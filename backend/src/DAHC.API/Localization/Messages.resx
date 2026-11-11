@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="account.not_registered" xml:space="preserve">
+    <value>Your account is not registered. Sign in again to continue.</value>
+  </data>
+  <data name="account.deactivated" xml:space="preserve">
+    <value>Your account is deactivated. Contact the admissions team.</value>
+  </data>
+  <data name="account.duplicate" xml:space="preserve">
+    <value>An account with the same identity details already exists. Sign in with your original account.</value>
+  </data>
+  <data name="account.no_role" xml:space="preserve">
+    <value>Your account has no active role. Contact the administrator.</value>
+  </data>
+  <data name="account.role_not_held" xml:space="preserve">
+    <value>You do not hold the requested role.</value>
+  </data>
+  <data name="auth.token_invalid" xml:space="preserve">
+    <value>Your session is not valid or has expired. Sign in again.</value>
+  </data>
+  <data name="auth.idam_unavailable" xml:space="preserve">
+    <value>The sign-in service is unavailable. Try again later.</value>
+  </data>
+  <data name="auth.forbidden" xml:space="preserve">
+    <value>You are not allowed to perform this action.</value>
+  </data>
+  <data name="auth.development_credentials_invalid" xml:space="preserve">
+    <value>The development sign-in details are not valid.</value>
+  </data>
+  <data name="integration.not_permitted" xml:space="preserve">
+    <value>This client is not permitted to call this operation.</value>
+  </data>
+  <data name="resource.not_found" xml:space="preserve">
+    <value>The requested record was not found.</value>
+  </data>
+  <data name="request.validation_failed" xml:space="preserve">
+    <value>Some of the information is missing or not valid.</value>
+  </data>
+  <data name="request.invalid_sort" xml:space="preserve">
+    <value>The requested sort order is not supported.</value>
+  </data>
+  <data name="request.invalid_cursor" xml:space="preserve">
+    <value>The page reference is not valid. Load the list again.</value>
+  </data>
+  <data name="request.idempotency_key_reused" xml:space="preserve">
+    <value>This request key was already used for a different request.</value>
+  </data>
+  <data name="request.precondition_required" xml:space="preserve">
+    <value>The version of the record you are changing is required.</value>
+  </data>
+  <data name="request.precondition_failed" xml:space="preserve">
+    <value>The record was changed since you opened it. Reload it and try again.</value>
+  </data>
+  <data name="request.rate_limited" xml:space="preserve">
+    <value>Too many requests. Wait a moment and try again.</value>
+  </data>
+  <data name="server.unexpected_error" xml:space="preserve">
+    <value>Something went wrong. Quote the reference number when contacting support.</value>
+  </data>
+  <data name="field.invalid" xml:space="preserve">
+    <value>This field is missing or not valid.</value>
+  </data>
+  <data name="application.active_exists" xml:space="preserve">
+    <value>You already have an active application in this cycle.</value>
+  </data>
+  <data name="application.not_editable" xml:space="preserve">
+    <value>This application can no longer be changed.</value>
+  </data>
+  <data name="application.program_not_open" xml:space="preserve">
+    <value>This program is not open for applications.</value>
+  </data>
+  <data name="application.invalid_preferences" xml:space="preserve">
+    <value>Check the selected specialties and training sites.</value>
+  </data>
+  <data name="applications.none_active" xml:space="preserve">
+    <value>You have no applications yet.</value>
+  </data>
+  <data name="programs.none_available" xml:space="preserve">
+    <value>No programs are available for this cycle.</value>
+  </data>
+  <data name="specialties.none_available" xml:space="preserve">
+    <value>No specialties are available for this program.</value>
+  </data>
+  <data name="sites.none_available" xml:space="preserve">
+    <value>No training sites are available for this specialty.</value>
+  </data>
+  <data name="preferences.count_invalid" xml:space="preserve">
+    <value>Select the number of specialties this program allows.</value>
+  </data>
+  <data name="preferences.order_invalid" xml:space="preserve">
+    <value>Number the preferences 1, 2 in order.</value>
+  </data>
+  <data name="preferences.duplicate_specialty" xml:space="preserve">
+    <value>Both preferences cannot be the same specialty.</value>
+  </data>
+  <data name="preferences.specialty_unavailable" xml:space="preserve">
+    <value>This specialty is not available for the selected program.</value>
+  </data>
+  <data name="preferences.sites_required" xml:space="preserve">
+    <value>Select at least one training site.</value>
+  </data>
+  <data name="preferences.site_order_invalid" xml:space="preserve">
+    <value>Number the training sites 1, 2, 3 in order.</value>
+  </data>
+  <data name="preferences.duplicate_site" xml:space="preserve">
+    <value>A training site cannot be selected twice for the same specialty.</value>
+  </data>
+  <data name="preferences.site_unavailable" xml:space="preserve">
+    <value>This training site is not available for the selected specialty.</value>
+  </data>
+</root>

@@ -1,0 +1,43 @@
+:host {
+  display: inline-flex;
+  align-items: center;
+  max-inline-size: 100%;
+  padding-block: var(--dahc-space-1);
+  padding-inline: var(--dahc-space-3);
+  border-radius: var(--dahc-radius-sm);
+  font-size: var(--dahc-font-size-xs);
+  font-weight: var(--dahc-font-weight-bold);
+  line-height: var(--dahc-font-line-height-tight);
+  overflow-wrap: anywhere;
+}
+
+:host(.dahc-badge--neutral) {
+  background-color: var(--dahc-color-neutral-surface);
+  color: var(--dahc-color-neutral-text);
+}
+
+:host(.dahc-badge--info) {
+  background-color: var(--dahc-color-info-surface);
+  color: var(--dahc-color-info-text);
+}
+
+:host(.dahc-badge--success) {
+  background-color: var(--dahc-color-success-surface);
+  color: var(--dahc-color-success-text);
+}
+
+:host(.dahc-badge--warning) {
+  background-color: var(--dahc-color-warning-surface);
+  color: var(--dahc-color-warning-text);
+}
+
+:host(.dahc-badge--danger) {
+  background-color: var(--dahc-color-danger-surface);
+  color: var(--dahc-color-danger-text);
+}
+
+@media (forced-colors: active) {
+  :host {
+    border: var(--dahc-size-border-width) solid CanvasText;
+  }
+}

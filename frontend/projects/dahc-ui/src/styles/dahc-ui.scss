@@ -1,0 +1,72 @@
+// Global entry point of the DAHC UI library: generates the token custom properties
+// for the light and dark themes and the few base rules every component relies on.
+// A custom theme is a block of token overrides under [data-theme='<name>'].
+@use 'theme';
+
+:root {
+  @include theme.static-tokens;
+  @include theme.light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    @include theme.dark;
+  }
+}
+
+[data-theme='light'] {
+  @include theme.light;
+}
+
+[data-theme='dark'] {
+  @include theme.dark;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dahc-motion-duration-fast: 0ms;
+    --dahc-motion-duration-normal: 0ms;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-block-size: 100vh;
+  background-color: var(--dahc-color-background);
+  color: var(--dahc-color-text);
+  font-family: var(--dahc-font-family-base);
+  font-size: var(--dahc-font-size-md);
+  line-height: var(--dahc-font-line-height-normal);
+}
+
+a {
+  color: var(--dahc-color-primary);
+}
+
+:focus-visible {
+  outline: var(--dahc-size-focus-ring-width) solid var(--dahc-color-focus-ring);
+  outline-offset: var(--dahc-size-focus-ring-offset);
+}
+
+.dahc-visually-hidden {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}

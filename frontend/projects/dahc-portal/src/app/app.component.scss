@@ -1,0 +1,25 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  min-block-size: 100vh;
+}
+
+.dahc-portal-main {
+  flex: 1;
+}
+
+.dahc-portal-main:focus {
+  outline: none;
+}
+
+.dahc-portal-problem {
+  max-inline-size: var(--dahc-size-content-max-width);
+  margin-inline: auto;
+  padding-block-start: var(--dahc-space-4);
+  padding-inline: var(--dahc-space-4);
+}
+
+.dahc-portal-problem-list {
+  margin-block: var(--dahc-space-2);
+  padding-inline-start: var(--dahc-space-6);
+}

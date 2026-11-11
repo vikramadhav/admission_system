@@ -1,0 +1,64 @@
+<dahc-playground-page
+  heading="Button"
+  description="Styles a native button or link. The host element keeps its own semantics, keyboard behaviour and form submission."
+  [sourceFiles]="sourceFiles">
+  <div preview>
+    <button
+      dahc-button
+      type="button"
+      [variant]="variant()"
+      [size]="size()"
+      [disabled]="disabled()"
+      [loading]="loading()"
+      [block]="block()"
+      [loadingLabel]="loadingLabel()"
+      (click)="recordClick()">{{ text() }}</button>
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-text label="content" [(value)]="text" />
+    <dahc-inspector-choice label="variant" [options]="variants" [(value)]="variant" />
+    <dahc-inspector-choice label="size" [options]="sizes" [(value)]="size" />
+    <dahc-inspector-toggle label="disabled" [(value)]="disabled" />
+    <dahc-inspector-toggle label="loading" [(value)]="loading" />
+    <dahc-inspector-toggle label="block" [(value)]="block" />
+    <dahc-inspector-text label="loadingLabel" [(value)]="loadingLabel" />
+    <dahc-event-log [events]="events()" />
+  </div>
+
+  <div states class="pg-stack">
+    @for (state of variants; track state) {
+      <div>
+        <p class="pg-state-label">{{ state }}</p>
+        <div class="pg-row">
+          <button dahc-button type="button" [variant]="state">Default</button>
+          <button dahc-button type="button" [variant]="state" [disabled]="true">Disabled</button>
+          <button dahc-button type="button" [variant]="state" [loading]="true">Loading</button>
+        </div>
+      </div>
+    }
+    <div>
+      <p class="pg-state-label">Sizes</p>
+      <div class="pg-row">
+        <button dahc-button type="button" size="sm">Small</button>
+        <button dahc-button type="button" size="md">Medium</button>
+        <button dahc-button type="button" size="lg">Large</button>
+      </div>
+    </div>
+    <div>
+      <p class="pg-state-label">Link</p>
+      <div class="pg-row">
+        <a dahc-button variant="secondary" routerLink="/button">Link styled as a button</a>
+        <a dahc-button variant="secondary" routerLink="/button" [disabled]="true">Disabled link</a>
+      </div>
+    </div>
+  </div>
+
+  <ul accessibility class="pg-notes">
+    <li>Use a native button for actions and a link for navigation; both keep their own role and keyboard support (Enter, and Space for buttons).</li>
+    <li>Disabled buttons get the disabled attribute; disabled links get aria-disabled="true" and leave the tab order.</li>
+    <li>While loading the button is busy (aria-busy) and announces the loading label; clicks are ignored.</li>
+    <li>The focus ring uses the focus-ring token and is visible in both themes and in forced-colours mode.</li>
+    <li>Minimum target size is 44 by 44 pixels.</li>
+  </ul>
+</dahc-playground-page>

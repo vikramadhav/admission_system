@@ -1,0 +1,104 @@
+@use '../../../dahc-ui/src/styles/breakpoints';
+
+:host {
+  display: block;
+}
+
+.pg-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--dahc-space-3);
+  padding-block: var(--dahc-space-3);
+  padding-inline: var(--dahc-space-4);
+  border-block-end: var(--dahc-size-border-width) solid var(--dahc-color-border);
+  background-color: var(--dahc-color-surface);
+}
+
+.pg-brand {
+  margin: 0;
+  color: var(--dahc-color-primary);
+  font-size: var(--dahc-font-size-lg);
+  font-weight: var(--dahc-font-weight-bold);
+}
+
+.pg-switchers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dahc-space-2);
+}
+
+.pg-layout {
+  display: flex;
+  flex-direction: column;
+}
+
+@include breakpoints.up('lg') {
+  .pg-layout {
+    flex-direction: row;
+  }
+}
+
+.pg-nav {
+  padding-block: var(--dahc-space-4);
+  padding-inline: var(--dahc-space-4);
+  border-block-end: var(--dahc-size-border-width) solid var(--dahc-color-border);
+  background-color: var(--dahc-color-surface);
+}
+
+@include breakpoints.up('lg') {
+  .pg-nav {
+    flex: none;
+    inline-size: var(--dahc-size-measure-narrow);
+    border-block-end: 0;
+    border-inline-end: var(--dahc-size-border-width) solid var(--dahc-color-border);
+  }
+}
+
+.pg-nav-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dahc-space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@include breakpoints.up('lg') {
+  .pg-nav-list {
+    flex-direction: column;
+  }
+}
+
+.pg-nav-link {
+  display: block;
+  padding-block: var(--dahc-space-2);
+  padding-inline: var(--dahc-space-3);
+  border-radius: var(--dahc-radius-md);
+  color: var(--dahc-color-text);
+  text-decoration: none;
+}
+
+.pg-nav-link:hover {
+  background-color: var(--dahc-color-surface-muted);
+}
+
+.pg-nav-link--active {
+  background-color: var(--dahc-color-surface-subtle);
+  color: var(--dahc-color-text-on-subtle);
+  font-weight: var(--dahc-font-weight-bold);
+}
+
+.pg-main {
+  flex: 1;
+  min-inline-size: 0;
+  padding-block: var(--dahc-space-6);
+  padding-inline: var(--dahc-space-4);
+}
+
+@include breakpoints.up('md') {
+  .pg-main {
+    padding-inline: var(--dahc-space-8);
+  }
+}

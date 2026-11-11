@@ -1,0 +1,96 @@
+<dahc-page-header [heading]="heading()" [description]="description()" [focusOnLoad]="true" />
+
+<div class="dahc-portal-page">
+  @if (!isNew() && application.isLoading() && loadedApplication() === null) {
+    <p class="dahc-portal-text" role="status" i18n="@@portal.draft.loading">Loading your draft…</p>
+  } @else if (!isNew() && application.error()) {
+    <dahc-alert variant="error" i18n-heading="@@portal.draft.loadFailedHeading" heading="This draft could not be opened">
+      <p class="dahc-portal-text" i18n="@@portal.draft.loadFailed">Go back to your dashboard and try again.</p>
+    </dahc-alert>
+    <div class="dahc-portal-actions">
+      <button dahc-button type="button" variant="secondary" (click)="backToDashboard()" i18n="@@portal.action.backToDashboard">Back to dashboard</button>
+    </div>
+  } @else {
+    @if (draftCreated()) {
+      <dahc-alert variant="success" [announce]="true" i18n-heading="@@portal.draft.createdHeading" heading="Your draft has been created">
+        <p class="dahc-portal-text" i18n="@@portal.draft.createdMessage">You can change your preferences and save the draft at any time before the deadline.</p>
+      </dahc-alert>
+    }
+    @if (savedAt(); as savedTime) {
+      <dahc-alert variant="success" i18n="@@portal.draft.savedAt">Draft saved on {{ savedTime | dahcDateTime: timeZoneId() : 'dateTime' }}.</dahc-alert>
+    }
+    @if (staleDraft()) {
+      <dahc-alert variant="warning" [announce]="true" i18n-heading="@@portal.draft.staleHeading" heading="This draft was changed somewhere else">
+        <p class="dahc-portal-text" i18n="@@portal.draft.staleMessage">Load the latest version before you save again. Changes you made here since your last save will be replaced.</p>
+        <div class="dahc-portal-actions dahc-draft-inline-actions">
+          <button dahc-button type="button" size="sm" variant="secondary" (click)="reloadDraft()" i18n="@@portal.draft.reload">Load latest version</button>
+        </div>
+      </dahc-alert>
+    }
+    @if (!isEditable()) {
+      <dahc-alert variant="info" i18n="@@portal.draft.readOnly">This application has been submitted and can no longer be changed here.</dahc-alert>
+    }
+    @if (isNew() && noOpenPrograms() !== '') {
+      <dahc-alert variant="info">{{ noOpenPrograms() }}</dahc-alert>
+    }
+
+    <form class="dahc-draft-form" [formGroup]="form" (ngSubmit)="isNew() ? createDraft() : saveDraft()" novalidate>
+      <section class="dahc-draft-section" aria-labelledby="program-heading">
+        <h2 id="program-heading" class="dahc-draft-section-heading" i18n="@@portal.draft.programHeading">Program and preferences</h2>
+        <p class="dahc-portal-text dahc-draft-hint" i18n="@@portal.draft.requiredHint">Fields marked with * are required.</p>
+
+        <div class="dahc-draft-grid">
+          <dahc-select
+            formControlName="programId"
+            i18n-label="@@portal.draft.program"
+            label="Program"
+            [options]="programOptions()"
+            [required]="true"
+            [invalid]="programError() !== ''"
+            [errorMessage]="programError()" />
+        </div>
+
+        @if (programIdValue() !== '') {
+          <div class="dahc-draft-grid">
+            <dahc-preference-fields
+              [group]="form.controls.preference1"
+              [specialtyId]="preference1SpecialtyId()"
+              i18n-specialtyLabel="@@portal.draft.preference1"
+              specialtyLabel="Preference 1"
+              i18n-sitesLabel="@@portal.draft.preference1Sites"
+              sitesLabel="Preference 1 training sites"
+              [specialtyOptions]="specialtyOptions()"
+              [required]="true"
+              [showAllErrors]="submitAttempted()" />
+
+            @if (allowsSecondPreference()) {
+              <dahc-preference-fields
+                [group]="form.controls.preference2"
+                [specialtyId]="preference2SpecialtyId()"
+                i18n-specialtyLabel="@@portal.draft.preference2"
+                specialtyLabel="Preference 2 (optional)"
+                i18n-sitesLabel="@@portal.draft.preference2Sites"
+                sitesLabel="Preference 2 training sites"
+                [specialtyOptions]="specialtyOptions()"
+                [showAllErrors]="submitAttempted()"
+                [crossFieldError]="samePreferenceError()" />
+            }
+          </div>
+        }
+
+        <dahc-alert variant="info" i18n="@@portal.draft.sameSiteHint">You can choose the same training site for different specialties. The specialties and sites offered depend on the program.</dahc-alert>
+      </section>
+
+      @if (isEditable()) {
+        <div class="dahc-draft-actions">
+          @if (isNew()) {
+            <button dahc-button type="submit" [loading]="busy()" i18n="@@portal.draft.create">Create draft</button>
+          } @else {
+            <button dahc-button type="submit" variant="secondary" [loading]="busy()" i18n="@@portal.draft.save">Save draft</button>
+          }
+          <button dahc-button type="button" variant="tertiary" (click)="backToDashboard()" i18n="@@portal.action.backToDashboard">Back to dashboard</button>
+        </div>
+      }
+    </form>
+  }
+</div>

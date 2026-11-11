@@ -1,0 +1,424 @@
+# Project-Specific Folders
+# BRD/
+# Contracts/
+# Database_Schema/
+# Design_System/
+# User-Stories/
+# coding-standards.md
+# master-prompt-final-v3.md
+
+# ============================================
+# PYTHON PROJECT PATTERNS
+# ============================================
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# PEP 582
+__pypackages__/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# ============================================
+# C# / .NET PROJECT PATTERNS
+# ============================================
+# Build results
+bin/
+obj/
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio cache/options directory
+.vs/
+
+# Rider IDE
+.idea/
+.idea_modules/
+*.sln.iml
+
+# Visual Studio temporary files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.sln.user
+
+# NuGet
+*.nupkg
+*.snupkg
+.nuget/
+project.lock.json
+project.assets.json
+project.assets.json.lock
+packages.lock.json
+nuget.config
+NuGetImports-*.xml
+
+# MSBuild
+*.msbuild
+*.msbuild.user
+*.msbuild.*.user
+
+# Visual Studio profiler
+*.psess
+*.vsp
+*.vspx
+*.sap
+
+# ReSharper is a .NET coding add-in
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# Rider
+out/
+
+# Test Explorer
+TestResults/
+*.trx
+
+# .NET Core
+artifacts/
+
+# Entity Framework
+*.edmx.diagram
+
+# Backup & Temp Files
+*.backup
+*.tmp
+*.temp
+
+# ============================================
+# ANGULAR / NODE.JS PROJECT PATTERNS
+# ============================================
+# Dependencies
+node_modules/
+npm-debug.log
+npm-debug.log.*
+yarn-debug.log*
+yarn-error.log*
+yarn-error.log.*
+pnpm-debug.log*
+pnpm-debug.log.*
+lerna-debug.log*
+lerna-debug.log.*
+
+# Production build output
+dist/
+dist-server/
+.next/
+out/
+
+# Angular
+angular.json
+.angular.json
+.angular/
+**/.angular/
+src/environments/environment.*.ts
+
+# Parcel related files
+.cache
+.parcel-cache
+
+# Nuxt.js build / generate output
+.nuxt
+generate/
+
+# Docusaurus cache and generated files
+.docusaurus
+
+# Grunt files
+.grunt
+
+# Gulp files
+.gulp
+
+# Build files
+build/
+
+# Node / npm
+.npm
+.eslintcache
+.eslintignore
+.node_repl_history
+*.tsbuildinfo
+.eslintrc
+.eslintrc.json
+.prettierrc
+.prettierignore
+
+# Package files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+.pnpm-debug.log
+.pnpm-debug.log.*
+
+# Testing
+.nyc_output/
+coverage/
+.coverage
+*.lcov
+
+# TypeScript
+*.js.map
+*.d.ts
+**/*.d.ts
+tsconfig.app.json.bak
+tsconfig.spec.json.bak
+
+# WebStorm/PhpStorm IDE
+*.sublime-project
+*.sublime-workspace
+
+# vs code
+.vscode/
+.history/
+.vscode-test
+launch.json
+settings.json
+*.code-workspace
+
+# IDE and Editor
+*.swp
+*.swo
+*~
+*.swn
+.DS_Store
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDE specific
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-settings
+*.iml
+*.iws
+*.ipr
+
+# General Build and Dependencies
+packages/
+.gradle/
+gradle/
+.m2/
+vendor/
+out/
+target/
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+.classpath
+.project
+.settings
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+*.mdb
+*.ldf
+
+# Logs
+logs/
+
+# OS
+Thumbs.db
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+
+# Temporary files
+*.orig
+*.rej
+
+# Visual Studio
+.vsx
+ipch/
+*.VC.db
+
+# JetBrains IDEs
+.idea/
+.idea_modules/
+
+# OS X
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Desktop.ini
+
+# Linux
+.directory
+
+# Credentials and Secrets
+secrets/
+*.pem
+*.key
+*.pub
+*.keystore
+.aws/
+.azure/
+
+# Debugging
+.gdbinit
+.lldbinit
+.gdbrc
+
+# Yarn
+.yarn-integrity
+.yarn/cache
+.yarn/install-state.gz
+
+# Misc
+.cache/
+.stylelintcache
+.prettierignore
+.turbo/
+*.tgz
+
+# ============================================
+# DAHC solution (backend/ and frontend/)
+# ============================================
+# The Python "lib/" rule above would hide the Angular library sources.
+!frontend/projects/**/lib/
+# Playwright output
+playwright-report/
+test-results/
+blob-report/

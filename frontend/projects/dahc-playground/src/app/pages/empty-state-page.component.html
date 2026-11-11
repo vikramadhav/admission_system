@@ -1,0 +1,31 @@
+<dahc-playground-page
+  heading="Empty state"
+  description="Explains why an area is empty and offers the next action through projected content."
+  [sourceFiles]="sourceFiles">
+  <div preview>
+    <dahc-empty-state [heading]="heading()" [description]="description()" [headingLevel]="headingLevel()">
+      @if (showAction()) {
+        <button dahc-button type="button">Start new application</button>
+      }
+    </dahc-empty-state>
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-text label="heading" [(value)]="heading" />
+    <dahc-inspector-text label="description" [(value)]="description" />
+    <dahc-inspector-choice label="headingLevel" [options]="headingLevels" [(value)]="headingLevel" />
+    <dahc-inspector-toggle label="projected action" [(value)]="showAction" />
+    <p class="pg-value">Outputs: none. Actions are projected content.</p>
+  </div>
+
+  <div states class="pg-stack">
+    <dahc-empty-state heading="Heading only" [headingLevel]="3" />
+    <dahc-empty-state heading="With description" description="Nothing has been added yet." [headingLevel]="3" />
+  </div>
+
+  <ul accessibility class="pg-notes">
+    <li>The heading is a real heading at the level chosen with headingLevel, so the empty area is found by heading navigation.</li>
+    <li>The illustration is decorative and hidden from assistive technology.</li>
+    <li>Projected actions keep their own semantics (use dahc-button on a button or link).</li>
+  </ul>
+</dahc-playground-page>
