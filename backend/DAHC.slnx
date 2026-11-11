@@ -1,6 +1,6 @@
 <Solution>
-  <Folder Name="/src/UI/">
-    <Project Path="src/UI/DAHC.API/DAHC.API.csproj" />
+  <Folder Name="/src/API/">
+    <Project Path="src/API/DAHC.API/DAHC.API.csproj" />
   </Folder>
   <Folder Name="/src/Core/">
     <Project Path="src/Core/DAHC.Applications.Core/DAHC.Applications.Core.csproj" />

@@ -10,7 +10,7 @@ ASP.NET Core Web API (.NET 10) for the DAHC GME admission platform. Built to `da
 dotnet build DAHC.slnx                      # zero warnings; warnings and style violations fail the build
 dotnet format DAHC.slnx --verify-no-changes
 dotnet test --solution DAHC.slnx            # Microsoft Testing Platform (see global.json)
-dotnet run --project src/UI/DAHC.API --launch-profile https
+dotnet run --project src/API/DAHC.API --launch-profile https
 ```
 
 Development starts without IDAM or SQL Server: `GET /health` answers, a request without a token gets `401`, and a request with an opaque token gets `503` because the placeholder IDAM (`idam.invalid`) is unreachable. Database-backed endpoints need SQL Server and a schema (see "Not included").
@@ -25,7 +25,7 @@ Projects are grouped by layer under `src/` (the same groups appear as solution f
 
 | Folder | Contents |
 |---|---|
-| `src/UI` | The Web API host |
+| `src/API` | The Web API host |
 | `src/Core` | Entities and enums per module; reference nothing |
 | `src/Services` | The shared application layer and each module's services |
 | `src/Data` | The shared `DahcDbContext` and each module's data services |
@@ -39,7 +39,7 @@ Projects are grouped by layer under `src/` (the same groups appear as solution f
 | `DAHC.Identity.Core` / `.Service` / `.Data` (in `Core`, `Services`, `Data`) | Candidates, staff users, roles, duplicate accounts; sign-in, active role, per-request user loading. |
 | `DAHC.Catalog.Core` / `.Service` / `.Data` (in `Core`, `Services`, `Data`) | Cycles, programs, specialties, training sites; catalog discovery. |
 | `DAHC.Applications.Core` / `.Service` / `.Data` (in `Core`, `Services`, `Data`) | Applications and preferences; draft create/read/list/save, dashboard. |
-| `src/UI/DAHC.API` | Composition root, controllers, envelope and ProblemDetails, authentication and authorization, localization, options, hardening. |
+| `src/API/DAHC.API` | Composition root, controllers, envelope and ProblemDetails, authentication and authorization, localization, options, hardening. |
 | `tests/DAHC.Test.Service` | Business rules without I/O. |
 | `tests/DAHC.Test.Data` | Data services on the EF Core in-memory provider, a new database per test. |
 | `tests/DAHC.Test.API` | `WebApplicationFactory<Program>`: response contract and security boundaries. |
