@@ -1,18 +1,26 @@
 <Solution>
-  <Folder Name="/src/">
-    <Project Path="src/DAHC.API/DAHC.API.csproj" />
-    <Project Path="src/DAHC.Applications.Core/DAHC.Applications.Core.csproj" />
-    <Project Path="src/DAHC.Applications.Data/DAHC.Applications.Data.csproj" />
-    <Project Path="src/DAHC.Applications.Service/DAHC.Applications.Service.csproj" />
-    <Project Path="src/DAHC.Catalog.Core/DAHC.Catalog.Core.csproj" />
-    <Project Path="src/DAHC.Catalog.Data/DAHC.Catalog.Data.csproj" />
-    <Project Path="src/DAHC.Catalog.Service/DAHC.Catalog.Service.csproj" />
-    <Project Path="src/DAHC.Data/DAHC.Data.csproj" />
-    <Project Path="src/DAHC.Identity.Core/DAHC.Identity.Core.csproj" />
-    <Project Path="src/DAHC.Identity.Data/DAHC.Identity.Data.csproj" />
-    <Project Path="src/DAHC.Identity.Service/DAHC.Identity.Service.csproj" />
-    <Project Path="src/DAHC.Logging/DAHC.Logging.csproj" />
-    <Project Path="src/DAHC.Service/DAHC.Service.csproj" />
+  <Folder Name="/src/UI/">
+    <Project Path="src/UI/DAHC.API/DAHC.API.csproj" />
+  </Folder>
+  <Folder Name="/src/Core/">
+    <Project Path="src/Core/DAHC.Applications.Core/DAHC.Applications.Core.csproj" />
+    <Project Path="src/Core/DAHC.Catalog.Core/DAHC.Catalog.Core.csproj" />
+    <Project Path="src/Core/DAHC.Identity.Core/DAHC.Identity.Core.csproj" />
+  </Folder>
+  <Folder Name="/src/Services/">
+    <Project Path="src/Services/DAHC.Applications.Service/DAHC.Applications.Service.csproj" />
+    <Project Path="src/Services/DAHC.Catalog.Service/DAHC.Catalog.Service.csproj" />
+    <Project Path="src/Services/DAHC.Identity.Service/DAHC.Identity.Service.csproj" />
+    <Project Path="src/Services/DAHC.Service/DAHC.Service.csproj" />
+  </Folder>
+  <Folder Name="/src/Data/">
+    <Project Path="src/Data/DAHC.Applications.Data/DAHC.Applications.Data.csproj" />
+    <Project Path="src/Data/DAHC.Catalog.Data/DAHC.Catalog.Data.csproj" />
+    <Project Path="src/Data/DAHC.Data/DAHC.Data.csproj" />
+    <Project Path="src/Data/DAHC.Identity.Data/DAHC.Identity.Data.csproj" />
+  </Folder>
+  <Folder Name="/src/Infrastructure/">
+    <Project Path="src/Infrastructure/DAHC.Logging/DAHC.Logging.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/DAHC.Test.API/DAHC.Test.API.csproj" />

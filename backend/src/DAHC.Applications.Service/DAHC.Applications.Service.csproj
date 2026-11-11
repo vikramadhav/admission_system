@@ -1,8 +1,0 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
-  <ItemGroup>
-    <ProjectReference Include="..\DAHC.Service\DAHC.Service.csproj" />
-    <ProjectReference Include="..\DAHC.Applications.Core\DAHC.Applications.Core.csproj" />
-  </ItemGroup>
-
-</Project>
