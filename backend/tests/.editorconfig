@@ -1,4 +1,0 @@
-[*.cs]
-dotnet_naming_rule.async_methods_end_in_async.severity = none
-dotnet_naming_rule.types_and_members_pascal.severity = suggestion
-dotnet_diagnostic.CA1707.severity = none
