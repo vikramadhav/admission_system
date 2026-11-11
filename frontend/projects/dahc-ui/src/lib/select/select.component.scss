@@ -1,0 +1,82 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dahc-space-1);
+  min-inline-size: 0;
+}
+
+.dahc-select__label {
+  color: var(--dahc-color-text);
+  font-size: var(--dahc-font-size-sm);
+  font-weight: var(--dahc-font-weight-semibold);
+}
+
+.dahc-select__required {
+  margin-inline-start: var(--dahc-space-1);
+  color: var(--dahc-color-danger-text);
+}
+
+.dahc-select__description {
+  margin: 0;
+  color: var(--dahc-color-text-muted);
+  font-size: var(--dahc-font-size-sm);
+}
+
+.dahc-select__control {
+  position: relative;
+}
+
+.dahc-select__native {
+  appearance: none;
+  inline-size: 100%;
+  min-block-size: var(--dahc-size-control-md);
+  padding-block: var(--dahc-space-2);
+  padding-inline: var(--dahc-space-4) var(--dahc-space-10);
+  border: var(--dahc-size-border-width) solid var(--dahc-color-border-control);
+  border-radius: var(--dahc-radius-md);
+  background-color: var(--dahc-color-surface);
+  color: var(--dahc-color-text);
+  font-family: inherit;
+  font-size: var(--dahc-font-size-md);
+  font-weight: var(--dahc-font-weight-medium);
+  text-overflow: ellipsis;
+}
+
+.dahc-select__native:hover:not(:disabled) {
+  border-color: var(--dahc-color-primary);
+}
+
+.dahc-select__native:focus-visible {
+  outline: var(--dahc-size-focus-ring-width) solid var(--dahc-color-focus-ring);
+  outline-offset: var(--dahc-size-focus-ring-offset);
+}
+
+.dahc-select__native[aria-invalid='true'] {
+  border-color: var(--dahc-color-danger);
+  border-width: var(--dahc-size-border-width-strong);
+}
+
+.dahc-select__native:disabled {
+  background-color: var(--dahc-color-surface-muted);
+  color: var(--dahc-color-text-muted);
+  cursor: not-allowed;
+}
+
+.dahc-select__chevron {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-end: var(--dahc-space-4);
+  inline-size: var(--dahc-size-icon-xs);
+  block-size: var(--dahc-size-icon-xs);
+  border-block-end: var(--dahc-size-border-width-strong) solid var(--dahc-color-text);
+  border-inline-end: var(--dahc-size-border-width-strong) solid var(--dahc-color-text);
+  transform: translateY(-75%) rotate(45deg);
+  pointer-events: none;
+}
+
+.dahc-select__error {
+  margin: 0;
+  color: var(--dahc-color-danger-text);
+  font-size: var(--dahc-font-size-sm);
+  font-weight: var(--dahc-font-weight-medium);
+}

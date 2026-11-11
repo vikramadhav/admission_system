@@ -1,0 +1,1616 @@
+/api/v1/me/dashboard:
+  get:
+    tags:
+      - Candidate Lifecycle
+    operationId: getCandidateDashboard
+    summary: Get the authenticated candidate's dashboard
+    description: >-
+      Returns the candidate's applications in inbox form with the actions each one
+      allows now, and whether "Start New Application" is enabled and why not. Scores
+      are included only after the applicable announcement; internal statuses and round
+      scores are never returned. Success: 200 with CandidateDashboard. Empty: 200
+      with an empty data list and a messageCode and the start-new state. Error: standard
+      Problem response. BRD: US-1.2.1, US-1.2.2, US-4.3.2. Roles (active role): CANDIDATE.
+    security:
+      - IdamBearer: []
+    parameters:
+      - $ref: "../components/parameters.yaml#/CycleIdOptional"
+      - $ref: "../components/parameters.yaml#/Limit"
+      - $ref: "../components/parameters.yaml#/Cursor"
+      - name: sort
+        in: query
+        description: >-
+          Allow-listed sort keys, comma-separated; prefix with - for descending. Allowed:
+          createdAt, submittedAt. Unsupported keys return 400 request.invalid_sort.
+        schema:
+          type: string
+          default: -createdAt
+    responses:
+      "200":
+        description: Candidate dashboard.
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas.yaml#/ApiResponse"
+                - type: object
+                  properties:
+                    data:
+                      $ref: "../components/schemas.yaml#/CandidateDashboard"
+      "400":
+        $ref: "../components/responses.yaml#/BadRequest"
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"
+      "403":
+        $ref: "../components/responses.yaml#/Forbidden"
+      "429":
+        $ref: "../components/responses.yaml#/RateLimited"
+      "500":
+        $ref: "../components/responses.yaml#/ServerError"
+      "503":
+        $ref: "../components/responses.yaml#/ServiceUnavailable"
+    x-dahc-roles:
+      - CANDIDATE
+
+/api/v1/applications/{applicationId}/sections/{sectionKey}:
+  get:
+    tags:
+      - Applications
+    operationId: getApplicationSection
+    summary: Read an application section
+    description: >-
+      Returns the section schema and values visible to the authenticated candidate.
+      Success: 200 with ApplicationSection. Empty: 404 if the section does not apply
+      or is not visible. Error: standard Problem response. BRD: US-1.3.2 through US-1.3.9.
+      Roles (active role): CANDIDATE.
+    security:
+      - IdamBearer: []
+    parameters:
+      - $ref: "../components/parameters.yaml#/ApplicationId"
+      - $ref: "../components/parameters.yaml#/SectionKey"
+    responses:
+      "200":
+        description: Section values and editability for this application state.
+        headers:
+          ETag:
+            schema:
+              type: string
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas.yaml#/ApiResponse"
+                - type: object
+                  properties:
+                    data:
+                      $ref: "../components/schemas.yaml#/ApplicationSection"
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"
+      "403":
+        $ref: "../components/responses.yaml#/Forbidden"
+      "404":
+        $ref: "../components/responses.yaml#/NotFound"
+      "500":
+        $ref: "../components/responses.yaml#/ServerError"
+      "503":
+        $ref: "../components/responses.yaml#/ServiceUnavailable"
+    x-dahc-roles:
+      - CANDIDATE
+  put:
+    tags:
+      - Applications
+    operationId: saveApplicationSection
+    summary: Save a program-specific application section
+    description: >-
+      Saves the supplied section after applying the versioned program form rules,
+      conditional requirements, candidate ownership, and current-state editability.
+      Success: 200 with saved section and new ETag. Empty: not applicable. Error:
+      404 missing/not visible, 409 not editable, 412 stale version, 422 invalid section
+      values, or standard Problem response. BRD: US-1.3.2 through US-1.3.9 and US-2.3.4
+      for permitted corrections. Roles (active role): CANDIDATE. The personal-information
+      section reads and writes the candidate's personal profile, which is shared by
+      all their applications (D-10); each application keeps a snapshot of it as submitted
+      (D-15).
+    security:
+      - IdamBearer: []
+    parameters:
+      - $ref: "../components/parameters.yaml#/ApplicationId"
+      - $ref: "../components/parameters.yaml#/SectionKey"
+      - name: If-Match
+        in: header
+        required: true
+        schema:
+          type: string
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas.yaml#/ApplicationSectionInput"
+    responses:
+      "200":
+        description: Section saved.
+        headers:
+          ETag:
+            schema:
+              type: string
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas.yaml#/ApiResponse"
+                - type: object
+                  properties:
+                    data:
+                      $ref: "../components/schemas.yaml#/ApplicationSection"
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"
+      "403":
+        $ref: "../components/responses.yaml#/Forbidden"
+      "404":
+        $ref: "../components/responses.yaml#/NotFound"
+      "409":
+        $ref: "../components/responses.yaml#/Conflict"
+      "412":
+        $ref: "../components/responses.yaml#/PreconditionFailed"
+      "422":
+        $ref: "../components/responses.yaml#/Validation"
+      "428":
+        $ref: "../components/responses.yaml#/PreconditionRequired"
+      "500":
+        $ref: "../components/responses.yaml#/ServerError"
+      "503":
+        $ref: "../components/responses.yaml#/ServiceUnavailable"
+    x-dahc-roles:
+      - CANDIDATE
+
+/api/v1/applications/{applicationId}/form-schema:
+  get:
+    tags:
+      - Applications
+    operationId: getApplicationFormSchema
+    summary: Get the versioned, program-specific application form schema
+    description: >-
+      Returns the sections, field codes, types, visibility, editability, requiredness,
+      options, conditional dependencies, and constraints applicable to this application.
+      The same schema version is used by the UI and server validation. Success: 200
+      with ApplicationFormSchema. Empty: 404 if application is missing or not visible.
+      Error: standard Problem response. BRD: US-1.3.2 through US-1.3.10. Roles (active
+      role): CANDIDATE.
+    security:
+      - IdamBearer: []
+    parameters:
+      - $ref: "../components/parameters.yaml#/ApplicationId"
+    responses:
+      "200":
+        description: Applicable form schema and version.
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas.yaml#/ApiResponse"
+                - type: object
+                  properties:
+                    data:
+                      $ref: "../components/schemas.yaml#/ApplicationFormSchema"
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"
+      "403":
+        $ref: "../components/responses.yaml#/Forbidden"
+      "404":
+        $ref: "../components/responses.yaml#/NotFound"
+      "500":
+        $ref: "../components/responses.yaml#/ServerError"
+      "503":
+        $ref: "../components/responses.yaml#/ServiceUnavailable"
+    x-dahc-roles:
+      - CANDIDATE
+
+/api/v1/applications/{applicationId}/attachments:
+  get:
+    tags:
+      - Applications
+    operationId: listApplicationAttachmentSlots
+    summary: List the attachment slots and current files for an application
+    description: >-
+      Returns every document slot that currently applies to the authenticated candidate's
+      application, with requiredness, editability, file constraints, and the active
+      file if one was uploaded. Slots reflect the current form schema, preferences,
+      and conditional answers. Success: 200 with AttachmentSlotList. Empty: 200 with
+      an empty data list and a messageCode when no documents apply. Error: 404 when
+      the application is missing or not owned by the caller, otherwise standard Problem
+      response. BRD: US-1.3.2 through US-1.3.10, US-2.3.4. Roles (active role): CANDIDATE.
+    security:
+      - IdamBearer: []
+    parameters:
+      - $ref: "../components/parameters.yaml#/ApplicationId"
+      - $ref: "../components/parameters.yaml#/Limit"
+      - $ref: "../components/parameters.yaml#/Cursor"
+    responses:
+      "200":
+        description: Applicable attachment slots; no applicable documents is an empty
+          success.
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas.yaml#/ApiListResponse"
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: "../components/schemas.yaml#/AttachmentSlot"
+      "400":
+        $ref: "../components/responses.yaml#/BadRequest"
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"
+      "403":
+        $ref: "../components/responses.yaml#/Forbidden"
+      "404":
+        $ref: "../components/responses.yaml#/NotFound"
+      "429":
+        $ref: "../components/responses.yaml#/RateLimited"
+      "500":
+        $ref: "../components/responses.yaml#/ServerError"
+    x-dahc-roles:
+      - CANDIDATE
+
+/api/v1/applications/{applicationId}/attachments/{slotId}:
+  put:
+    tags:
+      - Applications
+    operationId: uploadApplicationAttachment
+    summary: Upload or replace the file in an attachment slot
+    description: >-
+      The browser sends the file to this API only; it never calls the document integration
+      directly. The service checks ownership and slot editability, validates media
+      type and size against the slot, scans for malware, and stores the file through
+      the Rhapsody integration in FileNet using the approved naming convention. Success
+      is returned only after storage is confirmed. A replaced file is kept as a prior
+      version for audit. Portfolio evidence attachmentIds returned here are the evidenceIds
+      used in portfolio submission. Success: 200 with the new active AttachmentMetadata.
+      Empty: not applicable. Error: 404 missing or not owned, 409 slot not editable
+      in the current state, 413 too large, 415 disallowed type, 422 rejected content
+      such as an empty or infected file, 503 when the document integration is unavailable
+      (slot unchanged), or standard Problem response. BRD: US-1.3.2 through US-1.3.10,
+      US-2.3.4. Roles (active role): CANDIDATE.
+    security:
+      - IdamBearer: []
+    parameters:
+      - $ref: "../components/parameters.yaml#/ApplicationId"
+      - $ref: "../components/parameters.yaml#/AttachmentSlotId"
+    requestBody:
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - file
+            properties:
+              file:
+                type: string
+                format: binary
+    responses:
+      "200":
+        description: File stored and set as the active attachment for the slot.
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas.yaml#/ApiResponse"
+                - type: object
+                  properties:
+                    data:
+                      $ref: "../components/schemas.yaml#/AttachmentMetadata"
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"
+      "403":
+        $ref: "../components/responses.yaml#/Forbidden"
+      "404":
+        $ref: "../components/responses.yaml#/NotFound"
+      "409":
+        $ref: "../components/responses.yaml#/Conflict"
+      "413":
+        description: File exceeds the slot's maximum size.
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas.yaml#/Problem"
+      "415":
+        description: File type is not allowed for the slot.
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas.yaml#/Problem"
+      "422":
+        $ref: "../components/responses.yaml#/Validation"
+      "429":
+        $ref: "../components/responses.yaml#/RateLimited"
+      "500":
+        $ref: "../components/responses.yaml#/ServerError"
+      "503":
+        $ref: "../components/responses.yaml#/ServiceUnavailable"
+    x-dahc-roles:
+      - CANDIDATE
+  delete:
+    tags:
+      - Applications
+    operationId: deleteApplicationAttachment
+    summary: Remove the active file from an attachment slot
+    description: >-
+      Clears the slot's active file when the slot is editable. The removed file is
+      retained under the approved retention and audit policy rather than destroyed
+      immediately. Requiredness is enforced at payment and submission, not here. Success:
+      200 with the updated AttachmentSlot (attachment=null). Empty: 404 when the slot
+      has no active file or the application is not owned by the caller. Error: 409
+      slot not editable, 503 document integration unavailable, or standard Problem
+      response. BRD: US-1.3.2 (AC18). Roles (active role): CANDIDATE.
+    security:
+      - IdamBearer: []
+    parameters:
+      - $ref: "../components/parameters.yaml#/ApplicationId"
+      - $ref: "../components/parameters.yaml#/AttachmentSlotId"
+    responses:
+      "200":
+        description: Active file removed from the slot.
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas.yaml#/ApiResponse"
+                - type: object
+                  properties:
+                    data:
+                      $ref: "../components/schemas.yaml#/AttachmentSlot"
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"
+      "403":
+        $ref: "../components/responses.yaml#/Forbidden"
+      "404":
+        $ref: "../components/responses.yaml#/NotFound"
+      "409":
+        $ref: "../components/responses.yaml#/Conflict"
+      "500":
+        $ref: "../components/responses.yaml#/ServerError"
+      "503":
+        $ref: "../components/responses.yaml#/ServiceUnavailable"
+    x-dahc-roles:
+      - CANDIDATE
+
+/api/v1/applications/{applicationId}/attachments/{slotId}/content:
+  get:
+    tags:
+      - Applications
+    operationId: downloadApplicationAttachment
+    summary: Stream the active file in a slot for preview or download
+    description: >-
+      Streams the candidate's own active file from FileNet through this API; no FileNet
+      or Rhapsody URL is exposed. Responses are not cacheable by shared caches. Success:
+      200 with the file body. Empty: 404 when the slot has no active file or the application
+      is not owned by the caller. Error: 503 document integration unavailable, or
+      standard Problem response. BRD: US-1.3.2 (AC17). Roles (active role): CANDIDATE.
+    security:
+      - IdamBearer: []
+    parameters:
+      - $ref: "../components/parameters.yaml#/ApplicationId"
+      - $ref: "../components/parameters.yaml#/AttachmentSlotId"
+    responses:
+      "200":
+        description: Active file content.
+        headers:
+          Content-Disposition:
+            description: Attachment or inline disposition with a safe file name.
+            schema:
+              type: string
+          Cache-Control:
+            description: Always `private, no-store`.
+            schema:
+              type: string
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"
+      "403":
+        $ref: "../components/responses.yaml#/Forbidden"
+      "404":
+        $ref: "../components/responses.yaml#/NotFound"
+      "429":
+        $ref: "../components/responses.yaml#/RateLimited"
+      "500":
+        $ref: "../components/responses.yaml#/ServerError"
+      "503":
+        $ref: "../components/responses.yaml#/ServiceUnavailable"
+    x-dahc-roles:
+      - CANDIDATE
+
+/api/v1/applications/{applicationId}/portfolio:
+  get:
+    tags:
+      - Applications
+    operationId: getCandidatePortfolioDraft
+    summary: Read the candidate's portfolio submission
+    description: >-
+      Returns the candidate's own portfolio draft or submitted content. Success: 200
+      with the portfolio data. Empty: 404 when no portfolio is configured for this
+      application. Error: standard Problem response. Submitted portfolio data is immutable.
+      BRD: US-1.3.10. Roles (active role): CANDIDATE.
+    security:
+      - IdamBearer: []
+    parameters:
+      - $ref: "../components/parameters.yaml#/ApplicationId"
+    responses:
+      "200":
+        description: Portfolio answers and evidence references.
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas.yaml#/ApiResponse"
+                - type: object
+                  properties:
+                    data:
+                      $ref: "../components/schemas.yaml#/PortfolioSubmission"
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"
+      "403":
+        $ref: "../components/responses.yaml#/Forbidden"
+      "404":
+        $ref: "../components/responses.yaml#/NotFound"
+      "409":
+        $ref: "../components/responses.yaml#/Conflict"
+      "500":
+        $ref: "../components/responses.yaml#/ServerError"
+    x-dahc-roles:
+      - CANDIDATE
+
+/api/v1/applications/{applicationId}/portfolio-submission:
+  post:
+    tags:
+      - Applications
+    operationId: submitCandidatePortfolio
+    summary: Confirm and submit the one-time portfolio
+    description: >-
+      Validates all program-specific portfolio answers and evidence and irreversibly
+      submits the portfolio. Success: 201 with immutable PortfolioSubmission. Empty:
+      not applicable. Error: 409 if already submitted, 422 for incomplete or invalid
+      answers, otherwise standard Problem response. BRD: US-1.3.10. Roles (active
+      role): CANDIDATE.
+    security:
+      - IdamBearer: []
+    parameters:
+      - $ref: "../components/parameters.yaml#/ApplicationId"
+      - name: Idempotency-Key
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 16
+          maxLength: 128
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas.yaml#/PortfolioSubmissionInput"
+    responses:
+      "201":
+        description: Portfolio submitted and made immutable.
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas.yaml#/ApiResponse"
+                - type: object
+                  properties:
+                    data:
+                      $ref: "../components/schemas.yaml#/PortfolioSubmission"
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"
+      "403":
+        $ref: "../components/responses.yaml#/Forbidden"
+      "404":
+        $ref: "../components/responses.yaml#/NotFound"
+      "409":
+        $ref: "../components/responses.yaml#/Conflict"
+      "422":
+        $ref: "../components/responses.yaml#/Validation"
+      "500":
+        $ref: "../components/responses.yaml#/ServerError"
+      "503":
+        $ref: "../components/responses.yaml#/ServiceUnavailable"
+    x-dahc-roles:
+      - CANDIDATE
+
+/api/v1/applications/{applicationId}/preferences:
+  put:
+    tags:
+      - Candidate Lifecycle
+    operationId: updateCandidatePreferences
+    summary: Update application preferences before the configured deadline
+    description: >-
+      Replaces the candidate's preferences only when current status and cycle rules
+      permit. Success: 200 with updated Application. Empty: not applicable. Error:
+      409 when preferences are locked, 412 stale version, 422 invalid combinations,
+      or standard Problem response. BRD: US-1.2.6. Roles (active role): CANDIDATE.
+    security:
+      - IdamBearer: []
+    parameters:
+      - $ref: "../components/parameters.yaml#/ApplicationId"
+      - name: If-Match
+        in: header
+        required: true
+        schema:
+          type: string
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - preferences
+            properties:
+              preferences:
+                type: array
+                minItems: 1
+                maxItems: 2
+                items:
+                  $ref: "../components/schemas.yaml#/PreferenceInput"
+    responses:
+      "200":
+        description: Updated preferences.
+        headers:
+          ETag:
+            schema:
+              type: string
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas.yaml#/ApiResponse"
+                - type: object
+                  properties:
+                    data:
+                      $ref: "../components/schemas.yaml#/Application"
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"
+      "403":
+        $ref: "../components/responses.yaml#/Forbidden"
+      "404":
+        $ref: "../components/responses.yaml#/NotFound"
+      "409":
+        $ref: "../components/responses.yaml#/Conflict"
+      "412":
+        $ref: "../components/responses.yaml#/PreconditionFailed"
+      "422":
+        $ref: "../components/responses.yaml#/Validation"
+      "500":
+        $ref: "../components/responses.yaml#/ServerError"
+    x-dahc-roles:
+      - CANDIDATE
+
+/api/v1/applications/{applicationId}/site-exclusions:
+  post:
+    tags:
+      - Candidate Lifecycle
+    operationId: excludeCandidateTrainingSites
+    summary: Exclude previously selected training sites
+    description: >-
+      Excludes only existing sites, requires a reason, preserves at least one site
+      per specialty, and does not change application status. Success: 200 with updated
+      Application. Empty: not applicable. Error: 409 for a locked application or invalid
+      final-site exclusion, 422 for invalid request, or standard Problem response.
+      BRD: US-1.2.8. Roles (active role): CANDIDATE.
+    security:
+      - IdamBearer: []
+    parameters:
+      - $ref: "../components/parameters.yaml#/ApplicationId"
+      - name: Idempotency-Key
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 16
+          maxLength: 128
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - siteIds
+              - reason
+            properties:
+              siteIds:
+                type: array
+                minItems: 1
+                uniqueItems: true
+                items:
+                  type: string
+              reason:
+                type: string
+                minLength: 1
+                maxLength: 500
+    responses:
+      "200":
+        description: Sites excluded; application status remains unchanged.
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas.yaml#/ApiResponse"
+                - type: object
+                  properties:
+                    data:
+                      $ref: "../components/schemas.yaml#/Application"
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"
+      "403":
+        $ref: "../components/responses.yaml#/Forbidden"
+      "404":
+        $ref: "../components/responses.yaml#/NotFound"
+      "409":
+        $ref: "../components/responses.yaml#/Conflict"
+      "422":
+        $ref: "../components/responses.yaml#/Validation"
+      "500":
+        $ref: "../components/responses.yaml#/ServerError"
+    x-dahc-roles:
+      - CANDIDATE
+
+/api/v1/applications/{applicationId}/withdrawal-requests:
+  post:
+    tags:
+      - Candidate Lifecycle
+    operationId: createApplicationWithdrawalRequest
+    summary: Start an application withdrawal request
+    description: >-
+      Records the withdrawal reason and sends a one-time code to the registered email
+      and mobile. The application is not withdrawn until confirmApplicationWithdrawal
+      succeeds. reasonCode comes from lookup WITHDRAWAL_REASON; otherReason is required
+      for OTHER, at least 3 letters, and placeholder words such as "Reason" or "NA"
+      are rejected with 422. Success: 202 with request ID and OTP state. Empty: not
+      applicable. Error: 409 when the status is not withdrawable (Draft, Withdrawn,
+      Archived), 422 invalid reason, 503 when OTP delivery is unavailable, otherwise
+      standard Problem response. BRD: US-1.2.4 AC1-AC3. Roles (active role): CANDIDATE.
+    security:
+      - IdamBearer: []
+    parameters:
+      - $ref: "../components/parameters.yaml#/ApplicationId"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - reasonCode
+            properties:
+              reasonCode:
+                type: string
+                minLength: 1
+                maxLength: 50
+              otherReason:
+                type:
+                  - string
+                  - "null"
+                minLength: 3
+                maxLength: 500
+            allOf:
+              - if:
+                  required:
+                    - reasonCode
+                  properties:
+                    reasonCode:
+                      const: OTHER
+                then:
+                  required:
+                    - otherReason
+                  properties:
+                    otherReason:
+                      type: string
+    responses:
+      "202":
+        description: OTP confirmation has been initiated.
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas.yaml#/ApiResponse"
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      additionalProperties: false
+                      required:
+                        - requestId
+                        - expiresAt
+                        - resendAvailableAt
+                        - destinations
+                      properties:
+                        requestId:
+                          type: string
+                          format: uuid
+                        expiresAt:
+                          type: string
+                          format: date-time
+                        resendAvailableAt:
+                          type: string
+                          format: date-time
+                        destinations:
+                          type: array
+                          items:
+                            $ref: "../components/schemas.yaml#/OtpDestination"
+      "400":
+        $ref: "../components/responses.yaml#/BadRequest"
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"
+      "403":
+        $ref: "../components/responses.yaml#/Forbidden"
+      "404":
+        $ref: "../components/responses.yaml#/NotFound"
+      "409":
+        $ref: "../components/responses.yaml#/Conflict"
+      "422":
+        $ref: "../components/responses.yaml#/Validation"
+      "429":
+        $ref: "../components/responses.yaml#/RateLimited"
+      "500":
+        $ref: "../components/responses.yaml#/ServerError"
+      "503":
+        $ref: "../components/responses.yaml#/ServiceUnavailable"
+    x-dahc-roles:
+      - CANDIDATE
+
+/api/v1/applications/{applicationId}/withdrawal-requests/{requestId}/confirmation:
+  post:
+    tags:
+      - Candidate Lifecycle
+    operationId: confirmApplicationWithdrawal
+    summary: Confirm withdrawal using the issued OTP
+    description: >-
+      Verifies the one-time code and applies the withdrawal state transition once.
+      Success: 200 with authoritative workflow result. Empty: not applicable. Error:
+      409 for expired/consumed request, 422 invalid code, or standard Problem response.
+      BRD: US-1.2.4. Roles (active role): CANDIDATE.
+    security:
+      - IdamBearer: []
+    parameters:
+      - $ref: "../components/parameters.yaml#/ApplicationId"
+      - name: requestId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - otp
+            properties:
+              otp:
+                type: string
+                minLength: 4
+                maxLength: 12
+                writeOnly: true
+    responses:
+      "200":
+        description: Application withdrawn.
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas.yaml#/ApiResponse"
+                - type: object
+                  properties:
+                    data:
+                      $ref: "../components/schemas.yaml#/WorkflowActionResult"
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"
+      "403":
+        $ref: "../components/responses.yaml#/Forbidden"
+      "404":
+        $ref: "../components/responses.yaml#/NotFound"
+      "409":
+        $ref: "../components/responses.yaml#/Conflict"
+      "422":
+        $ref: "../components/responses.yaml#/Validation"
+      "429":
+        $ref: "../components/responses.yaml#/RateLimited"
+      "500":
+        $ref: "../components/responses.yaml#/ServerError"
+    x-dahc-roles:
+      - CANDIDATE
+
+/api/v1/applications/{applicationId}/reinstatement-requests:
+  post:
+    tags:
+      - Candidate Lifecycle
+    operationId: requestApplicationReinstatement
+    summary: Request reinstatement of a withdrawn application
+    description: >-
+      Creates a pending supervisor decision request; it does not restore the application.
+      Success: 202 with request status. Empty: not applicable. Error: 409 for another
+      active application or closed timeline, otherwise standard Problem response.
+      BRD: US-1.2.5. Roles (active role): CANDIDATE.
+    security:
+      - IdamBearer: []
+    parameters:
+      - $ref: "../components/parameters.yaml#/ApplicationId"
+      - name: Idempotency-Key
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 16
+          maxLength: 128
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - justification
+            properties:
+              justification:
+                type: string
+                minLength: 1
+                maxLength: 1000
+    responses:
+      "202":
+        description: Request is pending supervisor review.
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas.yaml#/ApiResponse"
+                - type: object
+                  properties:
+                    data:
+                      $ref: "../components/schemas.yaml#/WorkflowActionResult"
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"
+      "403":
+        $ref: "../components/responses.yaml#/Forbidden"
+      "404":
+        $ref: "../components/responses.yaml#/NotFound"
+      "409":
+        $ref: "../components/responses.yaml#/Conflict"
+      "422":
+        $ref: "../components/responses.yaml#/Validation"
+      "500":
+        $ref: "../components/responses.yaml#/ServerError"
+    x-dahc-roles:
+      - CANDIDATE
+
+/api/v1/applications/{applicationId}/appeals:
+  post:
+    tags:
+      - Candidate Lifecycle
+    operationId: submitPortfolioAppeal
+    summary: Submit an eligible portfolio appeal
+    description: >-
+      Accepts one appeal during the configured window and routes only eligible questions
+      to second evaluation. Success: 202 with appeal status and received time. Empty:
+      not applicable. Error: 409 if already appealed or window closed, 422 for invalid
+      question/response, or standard Problem. BRD: US-1.2.7. Roles (active role):
+      CANDIDATE.
+    security:
+      - IdamBearer: []
+    parameters:
+      - $ref: "../components/parameters.yaml#/ApplicationId"
+      - name: Idempotency-Key
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 16
+          maxLength: 128
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - responses
+              - confirmed
+            properties:
+              responses:
+                type: array
+                minItems: 1
+                items:
+                  type: object
+                  required:
+                    - questionId
+                    - response
+                  properties:
+                    questionId:
+                      type: string
+                      format: uuid
+                    response:
+                      type: string
+                      maxLength: 200
+              confirmed:
+                const: true
+    responses:
+      "202":
+        description: Appeal accepted for second evaluation.
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas.yaml#/ApiResponse"
+                - type: object
+                  properties:
+                    data:
+                      $ref: "../components/schemas.yaml#/WorkflowActionResult"
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"
+      "403":
+        $ref: "../components/responses.yaml#/Forbidden"
+      "404":
+        $ref: "../components/responses.yaml#/NotFound"
+      "409":
+        $ref: "../components/responses.yaml#/Conflict"
+      "422":
+        $ref: "../components/responses.yaml#/Validation"
+      "500":
+        $ref: "../components/responses.yaml#/ServerError"
+    x-dahc-roles:
+      - CANDIDATE
+
+/api/v1/applications/{applicationId}/payment-sessions:
+  post:
+    tags:
+      - Payments
+    operationId: createApplicationPaymentSession
+    summary: Start payment for an application
+    description: >-
+      Validates readiness and creates an idempotent payment session using the configured
+      fee and the active provider selected by server-side payment routing policy.
+      The client cannot choose a provider. The response is provider-neutral; the session
+      remains bound internally to the provider that created it. Success: 201 with
+      session status and opaque checkout information. Empty: not applicable. Error:
+      409 if not payable, 422 if application validation fails, 503 if the selected
+      provider is unavailable, or standard Problem response. BRD: US-1.3.12. Roles
+      (active role): CANDIDATE.
+    security:
+      - IdamBearer: []
+    parameters:
+      - $ref: "../components/parameters.yaml#/ApplicationId"
+      - name: Idempotency-Key
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 16
+          maxLength: 128
+    responses:
+      "201":
+        description: Payment session created.
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas.yaml#/ApiResponse"
+                - type: object
+                  properties:
+                    data:
+                      $ref: "../components/schemas.yaml#/PaymentSession"
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"
+      "403":
+        $ref: "../components/responses.yaml#/Forbidden"
+      "404":
+        $ref: "../components/responses.yaml#/NotFound"
+      "409":
+        $ref: "../components/responses.yaml#/Conflict"
+      "422":
+        $ref: "../components/responses.yaml#/Validation"
+      "429":
+        $ref: "../components/responses.yaml#/RateLimited"
+      "500":
+        $ref: "../components/responses.yaml#/ServerError"
+      "503":
+        $ref: "../components/responses.yaml#/ServiceUnavailable"
+    x-dahc-roles:
+      - CANDIDATE
+
+/api/v1/applications/{applicationId}/payment-sessions/{paymentSessionId}:
+  get:
+    tags:
+      - Payments
+    operationId: getApplicationPaymentSession
+    summary: Get payment status and receipt for the candidate
+    description: >-
+      Returns only the authenticated candidate's payment session. Success: 200 with
+      PaymentSession. Empty: 404 if missing or not owned by caller. Unknown payment
+      state is represented as UNKNOWN and must be reconciled; it must not be interpreted
+      as a confirmed failure. Error: standard Problem response. BRD: US-1.3.12. Roles
+      (active role): CANDIDATE.
+    security:
+      - IdamBearer: []
+    parameters:
+      - $ref: "../components/parameters.yaml#/ApplicationId"
+      - name: paymentSessionId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: Current authoritative payment-session state.
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas.yaml#/ApiResponse"
+                - type: object
+                  properties:
+                    data:
+                      $ref: "../components/schemas.yaml#/PaymentSession"
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"
+      "403":
+        $ref: "../components/responses.yaml#/Forbidden"
+      "404":
+        $ref: "../components/responses.yaml#/NotFound"
+      "429":
+        $ref: "../components/responses.yaml#/RateLimited"
+      "500":
+        $ref: "../components/responses.yaml#/ServerError"
+      "503":
+        $ref: "../components/responses.yaml#/ServiceUnavailable"
+    x-dahc-roles:
+      - CANDIDATE
+
+/api/v1/applications/{applicationId}/submission:
+  post:
+    tags:
+      - Payments
+    operationId: submitPaidApplication
+    summary: Submit an application after payment is confirmed
+    description: >-
+      Finalizes submission only after confirmed payment, complete validation, and
+      required attachment persistence. Success: 200 with submitted Application. Empty:
+      not applicable. Error: 409 if payment is not confirmed or already submitted;
+      422 for incomplete application; 503 for required dependency failure. Operation
+      is idempotent. BRD: US-1.3.12. Roles (active role): CANDIDATE.
+    security:
+      - IdamBearer: []
+    parameters:
+      - $ref: "../components/parameters.yaml#/ApplicationId"
+      - name: Idempotency-Key
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 16
+          maxLength: 128
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - paymentSessionId
+              - confirmed
+            properties:
+              paymentSessionId:
+                type: string
+                format: uuid
+              confirmed:
+                const: true
+    responses:
+      "200":
+        description: Application submitted; subsequent candidate form reads are read-only.
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas.yaml#/ApiResponse"
+                - type: object
+                  properties:
+                    data:
+                      $ref: "../components/schemas.yaml#/Application"
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"
+      "403":
+        $ref: "../components/responses.yaml#/Forbidden"
+      "404":
+        $ref: "../components/responses.yaml#/NotFound"
+      "409":
+        $ref: "../components/responses.yaml#/Conflict"
+      "422":
+        $ref: "../components/responses.yaml#/Validation"
+      "500":
+        $ref: "../components/responses.yaml#/ServerError"
+      "503":
+        $ref: "../components/responses.yaml#/ServiceUnavailable"
+    x-dahc-roles:
+      - CANDIDATE
+
+/api/v1/finance/payments:
+  get:
+    tags:
+      - Payments
+    operationId: listFinancePaymentRecords
+    summary: Search application payment records
+    description: >-
+      Finance-only read of payment fields, never application details. Success: 200
+      with paginated PaymentRecordList. Empty: 200 with an empty data list and a messageCode.
+      Error: standard Problem response. BRD: US-1.3.13. Roles (active role): FINANCE_OFFICER.
+    security:
+      - IdamBearer: []
+    parameters:
+      - $ref: "../components/parameters.yaml#/CycleIdOptional"
+      - $ref: "../components/parameters.yaml#/Limit"
+      - $ref: "../components/parameters.yaml#/Cursor"
+      - name: programId
+        in: query
+        schema:
+          type: string
+          format: uuid
+      - name: applicationNumber
+        in: query
+        schema:
+          $ref: "../components/schemas.yaml#/ApplicationNumber"
+      - name: from
+        in: query
+        schema:
+          type: string
+          format: date
+      - name: to
+        in: query
+        schema:
+          type: string
+          format: date
+      - name: sort
+        in: query
+        schema:
+          type: string
+          default: -paymentDate
+    responses:
+      "200":
+        description: Matching read-only payment records.
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas.yaml#/ApiListResponse"
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: "../components/schemas.yaml#/PaymentRecord"
+      "400":
+        $ref: "../components/responses.yaml#/BadRequest"
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"
+      "403":
+        $ref: "../components/responses.yaml#/Forbidden"
+      "429":
+        $ref: "../components/responses.yaml#/RateLimited"
+      "500":
+        $ref: "../components/responses.yaml#/ServerError"
+      "503":
+        $ref: "../components/responses.yaml#/ServiceUnavailable"
+    x-dahc-roles:
+      - FINANCE_OFFICER
+
+/api/v1/finance/payments/export:
+  get:
+    tags:
+      - Payments
+    operationId: exportFinancePaymentRecords
+    summary: Export filtered payment records to Excel
+    description: >-
+      Exports exactly the records returned by the same filters as listFinancePaymentRecords,
+      with the application key info columns only (application number, English Full
+      Name, Email, Program, Fee Type, Bill Status, Bill Amount in AED, Payment Date).
+      Cells are written as values, never formulas. Success: 200 with an .xlsx file.
+      Empty: 200 with a header-only sheet. Error: 400 invalid filters or to before
+      from, 422 export.too_large above the configured row limit, otherwise standard
+      Problem response. BRD: US-1.3.13 AC9. Roles (active role): FINANCE_OFFICER.
+    security:
+      - IdamBearer: []
+    parameters:
+      - $ref: "../components/parameters.yaml#/CycleIdOptional"
+      - name: programId
+        in: query
+        schema:
+          type: string
+          format: uuid
+      - name: applicationNumber
+        in: query
+        schema:
+          $ref: "../components/schemas.yaml#/ApplicationNumber"
+      - name: from
+        in: query
+        schema:
+          type: string
+          format: date
+      - name: to
+        in: query
+        schema:
+          type: string
+          format: date
+    responses:
+      "200":
+        description: Excel workbook for the supplied filters.
+        headers:
+          Content-Disposition:
+            description: attachment; filename of the stored file.
+            schema:
+              type: string
+          Cache-Control:
+            description: Always private, no-store.
+            schema:
+              type: string
+              const: private, no-store
+        content:
+          application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+            schema:
+              type: string
+              format: binary
+      "400":
+        $ref: "../components/responses.yaml#/BadRequest"
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"
+      "403":
+        $ref: "../components/responses.yaml#/Forbidden"
+      "422":
+        $ref: "../components/responses.yaml#/Validation"
+      "429":
+        $ref: "../components/responses.yaml#/RateLimited"
+      "500":
+        $ref: "../components/responses.yaml#/ServerError"
+    x-dahc-roles:
+      - FINANCE_OFFICER
+
+/api/v1/applications/{applicationId}/draft:
+  delete:
+    tags:
+      - Candidate Lifecycle
+    operationId: discardCandidateDraft
+    summary: Discard an unsubmitted draft
+    description: >-
+      Discards only the authenticated candidate's draft according to approved retention/audit
+      policy. Success: 200 with workflow result. Empty: 404 when absent or not owned
+      by caller. Error: 409 when not in DRAFT state, or standard Problem response.
+      BRD: US-1.2.3. Roles (active role): CANDIDATE.
+    security:
+      - IdamBearer: []
+    parameters:
+      - $ref: "../components/parameters.yaml#/ApplicationId"
+    responses:
+      "200":
+        description: Draft discarded according to the configured retention policy.
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas.yaml#/ApiResponse"
+                - type: object
+                  properties:
+                    data:
+                      $ref: "../components/schemas.yaml#/WorkflowActionResult"
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"
+      "403":
+        $ref: "../components/responses.yaml#/Forbidden"
+      "404":
+        $ref: "../components/responses.yaml#/NotFound"
+      "409":
+        $ref: "../components/responses.yaml#/Conflict"
+      "500":
+        $ref: "../components/responses.yaml#/ServerError"
+    x-dahc-roles:
+      - CANDIDATE
+
+/api/v1/applications/{applicationId}/withdrawal-requests/{requestId}/otp-resend:
+  post:
+    tags:
+      - Candidate Lifecycle
+    operationId: resendWithdrawalOtp
+    summary: Resend the withdrawal confirmation code
+    description: >-
+      Issues a new code for an open withdrawal request once the cooldown has passed,
+      and invalidates the previous code. Success: 202 with OtpChallenge. Empty: not
+      applicable. Error: 409 when the request is already confirmed or expired, 429
+      when the cooldown has not passed (Retry-After set) or the resend limit is reached,
+      503 when OTP delivery is unavailable, otherwise standard Problem response. BRD:
+      US-1.2.4 AC6. Roles (active role): CANDIDATE.
+    security:
+      - IdamBearer: []
+    parameters:
+      - $ref: "../components/parameters.yaml#/ApplicationId"
+      - name: requestId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "202":
+        description: A new code was sent.
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas.yaml#/ApiResponse"
+                - type: object
+                  properties:
+                    data:
+                      $ref: "../components/schemas.yaml#/OtpChallenge"
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"
+      "403":
+        $ref: "../components/responses.yaml#/Forbidden"
+      "404":
+        $ref: "../components/responses.yaml#/NotFound"
+      "409":
+        $ref: "../components/responses.yaml#/Conflict"
+      "429":
+        $ref: "../components/responses.yaml#/RateLimited"
+      "500":
+        $ref: "../components/responses.yaml#/ServerError"
+      "503":
+        $ref: "../components/responses.yaml#/ServiceUnavailable"
+    x-dahc-roles:
+      - CANDIDATE
+
+/api/v1/applications/{applicationId}/contact-verifications:
+  post:
+    tags:
+      - Candidate Lifecycle
+    operationId: startContactVerification
+    summary: Send a code to verify a changed contact email or mobile
+    description: >-
+      Starts verification of a new contact email or mobile number entered in the personal-information
+      section. A code is sent to the new value. Saving the section with a changed
+      contact value that has not been verified returns 422 contact.not_verified. Success:
+      202 with ContactVerification. Empty: not applicable. Error: 409 when the section
+      is not editable, 422 invalid value, 429 rate limit, 503 when OTP delivery is
+      unavailable, otherwise standard Problem response. BRD: US-1.3.3 AC11. Roles
+      (active role): CANDIDATE.
+    security:
+      - IdamBearer: []
+    parameters:
+      - $ref: "../components/parameters.yaml#/ApplicationId"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - channel
+              - value
+            properties:
+              channel:
+                type: string
+                enum:
+                  - EMAIL
+                  - SMS
+              value:
+                type: string
+                minLength: 3
+                maxLength: 254
+                description: Email address, or mobile number in E.164 format.
+    responses:
+      "202":
+        description: Verification code sent.
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas.yaml#/ApiResponse"
+                - type: object
+                  properties:
+                    data:
+                      $ref: "../components/schemas.yaml#/ContactVerification"
+      "400":
+        $ref: "../components/responses.yaml#/BadRequest"
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"
+      "403":
+        $ref: "../components/responses.yaml#/Forbidden"
+      "404":
+        $ref: "../components/responses.yaml#/NotFound"
+      "409":
+        $ref: "../components/responses.yaml#/Conflict"
+      "422":
+        $ref: "../components/responses.yaml#/Validation"
+      "429":
+        $ref: "../components/responses.yaml#/RateLimited"
+      "500":
+        $ref: "../components/responses.yaml#/ServerError"
+      "503":
+        $ref: "../components/responses.yaml#/ServiceUnavailable"
+    x-dahc-roles:
+      - CANDIDATE
+
+/api/v1/applications/{applicationId}/contact-verifications/{verificationId}/confirmation:
+  post:
+    tags:
+      - Candidate Lifecycle
+    operationId: confirmContactVerification
+    summary: Confirm a contact change with the received code
+    description: >-
+      Marks the contact value as verified for this application. Success: 200 with
+      ContactVerificationResult. Empty: not applicable. Error: 422 otp.invalid or
+      otp.expired with a clear reason, 409 when already confirmed, 429 after too many
+      attempts, otherwise standard Problem response. BRD: US-1.3.3 AC11. Roles (active
+      role): CANDIDATE.
+    security:
+      - IdamBearer: []
+    parameters:
+      - $ref: "../components/parameters.yaml#/ApplicationId"
+      - name: verificationId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - otp
+            properties:
+              otp:
+                type: string
+                minLength: 4
+                maxLength: 12
+                writeOnly: true
+    responses:
+      "200":
+        description: Contact value verified.
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas.yaml#/ApiResponse"
+                - type: object
+                  properties:
+                    data:
+                      $ref: "../components/schemas.yaml#/ContactVerificationResult"
+      "400":
+        $ref: "../components/responses.yaml#/BadRequest"
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"
+      "403":
+        $ref: "../components/responses.yaml#/Forbidden"
+      "404":
+        $ref: "../components/responses.yaml#/NotFound"
+      "409":
+        $ref: "../components/responses.yaml#/Conflict"
+      "422":
+        $ref: "../components/responses.yaml#/Validation"
+      "429":
+        $ref: "../components/responses.yaml#/RateLimited"
+      "500":
+        $ref: "../components/responses.yaml#/ServerError"
+    x-dahc-roles:
+      - CANDIDATE
+
+/api/v1/applications/{applicationId}/contact-verifications/{verificationId}/otp-resend:
+  post:
+    tags:
+      - Candidate Lifecycle
+    operationId: resendContactVerificationOtp
+    summary: Resend the contact verification code
+    description: >-
+      Issues a new code once the cooldown has passed and invalidates the previous
+      one. Success: 202 with ContactVerification. Empty: not applicable. Error: 409
+      when already confirmed, 429 when the cooldown has not passed or the resend limit
+      is reached, 503 when OTP delivery is unavailable, otherwise standard Problem
+      response. BRD: US-1.3.3 AC11. Roles (active role): CANDIDATE.
+    security:
+      - IdamBearer: []
+    parameters:
+      - $ref: "../components/parameters.yaml#/ApplicationId"
+      - name: verificationId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "202":
+        description: A new code was sent.
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas.yaml#/ApiResponse"
+                - type: object
+                  properties:
+                    data:
+                      $ref: "../components/schemas.yaml#/ContactVerification"
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"
+      "403":
+        $ref: "../components/responses.yaml#/Forbidden"
+      "404":
+        $ref: "../components/responses.yaml#/NotFound"
+      "409":
+        $ref: "../components/responses.yaml#/Conflict"
+      "429":
+        $ref: "../components/responses.yaml#/RateLimited"
+      "500":
+        $ref: "../components/responses.yaml#/ServerError"
+      "503":
+        $ref: "../components/responses.yaml#/ServiceUnavailable"
+    x-dahc-roles:
+      - CANDIDATE
+
+/api/v1/applications/{applicationId}/portfolio-result:
+  get:
+    tags:
+      - Candidate Lifecycle
+    operationId: getCandidatePortfolioResult
+    summary: View announced portfolio scores, comments and appeal eligibility
+    description: >-
+      Read-only portfolio view used by the appeal panel: questions, the candidate's
+      answers and evidence, final-round points and the predefined comments. Only the
+      final score is returned; round scores are never visible. appealable marks the
+      questions that may be flagged (answered YES and not awarded full points) while
+      the appeal window is open and no appeal was made. Success: 200 with CandidatePortfolioResult.
+      Empty: 404 portfolio.scores_not_announced before the initial announcement. Error:
+      standard Problem response. BRD: US-1.2.7 AC1-AC5, US-4.3.2. Roles (active role):
+      CANDIDATE.
+    security:
+      - IdamBearer: []
+    parameters:
+      - $ref: "../components/parameters.yaml#/ApplicationId"
+    responses:
+      "200":
+        description: Announced portfolio result.
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas.yaml#/ApiResponse"
+                - type: object
+                  properties:
+                    data:
+                      $ref: "../components/schemas.yaml#/CandidatePortfolioResult"
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"
+      "403":
+        $ref: "../components/responses.yaml#/Forbidden"
+      "404":
+        $ref: "../components/responses.yaml#/NotFound"
+      "429":
+        $ref: "../components/responses.yaml#/RateLimited"
+      "500":
+        $ref: "../components/responses.yaml#/ServerError"
+      "503":
+        $ref: "../components/responses.yaml#/ServiceUnavailable"
+    x-dahc-roles:
+      - CANDIDATE

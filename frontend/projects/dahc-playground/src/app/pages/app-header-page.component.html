@@ -1,0 +1,46 @@
+<dahc-playground-page
+  heading="App header"
+  description="Top banner: skip link, product name, link to the other language, theme switch and, when signed in, the user's name and sign-out."
+  [sourceFiles]="sourceFiles">
+  <div preview>
+    <dahc-app-header
+      [productName]="productName()"
+      [mainContentId]="mainContentId()"
+      [skipLinkLabel]="skipLinkLabel()"
+      [languageHref]="languageHref()"
+      [languageLabel]="languageLabel()"
+      [languageCode]="languageCode()"
+      [userName]="userName()"
+      [signedIn]="signedIn()"
+      [signOutLabel]="signOutLabel()"
+      (signOut)="onSignOut()" />
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-text label="productName" [(value)]="productName" />
+    <dahc-inspector-text label="mainContentId" [(value)]="mainContentId" />
+    <dahc-inspector-text label="skipLinkLabel" [(value)]="skipLinkLabel" />
+    <dahc-inspector-text label="languageHref" [(value)]="languageHref" />
+    <dahc-inspector-text label="languageLabel" [(value)]="languageLabel" />
+    <dahc-inspector-text label="languageCode" [(value)]="languageCode" />
+    <dahc-inspector-text label="userName" [(value)]="userName" />
+    <dahc-inspector-toggle label="signedIn" [(value)]="signedIn" />
+    <dahc-inspector-text label="signOutLabel" [(value)]="signOutLabel" />
+    <dahc-event-log [events]="events()" />
+  </div>
+
+  <div states class="pg-stack">
+    <div>
+      <p class="pg-state-label">Signed out, without a language link</p>
+      <dahc-app-header productName="GME Admissions" />
+    </div>
+  </div>
+
+  <ul accessibility class="pg-notes">
+    <li>The skip link is the first focusable element; it appears on focus and moves focus to the element named by mainContentId.</li>
+    <li>The header is a banner landmark; use one per page.</li>
+    <li>The language link sets hreflang and lang, so its text is pronounced in its own language.</li>
+    <li>Sign out is a native button that emits signOut; the application performs the sign-out.</li>
+    <li>Tools wrap onto a new line at narrow widths instead of scrolling sideways.</li>
+  </ul>
+</dahc-playground-page>

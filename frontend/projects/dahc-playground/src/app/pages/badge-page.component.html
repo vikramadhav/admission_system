@@ -1,0 +1,26 @@
+<dahc-playground-page
+  heading="Badge"
+  description="Short status label, for example an application status."
+  [sourceFiles]="sourceFiles">
+  <div preview>
+    <dahc-badge [tone]="tone()">{{ text() }}</dahc-badge>
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-choice label="tone" [options]="tones" [(value)]="tone" />
+    <dahc-inspector-text label="content" [(value)]="text" />
+    <p class="pg-value">Outputs: none.</p>
+  </div>
+
+  <div states class="pg-row">
+    @for (state of tones; track state) {
+      <dahc-badge [tone]="state">{{ state }}</dahc-badge>
+    }
+  </div>
+
+  <ul accessibility class="pg-notes">
+    <li>The text carries the meaning; the tone only reinforces it, so the status is clear without colour.</li>
+    <li>Text meets 4.5:1 contrast on every tone in both themes; forced-colours mode adds a border.</li>
+    <li>A badge is plain text, not interactive, and is read in reading order next to what it describes.</li>
+  </ul>
+</dahc-playground-page>

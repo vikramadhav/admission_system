@@ -1,0 +1,161 @@
+// DAHC design tokens. Values are derived from the Design_System/UIUX screens
+// (navy brand, sky-blue surfaces) and adjusted where a sampled colour failed WCAG 2.2 AA.
+// Components never use these values directly: they use the CSS custom properties
+// generated from these maps by dahc-ui.scss.
+
+$color-light: (
+  'primary': #002f70,
+  'primary-hover': #1a4775,
+  'on-primary': #ffffff,
+  'danger': #b42318,
+  'danger-hover': #912018,
+  'on-danger': #ffffff,
+  'background': #ecf2f5,
+  'surface': #ffffff,
+  'surface-subtle': #d6eefe,
+  'surface-muted': #e5ebf0,
+  'text': #0a233c,
+  'text-muted': #335c85,
+  'text-on-subtle': #002f70,
+  'border': #ccd6e0,
+  'border-control': #335c85,
+  'focus-ring': #0b62d6,
+  'info-surface': #d6eefe,
+  'info-text': #002f70,
+  'success-surface': #c9ffd7,
+  'success-text': #0b5a2a,
+  'warning-surface': #fef1db,
+  'warning-text': #6b4100,
+  'danger-surface': #ffe9e8,
+  'danger-text': #912018,
+  'neutral-surface': #e5ebf0,
+  'neutral-text': #0a233c,
+  'brand-band': #002f70,
+  'on-brand-band': #ffffff,
+);
+
+$color-dark: (
+  'primary': #8ccfff,
+  'primary-hover': #b5e0ff,
+  'on-primary': #04172f,
+  'danger': #ff9c94,
+  'danger-hover': #ffbdb7,
+  'on-danger': #2a0503,
+  'background': #08111d,
+  'surface': #0f1c2e,
+  'surface-subtle': #13304f,
+  'surface-muted': #1b2a3f,
+  'text': #e8eef5,
+  'text-muted': #b4c3d3,
+  'text-on-subtle': #e1f2ff,
+  'border': #2c3e55,
+  'border-control': #8fa5bf,
+  'focus-ring': #8ccfff,
+  'info-surface': #13304f,
+  'info-text': #e1f2ff,
+  'success-surface': #0f3d24,
+  'success-text': #b4f5c8,
+  'warning-surface': #3d2a07,
+  'warning-text': #ffd88f,
+  'danger-surface': #3d1412,
+  'danger-text': #ffc2bd,
+  'neutral-surface': #1b2a3f,
+  'neutral-text': #e8eef5,
+  'brand-band': #04172f,
+  'on-brand-band': #e8eef5,
+);
+
+$typography: (
+  'family-base': ('Segoe UI', system-ui, -apple-system, 'Noto Sans', 'Noto Sans Arabic', Tahoma, Arial, sans-serif),
+  'family-mono': (ui-monospace, 'Cascadia Mono', Consolas, 'Courier New', monospace),
+  'size-xs': 0.75rem,
+  'size-sm': 0.875rem,
+  'size-md': 1rem,
+  'size-lg': 1.125rem,
+  'size-xl': 1.375rem,
+  'size-2xl': 1.75rem,
+  'size-3xl': 2.25rem,
+  'weight-regular': 400,
+  'weight-medium': 500,
+  'weight-semibold': 600,
+  'weight-bold': 700,
+  'line-height-tight': 1.25,
+  'line-height-normal': 1.5,
+  'letter-spacing-caps': 0.06em,
+);
+
+$spacing: (
+  '0': 0,
+  '1': 0.25rem,
+  '2': 0.5rem,
+  '3': 0.75rem,
+  '4': 1rem,
+  '5': 1.25rem,
+  '6': 1.5rem,
+  '8': 2rem,
+  '10': 2.5rem,
+  '12': 3rem,
+  '16': 4rem,
+);
+
+$radius: (
+  'sm': 0.375rem,
+  'md': 0.5rem,
+  'lg': 1rem,
+  'pill': 999px,
+);
+
+$elevation-light: (
+  'none': none,
+  'sm': (0 1px 2px rgb(10 35 60 / 8%)),
+  'md': (0 4px 12px rgb(10 35 60 / 12%)),
+);
+
+$elevation-dark: (
+  'none': none,
+  'sm': (0 1px 2px rgb(0 0 0 / 40%)),
+  'md': (0 4px 12px rgb(0 0 0 / 50%)),
+);
+
+$motion: (
+  'duration-fast': 120ms,
+  'duration-normal': 200ms,
+  'easing-standard': cubic-bezier(0.2, 0, 0, 1),
+);
+
+$size: (
+  'control-sm': 2.25rem,
+  'control-md': 3rem,
+  'control-lg': 3.5rem,
+  'touch-target': 2.75rem,
+  'border-width': 1px,
+  'border-width-strong': 2px,
+  'focus-ring-width': 3px,
+  'focus-ring-offset': 2px,
+  'focus-ring-offset-wide': 4px,
+  'icon-xs': 0.6rem,
+  'icon-sm': 1rem,
+  'icon-md': 1.25rem,
+  'icon-lg': 1.75rem,
+  'icon-xl': 2.5rem,
+  'illustration': 3.5rem,
+  'measure-narrow': 22rem,
+  'measure': 36rem,
+  'measure-wide': 48rem,
+  'content-max-width': 76rem,
+);
+
+$z-index: (
+  'base': 0,
+  'header': 100,
+  'overlay': 1000,
+);
+
+// Breakpoints cannot be CSS custom properties inside media queries, so components
+// use the breakpoint-up mixin in _breakpoints.scss.
+$breakpoints: (
+  'sm': 40rem,
+  'md': 48rem,
+  'lg': 64rem,
+  'xl': 80rem,
+);

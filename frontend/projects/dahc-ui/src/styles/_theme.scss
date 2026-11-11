@@ -1,0 +1,28 @@
+@use 'tokens';
+
+@mixin custom-properties($group, $map) {
+  @each $name, $value in $map {
+    --dahc-#{$group}-#{$name}: #{$value};
+  }
+}
+
+@mixin light {
+  color-scheme: light;
+  @include custom-properties('color', tokens.$color-light);
+  @include custom-properties('elevation', tokens.$elevation-light);
+}
+
+@mixin dark {
+  color-scheme: dark;
+  @include custom-properties('color', tokens.$color-dark);
+  @include custom-properties('elevation', tokens.$elevation-dark);
+}
+
+@mixin static-tokens {
+  @include custom-properties('font', tokens.$typography);
+  @include custom-properties('space', tokens.$spacing);
+  @include custom-properties('radius', tokens.$radius);
+  @include custom-properties('motion', tokens.$motion);
+  @include custom-properties('size', tokens.$size);
+  @include custom-properties('z', tokens.$z-index);
+}

@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="xunit.v3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\DAHC.Service\DAHC.Service.csproj" />
+    <ProjectReference Include="..\..\src\DAHC.Identity.Service\DAHC.Identity.Service.csproj" />
+    <ProjectReference Include="..\..\src\DAHC.Applications.Service\DAHC.Applications.Service.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <UserSecretsId>dahc-api-development</UserSecretsId>
+    <InvariantGlobalization>false</InvariantGlobalization>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Duende.AspNetCore.Authentication.OAuth2Introspection" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DAHC.Service\DAHC.Service.csproj" />
+    <ProjectReference Include="..\DAHC.Data\DAHC.Data.csproj" />
+    <ProjectReference Include="..\DAHC.Logging\DAHC.Logging.csproj" />
+    <ProjectReference Include="..\DAHC.Identity.Service\DAHC.Identity.Service.csproj" />
+    <ProjectReference Include="..\DAHC.Identity.Data\DAHC.Identity.Data.csproj" />
+    <ProjectReference Include="..\DAHC.Catalog.Service\DAHC.Catalog.Service.csproj" />
+    <ProjectReference Include="..\DAHC.Catalog.Data\DAHC.Catalog.Data.csproj" />
+    <ProjectReference Include="..\DAHC.Applications.Service\DAHC.Applications.Service.csproj" />
+    <ProjectReference Include="..\DAHC.Applications.Data\DAHC.Applications.Data.csproj" />
+  </ItemGroup>
+
+</Project>

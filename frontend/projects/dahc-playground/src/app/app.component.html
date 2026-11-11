@@ -1,0 +1,27 @@
+<header class="pg-header">
+  <p class="pg-brand">DAHC UI playground</p>
+  <div class="pg-switchers">
+    <dahc-theme-switch />
+    <button type="button" class="pg-switch" [attr.aria-pressed]="direction() === 'rtl'" (click)="toggleDirection()">
+      Right-to-left
+    </button>
+  </div>
+</header>
+<div class="pg-layout">
+  <nav class="pg-nav" aria-label="Components">
+    <ul class="pg-nav-list">
+      @for (entry of entries; track entry.path) {
+        <li>
+          <a
+            class="pg-nav-link"
+            [routerLink]="['/', entry.path]"
+            routerLinkActive="pg-nav-link--active"
+            ariaCurrentWhenActive="page">{{ entry.title }}</a>
+        </li>
+      }
+    </ul>
+  </nav>
+  <main class="pg-main" id="main-content">
+    <router-outlet />
+  </main>
+</div>
