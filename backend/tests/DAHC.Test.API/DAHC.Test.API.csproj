@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\DAHC.API\DAHC.API.csproj" />
+    <ProjectReference Include="..\..\src\UI\DAHC.API\DAHC.API.csproj" />
   </ItemGroup>
 
 </Project>

@@ -16,9 +16,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\DAHC.Data\DAHC.Data.csproj" />
-    <ProjectReference Include="..\..\src\DAHC.Identity.Data\DAHC.Identity.Data.csproj" />
-    <ProjectReference Include="..\..\src\DAHC.Applications.Data\DAHC.Applications.Data.csproj" />
+    <ProjectReference Include="..\..\src\Data\DAHC.Data\DAHC.Data.csproj" />
+    <ProjectReference Include="..\..\src\Data\DAHC.Identity.Data\DAHC.Identity.Data.csproj" />
+    <ProjectReference Include="..\..\src\Data\DAHC.Applications.Data\DAHC.Applications.Data.csproj" />
   </ItemGroup>
 
 </Project>
