@@ -1,4 +1,5 @@
 using DAHC.Data;
+using DAHC.Data.Operations;
 using DAHC.Identity.Core;
 using DAHC.Identity.Data;
 using DAHC.Identity.Service;
@@ -204,14 +205,16 @@ public sealed class AuthSessionServiceTests
         Assert.Null(stored.ActiveRoleCode);
     }
 
-    private static AuthSessionService CreateService(TestDatabase database, DahcDbContext context, string candidateNumber)
+    internal static AuthSessionService CreateService(TestDatabase database, DahcDbContext context, string candidateNumber)
     {
         ICandidateNumberAllocator allocator = Substitute.For<ICandidateNumberAllocator>();
         allocator.AllocateAsync(Arg.Any<CancellationToken>()).Returns(candidateNumber);
         LocalTimeService localTime = new(database.TimeProvider, locale);
         IdentityUsers identityUsers = new(context, localTime, access, locale);
 
-        return new AuthSessionService(context, identityUsers, allocator, database.TimeProvider);
+        AuditWriter auditWriter = new(context, database.Access, database.TimeProvider);
+
+        return new AuthSessionService(context, identityUsers, allocator, auditWriter, database.TimeProvider);
     }
 
     /// <summary>
@@ -248,7 +251,7 @@ public sealed class AuthSessionServiceTests
         return staffUser;
     }
 
-    private static IdamIdentity Identity(string subject, string issuer = IdamIssuer)
+    internal static IdamIdentity Identity(string subject, string issuer = IdamIssuer)
     {
         return new IdamIdentity(issuer, subject);
     }
@@ -258,7 +261,7 @@ public sealed class AuthSessionServiceTests
         return new IdentityProfile { Subject = subject, DisplayName = "Test Person", Email = subject + "@example.test" };
     }
 
-    private static Candidate Candidate(string idamUserId, string candidateNumber, bool isActive)
+    internal static Candidate Candidate(string idamUserId, string candidateNumber, bool isActive)
     {
         Candidate candidate = new()
         {
@@ -274,7 +277,7 @@ public sealed class AuthSessionServiceTests
         return candidate;
     }
 
-    private static CurrentUser StaffCurrentUser(StaffUser staffUser, IReadOnlyList<string> roles)
+    internal static CurrentUser StaffCurrentUser(StaffUser staffUser, IReadOnlyList<string> roles)
     {
         CurrentUser user = new()
         {
