@@ -12,6 +12,10 @@ namespace DAHC.Test.Data;
 
 public sealed class AuthSessionServiceTests
 {
+    internal const string IdamIssuer = "https://idam.test/";
+
+    private const string OtherIssuer = "dahc-development";
+
     private static readonly DateTimeOffset now = new(2026, 11, 11, 8, 0, 0, TimeSpan.Zero);
 
     private static readonly LocaleSettings locale = new("Asia/Dubai", "en-AE", ["en-AE", "ar-AE"]);
@@ -26,7 +30,7 @@ public sealed class AuthSessionServiceTests
         AuthSessionService service = CreateService(database, context, "000000001");
 
         Result<AuthSession> result = await service.SignInAsync(
-            "new.candidate",
+            Identity("new.candidate"),
             Profile("new.candidate"),
             TestContext.Current.CancellationToken);
 
@@ -51,7 +55,7 @@ public sealed class AuthSessionServiceTests
         AuthSessionService service = CreateService(database, context, "000000001");
 
         Result<AuthSession> result = await service.SignInAsync(
-            "officer.one",
+            Identity("officer.one"),
             Profile("officer.one"),
             TestContext.Current.CancellationToken);
 
@@ -72,7 +76,7 @@ public sealed class AuthSessionServiceTests
         AuthSessionService service = CreateService(database, context, "000000008");
 
         Result<AuthSession> result = await service.SignInAsync(
-            "deactivated.candidate",
+            Identity("deactivated.candidate"),
             Profile("deactivated.candidate"),
             TestContext.Current.CancellationToken);
 
@@ -95,7 +99,7 @@ public sealed class AuthSessionServiceTests
         IdentityProfile profile = Profile("second.account") with { EmiratesId = "784-1990-1234567-1" };
 
         Result<AuthSession> result = await service.SignInAsync(
-            "second.account",
+            Identity("second.account"),
             profile,
             TestContext.Current.CancellationToken);
 
@@ -107,6 +111,77 @@ public sealed class AuthSessionServiceTests
         Candidate duplicate = await context.Candidates
             .SingleAsync(candidate => candidate.IdamUserId == "second.account", TestContext.Current.CancellationToken);
         Assert.False(duplicate.IsActive);
+    }
+
+    [Fact]
+    [Trait("Requirement", "US-1.1.1")]
+    [Trait("Decision", "AP-04")]
+    public async Task SameSubjectFromAnotherIssuer_ProvisionsDistinctCandidate()
+    {
+        TestDatabase database = new(now);
+        await using DahcDbContext context = database.CreateContext();
+        context.Candidates.Add(Candidate("shared.subject", "000000001", isActive: true));
+        await context.SaveChangesAsync(TestContext.Current.CancellationToken);
+        AuthSessionService service = CreateService(database, context, "000000002");
+
+        Result<AuthSession> result = await service.SignInAsync(
+            Identity("shared.subject", OtherIssuer),
+            Profile("shared.subject"),
+            TestContext.Current.CancellationToken);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal("000000002", result.Value.CandidateNumber);
+        List<Candidate> stored = await context.Candidates
+            .OrderBy(candidate => candidate.CandidateNumber)
+            .ToListAsync(TestContext.Current.CancellationToken);
+        Assert.Equal([IdamIssuer, OtherIssuer], stored.Select(candidate => candidate.IdamIssuer));
+        Assert.All(stored, candidate => Assert.Equal("shared.subject", candidate.IdamUserId));
+    }
+
+    [Fact]
+    [Trait("Requirement", "US-1.1.2")]
+    [Trait("Decision", "AP-04")]
+    public async Task ReturningCandidate_IsMatchedOnIssuerAndSubjectWithoutNewAccount()
+    {
+        TestDatabase database = new(now);
+        await using DahcDbContext context = database.CreateContext();
+        Candidate existing = Candidate("returning.candidate", "000000003", isActive: true);
+        context.Candidates.Add(existing);
+        await context.SaveChangesAsync(TestContext.Current.CancellationToken);
+        AuthSessionService service = CreateService(database, context, "000000004");
+
+        Result<AuthSession> result = await service.SignInAsync(
+            Identity("returning.candidate"),
+            Profile("returning.candidate"),
+            TestContext.Current.CancellationToken);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(existing.PublicId, result.Value.UserId);
+        Assert.Equal("000000003", result.Value.CandidateNumber);
+        Assert.Equal(1, await context.Candidates.CountAsync(TestContext.Current.CancellationToken));
+    }
+
+    [Fact]
+    [Trait("Requirement", "US-1.1.1")]
+    [Trait("Decision", "AP-04")]
+    public async Task StaffSubjectFromAnotherIssuer_IsNotSignedInAsStaff()
+    {
+        TestDatabase database = new(now);
+        await using DahcDbContext context = database.CreateContext();
+        await AddStaffUserAsync(context, "officer.three", RoleCodes.Administrator);
+        AuthSessionService service = CreateService(database, context, "000000005");
+
+        Result<AuthSession> result = await service.SignInAsync(
+            Identity("officer.three", OtherIssuer),
+            Profile("officer.three"),
+            TestContext.Current.CancellationToken);
+
+        // Only Candidate is ever provisioned automatically; the staff account and its roles are not reachable.
+        Assert.True(result.IsSuccess);
+        Assert.Equal(UserType.Candidate, result.Value.UserType);
+        Assert.Equal([RoleCodes.Candidate], result.Value.Roles);
+        Candidate provisioned = await context.Candidates.SingleAsync(TestContext.Current.CancellationToken);
+        Assert.Equal(OtherIssuer, provisioned.IdamIssuer);
     }
 
     [Fact]
@@ -139,31 +214,19 @@ public sealed class AuthSessionServiceTests
         return new AuthSessionService(context, identityUsers, allocator, database.TimeProvider);
     }
 
-    private static IdentityProfile Profile(string subject)
-    {
-        return new IdentityProfile { Subject = subject, DisplayName = "Test Person", Email = subject + "@example.test" };
-    }
-
-    private static Candidate Candidate(string idamUserId, string candidateNumber, bool isActive)
-    {
-        Candidate candidate = new()
-        {
-            PublicId = Guid.NewGuid(),
-            CandidateNumber = candidateNumber,
-            IdamUserId = idamUserId,
-            DisplayName = "Existing Candidate",
-            IsActive = isActive,
-            CreatedAt = now.AddDays(-30),
-        };
-
-        return candidate;
-    }
-
-    private static async Task<StaffUser> AddStaffUserAsync(DahcDbContext context, string idamUserId, string roleCode)
+    /// <summary>
+    /// A staff user pre-registered by an administrator for the given issuer and subject (never by signing in).
+    /// </summary>
+    internal static async Task<StaffUser> AddStaffUserAsync(
+        DahcDbContext context,
+        string idamUserId,
+        string roleCode,
+        string idamIssuer = IdamIssuer)
     {
         StaffUser staffUser = new()
         {
             PublicId = Guid.NewGuid(),
+            IdamIssuer = idamIssuer,
             IdamUserId = idamUserId,
             DisplayName = "Pre-registered Officer",
             Email = idamUserId + "@example.test",
@@ -183,6 +246,32 @@ public sealed class AuthSessionServiceTests
         await context.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         return staffUser;
+    }
+
+    private static IdamIdentity Identity(string subject, string issuer = IdamIssuer)
+    {
+        return new IdamIdentity(issuer, subject);
+    }
+
+    private static IdentityProfile Profile(string subject)
+    {
+        return new IdentityProfile { Subject = subject, DisplayName = "Test Person", Email = subject + "@example.test" };
+    }
+
+    private static Candidate Candidate(string idamUserId, string candidateNumber, bool isActive)
+    {
+        Candidate candidate = new()
+        {
+            PublicId = Guid.NewGuid(),
+            CandidateNumber = candidateNumber,
+            IdamIssuer = IdamIssuer,
+            IdamUserId = idamUserId,
+            DisplayName = "Existing Candidate",
+            IsActive = isActive,
+            CreatedAt = now.AddDays(-30),
+        };
+
+        return candidate;
     }
 
     private static CurrentUser StaffCurrentUser(StaffUser staffUser, IReadOnlyList<string> roles)

@@ -82,6 +82,7 @@ internal sealed class CatalogSeed
         {
             PublicId = Guid.NewGuid(),
             CandidateNumber = candidateNumber,
+            IdamIssuer = AuthSessionServiceTests.IdamIssuer,
             IdamUserId = idamUserId,
             DisplayName = "Test Candidate",
             IsActive = true,

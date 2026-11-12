@@ -60,6 +60,18 @@ public static class DevelopmentSignIn
                 + "in user secrets when the development sign-in is enabled.");
         }
 
+        // Local users are matched on issuer + subject (AP-04), so development identities stay apart from IDAM
+        // identities only while the two issuers differ.
+        string? idamIssuer = configuration[$"{IdamOptions.SectionName}:{nameof(IdamOptions.Issuer)}"];
+
+        if (options.Enabled
+            && (string.IsNullOrWhiteSpace(options.Issuer)
+                || string.Equals(options.Issuer, idamIssuer, StringComparison.Ordinal)))
+        {
+            throw new InvalidOperationException(
+                "DevelopmentSignIn:Issuer must be set and must differ from Idam:Issuer.");
+        }
+
         return options.Enabled;
     }
 

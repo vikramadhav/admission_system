@@ -1,14 +1,20 @@
 namespace DAHC.Identity.Core;
 
 /// <summary>
-/// A staff user (<c>idn.StaffUser</c>), pre-registered by an Administrator with the IDAM user identifier and staff
-/// roles before the first sign-in. Never created by signing in.
+/// A staff user (<c>idn.StaffUser</c>), pre-registered by an Administrator with the IDAM issuer and user identifier
+/// and the staff roles before the first sign-in. Never created by signing in.
 /// </summary>
 public sealed class StaffUser
 {
     public int StaffUserId { get; set; }
 
     public required Guid PublicId { get; set; }
+
+    /// <summary>
+    /// The validated issuer (<c>iss</c>) of the staff user's identity. Set together with <see cref="IdamUserId"/>
+    /// and matched only together with it (AP-04, DEC-01).
+    /// </summary>
+    public string? IdamIssuer { get; set; }
 
     public string? IdamUserId { get; set; }
 

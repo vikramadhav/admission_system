@@ -1,8 +1,9 @@
 namespace DAHC.Identity.Core;
 
 /// <summary>
-/// A candidate account (<c>idn.Candidate</c>). Matched to IDAM only by <see cref="IdamUserId"/>; the profile
-/// attributes are refreshed from IDAM UserInfo at every sign-in and never edited in DAHC.
+/// A candidate account (<c>idn.Candidate</c>). Matched to IDAM only by <see cref="IdamIssuer"/> and
+/// <see cref="IdamUserId"/> together (AP-04, DEC-01); the profile attributes are refreshed from IDAM UserInfo at
+/// every sign-in and never edited in DAHC.
 /// </summary>
 public sealed class Candidate
 {
@@ -15,6 +16,14 @@ public sealed class Candidate
     /// </summary>
     public required string CandidateNumber { get; set; }
 
+    /// <summary>
+    /// The validated issuer (<c>iss</c>) of the token the candidate was provisioned from.
+    /// </summary>
+    public required string IdamIssuer { get; set; }
+
+    /// <summary>
+    /// The validated subject (<c>sub</c>); unique only together with <see cref="IdamIssuer"/>.
+    /// </summary>
     public required string IdamUserId { get; set; }
 
     public required string DisplayName { get; set; }

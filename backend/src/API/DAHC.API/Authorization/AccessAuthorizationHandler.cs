@@ -62,7 +62,7 @@ public sealed class AccessAuthorizationHandler : IAuthorizationHandler
             return AuthenticationErrorCodes.IntegrationNotPermitted;
         }
 
-        return this.currentAccess.IdamUserId is null ? AuthenticationErrorCodes.Forbidden : null;
+        return this.currentAccess.Identity is null ? AuthenticationErrorCodes.Forbidden : null;
     }
 
     private string? FindActiveUserRefusal(ActiveUserRequirement requirement)

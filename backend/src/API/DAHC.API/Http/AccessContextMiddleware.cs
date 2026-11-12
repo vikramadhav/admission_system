@@ -76,16 +76,24 @@ public sealed class AccessContextMiddleware
             return;
         }
 
-        CurrentUserLoadResult result = await currentUserLoader.LoadAsync(claims.Subject, httpContext.RequestAborted);
+        // Each scheme has validated the issuer: introspection against Idam:Issuer, the development JWT against the
+        // development issuer. A user token without one is never matched on the subject alone (AP-04).
+        if (string.IsNullOrWhiteSpace(claims.Issuer))
+        {
+            return;
+        }
+
+        IdamIdentity identity = new(claims.Issuer, claims.Subject);
+        CurrentUserLoadResult result = await currentUserLoader.LoadAsync(identity, httpContext.RequestAborted);
 
         if (result.Status == AccessStatus.Active
             && result.User is not null)
         {
-            currentAccess.SetActiveUser(claims.Subject, result.User);
+            currentAccess.SetActiveUser(identity, result.User);
         }
         else
         {
-            currentAccess.SetRefusedUser(claims.Subject, result.Status);
+            currentAccess.SetRefusedUser(identity, result.Status);
         }
     }
 }
