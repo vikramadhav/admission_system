@@ -1,6 +1,6 @@
 # DAHC backend
 
-ASP.NET Core Web API (.NET 10) for the DAHC GME admission platform. Built to `dahc-engineering-standards (2).md`; decisions D-01 to D-23 are in `Open-Questions.md`; the API shape is `Contracts/openapi/openapi.editor.yaml`.
+ASP.NET Core Web API (.NET 10) for the DAHC GME admission platform. Built to `dahc-engineering-standards (2).md`; decisions D-01 to D-23 are in `Open-Questions.md`; the API shape is `Contracts/openapi/openapi.yaml`.
 
 ## Build, test, run
 

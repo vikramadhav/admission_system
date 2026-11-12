@@ -234,12 +234,10 @@ dist-server/
 .next/
 out/
 
-# Angular
-angular.json
+# Angular (cache only; angular.json and the non-secret environment files are tracked, R-0.6)
 .angular.json
 .angular/
 **/.angular/
-src/environments/environment.*.ts
 
 # Parcel related files
 .cache
@@ -272,8 +270,7 @@ build/
 .prettierrc
 .prettierignore
 
-# Package files
-package-lock.json
+# Package files (npm's package-lock.json is tracked for reproducible `npm ci`, R-0.6)
 yarn.lock
 pnpm-lock.yaml
 .pnpm-debug.log
@@ -422,3 +419,9 @@ secrets/
 playwright-report/
 test-results/
 blob-report/
+# Secrets and machine-specific configuration (user secrets stay outside the repository)
+secrets.json
+appsettings.*.local.json
+*.mdf
+*.ndf
+.claude/settings.local.json

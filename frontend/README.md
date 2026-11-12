@@ -38,7 +38,7 @@ Components: `alert`, `app-header`, `badge`, `button`, `card`, `detail-list`, `em
 - **US-1.3.11 core:** resume a draft and save preference changes with `PATCH` (JSON Merge Patch) and `If-Match`; a stale version (`412`) offers to load the latest version.
 - **Locale and security:** English and Arabic via `@angular/localize` (one build per locale, `lang` and `dir` set on `<html>`), dates through the DAHC `Intl.DateTimeFormat` pipe in the user's IANA time zone (default `Asia/Dubai`), `CSP_NONCE` through `ngCspNonce`, no `innerHTML`, no tokens or personal data in browser storage (`localStorage` holds the theme only). Lint rules enforce the last three.
 
-The typed API clients are written by hand from `Contracts/openapi/openapi.editor.yaml`, because OpenAPI code generation is not approved yet (OQ-08).
+The typed API clients are written by hand from `Contracts/openapi/openapi.yaml`, because OpenAPI code generation is not approved yet (OQ-08).
 
 ## Deployment notes
 
