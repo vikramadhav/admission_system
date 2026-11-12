@@ -1,0 +1,30 @@
+<a class="dahc-app-header__skip-link" [href]="'#' + mainContentId()" (click)="skipToMainContent($event)">{{ skipLinkLabel() }}</a>
+<header class="dahc-app-header__bar">
+  <div class="dahc-app-header__inner">
+    <p class="dahc-app-header__brand">
+      <span class="dahc-app-header__mark" aria-hidden="true"></span>
+      <span class="dahc-app-header__product">{{ productName() }}</span>
+    </p>
+    <div class="dahc-app-header__tools">
+      @if (languageHref() !== '' && languageLabel() !== '') {
+        <a
+          class="dahc-app-header__pill"
+          [href]="languageHref()"
+          [attr.hreflang]="languageCode() || null"
+          [attr.lang]="languageCode() || null">{{ languageLabel() }}</a>
+      }
+      <dahc-theme-switch />
+      @if (signedIn()) {
+        @if (userName() !== '') {
+          <p class="dahc-app-header__user">
+            <span class="dahc-app-header__avatar" aria-hidden="true"></span>
+            <span class="dahc-app-header__user-name">{{ userName() }}</span>
+          </p>
+        }
+        <button dahc-button type="button" variant="secondary" size="sm" (click)="requestSignOut()">
+          {{ signOutLabel() }}
+        </button>
+      }
+    </div>
+  </div>
+</header>

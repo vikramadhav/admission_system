@@ -1,0 +1,46 @@
+:host {
+  display: block;
+}
+
+.dahc-dashboard-start {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--dahc-space-2);
+}
+
+.dahc-dashboard-reason {
+  max-inline-size: var(--dahc-size-measure-narrow);
+  margin: 0;
+  font-size: var(--dahc-font-size-sm);
+  text-align: end;
+}
+
+.dahc-dashboard-inbox {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dahc-space-4);
+}
+
+.dahc-dashboard-section-heading {
+  margin: 0;
+  color: var(--dahc-color-text);
+  font-size: var(--dahc-font-size-xl);
+}
+
+.dahc-dashboard-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dahc-space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dahc-dashboard-scores-heading {
+  margin-block: var(--dahc-space-2) 0;
+  color: var(--dahc-color-text-muted);
+  font-size: var(--dahc-font-size-xs);
+  letter-spacing: var(--dahc-font-letter-spacing-caps);
+  text-transform: uppercase;
+}

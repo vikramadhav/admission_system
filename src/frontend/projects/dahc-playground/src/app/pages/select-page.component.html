@@ -1,0 +1,49 @@
+<dahc-playground-page
+  heading="Select"
+  description="Single choice from a list, built on the native select element. Implements ControlValueAccessor for typed reactive forms; the empty string means nothing selected."
+  [sourceFiles]="sourceFiles">
+  <div preview class="pg-stack">
+    <dahc-select
+      [formControl]="control"
+      [label]="label()"
+      [options]="programs"
+      [placeholder]="placeholder()"
+      [description]="description()"
+      [errorMessage]="errorMessage()"
+      [invalid]="invalid()"
+      [required]="required()" />
+    <p class="pg-value" data-testid="select-value">value: {{ valueText() }}</p>
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-text label="label" [(value)]="label" />
+    <dahc-inspector-text label="placeholder" [(value)]="placeholder" />
+    <dahc-inspector-text label="description" [(value)]="description" />
+    <dahc-inspector-text label="errorMessage" [(value)]="errorMessage" />
+    <dahc-inspector-toggle label="invalid" [(value)]="invalid" />
+    <dahc-inspector-toggle label="required" [(value)]="required" />
+    <dahc-inspector-toggle label="disabled" [(value)]="disabled" />
+    <p class="pg-value">Outputs: none. The value is reported through the form control (ControlValueAccessor).</p>
+  </div>
+
+  <div states class="pg-stack">
+    <dahc-select label="Empty" [options]="programs" />
+    <dahc-select label="With a value" [options]="programs" [formControl]="filledControl" />
+    <dahc-select
+      label="Invalid"
+      [options]="programs"
+      [formControl]="invalidControl"
+      [required]="true"
+      [invalid]="true"
+      errorMessage="Select a program." />
+    <dahc-select label="Disabled" [options]="programs" [formControl]="disabledControl" />
+    <dahc-select label="Disabled by input" [options]="programs" [disabled]="true" />
+  </div>
+
+  <ul accessibility class="pg-notes">
+    <li>The native select gives each platform's own accessible list and keyboard behaviour (arrow keys, type-ahead, Space or Alt+Down to open).</li>
+    <li>The visible label is linked with for and id; the description and error message are linked with aria-describedby.</li>
+    <li>Invalid state sets aria-invalid="true" and shows the error text; colour is never the only signal.</li>
+    <li>The required marker is decorative; the required attribute tells assistive technology.</li>
+  </ul>
+</dahc-playground-page>

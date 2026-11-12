@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="xunit.v3" />
+    <PackageReference Include="NSubstitute" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Data\DAHC.Data\DAHC.Data.csproj" />
+    <ProjectReference Include="..\..\src\Data\DAHC.Identity.Data\DAHC.Identity.Data.csproj" />
+    <ProjectReference Include="..\..\src\Data\DAHC.Applications.Data\DAHC.Applications.Data.csproj" />
+  </ItemGroup>
+
+</Project>

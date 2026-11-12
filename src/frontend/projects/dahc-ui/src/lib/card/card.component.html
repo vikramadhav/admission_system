@@ -1,0 +1,24 @@
+<article class="dahc-card__surface" [attr.aria-labelledby]="heading() !== '' ? headingId : null">
+  @if (heading() !== '' || eyebrow() !== '') {
+    <header class="dahc-card__header">
+      <div class="dahc-card__titles">
+        @if (eyebrow() !== '') {
+          <p class="dahc-card__eyebrow">{{ eyebrow() }}</p>
+        }
+        @if (heading() !== '') {
+          @if (headingLevel() === 2) {
+            <h2 class="dahc-card__heading" [id]="headingId">{{ heading() }}</h2>
+          } @else {
+            <h3 class="dahc-card__heading" [id]="headingId">{{ heading() }}</h3>
+          }
+        }
+        @if (subheading() !== '') {
+          <p class="dahc-card__subheading">{{ subheading() }}</p>
+        }
+      </div>
+      <div class="dahc-card__aside"><ng-content select="[card-aside]" /></div>
+    </header>
+  }
+  <div class="dahc-card__body"><ng-content /></div>
+  <footer class="dahc-card__footer"><ng-content select="[card-footer]" /></footer>
+</article>

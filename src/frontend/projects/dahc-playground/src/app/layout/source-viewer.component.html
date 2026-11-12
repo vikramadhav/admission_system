@@ -1,0 +1,21 @@
+@if (sources.isLoading()) {
+  <p class="pg-value" role="status">Loading source…</p>
+} @else if (sources.error()) {
+  <p class="pg-value">The source files could not be loaded.</p>
+} @else {
+  <div class="pg-source-files" role="group" aria-label="Source files">
+    @for (file of loadedFiles(); track file.name; let index = $index) {
+      <button
+        type="button"
+        class="pg-source-file"
+        [attr.aria-pressed]="index === selectedIndex()"
+        (click)="select(index)">{{ file.name }}</button>
+    }
+  </div>
+  @if (selectedFile(); as file) {
+    <div class="pg-source-toolbar">
+      <button type="button" class="pg-switch" (click)="copy(file)">Copy {{ file.name }}</button>
+    </div>
+    <pre class="pg-source-code" tabindex="0" [attr.aria-label]="file.name"><code>{{ file.content }}</code></pre>
+  }
+}

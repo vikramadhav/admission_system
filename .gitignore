@@ -1,0 +1,44 @@
+# Repository-wide ignore rules (Phase 0, R-0.1). The frontend keeps its own src/frontend/.gitignore.
+
+# .NET build output and test results
+[Bb]in/
+[Oo]bj/
+TestResults/
+*.trx
+coverage*.xml
+
+# IDE and editor state
+.vs/
+.idea/
+*.user
+*.suo
+*.rsuser
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+
+# Secrets and local configuration (user secrets live outside the repository; never commit copies)
+secrets.json
+appsettings.*.local.json
+*.pfx
+*.p12
+*.key
+.env
+.env.*
+
+# Local databases and logs
+*.mdf
+*.ldf
+*.ndf
+logs/
+*.log
+
+# Node (any depth)
+node_modules/
+
+# Claude Code personal settings (shared rules live in CLAUDE.md and .claude/rules/)
+.claude/settings.local.json
+
+# OS files
+.DS_Store
+Thumbs.db
