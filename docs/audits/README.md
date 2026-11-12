@@ -68,4 +68,6 @@ This was a read-only audit of the existing DAHC Admissions foundation (`src/back
 **Approved and recorded:** AP-08, IDAM opaque access tokens validated by introspection. It is recorded in `docs/dotnet-engineering-standards.md` §19 and §13, `docs/angular-structure-and-guidelines.md` §7 and the decisions table, and register §1.1, which rates conformance requirement by requirement.
 - Slice S1 as the first slice.
 
+**Re-check 2026-11-12:** against the team repository, see [01 §7](01-foundation-audit-report.md#7-re-check-against-the-team-repository-2026-11-12). BE-07 is resolved on the team branch; BE-08 is mostly resolved; BE-05 and INT-01 stay open (the draft contract must be aligned); Git integration is R-0.6.
+
 **Stopped for human review.** The remediation plan in [02-remediation-plan.md §5](02-remediation-plan.md#5-request-for-approval) needs approval before any change is made.

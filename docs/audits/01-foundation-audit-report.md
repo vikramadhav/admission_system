@@ -396,3 +396,40 @@ The full evidence is in [appendix-a-frontend-audit.md](appendix-a-frontend-audit
 | Workspace configuration | **Create** (missing) | FE-01 |
 | Playwright suite | **Retain + extend** | Real-API E2E, visual, RTL, negative paths |
 | **Rebuild candidates** | **None** | No demonstrable architectural incompatibility found |
+
+---
+
+## 7. Re-check against the team repository (2026-11-12)
+
+The audit was run on a local copy (`src/backend`, `src/frontend`). The team repository (`vikramadhav/admission_system`, branch `Feature-Foundation-New` @ `eed2bf6`) has **identical source code**: 385 files are byte-identical renames from `backend/` and `frontend/`. It also has 53 project files the local copy lacked. This section updates only the findings that the evidence changes.
+
+Scope decisions applied:
+- `Database_Schema/ExistingDatabase/` is legacy reference only, for future data-migration planning. The rest of `Database_Schema/` is disregarded.
+- Everything under `Contracts/` is a **preliminary draft**, not authoritative.
+
+| Finding | Re-check result | Evidence | Status |
+|---|---|---|---|
+| BE-05 | Still valid. No EF Core migration exists, and the new schema is EF Core Code First, designed from the BRD and approved architecture. SQL scripts are not used for design or validation | No `Migrations/` folder on any remote branch; Open-Questions D-01 (EF Core migrations are the schema of record) | **OPEN** (plan step 4) |
+| BE-07 | Resolved on the team branch. The root `.editorconfig` matches Appendix B rule for rule; only comments differ. `backend/tests/.editorconfig` relaxes test naming (`CA1707`, async suffix). The remote tree builds with 0 warnings, `dotnet format --verify-no-changes` is clean, and tests pass 54/54 on SDK 10.0.404 | Scratch verification of `origin/Feature-Foundation-New` | **RESOLVED on team branch**; it was missing only from the local copy (carried by R-0.6) |
+| BE-08 | Mostly resolved. `Open-Questions.md` exists, with decisions D-01 to D-27 and open questions OQ-01 to OQ-27, so the D-ids cited in code resolve. Relevance to the register (03 §6):<br>• **Consistent:** D-01, D-16 (= AP-09), D-22 (= BL-02).<br>• **Superseded:** D-03 (role-based authorization), by AP-10.<br>• **Matching business blockers** (still open for business confirmation): D-19 ↔ B-03, D-26 ↔ B-04, OQ-20 ↔ B-02, OQ-24 ↔ B-05.<br>• **Related to B-06 and BE-01:** OQ-15 (IDAM `sub` is currently the username; an immutable identifier is pending).<br>• **Id collision:** its `OQ-nn` ids clash with this audit's BRD `OQ-nn` (Appendix B §10) | `Open-Questions.md` on the team branch | **PARTLY RESOLVED**: map ids (register §6) |
+| INT-01 | The contract exists but is a draft: completeness and alignment are not established. Details in the next table | `Contracts/openapi/**` | **OPEN** (reclassified: draft contract to align, not a missing file) |
+| RBAC compatibility | The current code matches 05 §1; no change. The **draft contract** is role-based and conflicts with AP-10/AP-11 in several places (next table) | — | Alignment needed in the contract, not in the architecture |
+| Git integration | The local history (`6269d59`…`99b82f0`, pushed as `foundation-audit`) is **unrelated** to the team history and cannot be merged. The team `.gitignore` ignores `angular.json`, `package-lock.json`, `src/environments/environment.*.ts`, `launch.json`, `settings.json`, `nuget.config`, `*.d.ts` and `.eslintrc*`. **This is the root cause of FE-01**, and it would also block plan step 1 and the R-0.4 lockfile. The layouts differ: `backend/` and `frontend/` versus `src/...`, and every audit path and `.claude/rules` glob uses `src/` | `git diff -M origin/Feature-Foundation-New foundation-baseline-2026-11-12`; team `.gitignore` | **OPEN** (R-0.6) |
+
+**Draft contract versus approved architecture.** The architecture wins; the contract is corrected, contract-first, in the step that implements each part.
+
+| # | Draft contract | Conflicts with | Corrected in |
+|---|---|---|---|
+| C-01 | `x-dahc-roles` on about 100 operations; the description says authorization is by role | AP-10 (permissions declared per operation) | Step 15 for the 11 implemented operations; each later slice for its own operations |
+| C-02 | `StaffRoleCode` is a closed enum; `StaffRoleAssignment.roleCode` uses it | AP-10 (configurable roles; stable role ids) | Step 15 (session and switch); S-ADM (assignments) |
+| C-03 | `AuthSession.roles` is a string array; `activeRole` is a required string; there are no permissions | AP-11 and DEC-20 (`roles[{id, code, name}]`, `activeRole \| null`, `permissions[]`) | Step 15 |
+| C-04 | `switchActiveRole` takes a `StaffRoleCode` | DEC-20 (`{ roleId }`) | Step 15 |
+| C-05 | `setStaffUserRoles`: "removing the active role makes the next request fall back to the user's default role" | DEC-19 (clear the selection; the user must select; no automatic switch) | S-ADM |
+| C-06 | `preRegisterStaffUser` requires `idamUserId`, "the only match key at sign-in" | AP-10 pre-provisioning before first login; binding through the verified attribute of B-06 (open) | S-ADM, once B-06 is decided |
+| C-07 | Administration operations are `ADMINISTRATOR`-only; there are no role, permission-catalog or grant operations | AP-10 and DEC-17 (configurable roles, grants, controlled delegation) | S-ADM |
+| C-08 | Two root documents: `openapi.yaml` (modular, 238 lines) and `openapi.editor.yaml` (8,641 lines). The code cites the editor file | "Avoid multiple competing authoritative contract files" | R-0.6 decides one source; any bundle is generated, never edited |
+| C-09 | `StaffRoleAssignment` carries program, specialty and pool scopes | Pool and scope model not yet decided (DF-02) | Back-office slices; not invented in RBAC |
+
+Unchanged by the re-check:
+- The 11 implemented operations exist in the draft with matching routes and methods. `listPrograms` takes a cycle id, so FE-04 stands.
+- BE-01, BE-02, BE-03, BE-06 (AP-09), BE-10 and BE-14 stand.

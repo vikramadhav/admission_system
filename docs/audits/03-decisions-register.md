@@ -8,7 +8,7 @@ Status legend:
 - **APPROVED / PENDING / CANCELLED** (§3, DEC-nn): status of each technical decision.
 - **BLOCKER / ASSUMPTION / DEFERRED**: open business questions, as defined in the audit prompt §4.
 
-BRD question ids (OQ-nn) refer to [appendix-b-brd-inventory.md](appendix-b-brd-inventory.md) §10. The backend's own D-01..D-25 decisions live in a missing `Open-Questions.md` (BE-08). Recover it and merge it here.
+BRD question ids (OQ-nn) refer to [appendix-b-brd-inventory.md](appendix-b-brd-inventory.md) §10. The team's `Open-Questions.md` (team branch `Feature-Foundation-New`) has its own decisions D-01 to D-27 and questions with the same `OQ-nn` form. In this register they are written **TQ-nn** to avoid the clash; §6 maps them.
 
 ---
 
@@ -131,7 +131,7 @@ Required HTTP outcomes:
 | DEC-17 | **Controlled delegation and escalation safeguards (revised 2026-11-12, 05 §7):**<br>• **Tiers.** Administrative permissions have two tiers. *Protected* (`roles.manage`, `role-permissions.manage`) belong to `ADMINISTRATOR` only and cannot be delegated or revoked from it. *Delegable* (`roles.read`, `staff.read`, `staff.manage`, `staff-roles.manage`, `audit.security.read`) may be granted to configurable Staff roles by an Administrator.<br>• **Administrator-only actions.** Only an active `ADMINISTRATOR` grants or revokes permissions, assigns `ADMINISTRATOR`, or modifies an account holding protected capabilities.<br>• **Ceiling for delegated actors.** They may assign only roles whose permissions are a subset of their own active role's.<br>• **No self-elevation.** No actor changes their own assignments, status, or the grants of a role they hold.<br>• **Audience separation** between Candidate and Staff permissions.<br>• **Last administrator.** Protected in the same transaction with `UPDLOCK, HOLDLOCK` (409 `admin.last_administrator`) | AP-10 §3 | Tech lead | PENDING (step 16, S-ADM) |
 | DEC-18 | First-administrator bootstrap: a reviewed, idempotent DBA script in the deployment runbook. It creates a `PENDING` administrator and writes an audit row. **It refuses if any staff account (pending, bound or deactivated) already holds `ADMINISTRATOR`, or if the login identifier already exists**, so a duplicate protected administrator, including a pending one, can never be created. This is backed by a unique `LoginIdentifier` across all staff accounts. Binding follows B-06. Development uses the step 4 dev bootstrap | AP-10 §3 | Tech lead + DBA | PENDING (step 16; binding gated by B-06) |
 | DEC-19 | **Active-role selection (revised 2026-11-12):**<br>• **Initial sign-in.** Exactly one valid role → auto-selected; several → the user must select.<br>• **Revoked or deactivated active role.** The selection is **cleared** (`ActiveRoleId = null`, `ActiveRoleSelectionRequired = 1`, or detected on read for date expiry), and the user must select another valid role. There is **no automatic switch**, even when one role remains. `activeRole: null`, and 403 `access.active_role_required` outside `me`, `active-role` and `sign-in`.<br>• **No valid role.** 403 `account.no_role`.<br>• **Ordering.** `SortOrder` only orders lists | AP-11 items 9-10; G-06 | Tech lead | **APPROVED** (steps 15 and 11) |
-| DEC-20 | `AuthSession` contract: `roles[{id, code, name}]`, `activeRole \| null`, `permissions[]`. The `active-role` body becomes `{ roleId }` (the hard-coded `AllowedValues` is removed). Role names are bilingual (`NameEn`, `NameAr`). Breaking, but there is no client yet (FE-03) | AP-11; G-05, G-07 | API owner | **APPROVED** (steps 15 and 11). Record it in `openapi.yaml` before implementation; until the contract file is recovered or generated (R-0.5, DEC-04), 05 §5 is the reviewed contract |
+| DEC-20 | `AuthSession` contract: `roles[{id, code, name}]`, `activeRole \| null`, `permissions[]`. The `active-role` body becomes `{ roleId }` (the hard-coded `AllowedValues` is removed). Role names are bilingual (`NameEn`, `NameAr`). Breaking, but there is no client yet (FE-03) | AP-11; G-05, G-07 | API owner | **APPROVED** (steps 15 and 11). The draft team contract (`Contracts/openapi`) has the old role-based session; correct it to 05 §5 contract-first in step 15 (01 §7, C-01 to C-04). The approved design, not the draft, decides |
 
 ## 4. Open business decisions
 
@@ -181,3 +181,24 @@ Questions are grouped by the slice they affect. **BLOCKER** means correct work o
 - Four BRD sections have no visual reference: Residency Entrance Exam (US-1.3.9), Portfolio (US-1.3.10), Summary & Payment (US-1.3.12) and the Appeal panel. Extend the existing visual pattern to them; do not treat them as out of scope.
 - "Residency information" is the Fellowship applicant's previous residency (US-1.3.7), not the entrance exam.
 - Screen completeness must be tested against the field inventory in Appendix B §6, not against the screenshots.
+
+## 6. Team `Open-Questions.md` mapping (re-check 2026-11-12)
+
+The team decisions remain the record for their topics unless an approved decision below supersedes them. Team `OQ-nn` is written TQ-nn here. The files under `Contracts/` are **preliminary drafts**, not decisions (01 §7). In `Database_Schema/`, only `ExistingDatabase/` is consulted, and only for future legacy-data migration planning.
+
+| Team id | Topic | Relation to this register |
+|---|---|---|
+| D-01 | EF Core migrations are the schema of record | Consistent; BE-05 and DEC-02 |
+| D-03 | Role-based authorization (`x-dahc-roles`) | **Superseded by AP-10** (permission-based RBAC) |
+| D-04, D-14 | Separate candidate and staff records, linked by UUID | Input to B-07 (still open) |
+| D-16 | Data tests on EF Core InMemory | Consistent with AP-09 |
+| D-19 | Application number `<cycle start year><7 digits>` | Technical decision matching B-03; **B-03 stays open until the business confirms** |
+| D-22 | One `DahcDbContext` | Consistent with BL-02 |
+| D-26 | One active application per candidate per cycle | Technical decision matching B-04; **B-04 stays open until the business confirms** |
+| TQ-11 | Active role for multi-role staff | Answered by AP-11 and DEC-19 |
+| TQ-15 | IDAM items: `sub` is currently the username; an immutable identifier is pending | Input to B-06 and BE-01 (issuer + subject requires a stable subject); stays with the IDAM team |
+| TQ-20 | Duplicate-account handling | Same question as B-02 |
+| TQ-23 | EF Core design-time tools | Same as DEC-02 |
+| TQ-24 | Current cycle id for `listPrograms` | Same as B-05 and DEC-10 |
+| TQ-25 | `maxPreferences` on `Program` | Same as DEC-11 |
+| TQ-27 | OIDC library approval; single sign-out by POST | Library already baselined (BL-10); sign-out method stays with the IDAM team |
