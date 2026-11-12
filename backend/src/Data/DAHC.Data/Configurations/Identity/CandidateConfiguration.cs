@@ -27,6 +27,7 @@ public sealed class CandidateConfiguration : IEntityTypeConfiguration<Candidate>
         builder.HasAlternateKey(candidate => candidate.PublicId).HasName("UQ_Candidate_PublicId");
 
         builder.Property(candidate => candidate.CandidateNumber).HasMaxLength(9).IsFixedLength().IsUnicode(false);
+        builder.Property(candidate => candidate.IdamIssuer).HasMaxLength(400).IsUnicode(false);
         builder.Property(candidate => candidate.IdamUserId).HasMaxLength(200).IsUnicode(false);
         builder.Property(candidate => candidate.DisplayName).HasMaxLength(200);
         builder.Property(candidate => candidate.Email).HasMaxLength(320);
@@ -41,8 +42,11 @@ public sealed class CandidateConfiguration : IEntityTypeConfiguration<Candidate>
 
         builder.HasIndex(candidate => candidate.CandidateNumber).IsUnique().HasDatabaseName("UQ_Candidate_Number");
 
-        // The only match key at sign-in; also resolves concurrent first sign-ins (standard s.15).
-        builder.HasIndex(candidate => candidate.IdamUserId).IsUnique().HasDatabaseName("UQ_Candidate_IdamUserId");
+        // The only match key at sign-in: issuer and subject together, never the subject alone (AP-04, DEC-01).
+        // Also resolves concurrent first sign-ins (standard s.15).
+        builder.HasIndex(candidate => new { candidate.IdamIssuer, candidate.IdamUserId })
+            .IsUnique()
+            .HasDatabaseName("UQ_Candidate_IdamIdentity");
 
         // Deliberately not unique: a duplicate account must be insertable so the pair can be recorded (US-1.1.1).
         builder.HasIndex(candidate => candidate.EmiratesIdNumber)

@@ -9,31 +9,31 @@ public sealed class CurrentAccess
     public AccessStatus Status { get; private set; } = AccessStatus.Anonymous;
 
     /// <summary>
-    /// The IDAM user identifier from the validated token, when the token represents a user.
+    /// The validated issuer and subject of the token, when the token represents a user.
     /// </summary>
-    public string? IdamUserId { get; private set; }
+    public IdamIdentity? Identity { get; private set; }
 
     public TokenKind? TokenKind { get; private set; }
 
     public CurrentUser? User { get; private set; }
 
-    public void SetActiveUser(string idamUserId, CurrentUser user)
+    public void SetActiveUser(IdamIdentity identity, CurrentUser user)
     {
         ArgumentNullException.ThrowIfNull(user);
 
-        this.SetUserToken(idamUserId);
+        this.SetUserToken(identity);
         this.User = user;
         this.Status = AccessStatus.Active;
     }
 
-    public void SetRefusedUser(string idamUserId, AccessStatus status)
+    public void SetRefusedUser(IdamIdentity identity, AccessStatus status)
     {
         if (status is AccessStatus.Active or AccessStatus.Anonymous)
         {
             throw new ArgumentException("A refused user needs a refusal status.", nameof(status));
         }
 
-        this.SetUserToken(idamUserId);
+        this.SetUserToken(identity);
         this.User = null;
         this.Status = status;
     }
@@ -49,11 +49,11 @@ public sealed class CurrentAccess
         this.Status = AccessStatus.IntegrationNotPermitted;
     }
 
-    private void SetUserToken(string idamUserId)
+    private void SetUserToken(IdamIdentity identity)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(idamUserId);
+        ArgumentNullException.ThrowIfNull(identity);
 
-        this.IdamUserId = idamUserId;
+        this.Identity = identity;
         this.TokenKind = Access.TokenKind.User;
     }
 }

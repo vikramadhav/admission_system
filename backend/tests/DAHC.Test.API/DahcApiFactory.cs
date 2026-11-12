@@ -18,17 +18,57 @@ namespace DAHC.Test.API;
 
 /// <summary>
 /// The real API in the Testing environment, with the in-memory database, the test authentication handler in
-/// place of IDAM, a substitute for IDAM UserInfo and for the SQL Server candidate-number sequence.
+/// place of IDAM, a substitute for IDAM UserInfo and for the SQL Server candidate-number sequence. With
+/// <see cref="ForDevelopmentSignIn"/> it instead runs in Development with the real development sign-in and its
+/// tokens, and no IDAM at all.
 /// </summary>
 internal sealed class DahcApiFactory : WebApplicationFactory<Program>
 {
+    /// <summary>
+    /// Development only, for these tests; never a real secret.
+    /// </summary>
+    private const string DevelopmentSigningKey = "test-only-development-signing-key-0123456789";
+
     private readonly string databaseName = Guid.NewGuid().ToString("N");
 
     private readonly string environmentName;
 
+    private readonly Dictionary<string, string?> settings;
+
     public DahcApiFactory(string environmentName = AuthenticationRegistration.TestingEnvironment)
+        : this(environmentName, [])
+    {
+    }
+
+    private DahcApiFactory(string environmentName, Dictionary<string, string?> settings)
     {
         this.environmentName = environmentName;
+        this.settings = settings;
+    }
+
+    private bool UsesDevelopmentSignIn => this.settings.ContainsKey("DevelopmentSignIn:Enabled");
+
+    /// <summary>
+    /// The API in <paramref name="environmentName"/> with the development sign-in enabled and configured, as a
+    /// developer would in user secrets. Outside Development, startup must refuse it.
+    /// </summary>
+    public static DahcApiFactory ForDevelopmentSignIn(
+        string environmentName = "Development",
+        string? developmentIssuer = null)
+    {
+        Dictionary<string, string?> settings = new()
+        {
+            ["DevelopmentSignIn:Enabled"] = "true",
+            ["DevelopmentSignIn:SigningKey"] = DevelopmentSigningKey,
+            ["DevelopmentSignIn:Password"] = "test-only-password",
+        };
+
+        if (developmentIssuer is not null)
+        {
+            settings["DevelopmentSignIn:Issuer"] = developmentIssuer;
+        }
+
+        return new DahcApiFactory(environmentName, settings);
     }
 
     public HttpClient CreateClientFor(string? subject)
@@ -57,6 +97,11 @@ internal sealed class DahcApiFactory : WebApplicationFactory<Program>
         builder.UseSetting("Idam:ApiClientSecret", "not-a-real-secret");
         builder.UseSetting("Idam:WebClientId", TestAuthenticationHandler.WebClientId);
 
+        foreach (KeyValuePair<string, string?> setting in this.settings)
+        {
+            builder.UseSetting(setting.Key, setting.Value);
+        }
+
         builder.ConfigureTestServices(services =>
         {
             services.RemoveAll<DbContextOptions<DahcDbContext>>();
@@ -69,6 +114,12 @@ internal sealed class DahcApiFactory : WebApplicationFactory<Program>
 
             services.RemoveAll<ICandidateNumberAllocator>();
             services.AddScoped(_ => CreateCandidateNumberAllocator());
+
+            // The development sign-in is exercised as it is: its own token scheme and its UserInfo stand-in.
+            if (this.UsesDevelopmentSignIn)
+            {
+                return;
+            }
 
             services.RemoveAll<IUserInfoClient>();
             services.AddSingleton(CreateUserInfoClient());

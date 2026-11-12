@@ -35,6 +35,7 @@ public sealed class AuthenticationTests
         Assert.Equal("CANDIDATE", Assert.Single(session.GetProperty("roles").EnumerateArray()).GetString());
         Candidate candidate = await ReadSingleCandidateAsync(factory);
         Assert.Equal("token-subject", candidate.IdamUserId);
+        Assert.Equal(TestAuthenticationHandler.Issuer, candidate.IdamIssuer);
     }
 
     [Fact]

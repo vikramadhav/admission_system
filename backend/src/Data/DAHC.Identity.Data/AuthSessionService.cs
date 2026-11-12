@@ -33,23 +33,23 @@ internal sealed class AuthSessionService : IAuthSessionService
     }
 
     public async Task<Result<AuthSession>> SignInAsync(
-        string idamUserId,
+        IdamIdentity identity,
         IdentityProfile profile,
         CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(idamUserId);
+        ArgumentNullException.ThrowIfNull(identity);
         ArgumentNullException.ThrowIfNull(profile);
 
         try
         {
-            Result<AuthSession>? result = await this.TrySignInAsync(idamUserId, profile, cancellationToken);
+            Result<AuthSession>? result = await this.TrySignInAsync(identity, profile, cancellationToken);
 
             if (result is null)
             {
-                // Concurrent first sign-ins: the unique index on IdamUserId rejected this insert, so the record
-                // the other sign-in created is used instead.
+                // Concurrent first sign-ins: the unique index on (IdamIssuer, IdamUserId) rejected this insert, so
+                // the record the other sign-in created is used instead.
                 this.dbContext.ChangeTracker.Clear();
-                result = await this.TrySignInAsync(idamUserId, profile, cancellationToken)
+                result = await this.TrySignInAsync(identity, profile, cancellationToken)
                     ?? throw new InvalidOperationException("The candidate created by a concurrent sign-in was not found.");
             }
 
@@ -122,13 +122,13 @@ internal sealed class AuthSessionService : IAuthSessionService
     }
 
     private async Task<Result<AuthSession>?> TrySignInAsync(
-        string idamUserId,
+        IdamIdentity identity,
         IdentityProfile profile,
         CancellationToken cancellationToken)
     {
         try
         {
-            return await this.SignInOnceAsync(idamUserId, profile, cancellationToken);
+            return await this.SignInOnceAsync(identity, profile, cancellationToken);
         }
         catch (DbUpdateException exception) when (DahcDataException.IsUniqueViolation(exception))
         {
@@ -137,13 +137,20 @@ internal sealed class AuthSessionService : IAuthSessionService
     }
 
     private async Task<Result<AuthSession>> SignInOnceAsync(
-        string idamUserId,
+        IdamIdentity identity,
         IdentityProfile profile,
         CancellationToken cancellationToken)
     {
+        // Issuer and subject are matched together, never the subject alone (AP-04): the same subject from another
+        // issuer is another identity.
+        string issuer = identity.Issuer;
+        string subject = identity.Subject;
+
         // A pre-registered staff user is matched first, so no Candidate is ever created for them.
         StaffUser? staffUser = await this.dbContext.StaffUsers
-            .FirstOrDefaultAsync(staff => staff.IdamUserId == idamUserId, cancellationToken);
+            .FirstOrDefaultAsync(
+                staff => staff.IdamIssuer == issuer && staff.IdamUserId == subject,
+                cancellationToken);
 
         if (staffUser is not null)
         {
@@ -151,14 +158,16 @@ internal sealed class AuthSessionService : IAuthSessionService
         }
 
         Candidate? candidate = await this.dbContext.Candidates
-            .FirstOrDefaultAsync(existing => existing.IdamUserId == idamUserId, cancellationToken);
+            .FirstOrDefaultAsync(
+                existing => existing.IdamIssuer == issuer && existing.IdamUserId == subject,
+                cancellationToken);
 
         if (candidate is not null)
         {
             return await this.SignInCandidateAsync(candidate, profile, cancellationToken);
         }
 
-        return await this.ProvisionCandidateAsync(idamUserId, profile, cancellationToken);
+        return await this.ProvisionCandidateAsync(identity, profile, cancellationToken);
     }
 
     private async Task<Result<AuthSession>> SignInStaffAsync(
@@ -224,7 +233,7 @@ internal sealed class AuthSessionService : IAuthSessionService
     }
 
     private async Task<Result<AuthSession>> ProvisionCandidateAsync(
-        string idamUserId,
+        IdamIdentity identity,
         IdentityProfile profile,
         CancellationToken cancellationToken)
     {
@@ -238,7 +247,8 @@ internal sealed class AuthSessionService : IAuthSessionService
         {
             PublicId = Guid.CreateVersion7(now),
             CandidateNumber = candidateNumber,
-            IdamUserId = idamUserId,
+            IdamIssuer = identity.Issuer,
+            IdamUserId = identity.Subject,
             DisplayName = profile.DisplayName,
             Email = profile.Email,
             MobileNumber = attributes.MobileNumber,

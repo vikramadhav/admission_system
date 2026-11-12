@@ -9,11 +9,12 @@ namespace DAHC.Identity.Service;
 public interface IAuthSessionService
 {
     /// <summary>
-    /// Matches a pre-registered staff user or an existing candidate by the IDAM user identifier, or provisions a
-    /// new candidate with the Candidate role only; refreshes the profile attributes from <paramref name="profile"/>.
+    /// Matches a pre-registered staff user or an existing candidate by the validated issuer and subject together
+    /// (AP-04), or provisions a new candidate with the Candidate role only; refreshes the profile attributes from
+    /// <paramref name="profile"/>.
     /// </summary>
     Task<Result<AuthSession>> SignInAsync(
-        string idamUserId,
+        IdamIdentity identity,
         IdentityProfile profile,
         CancellationToken cancellationToken);
 

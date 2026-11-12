@@ -49,10 +49,10 @@ public sealed class AuthController : ControllerBase
     [Authorize(Policy = Policies.SignIn)]
     public async Task<IActionResult> SignInAsync(CancellationToken cancellationToken)
     {
-        string? idamUserId = this.currentAccess.IdamUserId;
+        IdamIdentity? identity = this.currentAccess.Identity;
         string? accessToken = BearerToken.Read(this.Request);
 
-        if (idamUserId is null
+        if (identity is null
             || accessToken is null)
         {
             Result<AuthSession> refused = Result.Failure<AuthSession>(
@@ -65,7 +65,7 @@ public sealed class AuthController : ControllerBase
         Result<IdentityProfile> profile = await this.userInfoClient.GetProfileAsync(
             this.User,
             accessToken,
-            idamUserId,
+            identity.Subject,
             cancellationToken);
 
         if (!profile.IsSuccess)
@@ -74,7 +74,7 @@ public sealed class AuthController : ControllerBase
         }
 
         Result<AuthSession> session = await this.authSessionService.SignInAsync(
-            idamUserId,
+            identity,
             profile.Value,
             cancellationToken);
 

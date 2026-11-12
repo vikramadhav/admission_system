@@ -7,7 +7,8 @@ using Microsoft.EntityFrameworkCore;
 namespace DAHC.Identity.Data;
 
 /// <summary>
-/// Loads the local user for the IDAM identity on every request. A staff record wins over a candidate record for
+/// Loads the local user for the validated issuer and subject on every request, never for the subject alone
+/// (AP-04). A staff record wins over a candidate record for
 /// the same identity: after a conversion the candidate records are no longer reachable through a Candidate role.
 /// </summary>
 internal sealed class CurrentUserLoader : ICurrentUserLoader
@@ -22,15 +23,20 @@ internal sealed class CurrentUserLoader : ICurrentUserLoader
         this.identityUsers = identityUsers;
     }
 
-    public async Task<CurrentUserLoadResult> LoadAsync(string idamUserId, CancellationToken cancellationToken)
+    public async Task<CurrentUserLoadResult> LoadAsync(IdamIdentity identity, CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(idamUserId);
+        ArgumentNullException.ThrowIfNull(identity);
+
+        string issuer = identity.Issuer;
+        string subject = identity.Subject;
 
         try
         {
             StaffUser? staffUser = await this.dbContext.StaffUsers
                 .AsNoTracking()
-                .FirstOrDefaultAsync(staff => staff.IdamUserId == idamUserId, cancellationToken);
+                .FirstOrDefaultAsync(
+                    staff => staff.IdamIssuer == issuer && staff.IdamUserId == subject,
+                    cancellationToken);
 
             if (staffUser is not null)
             {
@@ -39,7 +45,9 @@ internal sealed class CurrentUserLoader : ICurrentUserLoader
 
             Candidate? candidate = await this.dbContext.Candidates
                 .AsNoTracking()
-                .FirstOrDefaultAsync(existing => existing.IdamUserId == idamUserId, cancellationToken);
+                .FirstOrDefaultAsync(
+                    existing => existing.IdamIssuer == issuer && existing.IdamUserId == subject,
+                    cancellationToken);
 
             return this.LoadCandidate(candidate);
         }
