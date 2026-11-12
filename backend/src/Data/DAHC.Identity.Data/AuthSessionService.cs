@@ -1,4 +1,5 @@
 using DAHC.Data;
+using DAHC.Data.Operations;
 using DAHC.Identity.Core;
 using DAHC.Identity.Service;
 using DAHC.Service.Access;
@@ -8,15 +9,24 @@ using Microsoft.EntityFrameworkCore;
 namespace DAHC.Identity.Data;
 
 /// <summary>
-/// First and later sign-ins (US-1.1.1, US-1.1.2) and the active-role switch (standard s.15).
+/// First and later sign-ins (US-1.1.1, US-1.1.2) and the active-role switch (standard s.15). Every outcome writes
+/// one security audit event (BE-03, DEC-07): with the change it describes when there is one, otherwise on its own.
 /// </summary>
 internal sealed class AuthSessionService : IAuthSessionService
 {
+    private const string CandidateResource = "candidate";
+
+    private const string StaffUserResource = "staff_user";
+
+    private const string RoleResource = "role";
+
     private readonly DahcDbContext dbContext;
 
     private readonly IdentityUsers identityUsers;
 
     private readonly ICandidateNumberAllocator candidateNumberAllocator;
+
+    private readonly AuditWriter auditWriter;
 
     private readonly TimeProvider timeProvider;
 
@@ -24,11 +34,13 @@ internal sealed class AuthSessionService : IAuthSessionService
         DahcDbContext dbContext,
         IdentityUsers identityUsers,
         ICandidateNumberAllocator candidateNumberAllocator,
+        AuditWriter auditWriter,
         TimeProvider timeProvider)
     {
         this.dbContext = dbContext;
         this.identityUsers = identityUsers;
         this.candidateNumberAllocator = candidateNumberAllocator;
+        this.auditWriter = auditWriter;
         this.timeProvider = timeProvider;
     }
 
@@ -69,25 +81,32 @@ internal sealed class AuthSessionService : IAuthSessionService
         ArgumentNullException.ThrowIfNull(user);
         ArgumentException.ThrowIfNullOrWhiteSpace(roleCode);
 
-        // A candidate holds one role, and a staff user may only switch to a role they hold.
-        if (user.UserType != UserType.Staff
-            || !ActiveRoleRules.CanSwitchTo(user.Roles, roleCode))
-        {
-            return Result.Failure<AuthSession>(ResultStatus.Forbidden, IdentityErrorCodes.RoleNotHeld);
-        }
-
         try
         {
+            // A candidate holds one role, and a staff user may only switch to a role they hold.
+            if (user.UserType != UserType.Staff
+                || !ActiveRoleRules.CanSwitchTo(user.Roles, roleCode))
+            {
+                return await this.RefuseRoleSwitchAsync(user, roleCode, IdentityErrorCodes.RoleNotHeld);
+            }
+
             StaffUser? staffUser = await this.dbContext.StaffUsers
                 .FirstOrDefaultAsync(staff => staff.StaffUserId == user.InternalId, cancellationToken);
 
             if (staffUser is null)
             {
-                return Result.Failure<AuthSession>(ResultStatus.Forbidden, IdentityErrorCodes.NotRegistered);
+                return await this.RefuseRoleSwitchAsync(user, roleCode, IdentityErrorCodes.NotRegistered);
             }
 
             staffUser.ActiveRoleCode = roleCode;
             staffUser.UpdatedAt = this.timeProvider.GetUtcNow();
+
+            // The resource is the role switched to; role codes are not personal data.
+            this.auditWriter.Add(
+                new AuditRecord(AuditActions.ActiveRoleSwitched, AuditOutcomes.Success, RoleResource, roleCode)
+                {
+                    ActorStaffUserId = staffUser.StaffUserId,
+                });
 
             await this.dbContext.SaveChangesAsync(cancellationToken);
 
@@ -99,6 +118,38 @@ internal sealed class AuthSessionService : IAuthSessionService
         {
             throw new DahcDataException("AuthSessionService.SwitchActiveRoleAsync", exception);
         }
+    }
+
+    private static AuditRecord SignInRecord(StaffUser staffUser, string outcome, string? reasonCode)
+    {
+        return new AuditRecord(AuditActions.SignIn, outcome, StaffUserResource, staffUser.PublicId.ToString())
+        {
+            ReasonCode = reasonCode,
+            ActorStaffUserId = staffUser.StaffUserId,
+        };
+    }
+
+    private static AuditRecord SignInRecord(Candidate candidate, string outcome, string? reasonCode)
+    {
+        return new AuditRecord(AuditActions.SignIn, outcome, CandidateResource, candidate.PublicId.ToString())
+        {
+            ReasonCode = reasonCode,
+            ActorCandidateId = candidate.CandidateId,
+        };
+    }
+
+    private async Task<Result<AuthSession>> RefuseRoleSwitchAsync(CurrentUser user, string roleCode, string reasonCode)
+    {
+        AuditRecord record = new(AuditActions.ActiveRoleSwitched, AuditOutcomes.Denied, RoleResource, roleCode)
+        {
+            ReasonCode = reasonCode,
+            ActorStaffUserId = user.UserType == UserType.Staff ? (int)user.InternalId : null,
+            ActorCandidateId = user.UserType == UserType.Candidate ? user.InternalId : null,
+        };
+
+        await this.auditWriter.WriteAsync(record);
+
+        return Result.Failure<AuthSession>(ResultStatus.Forbidden, reasonCode);
     }
 
     private static bool RefreshCandidateProfile(
@@ -178,6 +229,9 @@ internal sealed class AuthSessionService : IAuthSessionService
         // A deactivated user is refused and never reactivated by signing in.
         if (!staffUser.IsActive)
         {
+            await this.auditWriter.WriteAsync(
+                SignInRecord(staffUser, AuditOutcomes.Denied, IdentityErrorCodes.Deactivated));
+
             return Result.Failure<AuthSession>(ResultStatus.Forbidden, IdentityErrorCodes.Deactivated);
         }
 
@@ -189,11 +243,16 @@ internal sealed class AuthSessionService : IAuthSessionService
             staffUser.DisplayName = profile.DisplayName;
             staffUser.Email = email;
             staffUser.UpdatedAt = this.timeProvider.GetUtcNow();
-
-            await this.dbContext.SaveChangesAsync(cancellationToken);
         }
 
         CurrentUser? user = await this.identityUsers.ForStaffAsync(staffUser, cancellationToken);
+        string? refusal = user is null ? IdentityErrorCodes.NoRole : null;
+
+        // One save: the profile refresh (kept even when no role is held) and the sign-in event together.
+        this.auditWriter.Add(
+            SignInRecord(staffUser, refusal is null ? AuditOutcomes.Success : AuditOutcomes.Denied, refusal));
+
+        await this.dbContext.SaveChangesAsync(cancellationToken);
 
         if (user is null)
         {
@@ -215,6 +274,8 @@ internal sealed class AuthSessionService : IAuthSessionService
             string code = isRecordedDuplicate ? IdentityErrorCodes.Duplicate : IdentityErrorCodes.Deactivated;
             ResultStatus status = isRecordedDuplicate ? ResultStatus.Conflict : ResultStatus.Forbidden;
 
+            await this.auditWriter.WriteAsync(SignInRecord(candidate, AuditOutcomes.Denied, code));
+
             return Result.Failure<AuthSession>(status, code);
         }
 
@@ -223,9 +284,12 @@ internal sealed class AuthSessionService : IAuthSessionService
         if (RefreshCandidateProfile(candidate, profile, attributes))
         {
             candidate.UpdatedAt = this.timeProvider.GetUtcNow();
-
-            await this.dbContext.SaveChangesAsync(cancellationToken);
         }
+
+        // One save: any profile refresh and the sign-in event together.
+        this.auditWriter.Add(SignInRecord(candidate, AuditOutcomes.Success, null));
+
+        await this.dbContext.SaveChangesAsync(cancellationToken);
 
         CurrentUser user = this.identityUsers.ForCandidate(candidate);
 
@@ -264,6 +328,24 @@ internal sealed class AuthSessionService : IAuthSessionService
         {
             this.dbContext.DuplicateAccountPairs.Add(CreatePair(original, candidate, attributes, now));
         }
+
+        // Saved with the new account, so the event exists exactly when the account does. The actor has no local
+        // id until this save (the token user is the actor); the new account's public id is the resource. Which
+        // attributes matched stays on the duplicate pair, never in the audit event (US-1.1.1 AC4-AC6).
+        this.auditWriter.Add(original is null
+            ? new AuditRecord(
+                AuditActions.AccountProvisioned,
+                AuditOutcomes.Success,
+                CandidateResource,
+                candidate.PublicId.ToString())
+            : new AuditRecord(
+                AuditActions.DuplicateDetected,
+                AuditOutcomes.Denied,
+                CandidateResource,
+                candidate.PublicId.ToString())
+            {
+                ReasonCode = IdentityErrorCodes.Duplicate,
+            });
 
         await this.dbContext.SaveChangesAsync(cancellationToken);
 

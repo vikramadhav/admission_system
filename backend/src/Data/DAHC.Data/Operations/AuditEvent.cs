@@ -34,5 +34,14 @@ public sealed class AuditEvent
     /// </summary>
     public required string Outcome { get; set; }
 
+    /// <summary>
+    /// Why the outcome is not <c>SUCCESS</c>: the refusal's error code (for example <c>account.deactivated</c>).
+    /// Written by <see cref="AuditWriter"/> only (DEC-07); null on row-change events.
+    /// </summary>
+    public string? ReasonCode { get; set; }
+
+    /// <summary>
+    /// The W3C trace id of the request, the same value returned as <c>X-Request-ID</c> and <c>traceId</c>.
+    /// </summary>
     public string? RequestId { get; set; }
 }

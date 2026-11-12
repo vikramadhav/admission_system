@@ -34,6 +34,7 @@ public sealed class AuditEventConfiguration : IEntityTypeConfiguration<AuditEven
         builder.Property(auditEvent => auditEvent.ResourceType).HasMaxLength(60).IsUnicode(false);
         builder.Property(auditEvent => auditEvent.ResourceId).HasMaxLength(64).IsUnicode(false);
         builder.Property(auditEvent => auditEvent.Outcome).HasMaxLength(20).IsUnicode(false);
+        builder.Property(auditEvent => auditEvent.ReasonCode).HasMaxLength(100).IsUnicode(false);
         builder.Property(auditEvent => auditEvent.RequestId).HasMaxLength(64).IsUnicode(false);
 
         builder.HasIndex(auditEvent => new { auditEvent.ResourceType, auditEvent.ResourceId, auditEvent.OccurredAt })

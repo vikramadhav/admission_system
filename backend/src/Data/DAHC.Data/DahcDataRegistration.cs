@@ -1,4 +1,5 @@
 using DAHC.Data.Interceptors;
+using DAHC.Data.Operations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -17,6 +18,7 @@ public static class DahcDataRegistration
 
         services.AddScoped<SoftDeleteSaveChangesInterceptor>();
         services.AddScoped<AuditSaveChangesInterceptor>();
+        services.AddScoped<AuditWriter>();
 
         services.AddDbContext<DahcDbContext>(
             (serviceProvider, options) =>
