@@ -221,6 +221,7 @@ Paths are relative to `src/backend/`.
   - BRD roles BRO-01..09 have no Administrator. "the admin" (L1383) and "Management Portal" (L2437) are mentioned without definition.
 - **Risk:** these elements were added beyond the BRD, against the guideline not to add unsupported functionality. However, *someone* must provision staff (B-01), so an administrative role is probably needed.
 - **Remediation:** keep the code, which is inert today because no endpoint uses either. Record ADMINISTRATOR and integration clients in the register as pending decisions (B-01, D-INT). Do not build on them until approved.
+- **Update 2026-11-12:** the `ADMINISTRATOR` part is **resolved**. AP-10 approves it as a system role, and B-01 is resolved. Roles become configurable data (`idn.Role`), and `RoleCodes` keeps only the system codes. Design: [05-rbac-design.md](05-rbac-design.md). Integration clients remain pending (DF-08).
 
 ### BE-13 — Minor items
 | Id | Finding | Evidence | Class |

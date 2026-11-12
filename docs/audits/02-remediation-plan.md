@@ -1,6 +1,6 @@
 # 02 — Remediation Plan, Collaboration Process and First Slice
 
-**Status: APPROVED FOR IMPLEMENTATION (2026-11-12), step by step as shown in the "Approval" column.** Phase 0 and the independent technical remediation are approved. Database work and work that depends on a business decision stay gated by the decision named. Approved architecture (AP-01 to AP-09) is not reopened.
+**Status: APPROVED FOR IMPLEMENTATION (2026-11-12), step by step as shown in the "Approval" column.** Phase 0 and the independent technical remediation are approved. Database work and work that depends on a business decision stay gated by the decision named. Approved architecture (AP-01 to AP-11) is not reopened.
 
 Every step is non-destructive: it adds or corrects code and deletes or regenerates nothing approved. Each step is a separate, reviewable PR.
 
@@ -29,18 +29,20 @@ Order matters where a dependency is shown. **Approval** values:
 | 1 | **Angular workspace config** [FE lead]: add `angular.json` for `dahc-ui`, `dahc-playground` and `dahc-portal`. Include per-locale builds (en, ar), `fileReplacements` for environments, global styles, playground source assets, lint and extract-i18n targets, and Playwright web servers | FE-01 | R-0.4 | APPROVED | `ng build` (all projects, both locales), `ng lint`, `ng extract-i18n` with no catalogue diff; playground serves real sources |
 | 2 | **Backend code-style enforcement** [BE lead]: add the Appendix B `.editorconfig`; fix violations only | BE-07 | — | APPROVED | `dotnet build` 0 warnings; `dotnet format --verify-no-changes` |
 | 3 | **Issuer binding** [BE lead]: `IdamIssuer` + composite unique index in the EF model; thread the issuer through loader and sign-in. This implements approved AP-04. The schema reaches a database through step 4 | BE-01 | DEC-01 | APPROVED (code and model); the database script waits for step 4 | InMemory tests: the same `sub` from two issuers gives distinct users; a returning user is matched on issuer + subject; existing tests green. The unique index itself goes on the release-validation checklist (§2.3) |
-| 4 | **Initial migration + dev bootstrap** [BE lead, migrations owner]: one reviewed `Initial` migration (schemas, sequence, counters, reference data); a separate dev-only bootstrap seeding one staff user per role and test candidates | BE-05 | DEC-02 (new package), step 3 | GATED: DEC-02 | Idempotent script applies to an empty SQL Server database; a re-run is a no-op (§2.3) |
+| 4 | **Initial migration + dev bootstrap** [BE lead, migrations owner]: one reviewed `Initial` migration (schemas, sequence, counters, reference data, **and the RBAC tables and permission catalog from step 15**); a separate dev-only bootstrap seeding one bound staff user per role, one bound administrator and test candidates | BE-05 | DEC-02 (new package), steps 3 and 15 (model) | GATED: DEC-02 | Idempotent script applies to an empty SQL Server database; a re-run is a no-op (§2.3) |
 | 5 | **Dev SFA seeded users** [BE]: username lookup against seeded users from user secrets; profile from the seed, not the request | BE-02 | DEC-06, step 4 | GATED: DEC-06, step 4 | InMemory API tests: 401 for an unknown username; body profile ignored |
 | 6 | **Dev SFA UI** [FE]: development-only provider and screen via `fileReplacements`; production bundle check | FE-02 | steps 1, 5 | GATED: step 5 | `grep development/sign-in` over the prod bundle is empty |
 | 7 | **Extend the InMemory test suite where meaningful** [BE]. Keep the existing 54 tests. Add tests only for rules not yet covered: provisioning outcomes (duplicate, deactivated, staff not auto-provisioned), draft rules, authorization negative paths and error mapping. Engine-dependent behaviour is **not** claimed here; it goes to the release-validation checklist (§2.3). Use existing boundaries for SQL-only operations (`ICandidateNumberAllocator`, `IApplicationNumberAllocator`, substituted with NSubstitute as today) | BE-06 (reclassified, AP-09) | AP-09 | APPROVED | New tests each protect a named rule; no coverage target; suite stays green |
 | 8 | **Security and provisioning audit events** [BE]: explicit audit writer for sign-in outcomes and refusals | BE-03 | DEC-07 | APPROVED (code; any new table goes through the step 4 migration owner) | InMemory tests: DENIED/SUCCESS rows with trace id for each sign-in outcome |
 | 9 | **Contract source of truth** [API owner]: generate and commit `openapi.yaml`; CI drift check; resolve the open-cycle contract and `maxPreferences` | BE-08, INT-01/02/04, FE-04 | DEC-04 (new package), DEC-10/11, B-05 | GATED: DEC-04; the cycle contract is GATED on B-05 | The portal draft flow works against the real dev API |
 | 10 | **Client auth robustness** [FE]: no sign-in loop on 401 from `/auth/sign-in`; session refresh after not-registered; explicit `response_mode=query`; sign-out state check | FE-06/07/09/14/15 | step 1 | APPROVED | Playwright negative-path specs |
-| 11 | **Role switcher + active-role guard** [FE] | FE-03, INT-03 | step 1 | APPROVED | Playwright: a staff user with 2 roles switches; a candidate sees no switcher |
+| 11 | **Permission-driven UI and role switcher** [FE] (revised for AP-11). `AuthSession` with role ids, names and permissions; `SessionService.can()`, `switchRole()` and `roleEpoch`. Header switcher, shown only with more than one role. Permission route guards instead of `userType`. Role-selection page. After a switch: refresh `/auth/me`, reset caches, drop stale responses and navigate to the landing page (05 §9) | FE-03, INT-03, G-11 | Phase 0 (R-0.4 lockfile), step 1, and step 15 (contract) | **APPROVED** 2026-11-12, subject to the dependencies | Playwright: a user with two roles switches, and menus, routes and data update with no stale data; a single-role user sees no switcher; at initial sign-in, several roles lead to role selection and one role goes straight in; a revoked active role clears the selection and shows role selection, with no automatic switch; the role is restored after refresh; RTL/LTR; axe |
 | 12 | **Real-API E2E** [FE + BE]: portal Playwright specs run against a running dev API with dev SFA, one per role. Keep the mocks for component specs | FE-13, INT-06 | steps 4–6 | GATED: steps 4–6 | Run against a dev environment with a SQL Server database. This is a pre-UAT check, not a mandatory per-PR CI dependency (AP-09) |
 | 13 | **Trusted reverse-proxy configuration** [BE]: forwarded headers with known proxies or networks from configuration, validated at startup, so the pre-auth limit from 14A partitions per real client behind the gateway | BE-10 (proxy part), BE-13a | DEC-08 (gateway topology), 14A | GATED: DEC-08. **Must be validated together with 14A before UAT** (§2.3) | API tests: a trusted proxy's `X-Forwarded-For` partitions per client; an untrusted source's header is ignored |
 | 14A | **Introspection hardening and tests** [BE lead] (DEC-14, approved). Extend `Http/RateLimiting.cs`, `Authentication/Idam/*` and `TokenValidation.cs`; do not rebuild. No new packages and no new abstractions. See the detail below | BE-10 (pre-auth part), BE-14b, BE-14c, AP-08 | DEC-14 | APPROVED | See below |
 | 14B | **Scope and audience validation** [BE lead]: required scopes (`Idam:RequiredScopes`) and `aud` checks, per the confirmed IDAM introspection contract | BE-14a, AP-08 item 5 | A-06 (the confirmed IDAM contract), 14A | GATED: A-06. Does not block other foundation work | Missing scope on an otherwise valid token → **403** `token.insufficient_scope`; wrong audience → 401 |
+| 15 | **RBAC foundation** [BE lead] (AP-10, AP-11; design in [05-rbac-design.md](05-rbac-design.md)). Extend, don't replace:<br>• **Model:** `idn.Role`, `idn.Permission`, `idn.RolePermission`; `StaffRoleAssignment.RoleId`; `StaffUser.ActiveRoleId` and `ActiveRoleSelectionRequired`.<br>• **Catalog and declarations:** the code catalog `Permissions.cs` (with the `IsAdministrative` and `IsProtected` flags) and its `HasData` seed; `[RequirePermission]` and `[AuthenticatedOnly]`; a `PermissionRequirement` branch in `AccessAuthorizationHandler`; migrate the 11 existing actions (05 §2).<br>• **Effective permissions:** the active role's permissions are loaded in `CurrentUserLoader` (no cache).<br>• **Session and active role:** the new `AuthSession` contract; `active-role` takes `{roleId}` and validates it; active-role resolution per DEC-19.<br>• **Guards and seeds:** startup guard and endpoint-declaration test; system roles `CANDIDATE` and `ADMINISTRATOR` with default grants.<br>• **Out of scope:** no administration endpoints or UI (those are step 16 and S-ADM). | G-01 to G-07, G-10; AP-10, AP-11 | Phase 0 (R-0.4 SDK 10.0.404); steps 2 (style first), 3 (same tables), 8 (audit writer for role switches); DEC-15, DEC-16, DEC-19, DEC-20 (approved); DEC-02 for the database script only | **APPROVED** 2026-11-12, subject to the dependencies | InMemory tests:<br>• permission granted → 200; missing → 403 `access.permission_denied`; ownership still → 404;<br>• after a switch, only the new role's permissions apply;<br>• initial resolution: one role → auto-selected, several → `active_role_required`;<br>• a revoked or inactive active role → selection cleared, `active_role_required`, no automatic switch even when one role remains; an unassigned role → 403;<br>• the endpoint-declaration test passes, and a deliberately undeclared test endpoint fails it.<br>SQL Server items: V-13 |
+| 16 | **Staff provisioning API, binding and admin protections** [BE]:<br>• pending provisioning by login identifier, and first-sign-in binding (05 §6);<br>• role, grant and assignment administration endpoints with the DEC-17 rules (protected and delegable tiers, delegated ceiling, no self-elevation);<br>• clearing the active role on revocation (DEC-19);<br>• last-administrator protection;<br>• bootstrap script that refuses duplicate pending or bound administrators (DEC-18);<br>• audit events.<br>Delivered with slice S-ADM, a **separate slice and not part of the RBAC foundation** | G-08, G-09 | Step 15; DEC-17, DEC-18; **B-06** (binding); **B-07** (only for the identity-has-Candidate case) | PENDING APPROVAL; binding GATED: B-06 | InMemory:<br>• protected permissions only on `ADMINISTRATOR`;<br>• the delegated ceiling;<br>• a delegated actor cannot assign `ADMINISTRATOR`;<br>• no self-elevation;<br>• last administrator → 409;<br>• bootstrap refuses an existing pending or bound administrator;<br>• binding only via the B-06 attribute once decided; existing Candidate → `account.link_required`;<br>• audit rows.<br>SQL Server items: V-12, V-14 |
 
 **14A in detail:**
 1. **Pre-authentication rate limiting.** Add a limiter partitioned by client address that runs **before** `UseAuthentication`, so a rejected request never causes an introspection call. Use the built-in `System.Threading.RateLimiting` / ASP.NET Core rate limiter. Keep the existing per-user limiter after authentication. The client address comes from step 13 once DEC-08 is approved.
@@ -79,7 +81,8 @@ Order matters where a dependency is shown. **Approval** values:
 
 ### Deferred (until a business decision or a later slice)
 
-- `ADMINISTRATOR` role usage and integration clients (B-01, DF-08).
+- Integration clients (DF-08). B-01 is resolved; the `ADMINISTRATOR` role is now approved (AP-10, step 15, S-ADM).
+- Role→permissions cache (DF-11), only after load testing.
 - Application id format change (B-03).
 - Correction-editing of flagged sections (BE-13f).
 - IDAM backchannel resilience package and circuit breaker (DF-10).
@@ -94,6 +97,8 @@ No remediation step changes the current behaviour behind these. Code keeps its p
 | B-03 | Application identifier format | `<cycle start year><7 digits>` (BRD L1096) |
 | B-04 | One active application per cycle, or one draft per program per cycle | One active application per cycle (unique filtered index) |
 | B-05 | Admission cycle model | `/programs` requires `cycleId`; there is no open-cycle discovery |
+| B-06 | IDAM attribute that binds a pre-provisioned Staff account (security-critical) | Staff can be pre-registered only by IDAM subject; no binding by identifier |
+| B-07 | Identity-linking policy (Candidate and Staff on one identity) | Staff record wins in the loader. Until B-07 is answered, Staff access for an identity with a Candidate account is refused |
 
 ### Risks of remediation and how to contain them
 
@@ -113,6 +118,7 @@ No remediation step changes the current behaviour behind these. Code keeps its p
 All of the following must be true:
 - Phase 0 is complete (R-0.2 once the remote exists).
 - Phase 1 steps 1, 2, 3, 7, 8, 10 and 14A are merged.
+- **Minimum RBAC foundation** is merged: step 15 (permission enforcement, catalog, effective permissions, active-role validation, endpoint-declaration test) and step 11 (permission-driven UI and switcher). Without them, each developer would invent their own authorization on feature endpoints. Step 16 and S-ADM are **not** entry-gating.
 - Steps 4, 5 and 9 are merged once their gates (DEC-02, DEC-06, DEC-04) clear. A slice that needs a database or the contract cannot start before them.
 - B-02, B-04 and B-05 are answered or explicitly accepted as assumptions for the slices they affect.
 - CI is green on:
@@ -123,6 +129,7 @@ A SQL Server test fixture is **not** part of this gate (AP-09).
 
 Not entry-gating:
 - 14B waits on A-06.
+- Step 16 and slice S-ADM: binding waits on B-06, and the Candidate-identity case on B-07. Development uses dev-bootstrap administrators.
 - Steps 12 and 13 are pre-UAT gates (§2.3).
 
 ### 2.2 Exit gate for every slice (definition of done)
@@ -163,6 +170,9 @@ These checks are therefore run separately, against a SQL Server database of the 
 | V-09 | SQL-specific queries (`SqlQuery`, raw allocator SQL) execute and translate | Correct results |
 | V-10 | Trusted reverse proxy plus pre-auth rate limiting, in the UAT topology (steps 13 and 14A) | Per-client partitioning behind the gateway; untrusted forwarded headers ignored; 429 before any introspection call |
 | V-11 | IDAM contract checks after A-06 (14B), against the real UAT IDAM | Valid → 200; missing scope → 403; wrong audience, inactive or expired → 401; IDAM unavailable → 503 |
+| V-12 | Last-administrator protection under concurrent removals or deactivations (two administrators removing each other at once) | At least one authorized administrator always remains; the loser gets 409 |
+| V-13 | RBAC constraints: unique `Role.Code`, unique `(RoleId, PermissionId)`, FKs from assignments and the active role to `idn.Role`, filtered unique open assignment, and the permission seed matching the code catalog | Duplicates and orphans are rejected; no drift |
+| V-14 | Concurrent first sign-in of a pending Staff account (parallel requests, same identity) | Exactly one binding; the others resolve to it; one audit `staff.bound` |
 
 Production persistence logic is never changed to accommodate the InMemory provider.
 
@@ -206,6 +216,13 @@ Production persistence logic is never changed to accommodate the InMemory provid
     - rate limited → 429;
     - IDAM unavailable → 503.
   - Use the library's own options. Never build custom caching or authentication infrastructure. Add no resilience package or circuit breaker (DF-10).
+- Authorization follows AP-10 and AP-11 ([05-rbac-design.md](05-rbac-design.md)):
+  - Every endpoint declares `[RequirePermission(Permissions.X)]`, or `[AuthenticatedOnly("reason")]`, or is on the reviewed anonymous list.
+  - Never check role names in code; permission codes come from the catalog only.
+  - Only the active role's permissions apply.
+  - Ownership, assignment scope, workflow state and business rules are still checked in the service.
+  - A new permission is added to `Permissions.cs` with its migration, and is denied until granted.
+  - Angular uses `can()` for UI only.
 - Testing follows AP-09:
   - Use xUnit with EF Core InMemory, building on the existing test projects and the existing substitutes at boundaries.
   - Test business rules, validation, authorization, workflow transitions and error handling.
@@ -214,7 +231,7 @@ Production persistence logic is never changed to accommodate the InMemory provid
   - Never claim that an InMemory test proves a SQL Server constraint, transaction, concurrency token, sequence or query. Add such behaviour to the release-validation checklist (§2.3) instead.
   - Never change production persistence code to suit InMemory.
   - Playwright for frontend end-to-end tests.
-- Business decisions B-01 to B-05 stay open. Keep the current provisional behaviour and do not finalise or change it without a recorded answer.
+- Business decisions B-02 to B-07 stay open (B-01 is resolved by AP-10). Keep the current provisional behaviour and do not finalise or change it without a recorded answer.
 - Contract first: change `openapi.yaml`, get it reviewed, then implement.
 - Never run destructive git, apply migrations to shared databases or edit generated migrations by hand.
 - Run the slice's exit-gate commands before opening a PR, and report failures verbatim.
@@ -253,7 +270,7 @@ Why this slice:
 | Scope in | IDAM sign-in (deployed) and dev SFA (local); Candidate auto-provisioning with duplicate refusal; dashboard empty state and start-new rules (AC1–AC7 of US-1.2.1); program/specialty/site selection per US-1.3.1 and the BRD field inventory (Appendix B §6.2); create and save draft with ETag; Arabic and English |
 | Scope out | Other form sections (US-1.3.2+), auto-save, reminders, archive job, withdraw, reinstate, payment |
 | Exit criteria | Section 2.2 exit gate. In addition, E2E (Playwright against the dev API) covers: first sign-in provisions a candidate; duplicate refused with message; deactivated user refused; second active application refused (409); stale save (412); other candidate's application not found (404); RTL screenshots. Before UAT, the §2.3 checklist items V-02, V-04 to V-07 are recorded for S1 |
-| Follow-on slices | S2 Application information + Personal information (needs DF-05 decision for ICP; manual entry path first); S3 Save-draft automation (auto-save, reminders, archive via `BackgroundService`); S4 first back-office slice, only after B-01 and DF-02 |
+| Follow-on slices | S2 Application information + Personal information (needs DF-05 decision for ICP; manual entry path first); S3 Save-draft automation (auto-save, reminders, archive via `BackgroundService`); **S-ADM Administration and Staff management** (after S1; with step 16): role list, create, rename, activate and deactivate; grant and revoke catalog permissions; Staff provisioning before and after first login; multiple role assignments; account activation; security audit view. Binding is gated by B-06 and the Candidate-identity case by B-07. S4 first back-office slice, only after S-ADM and DF-02 |
 
 ---
 
@@ -263,9 +280,12 @@ Approved on 2026-11-12:
 - Phase 0, and the Phase 1 and Phase 2 steps marked APPROVED in §1.
 - DEC-14, with its adjustments (14A / 14B split; HTTP outcomes 401 / 403 / 429 / 503; library options only; no resilience package or circuit breaker).
 - AP-09: xUnit with EF Core InMemory as the automated backend test approach. DEC-03 is cancelled.
+- AP-10 and AP-11 (RBAC and active-role switching), with the final corrections: controlled delegation (DEC-17), active-role selection rules (DEC-19) and duplicate-safe bootstrap (DEC-18).
+- **Step 15 (RBAC foundation) and step 11 (Angular role switching) are approved for implementation**, together with DEC-15, DEC-16, DEC-19 and DEC-20, subject to their dependencies. Implementation starts only once the Phase 0 prerequisites are met.
 
 Still open:
 1. Decisions that gate steps: DEC-02 (EF Design package), DEC-04 (OpenApi package), DEC-06, DEC-08 (deployment and proxy topology), DEC-09, DEC-10/11, DEC-12 and DEC-05 (formal approval of eslint tooling already in use). See register §3.
-2. Business decisions B-01 to B-05, which stay visible (§1). A-01 to A-05 are to be confirmed.
+2. Business decisions B-02 to B-05 (B-01 is resolved), which stay visible (§1). A-01 to A-05 are to be confirmed.
 3. A-06, the IDAM introspection contract. It gates only 14B and checklist item V-11.
-4. Slice S1 as the first end-to-end slice.
+4. Administration: step 16, slice S-ADM, DEC-17 and DEC-18. They form a separate slice that is not part of the foundation. **B-06 and B-07 stay open**; they gate only binding and the Candidate-identity case.
+5. Slice S1 as the first end-to-end slice.

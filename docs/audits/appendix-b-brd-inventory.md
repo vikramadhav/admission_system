@@ -97,6 +97,7 @@ The BRD has no "module" concept. It is organised into Epics and Steps. The modul
 | MOD-13 | Document Management (FileNet) | Attachment storage, versioning, naming convention | L271; L1088 AC12; L1089 n8; L1423-1424; L1709-1710 |
 | MOD-14 | Configuration / Reference Data (implied) | Programs, specialties, sites, cycles, deadlines, grace periods, fees, weights, reasons, templates, pool assignments | L223, L234, L553, L557, L1081 n4, L1316 n7, L1383 n3 ("edited by the admin"), L2437 ("Management Portal"). No user story covers it: OMISSION |
 | MOD-15 | Audit Log | Logging of all actions and status changes | L590 n3, L1423-1424, L1470 n4, L1485, L1501, L1560, L1733, L1772 n4, L2009 n2 |
+| MOD-16 | **Administration: roles, permissions and Staff management** (APPROVED DECISION AP-10, not BRD) | Configurable roles (create, rename, activate, deactivate); grant and revoke catalog permissions; Staff provisioning before and after first IDAM login, with verified binding; multiple role assignments; Staff activation and deactivation; security and administrative audit view; first-administrator bootstrap; last-administrator and escalation protection | Register AP-10, B-01 (resolved), B-06, B-07; design [05-rbac-design.md](05-rbac-design.md); slice S-ADM. Partly fills the MOD-14 "admin / Management Portal" omission for users and roles only. Reference-data configuration remains an OMISSION |
 
 ---
 
@@ -116,8 +117,12 @@ The BRD has no "module" concept. It is organised into Epics and Steps. The modul
 | ROLE-08 | BRO-08 | Finance Officer | Internal | Read-only payment records. Search by cycle, program, application ID, payment date range; export to Excel. Cannot open application details (L309, L1110). | "login process should follow a role-based approach, similar to the Admission Officer Login" (L1110 n1) |
 | ROLE-09 | BRO-09 | Central Monitor | Internal | Read-only Central Monitoring Dashboard. Drill down to read-only list and read-only application details (L310). Cannot retrieve, assign, reassign, return or verify (L1145). | Not stated beyond role routing (L1234 AC1). |
 
+| ROLE-10 | — (not in BRD) | **Administrator** | Internal | APPROVED DECISION AP-10 (2026-11-12), not a BRD fact. A system role (`ADMINISTRATOR`): manages roles, role-permission grants, Staff provisioning and role assignments, and Staff activation; views security and administrative audit history. It alone holds the protected system-administration permissions; it may delegate other administrative permissions to configurable Staff roles (DEC-17). It cannot modify its own roles or status, and the last authorized administrator cannot be removed | First administrator via controlled bootstrap (DEC-18). Others are assigned by an administrator. Never through self-registration |
+
+**Roles as configuration (AP-10).** ROLE-02 to ROLE-09 become **configurable roles** stored in SQL Server, seeded with these names and with no permissions until their feature slice grants them (deny by default). ROLE-01 Candidate and ROLE-10 Administrator are **system roles**. Access is decided by the **active role's permissions**, never by role name.
+
 ### 3.2 Actors mentioned but not defined as roles
-- **Admin** (L1383 n3: "note templates ... can be edited by the admin. TBD later"). **Management Portal** (L2437). No BRO, permissions or stories exist. OMISSION.
+- **Admin** (L1383 n3: "note templates ... can be edited by the admin. TBD later"). **Management Portal** (L2437). No BRO, permissions or stories existed. **Now ROLE-10 by approved decision AP-10** for users, roles and permissions. Editing reference data and templates "by the admin" is still unspecified (MOD-14 OMISSION).
 - **Admission team** as a notification recipient (L597 AC8, L651 AC9). Who exactly is notified for site exclusion is not stated.
 - **Third-party CASPER assessment provider** (L1867). Interaction is file-based only.
 - **Business Owners / stakeholders** (L238-263). These are not system users.
@@ -185,7 +190,23 @@ Legend: V = view, C = create, E = edit, A = approve/decide, X = explicitly denie
 | Duplicate-account report | — | — | V "report for supervisor" (L508 AC6); no screen | — | — | — | — | — | — |
 | Configuration (cycles, programs, sites, pools, fees, reasons, templates, user-pool mapping) | — | — | — | — | — | — | — | — | — |
 
-Gaps: the entire configuration/admin row. Supervisor visibility of training sites. Senior Referee seeing candidate identity. Supervisor "scope" (L1143, "within scope") is undefined. Supervisor reassigning portfolios. Who receives "admission team" notifications.
+### 4.1 Mapping to permissions (AP-10)
+
+The matrix above is the BRD's statement of who may do what. Under AP-10, each cell that grants an action becomes one or more **permission codes** in the code catalog, granted to the configured role. The mapping is written in each slice's feature spec (template §2) and seeded with that slice's migration. Cells marked X or "—" are **never** granted by default. Permission codes are not invented ahead of their slice. Codes defined so far (05 §2, §7):
+
+| Permission | Audience | Default grant | Covers |
+|---|---|---|---|
+| `applications.own.read` | Candidate | CANDIDATE | Own applications list, dashboard, view application (L545, L581) |
+| `applications.own.create` | Candidate | CANDIDATE | Start new application (L530, L553) |
+| `applications.own.update` | Candidate | CANDIDATE | Edit draft while Draft (L567) |
+| `catalog.read` | Candidate and Staff | CANDIDATE; staff roles per slice | Programs, specialties, sites (US-1.3.1) |
+| `roles.manage`, `role-permissions.manage` | Staff (administrative, **protected**) | ADMINISTRATOR only, never delegable | MOD-16 role administration |
+| `roles.read`, `staff.read`, `staff.manage`, `staff-roles.manage` | Staff (administrative, delegable) | ADMINISTRATOR; delegable to configurable Staff roles by an Administrator (DEC-17) | MOD-16 Staff provisioning, activation, assignments |
+| `audit.security.read` | Staff (administrative, delegable) | ADMINISTRATOR; delegable (DEC-17) | MOD-16 audit view |
+
+The Candidate permissions are separate codes (`*.own.*`) from future staff codes, so Candidate and Staff audiences never share an executable permission. Resource rules (own records only, pool assignment, workflow status) are still enforced in the services.
+
+Gaps: the entire configuration/admin row (users, roles and permissions now covered by MOD-16; reference data still open). Supervisor visibility of training sites. Senior Referee seeing candidate identity. Supervisor "scope" (L1143, "within scope") is undefined. Supervisor reassigning portfolios. Who receives "admission team" notifications.
 
 ---
 
@@ -595,7 +616,7 @@ Tags: **BLOCKER** = prevents correct foundation/first-slice implementation. **AS
 
 | # | Tag | Question / omission | Ref | Rationale |
 |---|---|---|---|---|
-| OQ-01 | BLOCKER | How are internal roles (Officer, Supervisor, Referee types, Senior Referee, Finance, Central Monitor) assigned? IDAM groups/claims, or platform admin UI? Who is the admin? | L491, L1153 n2, L1594 n2, L1383 n3 | Authorization foundation; no Admin role exists |
+| OQ-01 | **RESOLVED** (AP-10, register B-01) | ~~How are internal roles assigned? Who is the admin?~~ Platform administrators assign configurable roles through the admin API and UI; IDAM groups and claims are never used. Follow-ons: B-06 (binding attribute), B-07 (identity linking) | L491, L1153 n2, L1594 n2, L1383 n3 | Authorization foundation; no Admin role exists |
 | OQ-02 | BLOCKER | Who becomes a Candidate? Is any authenticated IDAM user with no internal role auto-provisioned as Candidate on first login? Can internal staff also be Candidates (role switcher)? | L491, L1152 AC5 | Defines the provisioning rule |
 | OQ-03 | BLOCKER | Duplicate account outcome: block access, block applying, or warn only? Matching keys (any one of mobile/EID/passport? normalisation?) Non-UAE PASS users may lack EID. Where is the supervisor report? | L508-509 | First-login flow |
 | OQ-04 | BLOCKER | Candidate ID generation (sequential, random, check digit?), and when it is created relative to the duplicate check | L514 | Needed for Application ID |

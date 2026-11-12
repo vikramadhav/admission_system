@@ -8,6 +8,7 @@ This was a read-only audit of the existing DAHC Admissions foundation (`src/back
 | 2 | [02-remediation-plan.md](02-remediation-plan.md) | Prioritised non-destructive remediation with risks and verification (4); four-developer plan (7); first slice and entry/exit gates (8) |
 | 3 | [03-decisions-register.md](03-decisions-register.md) | Confirmed baseline, proposed decisions, BLOCKER/ASSUMPTION/DEFERRED register (6) |
 | 4 | [04-feature-spec-template.md](04-feature-spec-template.md) | Lightweight feature-spec template (7) |
+| 5 | [05-rbac-design.md](05-rbac-design.md) | Configurable permission-based RBAC and active-role switching (AP-10, AP-11): reusable components, gaps, endpoint inventory, data model, permission catalog sync, provisioning and binding, Angular changes, tests |
 | A | [appendix-a-frontend-audit.md](appendix-a-frontend-audit.md) | Detailed frontend findings FE-01..FE-20 and the client-side API contract |
 | B | [appendix-b-brd-inventory.md](appendix-b-brd-inventory.md) | BRD inventory (5): 15 modules, 9 roles, permission matrix, 5 status profiles, 32 workflows, field inventory, 59 rules, NFRs, 45 questions, all with line citations |
 

@@ -222,7 +222,7 @@ A failure is logged **once, where the operation ends**, so one failure is one co
 
 - Every protected operation checks authorization on the server, before reading or changing data. Hiding something in a client is never authorization; role-aware navigation is a usability aid only.
 - A fallback policy requires authentication everywhere. Anonymous access is opt-in, per action or endpoint, and limited to sign-in, health and error paths.
-- Role policies protect role-specific areas. Resource-level access (does this user have access to this record now?) goes through one shared access service per resource boundary, with separate checks for read and write where they differ (for example a closed record stays readable but not writable).
+- Role or permission policies protect specific areas; a project that approves permission-based RBAC (DAHC: section 19) declares permissions on actions instead of checking role names. Resource-level access (does this user have access to this record now?) goes through one shared access service per resource boundary, with separate checks for read and write where they differ (for example a closed record stays readable but not writable).
 - Decide access from server-side data only. Never trust ids, roles, flags or channel values sent by the client.
 - Services revalidate entity state and ownership on every write; they never assume the host already did.
 - Refusals never reveal whether an account or record exists (return the same response as "not found").
@@ -342,7 +342,7 @@ Each project fills in this table and keeps it current. Anything not listed here 
 | Automated test approach | xUnit with EF Core InMemory for application service and API integration tests (`DAHC.Test.Service`, `DAHC.Test.Data`, `DAHC.Test.API`). SQL-only operations are substituted at existing interfaces (`ICandidateNumberAllocator`, `IApplicationNumberAllocator`). There is no SQL Server, Testcontainers, Docker or LocalDB test dependency. SQL Server behaviour (indexes, foreign keys, concurrent provisioning and application creation, number allocation, `RowVersion`, transactions, migrations, SQL-specific queries) is verified before UAT and before each release that changes schema or invariants, using the release-validation checklist in `docs/audits/02-remediation-plan.md` §2.3. Playwright covers frontend end-to-end tests. Approved 2026-11-12 (AP-09) |
 | Sensitive data classes | |
 | Approved packages and frameworks beyond the defaults | |
-| Approved deviations from this standard (with reason) | **Candidate-only automatic provisioning:** after successful validated OIDC sign-in, the API may create a local account with only the Candidate role when the authenticated identity is eligible for Candidate onboarding. All other roles require explicit administrator-controlled provisioning. Development-only SFA is permitted for local testing and is disabled outside Development. |
+| Approved deviations from this standard (with reason) | **Candidate-only automatic provisioning:** after successful validated OIDC sign-in, the API may create a local account with only the Candidate role when the authenticated identity is eligible for Candidate onboarding. All other roles require explicit administrator-controlled provisioning (configurable RBAC, AP-10; see "DAHC authorization" below). Development-only SFA is permitted for local testing and is disabled outside Development. |
 
 ### DAHC authentication and Candidate provisioning constraints
 
@@ -380,6 +380,52 @@ Approved 2026-11-12. Recorded as AP-08 in `docs/audits/03-decisions-register.md`
     
     Any introspection failure (error, timeout, malformed or inactive response) ends unauthenticated. An unreachable IDAM returns 503 and is never treated as a valid token.
 14. The existing introspection implementation (`DAHC.API/Authentication/Idam/*`, `TokenValidation.cs`) is retained and extended where a gap exists. It is not rebuilt.
+
+### DAHC authorization: configurable permission-based RBAC and active-role switching (approved, not to be reopened)
+
+Approved 2026-11-12 as AP-10 and AP-11 in `docs/audits/03-decisions-register.md`. The design and the endpoint inventory are in `docs/audits/05-rbac-design.md`.
+
+**Roles and permissions**
+- Access is granted by **permissions**, never by role names in code. Roles are data in SQL Server and hold permissions. A user may hold several roles, but only the **active role's** permissions apply; they are never combined.
+- Permissions are stable business codes (`applications.own.read`, `staff.manage`) defined in `DAHC.Service/Access/Permissions.cs`. They are never URLs or controller or action names, and several actions may share one code.
+
+**Declaring authorization on endpoints**
+- Every endpoint declares exactly one of:
+  - `[RequirePermission(Permissions.X)]` (ASP.NET Core `IAuthorizationRequirementData`, handled by the existing `AccessAuthorizationHandler`);
+  - `[AuthenticatedOnly("reason")]`, a documented exception such as sign-in, `me` or `active-role`;
+  - `[AllowAnonymous]`, only on the reviewed list.
+- A startup guard and an endpoint-enumeration test enforce this.
+
+**The permission catalog**
+- `idn.Permission` is synchronised from the code catalog through reviewed EF Core migrations (`HasData`), applied by the idempotent deployment script.
+- New permissions are denied until granted.
+- Administrators grant and revoke existing codes only.
+- Retired codes are flagged, never deleted, so audit history is kept.
+
+**Loading permissions**
+- Effective permissions are loaded once per request with the local user (no per-check query, no IDAM role or token permission claims).
+- Deny by default when the role, permission or account state is missing or invalid.
+- Any cache must make revocation take effect on the next request (DF-11).
+
+**Checks independent of permissions**
+- Ownership, assignment scope, workflow state and business rules are always checked in the service, whatever the permission. Another user's record still returns 404.
+
+**Administration**
+- `ADMINISTRATOR` and `CANDIDATE` are system roles.
+- **Protected system-administration** permissions (role management and permission grants) belong to `ADMINISTRATOR` only.
+- **Delegable administrative** permissions (Staff management, role assignment, read and audit views) may be granted to configurable Staff roles by an `ADMINISTRATOR` (controlled delegation).
+- Delegated actors may assign only roles within their own active role's permissions, and can never assign `ADMINISTRATOR`.
+- No actor changes their own roles, status or the grants of a role they hold (no self-elevation).
+- The last authorized administrator cannot be removed or deactivated.
+- The first administrator comes from a controlled bootstrap that never creates a duplicate protected administrator, whether pending or bound.
+- Staff are provisioned explicitly, before or after first IDAM login, and bound only through a verified IDAM attribute (B-06, open). There is no automatic Candidate/Staff merge (B-07, open).
+- Every administrative and permission change is audited.
+
+**Active-role switching**
+- `PUT /api/v1/auth/active-role` validates that the role exists, is active and is assigned.
+- `GET /api/v1/auth/me` returns the roles (id, name), the active role and its permissions.
+- At initial sign-in, a single valid role is selected automatically; with several, the user selects.
+- A revoked or deactivated active role is denied immediately: the selection is cleared and another role must be selected. There is never an automatic switch.
 
 
 ---

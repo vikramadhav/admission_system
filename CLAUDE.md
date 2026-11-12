@@ -8,7 +8,7 @@ The Dubai Health GME admissions platform. Candidates apply to internship, reside
 ## Sources of truth (in this order)
 
 1. `docs/brd/Addmission_System_BRD.md`: business function, fields, validations, permissions and workflows.
-2. Approved decisions: `docs/audits/03-decisions-register.md` (AP-nn, and DEC-nn marked APPROVED). Never reopen them.
+2. Approved decisions: `docs/audits/03-decisions-register.md` (AP-nn, and DEC-nn marked APPROVED), with the RBAC design in `docs/audits/05-rbac-design.md`. Never reopen them.
 3. Engineering standards: `docs/dotnet-engineering-standards.md` (backend, including §19 project decisions) and `docs/angular-structure-and-guidelines.md` (frontend).
 4. `docs/UIUX/`: visual look and feel only. It is never evidence that a field, rule or screen is complete or out of scope.
 
@@ -17,7 +17,7 @@ The Dubai Health GME admissions platform. Candidates apply to internship, reside
 - Read the slice's feature spec (`docs/specs/`, template in `docs/audits/04-feature-spec-template.md`), the decisions register, and the standards section for the area you touch.
 - Check `docs/audits/02-remediation-plan.md` §1. A step marked **GATED** must not be started until its decision is approved.
 - When a requirement or permission is ambiguous: stop, and add an entry to the register (§4) instead of assuming. Never invent permissions, statuses or transitions.
-- Business decisions B-01 to B-05 are open. Keep the current provisional behaviour and never finalise or change it silently.
+- Business decisions B-02 to B-07 are open (B-01 is resolved by AP-10). Keep the current provisional behaviour and never finalise or change it silently.
 
 ## Always
 
@@ -34,4 +34,4 @@ The Dubai Health GME admissions platform. Candidates apply to internship, reside
 - Run destructive git commands, rewrite shared history, force-push, apply migrations to shared databases or hand-edit generated migrations.
 - Commit secrets, user-secret files, local databases, logs or build output.
 
-Area-specific rules are in `.claude/rules/`.
+Area-specific rules are in `.claude/rules/`: `authentication.md`, `authorization.md` (permission-based RBAC and active role), `backend.md`, `frontend.md` and `workflow.md`.

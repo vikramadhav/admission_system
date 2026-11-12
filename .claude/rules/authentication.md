@@ -33,5 +33,5 @@ An introspection failure is never a valid token.
 - Resolve local users by the validated issuer + subject.
 - Only eligible Candidates are auto-provisioned. Staff are always provisioned explicitly.
 - Provisioning is idempotent and concurrency-safe. A disabled account is never reactivated.
-- The API enforces all authorization: account active, the active role (not the union of roles), and resource ownership. Angular guards are UI aids only. The IDAM `role` claim is ignored.
+- The API enforces all authorization: account active, the active role's permissions (never the union of roles), and resource ownership. Angular guards are UI aids only. The IDAM `role` claim is ignored. The permission conventions are in `authorization.md`.
 - Development-only SFA exists only in the Development environment. Never make it reachable or trusted in Test, UAT or Production.
