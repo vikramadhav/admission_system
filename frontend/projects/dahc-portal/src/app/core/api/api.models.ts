@@ -1,4 +1,4 @@
-// Hand-written from Contracts/openapi/openapi.editor.yaml (components ApiResponse,
+// Hand-written from Contracts/openapi/openapi.yaml (components ApiResponse,
 // ApiListResponse, Page, Problem, ValidationIssue). OpenAPI code generation is not
 // approved yet (OQ-08), so these types are kept in step with the contract by review.
 

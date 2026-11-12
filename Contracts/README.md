@@ -2,9 +2,11 @@
 
 This folder is the team's source of truth for API operation and data contracts. Contracts are modular OpenAPI 3.1 documents; implementation, generated clients, and tests should align with these contracts rather than maintaining competing endpoint definitions.
 
+> **Status (2026-11-12): preliminary draft.** These contracts were generated during preliminary planning and are not yet approved. They are corrected contract-first, operation by operation, as each step or slice is implemented. Where they disagree with the BRD or with approved architecture (for example permission-based RBAC and the active-role session, AP-10 and AP-11), the BRD and the approved decisions win. Known conflicts are C-01 to C-09 in [`docs/audits/01-foundation-audit-report.md` §7](../docs/audits/01-foundation-audit-report.md).
+
 ## Contract contents
 
-- [`openapi/openapi.yaml`](openapi/openapi.yaml) is the API entry point.
+- [`openapi/openapi.yaml`](openapi/openapi.yaml) is the **single authoritative** API entry point. The former bundled copy `openapi.editor.yaml` was removed in R-0.6; it was a generated copy with the same 97 operations and 105 schemas. Bundles are generated from this root when needed, never edited or committed.
 - `openapi/paths/` contains domain operation contracts.
 - `openapi/components/` contains shared data schemas and response definitions.
 - [`decisions.md`](decisions.md) records security boundaries, standard API behavior, and decisions still needing institutional approval.
