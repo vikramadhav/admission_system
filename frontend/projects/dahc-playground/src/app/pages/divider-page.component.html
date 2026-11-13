@@ -1,0 +1,83 @@
+<dahc-playground-page
+  heading="Divider"
+  description="A 1px line between sections, with an optional label in the middle, or vertical between inline items. Ported from dubai-health-ui dh-divider; DERIVED."
+  selector="dahc-divider"
+  [whenToUse]="whenToUse"
+  [exampleColumns]="2"
+  [sourceFiles]="sourceFiles">
+  <div preview>
+    <p class="divider-text">Sign in with UAE Pass</p>
+    <dahc-divider data-testid="divider-demo" [label]="label()" [decorative]="decorative()" />
+    <p class="divider-text">Sign in with your Dubai Health account</p>
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-text label="label" [(value)]="label" />
+    <dahc-inspector-toggle label="decorative" [(value)]="decorative" />
+  </div>
+
+  <div states class="pg-stack">
+    <dahc-divider data-testid="divider-plain" />
+    <dahc-space>
+      <span>Dashboard</span>
+      <dahc-divider [vertical]="true" data-testid="divider-vertical" />
+      <span>My applications</span>
+      <dahc-divider [vertical]="true" [decorative]="true" />
+      <span>My account</span>
+    </dahc-space>
+  </div>
+
+  <dahc-doc-example
+    examples
+    exampleId="basic"
+    heading="Horizontal"
+    description="A separator between two blocks of text."
+    template="divider-page.component.html">
+    <p>Your application has been submitted.</p>
+    <dahc-divider />
+    <p>We will contact you by e-mail about the next steps.</p>
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="label"
+    heading="With a label"
+    description="The label sits in the middle of the line and is read as text."
+    template="divider-page.component.html">
+    <button dahc-button type="button" [block]="true">Sign in with UAE Pass</button>
+    <dahc-divider label="or" />
+    <button dahc-button type="button" variant="secondary" [block]="true">Sign in with your Dubai Health account</button>
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="vertical"
+    heading="Vertical"
+    description="Separates inline links in a toolbar."
+    template="divider-page.component.html">
+    <dahc-space>
+      <a dahc-link href="#terms" size="sm">Terms</a>
+      <dahc-divider [vertical]="true" />
+      <a dahc-link href="#privacy" size="sm">Privacy</a>
+      <dahc-divider [vertical]="true" />
+      <a dahc-link href="#accessibility" size="sm">Accessibility</a>
+    </dahc-space>
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="decorative"
+    heading="Decorative"
+    description="Hidden from assistive technology when it only adds visual rhythm."
+    template="divider-page.component.html">
+    <p>Section one</p>
+    <dahc-divider [decorative]="true" />
+    <p>Section two</p>
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>Without a label the divider is a separator (role="separator" with its orientation); decorative hides it.</li>
+    <li>With a label the lines are hidden and the label is read as normal text, because a separator would hide it.</li>
+    <li>The line uses the subtle border colour and forced-colors mode draws it in CanvasText.</li>
+  </ul>
+</dahc-playground-page>

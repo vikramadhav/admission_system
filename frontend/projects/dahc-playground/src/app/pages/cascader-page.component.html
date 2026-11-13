@@ -1,0 +1,58 @@
+<dahc-playground-page
+  heading="Cascader"
+  description="Select from nested options shown as columns, such as country, emirate and area. Ported from dubai-health-ui dh-cascader; DERIVED design."
+  [sourceFiles]="sourceFiles"
+  selector="dahc-cascader"
+  [whenToUse]="whenToUse">
+  <div preview>
+    <dahc-cascader label="Area" [options]="places" [formControl]="control" />
+  </div>
+
+  <div inspector class="pg-stack">
+    <p class="pg-value" data-testid="form-value">Form value: {{ valueText() }}</p>
+  </div>
+
+  <div states class="pg-stack">
+    <dahc-cascader label="Parents selectable" [options]="places" [changeOnSelect]="true" />
+  </div>
+
+  <dahc-doc-example
+    examples
+    exampleId="basic"
+    heading="Basic"
+    description="Only the last level can be chosen."
+    template="cascader-page.component.html">
+    <dahc-cascader label="Place of residence" [options]="places" [formControl]="exampleResidence" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="parents"
+    heading="Parents selectable"
+    description="Any level is a valid answer."
+    template="cascader-page.component.html">
+    <dahc-cascader label="Region" [options]="places" [changeOnSelect]="true" [formControl]="exampleRegion" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="required"
+    heading="Required with error"
+    description="The error shows after the field was touched without a value."
+    template="cascader-page.component.html">
+    <dahc-cascader
+      label="Work location"
+      placeholder="Choose an area"
+      [options]="places"
+      [required]="true"
+      [invalid]="exampleWork.invalid && exampleWork.touched"
+      errorMessage="Choose where you work."
+      [formControl]="exampleWork" />
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>A combobox; focus stays on the field and aria-activedescendant points at the active option.</li>
+    <li>ArrowUp / ArrowDown move in a column, ArrowRight opens the next level, ArrowLeft goes back (mirrored in RTL), Enter selects, Escape closes.</li>
+    <li>Each column is a listbox named "Level n".</li>
+  </ul>
+</dahc-playground-page>

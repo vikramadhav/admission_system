@@ -1,0 +1,103 @@
+<a class="dahc-app-header__skip-link" [href]="'#' + mainContentId()" (click)="skipToMainContent($event)">{{ skipLinkLabel() }}</a>
+<header class="dahc-app-header__bar">
+  <div class="dahc-app-header__inner">
+    <p class="dahc-app-header__brand" [class.dahc-app-header__brand--image]="logoSrc() !== ''">
+      @if (logoSrc() !== '') {
+        <img class="dahc-app-header__logo-image" [src]="logoSrc()" [alt]="logoAlt()" />
+        <span class="dahc-visually-hidden">{{ productName() }}</span>
+      } @else {
+        <span class="dahc-app-header__tile"><dahc-logo orientation="icon" color="white" /></span>
+        <span class="dahc-app-header__product">{{ productName() }}</span>
+      }
+    </p>
+
+    @if (navItems().length > 0) {
+      <nav class="dahc-app-header__nav" [attr.aria-label]="navLabel()">
+        <ul class="dahc-app-header__nav-list">
+          @for (item of navItems(); track item.label) {
+            <li>
+              @if (item.route) {
+                <a class="dahc-app-header__nav-link" [routerLink]="item.route" [attr.aria-current]="item.current ? 'page' : null">{{ item.label }}</a>
+              } @else {
+                <a class="dahc-app-header__nav-link" [href]="item.href ?? '#'" [attr.aria-current]="item.current ? 'page' : null">{{ item.label }}</a>
+              }
+            </li>
+          }
+        </ul>
+      </nav>
+    }
+
+    <div class="dahc-app-header__tools">
+      @if (languageHref() !== '' && languageLabel() !== '') {
+        <a
+          class="dahc-app-header__pill dahc-app-header__wide"
+          [href]="languageHref()"
+          [attr.hreflang]="languageCode() || null"
+          [attr.lang]="languageCode() || null">{{ languageLabel() }}</a>
+      }
+      <dahc-theme-switch class="dahc-app-header__wide" />
+      @if (notificationCount() !== null) {
+        <span class="dahc-app-header__notifications">
+          <button dahc-icon-button type="button" icon="gov-chat" variant="ghost" size="md" (click)="openNotifications()">
+            {{ notificationsLabel() }}
+          </button>
+          <dahc-badge
+            class="dahc-app-header__badge"
+            [count]="notificationCount() ?? 0"
+            [label]="notificationCount() + ' ' + notificationsLabel()" />
+        </span>
+      }
+      @if (signedIn()) {
+        @if (userName() !== '') {
+          <p class="dahc-app-header__pill dahc-app-header__user dahc-app-header__wide">
+            <dahc-icon name="account" size="md" />
+            <span class="dahc-app-header__user-name">{{ userName() }}</span>
+          </p>
+        }
+        <button dahc-button type="button" variant="secondary" size="sm" class="dahc-app-header__wide" (click)="requestSignOut()">
+          {{ signOutLabel() }}
+        </button>
+      }
+      <button dahc-icon-button type="button" icon="menu" variant="ghost" size="md" class="dahc-app-header__burger" (click)="menuOpen.set(true)">
+        {{ menuLabel() }}
+      </button>
+    </div>
+  </div>
+</header>
+
+<dahc-drawer [heading]="productName()" size="sm" placement="end" [(open)]="menuOpen">
+  @if (navItems().length > 0) {
+    <nav [attr.aria-label]="navLabel()">
+      <ul class="dahc-app-header__menu-list">
+        @for (item of navItems(); track item.label) {
+          <li>
+            @if (item.route) {
+              <a class="dahc-app-header__menu-link" [routerLink]="item.route" [attr.aria-current]="item.current ? 'page' : null" (click)="closeMenu()">{{ item.label }}</a>
+            } @else {
+              <a class="dahc-app-header__menu-link" [href]="item.href ?? '#'" [attr.aria-current]="item.current ? 'page' : null" (click)="closeMenu()">{{ item.label }}</a>
+            }
+          </li>
+        }
+      </ul>
+    </nav>
+  }
+  <div class="dahc-app-header__menu-tools">
+    @if (signedIn() && userName() !== '') {
+      <p class="dahc-app-header__user">
+        <dahc-icon name="account" size="md" />
+        <span>{{ userName() }}</span>
+      </p>
+    }
+    @if (languageHref() !== '' && languageLabel() !== '') {
+      <a
+        class="dahc-app-header__pill"
+        [href]="languageHref()"
+        [attr.hreflang]="languageCode() || null"
+        [attr.lang]="languageCode() || null">{{ languageLabel() }}</a>
+    }
+    <dahc-theme-switch />
+    @if (signedIn()) {
+      <button dahc-button type="button" variant="secondary" size="sm" (click)="requestSignOut()">{{ signOutLabel() }}</button>
+    }
+  </div>
+</dahc-drawer>

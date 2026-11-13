@@ -1,0 +1,131 @@
+<div class="step" [formGroup]="form">
+  <div class="step-grid">
+    <dahc-select
+      formControlName="country"
+      i18n-label="@@portal.academic.country"
+      label="Country"
+      [options]="countries"
+      [required]="true"
+      [invalid]="error('country') !== ''"
+      [errorMessage]="error('country')" />
+    <dahc-select
+      formControlName="university"
+      i18n-label="@@portal.academic.university"
+      label="University"
+      [options]="universities()"
+      [required]="true"
+      [invalid]="error('university') !== ''"
+      [errorMessage]="error('university')" />
+    @if (form.controls.university.value === other) {
+      <dahc-form-field
+        class="step-full"
+        i18n-label="@@portal.academic.otherUniversity"
+        label="University name"
+        [required]="true"
+        [invalid]="error('otherUniversity') !== ''"
+        [error]="error('otherUniversity')">
+        <input dahcInput type="text" formControlName="otherUniversity" />
+      </dahc-form-field>
+    }
+    <dahc-select
+      formControlName="degree"
+      i18n-label="@@portal.academic.degree"
+      label="Degree"
+      [options]="degrees()"
+      [required]="true"
+      [invalid]="error('degree') !== ''"
+      [errorMessage]="error('degree')" />
+    <dahc-select
+      formControlName="graduationYear"
+      i18n-label="@@portal.academic.graduationYear"
+      label="Graduation year"
+      [options]="years"
+      [required]="true"
+      [invalid]="error('graduationYear') !== ''"
+      [errorMessage]="error('graduationYear')" />
+    <dahc-select
+      formControlName="graduationMonth"
+      i18n-label="@@portal.academic.graduationMonth"
+      label="Graduation month"
+      [options]="months"
+      [required]="true"
+      [invalid]="error('graduationMonth') !== ''"
+      [errorMessage]="error('graduationMonth')" />
+  </div>
+
+  @if (form.controls.country.value !== '') {
+    <section class="step-section" aria-labelledby="gpa-heading">
+      <h3 id="gpa-heading" class="step-section-heading" i18n="@@portal.academic.gpaHeading">Grade point average</h3>
+      <div class="step-grid">
+        @if (form.controls.country.value === 'AE') {
+          <dahc-radio-group
+            formControlName="gpaType"
+            i18n-label="@@portal.academic.gpaType"
+            label="GPA Type"
+            [options]="gpaTypes"
+            [required]="true"
+            [invalid]="error('gpaType') !== ''"
+            [errorMessage]="error('gpaType')" />
+          @if (form.controls.gpaType.value === 'SCALE_4') {
+            <dahc-form-field
+              i18n-label="@@portal.academic.gpaScale4"
+              label="GPA (scale of 4)"
+              [hint]="rangeWarning('gpaScale4', 4)"
+              [required]="true"
+              [invalid]="error('gpaScale4') !== ''"
+              [error]="error('gpaScale4')">
+              <input dahcInput type="text" inputmode="decimal" formControlName="gpaScale4" />
+            </dahc-form-field>
+          } @else {
+            <dahc-form-field
+              i18n-label="@@portal.academic.gpaPercentage"
+              label="GPA (percentage)"
+              [hint]="rangeWarning('gpaPercentage', 100)"
+              [required]="true"
+              [invalid]="error('gpaPercentage') !== ''"
+              [error]="error('gpaPercentage')">
+              <input dahcInput type="text" inputmode="decimal" formControlName="gpaPercentage" />
+            </dahc-form-field>
+          }
+        } @else {
+          <dahc-form-field
+            i18n-label="@@portal.academic.eceGpa"
+            label="ECE GPA (scale of 4)"
+            [hint]="rangeWarning('eceGpa', 4)"
+            [required]="true"
+            [invalid]="error('eceGpa') !== ''"
+            [error]="error('eceGpa')">
+            <input dahcInput type="text" inputmode="decimal" formControlName="eceGpa" />
+          </dahc-form-field>
+          <dahc-form-field
+            i18n-label="@@portal.academic.originalGpa"
+            label="Original GPA"
+            i18n-hint="@@portal.academic.originalGpaHint"
+            hint="As shown on your transcript, for example 3.6 / 4.0, 85 % or Pass."
+            [required]="true"
+            [invalid]="error('originalGpa') !== ''"
+            [error]="error('originalGpa')">
+            <input dahcInput type="text" formControlName="originalGpa" />
+          </dahc-form-field>
+        }
+        <dahc-form-field i18n-label="@@portal.academic.gpaResult" label="GPA Result">
+          <input dahcInput type="text" [value]="gpaResult()" readonly />
+        </dahc-form-field>
+        @if (shortlistingScore() !== null) {
+          <dahc-form-field
+            i18n-label="@@portal.academic.gpaScore"
+            label="GPA shortlisting score"
+            i18n-hint="@@portal.academic.gpaScoreHint"
+            hint="Calculated from your GPA">
+            <input dahcInput type="text" [value]="shortlistingScore()" readonly />
+          </dahc-form-field>
+        }
+      </div>
+    </section>
+  }
+
+  <section class="step-section" aria-labelledby="academic-documents-heading">
+    <h3 id="academic-documents-heading" class="step-section-heading" i18n="@@portal.academic.documents">Documents</h3>
+    <dahc-section-attachments sectionKey="academic-information" [showRequired]="showAll()" />
+  </section>
+</div>

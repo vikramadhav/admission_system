@@ -1,0 +1,128 @@
+<dahc-page-header [heading]="heading()" [breadcrumbs]="breadcrumbs()" [meta]="meta()" [focusOnLoad]="true">
+  @if (status(); as currentStatus) {
+    <dahc-tag page-header-status size="lg" appearance="outline" [purpose]="currentStatus.purpose">{{ currentStatus.label }}</dahc-tag>
+  }
+</dahc-page-header>
+
+<div class="wizard-page">
+  @if (state.loading() && !state.application()) {
+    <p class="wizard-text" role="status" i18n="@@portal.wizard.loading">Loading your application…</p>
+  } @else if (state.loadError(); as problem) {
+    <dahc-alert variant="error" i18n-heading="@@portal.wizard.loadFailedHeading" heading="This application could not be opened">
+      <p class="wizard-text">{{ problem.detail ?? problem.title }}</p>
+    </dahc-alert>
+    <div class="wizard-inline-actions">
+      <a dahc-button variant="secondary" routerLink="/candidate/dashboard" i18n="@@portal.action.backToDashboard">Back to dashboard</a>
+    </div>
+  } @else {
+    @if (state.saveProblem(); as problem) {
+      <dahc-alert variant="error" [announce]="true" [dismissible]="true" (dismissed)="state.saveProblem.set(null)">
+        <p class="wizard-text">{{ problem.detail ?? problem.title }}</p>
+        @if (problem.errors?.length) {
+          <ul class="wizard-problem-list">
+            @for (issue of problem.errors; track $index) {
+              <li>{{ issue.detail }}</li>
+            }
+          </ul>
+        }
+        @if (problem.status === 412) {
+          <div class="wizard-inline-actions">
+            <button dahc-button type="button" size="sm" variant="secondary" (click)="state.reload()" i18n="@@portal.wizard.reload">
+              Load the latest version
+            </button>
+          </div>
+        }
+      </dahc-alert>
+    }
+    @if (state.mode() === 'view') {
+      <dahc-alert variant="info" i18n="@@portal.wizard.readOnly">
+        This application has been submitted, so it is shown read-only. Use your dashboard for the actions that are still available.
+      </dahc-alert>
+    }
+
+    <div class="wizard-layout">
+      <dahc-card class="wizard-stepper">
+        <dahc-wizard-steps [steps]="state.stepperSteps()" (stepSelected)="state.openGroup($event)" />
+      </dahc-card>
+
+      <dahc-card class="wizard-form">
+        <dahc-step-header [heading]="stepHeading()" [step]="stepNumber()" [total]="stepTotal()" />
+        @switch (current()) {
+          @case ('program') {
+            <dahc-program-step />
+          }
+          @case ('application-information') {
+            <dahc-application-information-step />
+          }
+          @case ('personal-identity') {
+            <dahc-identity-step />
+          }
+          @case ('personal-contact') {
+            <dahc-contact-step />
+          }
+          @case ('personal-next-of-kin') {
+            <dahc-next-of-kin-step />
+          }
+          @case ('personal-attachments') {
+            <dahc-personal-attachments-step />
+          }
+          @case ('academic-information') {
+            <dahc-academic-step />
+          }
+          @case ('english-proficiency') {
+            <dahc-english-step />
+          }
+          @case ('internship-information') {
+            <dahc-internship-step />
+          }
+          @case ('residency-information') {
+            <dahc-residency-step />
+          }
+          @case ('board-license-information') {
+            <dahc-board-license-step />
+          }
+          @case ('residency-entrance-exam') {
+            <dahc-entrance-exam-step />
+          }
+          @case ('portfolio') {
+            <dahc-portfolio-step />
+          }
+          @case ('pay-and-submit') {
+            <dahc-pay-and-submit-step />
+          }
+        }
+      </dahc-card>
+    </div>
+  }
+</div>
+
+@if (!state.loadError()) {
+  <dahc-wizard-action-bar>
+    <ng-container dahcActionsStart>
+      @if (state.editable()) {
+        <button dahc-button type="button" variant="secondary" [loading]="state.saving()" (click)="state.saveDraft()" i18n="@@portal.wizard.saveDraft">
+          Save As Draft
+        </button>
+      }
+      @if (state.mode() === 'edit' && state.application()) {
+        <button dahc-button type="button" variant="danger-outline" (click)="discardOpen.set(true)" i18n="@@portal.wizard.discard">Discard</button>
+      }
+    </ng-container>
+    <ng-container dahcActionsEnd>
+      @if (state.previousStep()) {
+        <button dahc-button type="button" variant="secondary" [disabled]="state.saving()" (click)="state.back()" i18n="@@portal.action.back">Back</button>
+      }
+      @if (state.primaryAction(); as action) {
+        <button dahc-button type="button" [loading]="action.loading" [disabled]="action.disabled" (click)="action.run()">{{ action.label }}</button>
+      } @else if (nextLabel() !== '') {
+        <button dahc-button type="button" iconEnd="chevron-right" [loading]="state.saving()" (click)="state.next()">{{ nextLabel() }}</button>
+      } @else if (state.mode() === 'view') {
+        <a dahc-button routerLink="/candidate/dashboard" i18n="@@portal.action.backToDashboard">Back to dashboard</a>
+      }
+    </ng-container>
+  </dahc-wizard-action-bar>
+}
+
+@if (state.application(); as application) {
+  <dahc-discard-draft-dialog [applicationId]="application.id" [(open)]="discardOpen" (completed)="discarded()" />
+}

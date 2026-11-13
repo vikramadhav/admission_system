@@ -1,0 +1,85 @@
+<dahc-playground-page
+  heading="Space"
+  description="Even spacing between inline items such as buttons and tags. Ported from dubai-health-ui dh-space; DERIVED layout helper."
+  selector="dahc-space"
+  [whenToUse]="whenToUse"
+  [exampleColumns]="2"
+  [sourceFiles]="sourceFiles">
+  <div preview>
+    <dahc-space data-testid="space-demo" [gap]="gap()" [wrap]="wrap()" [block]="block()">
+      <button dahc-button type="button" size="sm">Approve</button>
+      <button dahc-button type="button" size="sm" variant="secondary">Return</button>
+      <dahc-tag purpose="success">Complete</dahc-tag>
+      <dahc-tag purpose="warning">Pending</dahc-tag>
+    </dahc-space>
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-choice label="gap" [options]="gaps" [(value)]="gap" />
+    <dahc-inspector-toggle label="wrap" [(value)]="wrap" />
+    <dahc-inspector-toggle label="block" [(value)]="block" />
+  </div>
+
+  <div states class="pg-stack">
+    <dahc-space gap="lg">
+      <dahc-tag purpose="information">Large gap</dahc-tag>
+      <dahc-tag purpose="information">Between tags</dahc-tag>
+    </dahc-space>
+  </div>
+
+  <dahc-doc-example
+    examples
+    exampleId="basic"
+    heading="Basic"
+    description="Small gap between buttons."
+    template="space-page.component.html">
+    <dahc-space>
+      <button dahc-button type="button" size="sm">Approve</button>
+      <button dahc-button type="button" size="sm" variant="secondary">Return</button>
+    </dahc-space>
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="size"
+    heading="Gap sizes"
+    description="The large gap separates groups more clearly."
+    template="space-page.component.html">
+    <dahc-space gap="lg">
+      <dahc-tag purpose="success">Complete</dahc-tag>
+      <dahc-tag purpose="warning">Pending</dahc-tag>
+    </dahc-space>
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="vertical"
+    heading="Vertical"
+    description="Stacks the items with even spacing."
+    template="space-page.component.html">
+    <dahc-space [vertical]="true" align="start">
+      <a dahc-link href="#guide">Admission guide</a>
+      <a dahc-link href="#fees">Fees</a>
+      <a dahc-link href="#faq">Questions and answers</a>
+    </dahc-space>
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="wrap"
+    heading="Wrapping"
+    description="Items wrap onto the next line on narrow screens."
+    template="space-page.component.html">
+    <dahc-space [wrap]="true">
+      <dahc-tag purpose="information">Rashid Hospital</dahc-tag>
+      <dahc-tag purpose="information">Dubai Hospital</dahc-tag>
+      <dahc-tag purpose="information">Latifa Hospital</dahc-tag>
+      <dahc-tag purpose="information">Hatta Hospital</dahc-tag>
+    </dahc-space>
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>Spacing only: no role is added and the source order is the reading order.</li>
+    <li>Turn wrap on when the items can exceed the line, so they reflow at 320 pixels.</li>
+  </ul>
+</dahc-playground-page>

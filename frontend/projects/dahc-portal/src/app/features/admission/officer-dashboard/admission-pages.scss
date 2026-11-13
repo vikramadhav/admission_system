@@ -1,0 +1,130 @@
+// Layout shared by the admission list pages (dashboards, workload, reinstatements, duplicates).
+.section {
+  display: grid;
+  // minmax(0, 1fr): wide tables scroll inside their own region instead of widening the page.
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--dahc-space-4);
+}
+
+.section-heading {
+  margin: 0;
+  font-size: var(--dahc-type-heading-3-size);
+  line-height: var(--dahc-type-heading-3-line-height);
+}
+
+.section-text {
+  margin: 0;
+  color: var(--dahc-color-text-secondary);
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(calc(var(--dahc-space-20) * 2), 1fr));
+  gap: var(--dahc-space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+// Insight tiles that filter a list are buttons around the tile.
+.tile-button {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  padding: 0;
+  border: var(--dahc-size-border-strong) solid transparent;
+  border-radius: var(--dahc-radius-lg);
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.tile-button[aria-pressed='true'] {
+  border-color: var(--dahc-color-border-strong);
+}
+
+.tile-button:focus-visible {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: var(--dahc-size-focus-offset);
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--dahc-space-3);
+}
+
+.toolbar > dahc-search,
+.toolbar > dahc-select {
+  flex: 1 1 calc(var(--dahc-space-16) * 4);
+  min-inline-size: 0;
+}
+
+.pool-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--dahc-size-measure-narrow)), 1fr));
+  gap: var(--dahc-space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pool {
+  display: grid;
+  gap: var(--dahc-space-2);
+  justify-items: start;
+}
+
+.pool-name {
+  margin: 0;
+  font-size: var(--dahc-type-heading-4-size);
+  line-height: var(--dahc-type-heading-4-line-height);
+}
+
+.pool-text {
+  margin: 0;
+  color: var(--dahc-color-text-secondary);
+}
+
+.overdue {
+  display: inline-flex;
+  gap: var(--dahc-space-1);
+  align-items: center;
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dahc-space-3);
+}
+
+.dialog-form {
+  display: grid;
+  gap: var(--dahc-space-4);
+}
+
+.dialog-text {
+  margin: 0;
+}
+
+.dialog-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--dahc-space-3);
+}
+
+.result-list {
+  display: grid;
+  gap: var(--dahc-space-1);
+  margin: 0;
+  padding-inline-start: var(--dahc-space-5);
+}
+
+textarea[dahcInput] {
+  min-block-size: calc(var(--dahc-size-control-lg) * 2);
+  resize: vertical;
+}

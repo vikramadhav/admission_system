@@ -1,0 +1,31 @@
+.portfolio-questions {
+  display: grid;
+  gap: var(--dahc-space-4);
+}
+
+.portfolio-summary {
+  inline-size: 100%;
+  margin-block: var(--dahc-space-4) 0;
+  border-collapse: collapse;
+  font-size: var(--dahc-type-body-sm-size);
+}
+
+.portfolio-summary th,
+.portfolio-summary td {
+  padding-block: var(--dahc-space-2);
+  padding-inline: var(--dahc-space-2);
+  border-block-end: var(--dahc-size-border) solid var(--dahc-color-border-subtle);
+  text-align: start;
+}
+
+.portfolio-summary th {
+  color: var(--dahc-color-text-secondary);
+  font-weight: var(--dahc-font-weight-medium);
+}
+
+.portfolio-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--dahc-space-3);
+}

@@ -1,0 +1,11 @@
+/* Ported from dubai-health-ui dh-affix: sticky at the offset. The pinned state adds the raised
+   shadow so the pinned content stands out from what scrolls under it (DERIVED). */
+:host {
+  position: sticky;
+  z-index: var(--dahc-z-sticky);
+  display: block;
+}
+
+:host(.dahc-affix--affixed) {
+  box-shadow: var(--dahc-shadow-1);
+}

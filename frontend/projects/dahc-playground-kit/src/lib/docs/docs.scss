@@ -1,0 +1,619 @@
+// Documentation page styles (NG-ZORRO layout) built from DAHC-UI semantic tokens. Shared by the
+// component page, example cards, API tables, search and the overview. Global (unencapsulated)
+// selectors are not used: each component lists this file in its styleUrls.
+
+// Article and table of contents.
+.pg-doc-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--dahc-space-8);
+}
+
+@media (min-width: 90rem) {
+  .pg-doc-layout {
+    grid-template-columns: minmax(0, 1fr) calc(var(--dahc-size-measure-narrow) / 2);
+  }
+}
+
+.pg-doc-article {
+  min-inline-size: 0;
+  max-inline-size: calc(var(--dahc-size-container-max) - var(--dahc-size-measure-narrow));
+  color: var(--dahc-color-text-primary);
+}
+
+.pg-doc-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--dahc-space-3);
+  margin: var(--dahc-space-2) 0 var(--dahc-space-5);
+  color: var(--dahc-color-text-primary);
+  font-size: var(--dahc-font-size-26);
+  font-weight: var(--dahc-font-weight-bold);
+  line-height: var(--dahc-font-line-height-tight);
+}
+
+.pg-doc-selector {
+  padding: var(--dahc-space-0-5) var(--dahc-space-2);
+  border-radius: var(--dahc-radius-sm);
+  background-color: var(--dahc-color-surface-muted);
+  color: var(--dahc-color-text-secondary);
+  font-size: var(--dahc-font-size-14);
+  font-weight: var(--dahc-font-weight-regular);
+}
+
+.pg-doc-lead,
+.pg-doc-text {
+  margin: 0 0 var(--dahc-space-4);
+  max-inline-size: var(--dahc-size-measure-wide);
+  color: var(--dahc-color-text-secondary);
+  font-size: var(--dahc-font-size-16);
+  line-height: var(--dahc-font-line-height-normal);
+}
+
+.pg-doc-muted {
+  margin: 0;
+  color: var(--dahc-color-text-secondary);
+  font-size: var(--dahc-font-size-14);
+}
+
+.pg-doc-section {
+  margin-block-start: var(--dahc-space-10);
+}
+
+.pg-doc-h2 {
+  display: flex;
+  align-items: center;
+  gap: var(--dahc-space-2);
+  margin: 0 0 var(--dahc-space-4);
+  color: var(--dahc-color-text-primary);
+  font-size: var(--dahc-font-size-24);
+  font-weight: var(--dahc-font-weight-bold);
+  line-height: var(--dahc-font-line-height-tight);
+}
+
+.pg-doc-h2:focus,
+.pg-example-title:focus {
+  outline: none;
+}
+
+.pg-doc-list {
+  margin: 0;
+  padding-inline-start: var(--dahc-space-6);
+  color: var(--dahc-color-text-secondary);
+  line-height: var(--dahc-font-line-height-normal);
+}
+
+.pg-doc-list li + li {
+  margin-block-start: var(--dahc-space-2);
+}
+
+.pg-doc-notes {
+  color: var(--dahc-color-text-secondary);
+}
+
+.pg-toc {
+  display: none;
+}
+
+@media (min-width: 90rem) {
+  .pg-toc {
+    position: sticky;
+    inset-block-start: calc(var(--dahc-space-16) + var(--dahc-space-6));
+    display: block;
+    align-self: start;
+    max-block-size: calc(100vh - var(--dahc-space-16) - var(--dahc-space-12));
+    overflow-y: auto;
+  }
+}
+
+.pg-toc-list {
+  margin: 0;
+  padding: 0;
+  border-inline-start: var(--dahc-size-border) solid var(--dahc-color-border-subtle);
+  list-style: none;
+}
+
+.pg-toc-link {
+  display: block;
+  margin-inline-start: calc(var(--dahc-size-border) * -1);
+  padding-block: var(--dahc-space-1);
+  padding-inline-start: var(--dahc-space-4);
+  border-inline-start: var(--dahc-size-border-strong) solid transparent;
+  color: var(--dahc-color-text-secondary);
+  font-size: var(--dahc-font-size-14);
+  line-height: var(--dahc-font-line-height-tight);
+  text-decoration: none;
+}
+
+.pg-toc-link--nested {
+  padding-inline-start: var(--dahc-space-8);
+}
+
+.pg-toc-link:hover {
+  color: var(--dahc-color-text-link);
+}
+
+.pg-toc-link--active {
+  border-inline-start-color: var(--dahc-color-border-strong);
+  color: var(--dahc-color-text-primary);
+}
+
+.pg-toc-link:focus-visible {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: var(--dahc-size-focus-offset);
+}
+
+// Examples (NG-ZORRO code boxes).
+.pg-examples {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--dahc-space-4);
+}
+
+@media (min-width: 90rem) {
+  .pg-examples--two {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .pg-examples--two .pg-example--wide {
+    grid-column: 1 / -1;
+  }
+}
+
+:host(.pg-example-host) {
+  display: block;
+  min-inline-size: 0;
+}
+
+.pg-example {
+  min-inline-size: 0;
+  border: var(--dahc-size-border) solid var(--dahc-color-border-subtle);
+  border-radius: var(--dahc-radius-md);
+  background-color: var(--dahc-color-surface);
+}
+
+.pg-example-demo {
+  min-inline-size: 0;
+  padding: var(--dahc-space-6) var(--dahc-space-3) var(--dahc-space-8);
+  border-block-end: var(--dahc-size-border) solid var(--dahc-color-border-subtle);
+}
+
+@media (min-width: 48rem) {
+  .pg-example-demo {
+    padding: var(--dahc-space-10) var(--dahc-space-6) var(--dahc-space-12);
+  }
+}
+
+.pg-example-meta {
+  position: relative;
+  padding: var(--dahc-space-5) var(--dahc-space-6) var(--dahc-space-4);
+}
+
+.pg-example-title {
+  position: absolute;
+  inset-block-start: calc(var(--dahc-font-size-14) * -0.75);
+  inset-inline-start: var(--dahc-space-4);
+  margin: 0;
+  padding-inline: var(--dahc-space-2);
+  background-color: var(--dahc-color-surface);
+  color: var(--dahc-color-text-primary);
+  font-size: var(--dahc-font-size-14);
+  font-weight: var(--dahc-font-weight-bold);
+  line-height: var(--dahc-font-line-height-tight);
+}
+
+.pg-example-description {
+  margin: 0;
+  color: var(--dahc-color-text-secondary);
+  font-size: var(--dahc-font-size-14);
+  line-height: var(--dahc-font-line-height-normal);
+}
+
+.pg-example-actions {
+  display: flex;
+  justify-content: center;
+  gap: var(--dahc-space-2);
+  margin-block-start: var(--dahc-space-4);
+  padding-block-start: var(--dahc-space-3);
+  border-block-start: var(--dahc-size-border) dashed var(--dahc-color-border-subtle);
+}
+
+.pg-example-action {
+  min-block-size: var(--dahc-size-target-min);
+  padding-inline: var(--dahc-space-3);
+  border: var(--dahc-size-border) solid var(--dahc-color-border-default);
+  border-radius: var(--dahc-radius-pill);
+  background-color: var(--dahc-color-surface);
+  color: var(--dahc-color-text-primary);
+  font: inherit;
+  font-size: var(--dahc-font-size-12);
+  cursor: pointer;
+}
+
+.pg-example-action:hover:not(:disabled) {
+  border-color: var(--dahc-color-border-strong);
+}
+
+.pg-example-action:disabled {
+  opacity: var(--dahc-opacity-disabled);
+  cursor: not-allowed;
+}
+
+.pg-example-action:focus-visible,
+.pg-example-code pre:focus-visible {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: var(--dahc-size-focus-offset);
+}
+
+.pg-example-code {
+  border-block-start: var(--dahc-size-border) dashed var(--dahc-color-border-subtle);
+}
+
+.pg-example-code pre {
+  margin: 0;
+  padding: var(--dahc-space-4) var(--dahc-space-6);
+  overflow-x: auto;
+  background-color: var(--dahc-color-surface-muted);
+  border-end-start-radius: var(--dahc-radius-md);
+  border-end-end-radius: var(--dahc-radius-md);
+  color: var(--dahc-color-text-primary);
+  font-size: var(--dahc-font-size-12);
+  line-height: var(--dahc-font-line-height-normal);
+  white-space: pre;
+}
+
+// The Playground card: the live preview at full width, the property inspector below it.
+.pg-playground {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--dahc-space-6);
+  padding-block-start: var(--dahc-space-6);
+}
+
+.pg-playground-label {
+  margin: 0 0 var(--dahc-space-3);
+  color: var(--dahc-color-text-secondary);
+  font-size: var(--dahc-font-size-12);
+  font-weight: var(--dahc-font-weight-bold);
+  letter-spacing: var(--dahc-font-letter-spacing-caps);
+  text-transform: uppercase;
+}
+
+.pg-preview-stage {
+  min-inline-size: 0;
+  padding: var(--dahc-space-6) var(--dahc-space-4);
+  border-radius: var(--dahc-radius-md);
+  background-color: var(--dahc-color-background);
+}
+
+.pg-playground-properties {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(14rem, 100%), 1fr));
+  gap: var(--dahc-space-3) var(--dahc-space-5);
+  align-items: start;
+  min-inline-size: 0;
+}
+
+.pg-playground-properties > .pg-playground-label {
+  grid-column: 1 / -1;
+}
+
+// Pages wrap their controls in one .pg-stack; lay those controls out in columns too (global rule:
+// the projected wrapper belongs to the page, so only the global copy of this file reaches it).
+.pg-playground-properties > .pg-stack {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: repeat(auto-fill, minmax(min(14rem, 100%), 1fr));
+  gap: var(--dahc-space-3) var(--dahc-space-5);
+  align-items: start;
+}
+
+.pg-states {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dahc-space-6);
+}
+
+// API tables.
+.pg-api + .pg-api {
+  margin-block-start: var(--dahc-space-8);
+}
+
+.pg-api-heading {
+  margin: 0 0 var(--dahc-space-2);
+  font-size: var(--dahc-font-size-16);
+}
+
+.pg-api-required {
+  color: var(--dahc-color-error-text);
+  font-size: var(--dahc-font-size-12);
+}
+
+.pg-table-scroll {
+  margin-block: var(--dahc-space-3);
+  overflow-x: auto;
+  border: var(--dahc-size-border) solid var(--dahc-color-border-subtle);
+  border-radius: var(--dahc-radius-md);
+}
+
+.pg-table-scroll:focus-visible {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: var(--dahc-size-focus-offset);
+}
+
+.pg-table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-size: var(--dahc-font-size-14);
+  line-height: var(--dahc-font-line-height-normal);
+}
+
+.pg-table th,
+.pg-table td {
+  padding: var(--dahc-space-3) var(--dahc-space-4);
+  border-block-end: var(--dahc-size-border) solid var(--dahc-color-border-subtle);
+  text-align: start;
+  vertical-align: top;
+}
+
+.pg-table th {
+  background-color: var(--dahc-color-surface-muted);
+  color: var(--dahc-color-text-primary);
+  font-weight: var(--dahc-font-weight-bold);
+  white-space: nowrap;
+}
+
+.pg-table tr:last-child td {
+  border-block-end: 0;
+}
+
+.pg-table td:first-child code {
+  white-space: nowrap;
+}
+
+.pg-table code {
+  color: var(--dahc-color-text-primary);
+  font-size: var(--dahc-font-size-12);
+  overflow-wrap: anywhere;
+}
+
+// Header search.
+:host(.pg-search) {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.pg-search-input {
+  inline-size: 100%;
+  max-inline-size: var(--dahc-size-measure-narrow);
+  min-block-size: var(--dahc-size-touch-target);
+  padding-inline: var(--dahc-space-3) var(--dahc-space-8);
+  border: var(--dahc-size-border) solid var(--dahc-color-border-subtle);
+  border-radius: var(--dahc-radius-pill);
+  background-color: var(--dahc-color-surface);
+  color: var(--dahc-color-text-primary);
+  font: inherit;
+  font-size: var(--dahc-font-size-14);
+}
+
+.pg-search-input::placeholder {
+  color: var(--dahc-color-text-placeholder);
+}
+
+.pg-search-input:focus-visible {
+  border-color: var(--dahc-color-border-strong);
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: var(--dahc-size-focus-offset);
+}
+
+.pg-search-kbd {
+  position: absolute;
+  inset-inline-start: calc(min(100%, var(--dahc-size-measure-narrow)) - var(--dahc-space-6));
+  padding: 0 var(--dahc-space-1);
+  border: var(--dahc-size-border) solid var(--dahc-color-border-subtle);
+  border-radius: var(--dahc-radius-xs);
+  color: var(--dahc-color-text-secondary);
+  font: inherit;
+  font-size: var(--dahc-font-size-12);
+  pointer-events: none;
+}
+
+.pg-search-results {
+  position: absolute;
+  inset-block-start: calc(100% + var(--dahc-space-1));
+  inset-inline-start: 0;
+  z-index: var(--dahc-z-dropdown);
+  inline-size: min(var(--dahc-size-measure-narrow), calc(100vw - 2 * var(--dahc-space-4)));
+  max-block-size: calc(var(--dahc-space-16) * 6);
+  margin: 0;
+  padding: var(--dahc-space-1);
+  overflow-y: auto;
+  border: var(--dahc-size-border) solid var(--dahc-color-border-popup);
+  border-radius: var(--dahc-radius-md);
+  background-color: var(--dahc-color-surface);
+  box-shadow: var(--dahc-shadow-3);
+  list-style: none;
+}
+
+.pg-search-option,
+.pg-search-empty {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0 var(--dahc-space-2);
+  padding: var(--dahc-space-2) var(--dahc-space-3);
+  border-radius: var(--dahc-radius-sm);
+  color: var(--dahc-color-text-primary);
+  font-size: var(--dahc-font-size-14);
+}
+
+.pg-search-option {
+  cursor: pointer;
+}
+
+.pg-search-option[aria-selected='true'],
+.pg-search-option:hover {
+  background-color: var(--dahc-color-surface-highlight);
+}
+
+.pg-search-option-title {
+  font-weight: var(--dahc-font-weight-bold);
+}
+
+.pg-search-option-meta {
+  color: var(--dahc-color-text-secondary);
+  font-size: var(--dahc-font-size-12);
+}
+
+.pg-search-option-description {
+  grid-column: 1 / -1;
+  color: var(--dahc-color-text-secondary);
+  font-size: var(--dahc-font-size-12);
+}
+
+.pg-search-empty {
+  color: var(--dahc-color-text-secondary);
+}
+
+// Components overview.
+.pg-overview-filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--dahc-space-4);
+  margin-block: var(--dahc-space-6) var(--dahc-space-2);
+}
+
+.pg-overview-input {
+  max-inline-size: calc(var(--dahc-size-measure-narrow) * 1.25);
+}
+
+.pg-overview-group {
+  margin-block-start: var(--dahc-space-8);
+}
+
+.pg-overview-count {
+  padding: 0 var(--dahc-space-2);
+  border-radius: var(--dahc-radius-pill);
+  background-color: var(--dahc-color-surface-muted);
+  color: var(--dahc-color-text-secondary);
+  font-size: var(--dahc-font-size-14);
+  font-weight: var(--dahc-font-weight-regular);
+}
+
+.pg-overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(14rem, 100%), 1fr));
+  gap: var(--dahc-space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pg-overview-card {
+  display: grid;
+  gap: var(--dahc-space-2);
+  block-size: 100%;
+  padding: var(--dahc-space-5);
+  border: var(--dahc-size-border) solid var(--dahc-color-border-subtle);
+  border-radius: var(--dahc-radius-md);
+  background-color: var(--dahc-color-surface);
+  color: var(--dahc-color-text-primary);
+  text-decoration: none;
+  transition:
+    box-shadow var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard),
+    border-color var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard);
+}
+
+.pg-overview-card:hover {
+  border-color: var(--dahc-color-border-default);
+  box-shadow: var(--dahc-shadow-3);
+}
+
+.pg-overview-card:focus-visible {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: var(--dahc-size-focus-offset);
+}
+
+.pg-overview-mark {
+  display: inline-grid;
+  place-items: center;
+  inline-size: var(--dahc-size-control-md);
+  block-size: var(--dahc-size-control-md);
+  border-radius: var(--dahc-radius-md);
+  background-color: var(--dahc-color-surface-highlight);
+  color: var(--dahc-color-text-primary);
+  font-weight: var(--dahc-font-weight-bold);
+}
+
+.pg-overview-card-title {
+  font-weight: var(--dahc-font-weight-bold);
+}
+
+.pg-overview-selector {
+  justify-self: start;
+  color: var(--dahc-color-text-secondary);
+  font-size: var(--dahc-font-size-12);
+}
+
+.pg-overview-description {
+  color: var(--dahc-color-text-secondary);
+  font-size: var(--dahc-font-size-14);
+  line-height: var(--dahc-font-line-height-normal);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pg-overview-card {
+    transition: none;
+  }
+}
+
+// Code blocks on docs pages.
+.pg-doc-code {
+  margin: var(--dahc-space-3) 0 var(--dahc-space-6);
+  padding: var(--dahc-space-4) var(--dahc-space-5);
+  overflow-x: auto;
+  border: var(--dahc-size-border) solid var(--dahc-color-border-subtle);
+  border-radius: var(--dahc-radius-md);
+  background-color: var(--dahc-color-surface-muted);
+  color: var(--dahc-color-text-primary);
+  font-size: var(--dahc-font-size-12);
+  line-height: var(--dahc-font-line-height-normal);
+}
+
+.pg-doc-code:focus-visible {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: var(--dahc-size-focus-offset);
+}
+
+.pg-doc-h3 {
+  margin: var(--dahc-space-6) 0 var(--dahc-space-2);
+  color: var(--dahc-color-text-primary);
+  font-size: var(--dahc-font-size-18);
+}
+
+.pg-doc-features {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr));
+  gap: var(--dahc-space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pg-doc-feature {
+  padding: var(--dahc-space-5);
+  border: var(--dahc-size-border) solid var(--dahc-color-border-subtle);
+  border-radius: var(--dahc-radius-md);
+  color: var(--dahc-color-text-secondary);
+  font-size: var(--dahc-font-size-14);
+  line-height: var(--dahc-font-line-height-normal);
+}
+
+.pg-doc-feature strong {
+  display: block;
+  margin-block-end: var(--dahc-space-1);
+  color: var(--dahc-color-text-primary);
+  font-size: var(--dahc-font-size-16);
+}

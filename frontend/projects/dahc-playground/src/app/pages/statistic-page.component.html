@@ -1,0 +1,41 @@
+<dahc-playground-page
+  heading="Statistic"
+  description="A number with its label in the DH Stats text style (frame 50:2249, Care in Numbers). For coloured score tiles use Stat tile. Ported from dubai-health-ui dh-statistic."
+  selector="dahc-statistic"
+  [whenToUse]="whenToUse"
+  [exampleColumns]="2"
+  [sourceFiles]="sourceFiles">
+  <div preview class="pg-row">
+    <dahc-statistic label="Candidates this cycle" [value]="12480" suffix="+" [size]="size()" />
+    <dahc-statistic label="Application fee" value="650" prefix="AED " [size]="size()" />
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-choice label="size" [options]="sizes" [(value)]="size" />
+  </div>
+
+  <div states class="pg-row">
+    <dahc-statistic label="Programs" value="7" />
+    <dahc-statistic label="Status" value="Open" />
+  </div>
+
+  <div examples>
+    <dahc-doc-example exampleId="basic" heading="Basic" description="A label and a number formatted for the locale." template="statistic-page.component.html">
+      <dahc-statistic label="Training sites" [value]="18" />
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="affix" heading="Prefix and suffix" description="Currency and units around the value." template="statistic-page.component.html">
+      <dahc-statistic label="Residency fee" value="650" prefix="AED " />
+      <dahc-statistic label="Graduates since 2016" [value]="3200" suffix="+" />
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="large" heading="Large" description="The large size for headline numbers." template="statistic-page.component.html">
+      <dahc-statistic label="Specialties" [value]="42" size="lg" />
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="text" heading="Text value" description="Values can be words." template="statistic-page.component.html">
+      <dahc-statistic label="Admission cycle" value="Open" />
+    </dahc-doc-example>
+  </div>
+
+  <ul accessibility class="pg-notes">
+    <li>Plain text: the value and label read in order; numbers are formatted for the locale.</li>
+  </ul>
+</dahc-playground-page>

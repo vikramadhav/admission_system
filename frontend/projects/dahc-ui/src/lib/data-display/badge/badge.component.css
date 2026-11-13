@@ -1,0 +1,41 @@
+/* Aligned with dubai-health-ui dh-badge: 20px pill, Bold 12/16, 6px sides, red (tag-error hue)
+   with on-hue text and a 2px surface ring that separates it from what it sits on. */
+
+:host {
+  display: inline-grid;
+  place-items: center;
+  min-inline-size: var(--dahc-size-icon-md);
+  block-size: var(--dahc-size-icon-md);
+  padding-inline: calc(var(--dahc-space-1) + var(--dahc-space-0-5));
+  border-radius: var(--dahc-radius-pill);
+  background-color: var(--dahc-color-tag-error);
+  box-shadow: 0 0 0 var(--dahc-size-border-strong) var(--dahc-color-surface);
+  color: var(--dahc-color-text-on-special);
+  font-size: var(--dahc-font-size-12);
+  font-weight: var(--dahc-font-weight-bold);
+  line-height: var(--dahc-type-overline-line-height);
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+:host(.dahc-badge--primary) {
+  background-color: var(--dahc-color-action-primary);
+  color: var(--dahc-color-text-inverse);
+}
+
+:host(.dahc-badge--dot) {
+  min-inline-size: 0;
+  inline-size: var(--dahc-space-2);
+  block-size: var(--dahc-space-2);
+  padding: 0;
+}
+
+@media (forced-colors: active) {
+  :host {
+    border: var(--dahc-size-border) solid CanvasText;
+  }
+}

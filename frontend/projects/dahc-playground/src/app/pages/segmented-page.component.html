@@ -1,0 +1,46 @@
+<dahc-playground-page
+  heading="Segmented"
+  description="A segmented control for picking one of a few options, such as a period or a view. Ported from dubai-health-ui dh-segmented."
+  [sourceFiles]="sourceFiles"
+  selector="dahc-segmented"
+  [whenToUse]="whenToUse">
+  <div preview>
+    <dahc-segmented label="Period" [options]="options" [formControl]="control" />
+  </div>
+
+  <div inspector class="pg-stack">
+    <p class="pg-value" data-testid="form-value">Form value: {{ valueText() }}</p>
+  </div>
+
+  <dahc-doc-example
+    examples
+    exampleId="basic"
+    heading="Basic"
+    description="Two options switch the layout of a list."
+    template="segmented-page.component.html">
+    <dahc-segmented label="Layout" [options]="exampleViews" [formControl]="exampleView" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="disabled-option"
+    heading="Disabled option"
+    description="An option that is not available yet stays visible but cannot be chosen."
+    template="segmented-page.component.html">
+    <dahc-segmented label="Intake" [options]="exampleTerms" [formControl]="exampleTerm" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="three"
+    heading="Three options"
+    description="A display density switch."
+    template="segmented-page.component.html">
+    <dahc-segmented label="Density" [options]="exampleSizes" [formControl]="exampleDensity" />
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>Native radio buttons in a labelled radio group: Arrow keys move the choice, Tab leaves the group.</li>
+    <li>The selected option is navy with bold white text; disabled options are skipped by the keyboard.</li>
+  </ul>
+</dahc-playground-page>

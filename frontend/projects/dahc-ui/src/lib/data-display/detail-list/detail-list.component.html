@@ -1,0 +1,24 @@
+@if (heading() !== '') {
+  @switch (headingLevel()) {
+    @case (2) {
+      <h2 class="dahc-detail-list__heading">{{ heading() }}</h2>
+    }
+    @case (4) {
+      <h4 class="dahc-detail-list__heading">{{ heading() }}</h4>
+    }
+    @default {
+      <h3 class="dahc-detail-list__heading">{{ heading() }}</h3>
+    }
+  }
+}
+<dl class="dahc-detail-list__list">
+  @for (item of items(); track item.label) {
+    <div class="dahc-detail-list__item">
+      <dt class="dahc-detail-list__label">{{ item.label }}</dt>
+      <dd class="dahc-detail-list__value" [class.dahc-detail-list__value--empty]="item.value === ''">
+        {{ item.value === '' ? emptyValue() : item.value }}
+      </dd>
+    </div>
+  }
+  <ng-content />
+</dl>

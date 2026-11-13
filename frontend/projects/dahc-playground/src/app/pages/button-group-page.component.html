@@ -1,0 +1,45 @@
+<dahc-playground-page
+  heading="Button group"
+  description="A single-choice segmented control built on native radio buttons, styled as the Figma Selection chip. Figma Chips and Tags 50:7519."
+  selector="dahc-button-group"
+  [whenToUse]="whenToUse"
+  [sourceFiles]="sourceFiles">
+  <div preview>
+    <dahc-button-group
+      [label]="label()"
+      [options]="options"
+      [size]="size()"
+      [hideLabel]="hideLabel()"
+      [formControl]="control" />
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-text label="label" [(value)]="label" />
+    <dahc-inspector-choice label="size" [options]="sizes" [(value)]="size" />
+    <dahc-inspector-toggle label="hideLabel" [(value)]="hideLabel" />
+    <p class="pg-value" data-testid="form-value">Form value: {{ valueText() }}</p>
+  </div>
+
+  <div states class="pg-stack">
+    <dahc-button-group label="Small" size="sm" [options]="options" selected="corporate" />
+    <dahc-button-group label="With a disabled option" [options]="optionsWithDisabled" selected="all" />
+    <dahc-button-group label="Disabled group" [options]="options" [formControl]="disabledControl" />
+  </div>
+
+  <dahc-doc-example examples exampleId="basic" heading="Basic" description="The legend names the group; the selected option is bold." template="button-group-page.component.html">
+    <dahc-button-group label="Applicant type" [options]="applicantTypes" selected="all" />
+  </dahc-doc-example>
+  <dahc-doc-example examples exampleId="small" heading="Small" description="size=&quot;sm&quot; for toolbars and dense filters." template="button-group-page.component.html">
+    <dahc-button-group label="Period" size="sm" [options]="periods" selected="month" />
+  </dahc-doc-example>
+  <dahc-doc-example examples exampleId="hidden-label" heading="Hidden label" description="hideLabel keeps the legend for screen readers when a visible heading already names the choice." template="button-group-page.component.html">
+    <dahc-button-group label="Show applications for" [hideLabel]="true" [options]="applicantTypes" selected="individual" />
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>Native radio buttons in a fieldset: the legend names the group, Tab moves into and out of it, arrow keys change the choice.</li>
+    <li>The selected option is bold; a hidden bold copy reserves its width, so selecting does not shift the layout.</li>
+    <li>Works with reactive forms (value, touched, disabled) or standalone through [(selected)].</li>
+    <li>In forced-colours mode the selected option uses the Highlight system colours.</li>
+  </ul>
+</dahc-playground-page>

@@ -1,0 +1,89 @@
+<dahc-playground-page
+  heading="Tabs, steps and pagination"
+  description="Tabs switch between related views, steps show progress through a sequence, and pagination moves between pages of a long list. Ported from dubai-health-ui; inverse tabs Figma 50:9930, pagination Figma 50:8033."
+  selector="dahc-tabs / dahc-steps / dahc-pagination"
+  [whenToUse]="whenToUse"
+  [exampleColumns]="2"
+  [sourceFiles]="sourceFiles">
+  <div preview class="pg-stack">
+    <dahc-tabs label="Application" [tone]="tone()" [(active)]="activeTab">
+      <dahc-tab-panel name="overview" label="Overview"><p>Program, preferences and key dates.</p></dahc-tab-panel>
+      <dahc-tab-panel name="documents" label="Documents" icon="upload"><p>Uploaded documents.</p></dahc-tab-panel>
+      <dahc-tab-panel name="payments" label="Payments"><p>Receipts and refunds.</p></dahc-tab-panel>
+      <dahc-tab-panel name="interview" label="Interview" [disabled]="true"><p>Not scheduled.</p></dahc-tab-panel>
+    </dahc-tabs>
+    <p class="pg-value" data-testid="active-tab">active: {{ activeTab() }}</p>
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-choice label="tabs tone" [options]="tones" [(value)]="tone" />
+    <dahc-inspector-choice label="steps direction" [options]="directions" [(value)]="direction" />
+  </div>
+
+  <div states class="pg-stack">
+    <dahc-steps label="Application progress" [steps]="steps" [current]="currentStep()" [direction]="direction()" />
+    <dahc-pagination [total]="95" [pageSize]="10" [divider]="true" [(current)]="page" />
+    <p class="pg-value" data-testid="current-page">page: {{ page() }}</p>
+  </div>
+
+  <dahc-doc-example
+    examples
+    exampleId="tabs"
+    heading="Tabs"
+    description="Three views of an application with an icon and a disabled tab."
+    template="navigation-data-page.component.html">
+    <dahc-tabs label="Application views">
+      <dahc-tab-panel name="summary" label="Summary"><p>Program and preferences.</p></dahc-tab-panel>
+      <dahc-tab-panel name="files" label="Files" icon="upload"><p>Uploaded documents.</p></dahc-tab-panel>
+      <dahc-tab-panel name="history" label="History" [disabled]="true"><p>No changes yet.</p></dahc-tab-panel>
+    </dahc-tabs>
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="steps-horizontal"
+    heading="Horizontal steps"
+    description="Progress across the page; the second step is current."
+    template="navigation-data-page.component.html">
+    <dahc-steps
+      label="Registration progress"
+      [current]="1"
+      [steps]="[
+        { heading: 'Account' },
+        { heading: 'Profile' },
+        { heading: 'Done' }
+      ]" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="steps-vertical"
+    heading="Vertical steps with an error"
+    description="A step can override its status, for example error."
+    template="navigation-data-page.component.html">
+    <dahc-steps
+      label="Submission progress"
+      direction="vertical"
+      [current]="2"
+      [steps]="[
+        { heading: 'Program' },
+        { heading: 'Documents', status: 'error', description: 'Upload your transcript' },
+        { heading: 'Payment' }
+      ]" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="pagination"
+    heading="Pagination"
+    description="42 items, 10 per page."
+    template="navigation-data-page.component.html">
+    <dahc-pagination [total]="42" [pageSize]="10" />
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>Tabs: arrow keys in the reading direction move and select, Home / End jump, Tab moves into the panel; disabled tabs are skipped.</li>
+    <li>Steps: an ordered list; the current step has aria-current="step" and every step announces its status.</li>
+    <li>Pagination: a navigation landmark; page buttons are named "Page n", the current page has aria-current="page", and focus follows the chosen page.</li>
+  </ul>
+</dahc-playground-page>

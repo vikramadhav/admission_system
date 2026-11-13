@@ -1,0 +1,100 @@
+/* GME key/value grid (Created / Submitted / Announcement, Pay & Submit): label Regular 12/16
+   navy-900 above the value Medium 16/20 navy (GME label 12, value 15 aligned to the DH 16 scale,
+   decision D3). Columns DERIVED. Heading and the bordered variant follow dubai-health-ui
+   dh-descriptions: heading H4 with 16 below; bordered = navy-100 frame, radius 12, no gaps, each
+   pair padded 12/16 with a navy-100 line, label 14/18 hint, value Bold 16/20. Projected pairs
+   (dahc-detail-item) style themselves in detail-item.component.css. */
+
+:host {
+  display: block;
+}
+
+.dahc-detail-list__list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--dahc-space-4) var(--dahc-space-6);
+  margin: 0;
+}
+
+/* Breakpoint md (tokens/_breakpoints.scss) */
+@media (min-width: 48rem) {
+  :host(.dahc-detail-list--columns-2) .dahc-detail-list__list,
+  :host(.dahc-detail-list--columns-3) .dahc-detail-list__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Breakpoint lg (tokens/_breakpoints.scss) */
+@media (min-width: 64rem) {
+  :host(.dahc-detail-list--columns-3) .dahc-detail-list__list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.dahc-detail-list__item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dahc-space-1);
+  min-inline-size: 0;
+}
+
+.dahc-detail-list__label {
+  color: var(--dahc-color-text-secondary);
+  font-size: var(--dahc-font-size-12);
+  font-weight: var(--dahc-font-weight-regular);
+  line-height: var(--dahc-type-overline-line-height);
+}
+
+.dahc-detail-list__value {
+  margin: 0;
+  color: var(--dahc-color-text-primary);
+  font-size: var(--dahc-font-size-16);
+  font-weight: var(--dahc-font-weight-medium);
+  line-height: var(--dahc-font-line-height-tight);
+  overflow-wrap: anywhere;
+}
+
+.dahc-detail-list__value--empty {
+  color: var(--dahc-color-text-secondary);
+  font-weight: var(--dahc-font-weight-regular);
+}
+
+.dahc-detail-list__heading {
+  margin-block: 0 var(--dahc-space-4);
+  color: var(--dahc-color-text-primary);
+  font-size: var(--dahc-type-heading-4-size);
+  font-weight: var(--dahc-type-heading-4-weight);
+  line-height: var(--dahc-type-heading-4-line-height);
+}
+
+/* Bordered (dh-descriptions bordered). Items overlap the frame's bottom edge by one border so the
+   last row never shows a double line. */
+:host(.dahc-detail-list--bordered) .dahc-detail-list__list {
+  gap: 0;
+  border: var(--dahc-size-border) solid var(--dahc-color-border-subtle);
+  border-radius: var(--dahc-radius-md);
+  overflow: hidden;
+}
+
+:host(.dahc-detail-list--bordered) .dahc-detail-list__item {
+  margin-block-end: calc(var(--dahc-size-border) * -1);
+  padding-block: var(--dahc-space-3);
+  padding-inline: var(--dahc-space-4);
+  border-block-end: var(--dahc-size-border) solid var(--dahc-color-border-subtle);
+}
+
+:host(.dahc-detail-list--bordered) .dahc-detail-list__label {
+  font-size: var(--dahc-font-size-14);
+  line-height: var(--dahc-type-body-sm-line-height);
+}
+
+:host(.dahc-detail-list--bordered) .dahc-detail-list__value {
+  font-weight: var(--dahc-font-weight-bold);
+}
+
+@media (forced-colors: active) {
+  :host(.dahc-detail-list--bordered) .dahc-detail-list__list,
+  :host(.dahc-detail-list--bordered) .dahc-detail-list__item {
+    border-color: CanvasText;
+  }
+}

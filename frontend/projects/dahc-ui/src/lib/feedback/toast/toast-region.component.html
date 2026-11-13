@@ -1,0 +1,25 @@
+<section class="dahc-toast-region" [attr.aria-label]="label()">
+  <ol class="dahc-toast-region__list" aria-live="polite">
+    @for (toast of service.toasts(); track toast.id) {
+      <li
+        [class]="'dahc-toast dahc-toast--' + toast.variant"
+        [attr.role]="toast.variant === 'error' ? 'alert' : null"
+        (pointerenter)="pause(toast)"
+        (pointerleave)="resume(toast)"
+        (focusin)="pause(toast)"
+        (focusout)="resume(toast)">
+        <dahc-icon class="dahc-toast__icon" [name]="icons[toast.variant]" size="lg" />
+        <div class="dahc-toast__body">
+          <p class="dahc-toast__heading">{{ toast.heading }}</p>
+          @if (toast.message) {
+            <p class="dahc-toast__message">{{ toast.message }}</p>
+          }
+        </div>
+        <button type="button" class="dahc-toast__dismiss" (click)="dismiss(toast)">
+          <dahc-icon name="x-close" size="md" />
+          <span class="dahc-visually-hidden">{{ dismissLabel() }}</span>
+        </button>
+      </li>
+    }
+  </ol>
+</section>

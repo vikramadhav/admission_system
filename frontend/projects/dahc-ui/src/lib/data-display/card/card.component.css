@@ -1,0 +1,104 @@
+/* default: GME panel (GME 1:3827) - white, 1px navy-200 border, radius 16, padding 24, no shadow.
+   subtle: highlighted surface (DH Elevation, blue-200). actionable: DH Actionable card.
+   elevated (any variant): dubai-health-ui dh-card elevated, Shadow 3 instead of the border. */
+
+:host {
+  display: block;
+  min-inline-size: 0;
+}
+
+.dahc-card__surface {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dahc-space-4);
+  padding-block: var(--dahc-space-6);
+  padding-inline: var(--dahc-space-6);
+  border: var(--dahc-size-border) solid var(--dahc-color-border-default);
+  border-radius: var(--dahc-radius-lg);
+  background-color: var(--dahc-color-surface);
+  color: var(--dahc-color-text-primary);
+  transition: box-shadow var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard);
+}
+
+/* DH Actionable card (Cards 50:13532, hover 50:1598): radius 12, navy-100 outline, Shadow 4 on hover
+   or keyboard focus inside (a card that contains a link or button). */
+:host(.dahc-card--actionable) .dahc-card__surface {
+  border-color: var(--dahc-color-border-subtle);
+  border-radius: var(--dahc-radius-md);
+}
+
+:host(.dahc-card--actionable) .dahc-card__surface:hover,
+:host(.dahc-card--actionable) .dahc-card__surface:has(:focus-visible) {
+  box-shadow: var(--dahc-shadow-4);
+}
+
+:host(.dahc-card--subtle) .dahc-card__surface {
+  border-color: transparent;
+  background-color: var(--dahc-color-surface-highlight);
+  box-shadow: var(--dahc-shadow-none);
+  color: var(--dahc-color-text-primary);
+}
+
+/* dh-card elevated: DH Shadow 3, no border; applies to every variant. The actionable hover lift
+   (Shadow 4) still wins because it is more specific. */
+:host(.dahc-card--elevated) .dahc-card__surface {
+  border-color: transparent;
+  box-shadow: var(--dahc-shadow-3);
+}
+
+.dahc-card__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--dahc-space-3);
+}
+
+.dahc-card__titles {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dahc-space-1);
+  min-inline-size: 0;
+}
+
+.dahc-card__eyebrow {
+  margin: 0;
+  color: var(--dahc-color-text-secondary);
+  font-size: var(--dahc-font-size-12);
+  font-weight: var(--dahc-font-weight-bold);
+  letter-spacing: var(--dahc-font-letter-spacing-caps);
+  text-transform: uppercase;
+}
+
+.dahc-card__heading {
+  margin: 0;
+  color: var(--dahc-color-action-primary);
+  font-size: var(--dahc-font-size-22);
+  font-weight: var(--dahc-font-weight-bold);
+  line-height: var(--dahc-font-line-height-tight);
+  overflow-wrap: anywhere;
+}
+
+:host(.dahc-card--subtle) .dahc-card__heading {
+  color: inherit;
+}
+
+.dahc-card__subheading {
+  margin: 0;
+  color: var(--dahc-color-text-secondary);
+  font-size: var(--dahc-font-size-14);
+}
+
+.dahc-card__aside:empty,
+.dahc-card__body:empty,
+.dahc-card__footer:empty {
+  display: none;
+}
+
+.dahc-card__footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dahc-space-3);
+  padding-block-start: var(--dahc-space-4);
+  border-block-start: var(--dahc-size-border) solid var(--dahc-color-border-default);
+}

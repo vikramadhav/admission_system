@@ -1,0 +1,11 @@
+/* DERIVED on the DH Input field (50:7763). The theme's color-scheme styles the browser's clock
+   button and popup in both themes. */
+
+:host {
+  display: block;
+  min-inline-size: 0;
+}
+
+.dahc-time-picker__control::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+}

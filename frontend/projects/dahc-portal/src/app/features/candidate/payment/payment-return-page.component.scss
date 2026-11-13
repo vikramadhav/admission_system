@@ -1,0 +1,45 @@
+.payment-page {
+  display: grid;
+  gap: var(--dahc-space-6);
+  max-inline-size: var(--dahc-size-container-max);
+  margin-inline: auto;
+  padding-block: var(--dahc-space-8) var(--dahc-space-12);
+  padding-inline: var(--dahc-space-4);
+}
+
+/* Same content edge as the header, banner and footer: 24px sides from md. */
+@media (min-width: 48rem) {
+  .payment-page {
+    padding-inline: var(--dahc-space-6);
+  }
+}
+
+.payment-text {
+  margin: 0;
+}
+
+.payment-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dahc-space-3);
+}
+
+// Featured check icon of the success dialog (Figma 1:5892).
+.payment-featured-icon {
+  display: inline-grid;
+  place-items: center;
+  inline-size: var(--dahc-size-control-lg);
+  block-size: var(--dahc-size-control-lg);
+  border-radius: var(--dahc-radius-pill);
+  background-color: var(--dahc-color-success-surface);
+  color: var(--dahc-color-success-icon);
+}
+
+.payment-details {
+  margin-block-start: var(--dahc-space-4);
+}
+
+.payment-dialog-actions {
+  display: flex;
+  justify-content: center;
+}

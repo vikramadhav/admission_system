@@ -1,0 +1,42 @@
+<dahc-playground-page
+  heading="QR code"
+  description="Text or a URL as a QR code, encoded in the browser: navy modules on a white card in every theme. Ported from dubai-health-ui dh-qr-code; DERIVED."
+  selector="dahc-qr-code"
+  [whenToUse]="whenToUse"
+  [exampleColumns]="2"
+  [sourceFiles]="sourceFiles">
+  <div preview>
+    <dahc-qr-code [value]="value()" [ecl]="ecl()" />
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-text label="value" [(value)]="value" />
+    <dahc-inspector-choice label="ecl" [options]="levels" [(value)]="ecl" />
+  </div>
+
+  <div states class="pg-row">
+    <dahc-qr-code value="GME-2026-000123" [size]="120" label="Application reference QR code" />
+    <dahc-qr-code value="https://www.dubaihealth.ae" ecl="H" [size]="120">
+      <img dahcQrIcon src="dahc-ui/logo/dh-logo-icon-navy.svg" alt="" />
+    </dahc-qr-code>
+  </div>
+
+  <div examples>
+    <dahc-doc-example exampleId="basic" heading="Basic" description="The value is encoded as it is." template="qr-code-page.component.html">
+      <dahc-qr-code value="https://www.dubaihealth.ae/gme" />
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="size" heading="Size" description="size sets the width in pixels." template="qr-code-page.component.html">
+      <dahc-qr-code value="GME-2026-000187" [size]="96" label="Reference GME-2026-000187" />
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="logo" heading="With logo" description="Mark the logo with dahcQrIcon and use error correction H." template="qr-code-page.component.html">
+      <dahc-qr-code value="https://www.dubaihealth.ae/careers" ecl="H" [size]="140">
+        <img dahcQrIcon src="dahc-ui/logo/dh-logo-icon-navy.svg" alt="" />
+      </dahc-qr-code>
+    </dahc-doc-example>
+  </div>
+
+  <ul accessibility class="pg-notes">
+    <li>An image named "QR code: &lt;value&gt;" unless a label is given; the SVG itself is hidden.</li>
+    <li>Use error correction H when a logo is placed in the centre; mark the logo with dahcQrIcon so it fits the centre tile.</li>
+  </ul>
+</dahc-playground-page>

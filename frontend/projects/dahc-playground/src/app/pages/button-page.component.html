@@ -1,0 +1,111 @@
+<dahc-playground-page
+  heading="Button"
+  description="A button starts an immediate action; on a link it navigates. It styles the native element, so semantics, keyboard support and form submission stay native. Figma Buttons 50:6786."
+  selector="button[dahc-button]"
+  [whenToUse]="whenToUse"
+  [exampleColumns]="2"
+  [sourceFiles]="sourceFiles">
+  <div preview>
+    <button
+      dahc-button
+      type="button"
+      [variant]="variant()"
+      [size]="size()"
+      [disabled]="disabled()"
+      [loading]="loading()"
+      [block]="block()"
+      [iconStart]="iconStart()"
+      [iconEnd]="iconEnd()"
+      [loadingLabel]="loadingLabel()"
+      (click)="recordClick()">{{ text() }}</button>
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-text label="content" [(value)]="text" />
+    <dahc-inspector-choice label="variant" [options]="variants" [(value)]="variant" />
+    <dahc-inspector-choice label="size" [options]="sizes" [(value)]="size" />
+    <dahc-inspector-choice label="iconStart" [options]="iconChoices" [(value)]="iconStartChoice" />
+    <dahc-inspector-choice label="iconEnd" [options]="iconChoices" [(value)]="iconEndChoice" />
+    <dahc-inspector-toggle label="disabled" [(value)]="disabled" />
+    <dahc-inspector-toggle label="loading" [(value)]="loading" />
+    <dahc-inspector-toggle label="block" [(value)]="block" />
+    <dahc-inspector-text label="loadingLabel" [(value)]="loadingLabel" />
+    <dahc-event-log [events]="events()" />
+  </div>
+
+  <div states class="pg-stack">
+    @for (state of variants; track state) {
+      <div>
+        <p class="pg-state-label">{{ state }}</p>
+        <div class="pg-row">
+          @for (buttonSize of sizes; track buttonSize) {
+            <button dahc-button type="button" [variant]="state" [size]="buttonSize" iconEnd="chevron-right">
+              {{ buttonSize }}
+            </button>
+          }
+          <button dahc-button type="button" [variant]="state" [disabled]="true">Disabled</button>
+          <button dahc-button type="button" [variant]="state" [loading]="true">Loading</button>
+        </div>
+      </div>
+    }
+    <div>
+      <p class="pg-state-label">Link element</p>
+      <div class="pg-row">
+        <a dahc-button variant="secondary" routerLink="/button">Link styled as a button</a>
+        <a dahc-button variant="secondary" routerLink="/button" [disabled]="true">Disabled link</a>
+      </div>
+    </div>
+  </div>
+
+  <dahc-doc-example examples exampleId="types" heading="Types" description="Primary for the main action, secondary and link for supporting actions, danger for destructive ones, and two special colours." template="button-page.component.html">
+    <dahc-space [wrap]="true">
+      <button dahc-button type="button">Primary</button>
+      <button dahc-button type="button" variant="secondary">Secondary</button>
+      <button dahc-button type="button" variant="link">Link</button>
+      <button dahc-button type="button" variant="danger">Danger</button>
+      <button dahc-button type="button" variant="danger-outline">Danger outline</button>
+      <button dahc-button type="button" variant="special-blue">Special blue</button>
+      <button dahc-button type="button" variant="special-green">Special green</button>
+    </dahc-space>
+  </dahc-doc-example>
+  <dahc-doc-example examples exampleId="sizes" heading="Sizes" description="Three heights: sm (36px) for dense areas, md (44px) by default and lg (48px) for the main call to action." template="button-page.component.html">
+    <dahc-space [wrap]="true">
+      <button dahc-button type="button" size="sm">Small</button>
+      <button dahc-button type="button">Medium</button>
+      <button dahc-button type="button" size="lg">Large</button>
+    </dahc-space>
+  </dahc-doc-example>
+  <dahc-doc-example examples exampleId="icons" heading="With icons" description="iconStart and iconEnd add a DAHC icon before or after the label; arrows and chevrons mirror in right-to-left." template="button-page.component.html">
+    <dahc-space [wrap]="true">
+      <button dahc-button type="button" iconStart="print">Print receipt</button>
+      <button dahc-button type="button" variant="secondary" iconEnd="chevron-right">Next step</button>
+    </dahc-space>
+  </dahc-doc-example>
+  <dahc-doc-example examples exampleId="loading" heading="Loading" description="While loading the button is busy, ignores clicks and announces the loading label." template="button-page.component.html">
+    <dahc-space [wrap]="true">
+      <button dahc-button type="button" [loading]="true">Submitting</button>
+      <button dahc-button type="button" variant="secondary" [loading]="true" loadingLabel="Saving your draft">Save as draft</button>
+    </dahc-space>
+  </dahc-doc-example>
+  <dahc-doc-example examples exampleId="disabled" heading="Disabled" description="A disabled button keeps its colours at reduced opacity and leaves the tab order." template="button-page.component.html">
+    <dahc-space [wrap]="true">
+      <button dahc-button type="button" [disabled]="true">Pay and submit</button>
+      <button dahc-button type="button" variant="secondary" [disabled]="true">Back</button>
+    </dahc-space>
+  </dahc-doc-example>
+  <dahc-doc-example examples exampleId="block" heading="Block and link" description="block stretches the button to its container; on an a element the same styles apply to a navigation link." template="button-page.component.html">
+    <dahc-space [vertical]="true" [block]="true">
+      <button dahc-button type="button" [block]="true">Continue</button>
+      <a dahc-button variant="secondary" routerLink="/button">Go to the button page</a>
+    </dahc-space>
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>Use a native button for actions and a link for navigation; both keep their own role and keyboard support (Enter, and Space for buttons).</li>
+    <li>Disabled buttons get the disabled attribute; disabled links get aria-disabled="true" and leave the tab order.</li>
+    <li>While loading the button is busy (aria-busy) and announces the loading label; clicks are ignored.</li>
+    <li>The focus ring uses the focus-ring token and is visible in both themes and in forced-colours mode.</li>
+    <li>Icons are decorative; the visible label is the accessible name. Chevrons and arrows mirror in right-to-left.</li>
+    <li>Special Blue uses a navy label: Figma's white label on #32AFFC is 2.42:1 (A11y fix).</li>
+  </ul>
+</dahc-playground-page>

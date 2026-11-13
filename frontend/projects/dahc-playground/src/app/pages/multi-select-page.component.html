@@ -1,0 +1,70 @@
+<dahc-playground-page
+  heading="Multi-select"
+  description="Choose several options from a dropdown list with optional search; the value is an array in option order. Figma Dropdown 50:12859."
+  [sourceFiles]="sourceFiles"
+  selector="dahc-multi-select"
+  [whenToUse]="whenToUse">
+  <div preview>
+    <dahc-multi-select
+      [label]="label()"
+      [hint]="hint()"
+      [options]="sites"
+      [searchable]="searchable()"
+      [invalid]="invalid()"
+      errorMessage="Choose at least one training site."
+      [formControl]="control" />
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-text label="label" [(value)]="label" />
+    <dahc-inspector-text label="hint" [(value)]="hint" />
+    <dahc-inspector-toggle label="searchable" [(value)]="searchable" />
+    <dahc-inspector-toggle label="invalid" [(value)]="invalid" />
+    <p class="pg-value" data-testid="form-value">Form value: {{ valueText() }}</p>
+  </div>
+
+  <div states class="pg-stack">
+    <dahc-multi-select label="Empty" [options]="sites" />
+    <dahc-multi-select label="Disabled" [options]="sites" [formControl]="disabledControl" />
+  </div>
+
+  <dahc-doc-example
+    examples
+    exampleId="basic"
+    heading="Basic"
+    description="Search the list and tick several options."
+    template="multi-select-page.component.html">
+    <dahc-multi-select label="Languages spoken" [options]="exampleLanguageOptions" [formControl]="exampleLanguagesSpoken" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="no-search"
+    heading="Without search"
+    description="Short lists do not need a search field."
+    template="multi-select-page.component.html">
+    <dahc-multi-select label="Shift preferences" [searchable]="false" [options]="exampleShiftOptions" [formControl]="exampleShifts" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="required"
+    heading="Required with error"
+    description="The error shows after the field was touched without a value."
+    template="multi-select-page.component.html">
+    <dahc-multi-select
+      label="Clinical interests"
+      [options]="sites"
+      [required]="true"
+      [invalid]="exampleInterests.invalid && exampleInterests.touched"
+      errorMessage="Choose at least one interest."
+      [formControl]="exampleInterests" />
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>A combobox with a multi-selectable listbox; the field label names it and it reports aria-expanded.</li>
+    <li>Enter, Space or ArrowDown opens it; ArrowUp / ArrowDown / Home / End move; Enter toggles and keeps the list open; Escape closes back to the field.</li>
+    <li>With search, typing filters the options and focus stays in the search field (aria-activedescendant shows the active option).</li>
+    <li>Each option shows a checkbox and reports aria-selected; disabled options are skipped.</li>
+  </ul>
+</dahc-playground-page>

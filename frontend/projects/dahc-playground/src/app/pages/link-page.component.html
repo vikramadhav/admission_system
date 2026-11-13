@@ -1,0 +1,90 @@
+<dahc-playground-page
+  heading="Link"
+  description="A text link on a real anchor in three sizes, blue or navy. Ported from dubai-health-ui dh-link; Figma Buttons Type=3 Links (50:6786)."
+  selector="a[dahc-link]"
+  [whenToUse]="whenToUse"
+  [exampleColumns]="2"
+  [sourceFiles]="sourceFiles">
+  <div preview class="link-surface">
+    <a
+      dahc-link
+      href="#guide"
+      [variant]="variant()"
+      [size]="size()"
+      [iconEnd]="icon() ? 'chevron-right' : null"
+      [target]="newTab() ? '_blank' : ''">
+      {{ text() }}
+    </a>
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-text label="text" [(value)]="text" />
+    <dahc-inspector-choice label="variant" [options]="variants" [(value)]="variant" />
+    <dahc-inspector-choice label="size" [options]="sizes" [(value)]="size" />
+    <dahc-inspector-toggle label="iconEnd chevron-right" [(value)]="icon" />
+    <dahc-inspector-toggle label="target _blank" [(value)]="newTab" />
+  </div>
+
+  <div states class="pg-stack link-surface">
+    @for (variantName of variants; track variantName) {
+      <p class="pg-value">
+        @for (sizeName of sizes; track sizeName) {
+          <a dahc-link href="#states" [variant]="variantName" [size]="sizeName">{{ variantName }} {{ sizeName }}</a>
+          {{ ' ' }}
+        }
+      </p>
+    }
+  </div>
+
+  <dahc-doc-example
+    examples
+    exampleId="variants"
+    heading="Blue and navy"
+    description="Both colours at the medium size."
+    template="link-page.component.html">
+    <dahc-space>
+      <a dahc-link href="#guide">Admission guide</a>
+      <a dahc-link href="#fees" variant="navy">Fees and payment</a>
+    </dahc-space>
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="sizes"
+    heading="Sizes"
+    description="Large 18, medium 16 and small 14."
+    template="link-page.component.html">
+    <dahc-space>
+      <a dahc-link href="#large" size="lg">Large link</a>
+      <a dahc-link href="#medium">Medium link</a>
+      <a dahc-link href="#small" size="sm">Small link</a>
+    </dahc-space>
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="icons"
+    heading="With icons"
+    description="An icon before or after the text."
+    template="link-page.component.html">
+    <dahc-space>
+      <a dahc-link href="#back" iconStart="chevron-left">Previous step</a>
+      <a dahc-link href="#next" iconEnd="chevron-right">Continue to payment</a>
+    </dahc-space>
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="external"
+    heading="New tab"
+    description="target _blank adds rel noopener noreferrer; the text says it opens a new tab."
+    template="link-page.component.html">
+    <a dahc-link href="https://www.dubaihealth.ae" target="_blank">Dubai Health website (opens in a new tab)</a>
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>A real anchor: keyboard, context menu and screen readers treat it as a link.</li>
+    <li>target="_blank" adds rel="noopener noreferrer" unless rel is set; say in the text that it opens a new tab.</li>
+    <li>Blue uses the accessible link colour (#026DAE): 5.5:1 on white, 4.9:1 on the page background and 4.6:1 on the Blue/200 banner. Hover adds an underline instead of a lighter tint.</li>
+  </ul>
+</dahc-playground-page>

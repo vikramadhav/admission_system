@@ -1,0 +1,48 @@
+<footer class="dahc-footer">
+  <div class="dahc-footer__inner">
+    <div class="dahc-footer__top">
+      <dahc-logo class="dahc-footer__logo" orientation="horizontal" color="white" />
+      @if (links().length > 0) {
+        <nav class="dahc-footer__nav" [attr.aria-label]="linksLabel()">
+          <ul class="dahc-footer__links">
+            @for (link of links(); track link.label) {
+              <li>
+                @if (link.route) {
+                  <a class="dahc-footer__link" [routerLink]="link.route">{{ link.label }}</a>
+                } @else {
+                  <a class="dahc-footer__link" [href]="link.href ?? '#'">{{ link.label }}</a>
+                }
+              </li>
+            }
+          </ul>
+        </nav>
+      }
+      @if (phone() !== '') {
+        <p class="dahc-footer__contact">
+          <span class="dahc-footer__contact-label">{{ contactLabel() }}</span>
+          <a class="dahc-footer__phone" [href]="phoneHref()">
+            <dahc-icon name="phone" size="lg" />
+            <span dir="ltr">{{ phone() }}</span>
+          </a>
+        </p>
+      }
+    </div>
+    <div class="dahc-footer__bottom">
+      @if (copyright() !== '') {
+        <p class="dahc-footer__copyright">{{ copyright() }}</p>
+      }
+      @if (socialLinks().length > 0) {
+        <ul class="dahc-footer__social">
+          @for (social of socialLinks(); track social.href) {
+            <li>
+              <a class="dahc-footer__social-link" [href]="social.href" rel="noopener" target="_blank">
+                <dahc-icon [name]="social.icon" size="lg" />
+                <span class="dahc-visually-hidden">{{ social.label }}</span>
+              </a>
+            </li>
+          }
+        </ul>
+      }
+    </div>
+  </div>
+</footer>

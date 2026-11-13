@@ -1,0 +1,122 @@
+// Shared layout of the foundations pages (playground chrome, not part of DAHC-UI).
+
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dahc-space-6);
+}
+
+.fd-heading {
+  margin: 0;
+  color: var(--dahc-color-text-primary);
+}
+
+.fd-page-title {
+  font-size: var(--dahc-font-size-36);
+  line-height: 1.1;
+}
+
+.fd-specimen {
+  margin: 0;
+  font-size: var(--dahc-font-size-24);
+}
+
+.fd-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--dahc-space-4);
+}
+
+.fd-description {
+  margin: calc(var(--dahc-space-4) * -1) 0 0;
+  max-inline-size: var(--dahc-size-measure-wide);
+  color: var(--dahc-color-text-secondary);
+}
+
+.fd-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dahc-space-4);
+  min-inline-size: 0;
+  padding: var(--dahc-space-4);
+  border: var(--dahc-size-border) solid var(--dahc-color-border-default);
+  border-radius: var(--dahc-radius-lg);
+  background-color: var(--dahc-color-surface);
+}
+
+.fd-panel-heading {
+  margin: 0;
+  font-size: var(--dahc-font-size-20);
+}
+
+.fd-note {
+  margin: 0;
+  color: var(--dahc-color-text-secondary);
+}
+
+.fd-swatches {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(9rem, 100%), 1fr));
+  gap: var(--dahc-space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fd-swatch {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dahc-space-1);
+  margin: 0;
+}
+
+.fd-swatch-chip {
+  block-size: var(--dahc-size-control-lg);
+  border: var(--dahc-size-border) solid var(--dahc-color-border-default);
+  border-radius: var(--dahc-radius-sm);
+}
+
+.fd-code {
+  font-family: var(--dahc-font-family-mono);
+  font-size: var(--dahc-font-size-12);
+  overflow-wrap: anywhere;
+}
+
+.fd-table-wrapper {
+  overflow-x: auto;
+}
+
+.fd-table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-size: var(--dahc-font-size-14);
+}
+
+.fd-table caption {
+  padding-block-end: var(--dahc-space-2);
+  font-weight: var(--dahc-font-weight-bold);
+  text-align: start;
+}
+
+.fd-table th,
+.fd-table td {
+  padding-block: var(--dahc-space-2);
+  padding-inline: var(--dahc-space-3);
+  border-block-end: var(--dahc-size-border) solid var(--dahc-color-border-subtle);
+  text-align: start;
+  vertical-align: middle;
+}
+
+.fd-sample {
+  display: inline-block;
+  min-inline-size: var(--dahc-size-icon-xl);
+  block-size: var(--dahc-size-icon-lg);
+  border: var(--dahc-size-border) solid var(--dahc-color-border-default);
+  border-radius: var(--dahc-radius-sm);
+}
+
+.fd-fail {
+  color: var(--dahc-color-error-text);
+  font-weight: var(--dahc-font-weight-bold);
+}

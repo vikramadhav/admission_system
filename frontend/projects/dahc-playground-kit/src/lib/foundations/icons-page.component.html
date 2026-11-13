@@ -1,0 +1,29 @@
+<h1 class="fd-heading fd-page-title">Icons</h1>
+<p class="fd-description">
+  Every icon of the design system, by set. Use <code class="fd-code">&lt;dahc-icon name="…" /&gt;</code>; icons take the
+  current text colour (brand logos keep their own colours), are decorative unless given a label, and the ones marked
+  "mirrors" flip in right-to-left layouts.
+</p>
+
+<div class="fd-toolbar">
+  <div><dahc-inspector-text label="Filter by name" [(value)]="filter" /></div>
+  <div><dahc-inspector-choice label="Size" [options]="sizes" [(value)]="size" /></div>
+  <p class="fd-note" data-testid="icon-total">{{ total() }} icons</p>
+</div>
+
+@for (group of groups(); track group.label; let index = $index) {
+  <section class="fd-panel" [attr.aria-labelledby]="'icons-heading-' + index" data-testid="icon-group">
+    <h2 class="fd-panel-heading" [id]="'icons-heading-' + index">{{ group.label }} ({{ group.icons.length }})</h2>
+    <ul class="fd-swatches">
+      @for (icon of group.icons; track icon.name) {
+        <li class="fd-swatch" data-testid="icon-tile">
+          <dahc-icon [name]="icon.name" [size]="size()" />
+          <span class="fd-code">{{ icon.name }}</span>
+          @if (icon.directional) {
+            <span class="fd-code">mirrors</span>
+          }
+        </li>
+      }
+    </ul>
+  </section>
+}

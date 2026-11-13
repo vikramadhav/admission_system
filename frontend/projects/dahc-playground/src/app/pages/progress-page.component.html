@@ -1,0 +1,65 @@
+<dahc-playground-page
+  heading="Progress"
+  description="Shows the progress of a task of known length as a bar or a ring. The circle type and status colours are DAHC additions to dubai-health-ui."
+  selector="dahc-progress"
+  [whenToUse]="whenToUse"
+  [sourceFiles]="sourceFiles">
+  <div preview class="pg-stack">
+    <dahc-progress
+      [label]="label()"
+      [value]="value()"
+      [type]="type()"
+      [size]="size()"
+      [status]="status()"
+      [showValue]="showValue()" />
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-text label="label" [(value)]="label" />
+    <dahc-inspector-choice label="value" [options]="values" [(value)]="valueText" />
+    <dahc-inspector-choice label="type" [options]="types" [(value)]="type" />
+    <dahc-inspector-choice label="size (circle)" [options]="sizes" [(value)]="size" />
+    <dahc-inspector-choice label="status" [options]="statuses" [(value)]="status" />
+    <dahc-inspector-toggle label="showValue" [(value)]="showValue" />
+  </div>
+
+  <div states class="pg-stack">
+    <dahc-progress label="Documents uploaded" [value]="3" [max]="8" [showValue]="true" />
+    <dahc-progress label="Upload complete" [value]="100" status="success" [showValue]="true" />
+    <dahc-progress label="Upload failed" [value]="45" status="error" [showValue]="true" />
+    <div class="pg-row">
+      <dahc-progress label="Portfolio small" type="circle" size="sm" [value]="25" [showValue]="true" />
+      <dahc-progress label="Portfolio medium" type="circle" [value]="50" [showValue]="true" />
+      <dahc-progress label="Portfolio large" type="circle" size="lg" [value]="75" [showValue]="true" />
+    </div>
+  </div>
+
+  <dahc-doc-example examples exampleId="line" heading="Line" description="The default bar; showValue adds the percentage." template="progress-page.component.html">
+    <dahc-space [vertical]="true" [block]="true">
+      <dahc-progress label="Profile completion" [value]="40" />
+      <dahc-progress label="Application completion" [value]="70" [showValue]="true" />
+    </dahc-space>
+  </dahc-doc-example>
+  <dahc-doc-example examples exampleId="circle" heading="Circle" description="type=&quot;circle&quot; in three sizes for dashboards and summary tiles." template="progress-page.component.html">
+    <dahc-space [wrap]="true">
+      <dahc-progress label="Steps completed, small" type="circle" size="sm" [value]="30" [showValue]="true" />
+      <dahc-progress label="Steps completed, medium" type="circle" [value]="60" [showValue]="true" />
+      <dahc-progress label="Steps completed, large" type="circle" size="lg" [value]="90" [showValue]="true" />
+    </dahc-space>
+  </dahc-doc-example>
+  <dahc-doc-example examples exampleId="status" heading="Status" description="success and error change the colour; say the outcome in text too." template="progress-page.component.html">
+    <dahc-space [vertical]="true" [block]="true">
+      <dahc-progress label="Passport uploaded" [value]="100" status="success" [showValue]="true" />
+      <dahc-progress label="Transcript upload stopped" [value]="35" status="error" [showValue]="true" />
+    </dahc-space>
+  </dahc-doc-example>
+  <dahc-doc-example examples exampleId="max" heading="Custom maximum" description="max counts steps or items instead of percent." template="progress-page.component.html">
+    <dahc-progress label="Sections completed" [value]="5" [max]="9" [showValue]="true" />
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>role="progressbar" with aria-valuemin, aria-valuemax and aria-valuenow; the label is its accessible name.</li>
+    <li>The shown percentage is hidden from screen readers, which read the value from the progressbar.</li>
+    <li>Status is not shown by colour alone: say the outcome in text next to it.</li>
+  </ul>
+</dahc-playground-page>

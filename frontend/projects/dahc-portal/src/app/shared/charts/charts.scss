@@ -1,0 +1,176 @@
+// Portal charts (GAP-03). Tokens only; segment fills come from semantic tag tokens, edges from
+// the strong border so each shape keeps 3:1 against the surface (WCAG 1.4.11). Stroke widths and
+// the total's font size are SVG geometry in viewBox units, set as attributes in the template.
+:host {
+  display: block;
+  min-inline-size: 0;
+}
+
+.chart {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--dahc-space-3);
+  margin: 0;
+}
+
+.chart-caption {
+  font-weight: var(--dahc-font-weight-bold);
+}
+
+.chart-empty {
+  margin: 0;
+  color: var(--dahc-color-text-secondary);
+}
+
+// Stacked columns.
+.bars {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--dahc-space-3);
+  overflow-x: auto;
+  padding-block-end: var(--dahc-space-1);
+}
+
+.bar-column {
+  display: grid;
+  flex: 1 0 var(--dahc-space-12);
+  justify-items: center;
+  gap: var(--dahc-space-1);
+  min-inline-size: var(--dahc-space-12);
+}
+
+.bar-track {
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-start;
+  inline-size: 100%;
+  block-size: calc(var(--dahc-space-20) * 3);
+}
+
+.bar-segment {
+  display: block;
+  inline-size: 100%;
+  // WCAG 2.5.8: every segment stays at least the minimum target size, however small its value.
+  min-block-size: var(--dahc-size-target-min);
+  flex-shrink: 0;
+  margin: 0;
+  padding: 0;
+  border: var(--dahc-size-border) solid var(--dahc-color-border-strong);
+  cursor: pointer;
+}
+
+.bar-segment:focus-visible {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: var(--dahc-size-focus-offset);
+}
+
+.bar-total,
+.bar-label {
+  font-size: var(--dahc-type-body-sm-size);
+  line-height: var(--dahc-type-body-sm-line-height);
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.bar-total {
+  font-weight: var(--dahc-font-weight-bold);
+}
+
+// Donut.
+.pie {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--dahc-space-4);
+}
+
+.pie-svg {
+  inline-size: calc(var(--dahc-space-20) * 2);
+  max-inline-size: 100%;
+  block-size: auto;
+  overflow: visible;
+}
+
+.pie-slice {
+  stroke: var(--dahc-color-border-strong);
+  cursor: pointer;
+}
+
+.pie-slice:focus {
+  outline: none;
+}
+
+.pie-slice:focus-visible {
+  stroke: var(--dahc-color-focus-ring);
+  stroke-width: var(--dahc-size-focus-ring);
+}
+
+.pie-hole {
+  fill: var(--dahc-color-surface);
+  stroke: var(--dahc-color-border-strong);
+}
+
+.pie-total {
+  fill: var(--dahc-color-text-primary);
+  font-weight: var(--dahc-font-weight-bold);
+}
+
+// Legend.
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dahc-space-2) var(--dahc-space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--dahc-type-body-sm-size);
+  line-height: var(--dahc-type-body-sm-line-height);
+}
+
+.legend--stacked {
+  flex-direction: column;
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--dahc-space-2);
+}
+
+.legend-swatch {
+  display: inline-block;
+  inline-size: var(--dahc-space-3);
+  block-size: var(--dahc-space-3);
+  border: var(--dahc-size-border) solid var(--dahc-color-border-strong);
+}
+
+// Hover marks the segment with the focus colour edge; no animation, so reduced motion needs nothing.
+.bar-segment:hover {
+  border-color: var(--dahc-color-focus-ring);
+}
+
+.pie-slice:hover {
+  stroke: var(--dahc-color-focus-ring);
+}
+
+// Legend entries that drill down like their slice (PQ-43): at least the minimum target size.
+.legend-button {
+  min-block-size: var(--dahc-size-target-min);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--dahc-color-text-link);
+  font: inherit;
+  text-align: start;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.legend-button:hover {
+  color: var(--dahc-color-text-link-hover);
+}
+
+.legend-button:focus-visible {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: var(--dahc-size-focus-offset);
+}

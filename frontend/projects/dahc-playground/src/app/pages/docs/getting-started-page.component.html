@@ -1,0 +1,47 @@
+<article class="pg-doc-article">
+  <h1 class="pg-doc-title">Getting started</h1>
+  <p class="pg-doc-lead">DAHC UI is a library project in the frontend Angular workspace. Applications in the same workspace use it directly from source.</p>
+
+  <section class="pg-doc-section" aria-labelledby="gs-setup">
+    <h2 id="gs-setup" class="pg-doc-h2">1. Add the styles and assets</h2>
+    <p class="pg-doc-text">
+      The stylesheet emits every design token as a CSS custom property and adds the Dubai font, base styles and type roles. Icons and logos
+      are SVG files that the build copies next to your app.
+    </p>
+    <pre class="pg-doc-code" tabindex="0" aria-label="angular.json build options"><code>{{ angularJson }}</code></pre>
+    <p class="pg-doc-text">Point TypeScript at the library sources (already set in this workspace):</p>
+    <pre class="pg-doc-code" tabindex="0" aria-label="tsconfig paths"><code>{{ tsconfig }}</code></pre>
+  </section>
+
+  <section class="pg-doc-section" aria-labelledby="gs-use">
+    <h2 id="gs-use" class="pg-doc-h2">2. Use a component</h2>
+    <p class="pg-doc-text">Every component is standalone: import it where you use it.</p>
+    <pre class="pg-doc-code" tabindex="0" aria-label="Component example"><code>{{ component }}</code></pre>
+  </section>
+
+  <section class="pg-doc-section" aria-labelledby="gs-forms">
+    <h2 id="gs-forms" class="pg-doc-h2">3. Forms</h2>
+    <p class="pg-doc-text">
+      Form controls implement ControlValueAccessor, so they work with Reactive and template-driven forms. Text inputs use the native element
+      with the <code>dahcInput</code> directive inside <code>dahc-form-field</code>, which adds the label, hint, error and required marker.
+    </p>
+    <pre class="pg-doc-code" tabindex="0" aria-label="Forms example"><code>{{ forms }}</code></pre>
+  </section>
+
+  <section class="pg-doc-section" aria-labelledby="gs-providers">
+    <h2 id="gs-providers" class="pg-doc-h2">4. Optional providers</h2>
+    <pre class="pg-doc-code" tabindex="0" aria-label="Providers example"><code>{{ providers }}</code></pre>
+    <p class="pg-doc-text">
+      Place one <code>&lt;dahc-toast-region /&gt;</code> (and <code>&lt;dahc-message-region /&gt;</code> and
+      <code>&lt;dahc-notification-region /&gt;</code> if you use them) in your root layout so the services have somewhere to show messages.
+    </p>
+  </section>
+
+  <section class="pg-doc-section" aria-labelledby="gs-next">
+    <h2 id="gs-next" class="pg-doc-h2">Next</h2>
+    <ul class="pg-doc-list">
+      <li><a routerLink="/docs/themes-and-languages">Themes and languages</a></li>
+      <li><a routerLink="/components/overview">Components overview</a></li>
+    </ul>
+  </section>
+</article>

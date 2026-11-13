@@ -1,0 +1,99 @@
+// Layout shared by the senior referee pages (dashboard, referee inbox, portfolio oversight).
+.section {
+  display: grid;
+  // minmax(0, 1fr): wide tables scroll inside their own region instead of widening the page.
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--dahc-space-4);
+}
+
+.section-heading {
+  margin: 0;
+  font-size: var(--dahc-type-heading-3-size);
+  line-height: var(--dahc-type-heading-3-line-height);
+}
+
+.section-text {
+  margin: 0;
+  color: var(--dahc-color-text-secondary);
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(calc(var(--dahc-space-20) * 2), 1fr));
+  gap: var(--dahc-space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dahc-space-3);
+}
+
+.overdue {
+  display: inline-flex;
+  gap: var(--dahc-space-1);
+  align-items: center;
+}
+
+.questions {
+  display: grid;
+  gap: var(--dahc-space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.question {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--dahc-space-3);
+}
+
+.question-heading {
+  margin: 0;
+  font-size: var(--dahc-type-heading-4-size);
+  line-height: var(--dahc-type-heading-4-line-height);
+}
+
+.evidence-list {
+  display: grid;
+  gap: var(--dahc-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.evidence {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--dahc-space-2);
+}
+
+.evidence-name {
+  overflow-wrap: anywhere;
+}
+
+.dialog-form {
+  display: grid;
+  gap: var(--dahc-space-4);
+}
+
+.dialog-text {
+  margin: 0;
+}
+
+.dialog-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--dahc-space-3);
+}
+
+textarea[dahcInput] {
+  min-block-size: calc(var(--dahc-size-control-lg) * 2);
+  resize: vertical;
+}

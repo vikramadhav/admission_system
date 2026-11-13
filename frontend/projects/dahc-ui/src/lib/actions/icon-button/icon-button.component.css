@@ -1,0 +1,74 @@
+/* Figma Buttons 50:6786 "Icon only": 48x48 circle, 1px border, 20px icon.
+   Default border navy (50:7051), Hover navy-700 (50:7054), Active navy (50:7057). */
+
+:host {
+  --_bg: transparent;
+  --_border: var(--dahc-color-border-strong);
+  --_bg-hover: var(--_bg);
+  --_border-hover: var(--dahc-color-text-tertiary);
+
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--dahc-size-control-lg);
+  block-size: var(--dahc-size-control-lg);
+  padding: 0;
+  border: var(--dahc-size-border) solid var(--_border);
+  border-radius: var(--dahc-radius-pill);
+  background-color: var(--_bg);
+  color: var(--dahc-color-text-primary);
+  cursor: pointer;
+  transition:
+    background-color var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard),
+    border-color var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard),
+    color var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard);
+}
+
+/* GME header: 40px, muted fill, no ring. Hover derived (pending UX). */
+:host(.dahc-icon-button--md) {
+  inline-size: calc(var(--dahc-size-control-md) - var(--dahc-space-1));
+  block-size: calc(var(--dahc-size-control-md) - var(--dahc-space-1));
+}
+
+:host(.dahc-icon-button--ghost) {
+  --_bg: var(--dahc-color-surface-muted);
+  --_border: transparent;
+  --_bg-hover: var(--dahc-color-surface-highlight);
+  --_border-hover: transparent;
+}
+
+:host(:hover:not([disabled], [aria-disabled='true'])) {
+  border-color: var(--_border-hover);
+  background-color: var(--_bg-hover);
+  color: var(--dahc-color-text-tertiary);
+}
+
+:host(:active:not([disabled], [aria-disabled='true'])) {
+  border-color: var(--_border);
+  color: var(--dahc-color-text-primary);
+}
+
+:host(:focus-visible) {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: var(--dahc-size-focus-offset);
+}
+
+:host([disabled]),
+:host([aria-disabled='true']) {
+  border-color: var(--dahc-color-action-disabled-fg);
+  color: var(--dahc-color-action-disabled-fg);
+  cursor: not-allowed;
+}
+
+:host(.dahc-icon-button--ghost[disabled]),
+:host(.dahc-icon-button--ghost[aria-disabled='true']) {
+  border-color: transparent;
+  background-color: var(--dahc-color-action-disabled-bg);
+}
+
+@media (forced-colors: active) {
+  :host {
+    border-color: ButtonText;
+  }
+}

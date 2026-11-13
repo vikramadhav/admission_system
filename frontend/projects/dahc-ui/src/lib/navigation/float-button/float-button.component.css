@@ -1,0 +1,104 @@
+/* Shared by dahc-float-button and dahc-back-top. DERIVED (dubai-health-ui UDD-019): 48px circle,
+   DH primary navy (or white) colours, Shadow 4, 24px from the corner, a navy tip on hover and focus.
+   Ported from dubai-health-ui dh-float-button. */
+
+:host {
+  position: fixed;
+  inset-block-end: var(--dahc-space-6);
+  inset-inline-end: var(--dahc-space-6);
+  z-index: var(--dahc-z-sticky);
+  display: inline-block;
+}
+
+:host(.dahc-float-button--start) {
+  inset-inline: var(--dahc-space-6) auto;
+}
+
+:host(.dahc-float-button--inline) {
+  position: relative;
+  inset: auto;
+  z-index: auto;
+}
+
+:host(.dahc-float-button--hidden) {
+  display: none;
+}
+
+.dahc-float-button__button {
+  position: relative;
+  display: grid;
+  place-items: center;
+  inline-size: var(--dahc-size-control-lg);
+  block-size: var(--dahc-size-control-lg);
+  padding: 0;
+  border: var(--dahc-size-border) solid transparent;
+  border-radius: var(--dahc-radius-pill);
+  background-color: var(--dahc-color-action-primary);
+  color: var(--dahc-color-text-inverse);
+  box-shadow: var(--dahc-shadow-4);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard);
+}
+
+.dahc-float-button__button:hover {
+  background-color: var(--dahc-color-action-primary-hover);
+}
+
+.dahc-float-button__button:active {
+  background-color: var(--dahc-color-action-primary-active);
+}
+
+:host(.dahc-float-button--default) .dahc-float-button__button {
+  border-color: var(--dahc-color-border-subtle);
+  background-color: var(--dahc-color-surface);
+  color: var(--dahc-color-text-primary);
+}
+
+:host(.dahc-float-button--default) .dahc-float-button__button:hover {
+  background-color: var(--dahc-color-surface-raised-1);
+}
+
+.dahc-float-button__button:focus-visible {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: var(--dahc-size-focus-offset);
+}
+
+/* The tip opens towards the middle of the page. */
+.dahc-float-button__tip {
+  position: absolute;
+  inset-inline-end: calc(100% + var(--dahc-space-2));
+  padding-block: calc(var(--dahc-space-1) + var(--dahc-space-0-5));
+  padding-inline: var(--dahc-space-3);
+  border-radius: var(--dahc-radius-sm);
+  background-color: var(--dahc-color-surface-inverse);
+  color: var(--dahc-color-text-inverse);
+  font-size: var(--dahc-font-size-14);
+  line-height: var(--dahc-type-body-sm-line-height);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard);
+}
+
+:host(.dahc-float-button--start) .dahc-float-button__tip {
+  inset-inline: calc(100% + var(--dahc-space-2)) auto;
+}
+
+.dahc-float-button__button:hover .dahc-float-button__tip,
+.dahc-float-button__button:focus-visible .dahc-float-button__tip {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dahc-float-button__button,
+  .dahc-float-button__tip {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .dahc-float-button__button {
+    border-color: ButtonText;
+  }
+}

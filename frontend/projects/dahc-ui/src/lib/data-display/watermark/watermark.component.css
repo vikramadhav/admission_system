@@ -1,0 +1,23 @@
+/* Ported from dubai-health-ui dh-watermark (DERIVED). The mark's colour and font are read from
+   this element when the tile is drawn. */
+
+:host {
+  position: relative;
+  display: block;
+}
+
+.dahc-watermark__mark {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  color: color-mix(in srgb, var(--dahc-color-text-primary) 12%, transparent);
+  font-family: var(--dahc-font-family-base);
+  background-repeat: repeat;
+  pointer-events: none;
+}
+
+@media (forced-colors: active) {
+  .dahc-watermark__mark {
+    display: none;
+  }
+}

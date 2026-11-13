@@ -1,0 +1,46 @@
+<dahc-playground-page
+  heading="Result"
+  description="The outcome of a task or page, such as submitted, failed or not found, with a featured status icon, heading, subtitle and actions."
+  selector="dahc-result"
+  [whenToUse]="whenToUse"
+  [sourceFiles]="sourceFiles">
+  <div preview>
+    <dahc-result [status]="status()" [heading]="heading()" [subtitle]="subtitle()">
+      <button dahc-button type="button" variant="secondary">View application</button>
+      <button dahc-button type="button">Go to dashboard</button>
+    </dahc-result>
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-choice label="status" [options]="statuses" [(value)]="status" />
+    <dahc-inspector-text label="heading" [(value)]="heading" />
+    <dahc-inspector-text label="subtitle" [(value)]="subtitle" />
+  </div>
+
+  <div states class="pg-stack">
+    <dahc-result status="error" heading="Payment failed" subtitle="Your card was not charged. Try again or use another card." [headingLevel]="3" />
+  </div>
+
+  <dahc-doc-example examples exampleId="success" heading="Success" description="The default status, with the next steps as projected buttons." template="result-page.component.html">
+    <dahc-result heading="Payment received" subtitle="Receipt RCP-2026-004517 has been emailed to you." [headingLevel]="3">
+      <button dahc-button type="button">Go to dashboard</button>
+    </dahc-result>
+  </dahc-doc-example>
+  <dahc-doc-example examples exampleId="error" heading="Error" description="status=&quot;error&quot; is announced as an alert." template="result-page.component.html">
+    <dahc-result status="error" heading="Upload failed" subtitle="The file could not be read. Try a PDF under 2 MB." [headingLevel]="3">
+      <button dahc-button type="button" variant="secondary">Try again</button>
+    </dahc-result>
+  </dahc-doc-example>
+  <dahc-doc-example examples exampleId="warning" heading="Warning" description="For outcomes that need attention but are not failures." template="result-page.component.html">
+    <dahc-result status="warning" heading="Application returned for correction" subtitle="Two sections need changes before the deadline." [headingLevel]="3" />
+  </dahc-doc-example>
+  <dahc-doc-example examples exampleId="info" heading="Info" description="For neutral outcomes, such as a page that is not available yet." template="result-page.component.html">
+    <dahc-result status="info" heading="Results are not announced yet" subtitle="Scores are published on 5 November." [headingLevel]="3" />
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>The outcome is announced: role="alert" for errors, role="status" otherwise.</li>
+    <li>headingLevel sets the heading (h1 when the result is the whole page, h2 by default).</li>
+    <li>The icon is decorative; the heading carries the meaning.</li>
+  </ul>
+</dahc-playground-page>

@@ -1,0 +1,32 @@
+<dahc-form-field
+  [label]="label()"
+  [hint]="hint()"
+  [error]="errorMessage()"
+  [invalid]="showError()"
+  [required]="required()">
+  <span dahcFieldStart class="dahc-phone-input__country">
+    <select
+      class="dahc-phone-input__select"
+      [attr.aria-label]="countryLabel()"
+      [disabled]="isDisabled()"
+      (change)="onCountryChange($event)"
+      (blur)="onBlur()">
+      @for (option of countries(); track option.code) {
+        <option [value]="option.code" [selected]="option.code === country()?.code" [title]="option.name">
+          {{ option.code }} {{ option.dialCode }}
+        </option>
+      }
+    </select>
+  </span>
+  <input
+    dahcInput
+    type="tel"
+    inputmode="tel"
+    autocomplete="tel-national"
+    [placeholder]="placeholder()"
+    [value]="number()"
+    [disabled]="isDisabled()"
+    [required]="required()"
+    (input)="onNumberInput($event)"
+    (blur)="onBlur()" />
+</dahc-form-field>

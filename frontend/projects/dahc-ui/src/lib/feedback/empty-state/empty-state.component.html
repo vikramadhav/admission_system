@@ -1,0 +1,15 @@
+<div class="dahc-empty-state__box">
+  <svg class="dahc-empty-state__illustration" viewBox="0 0 64 48" aria-hidden="true" focusable="false">
+    <rect x="8" y="14" width="48" height="30" rx="6" />
+    <path d="M8 22h48M22 6h20l6 8H16z" />
+  </svg>
+  @if (headingLevel() === 2) {
+    <h2 class="dahc-empty-state__heading">{{ heading() }}</h2>
+  } @else {
+    <h3 class="dahc-empty-state__heading">{{ heading() }}</h3>
+  }
+  @if (description() !== '') {
+    <p class="dahc-empty-state__description">{{ description() }}</p>
+  }
+  <div class="dahc-empty-state__actions"><ng-content /></div>
+</div>

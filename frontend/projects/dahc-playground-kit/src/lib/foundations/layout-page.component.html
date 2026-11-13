@@ -1,0 +1,115 @@
+<h1 class="fd-heading fd-page-title">Layout and elevation</h1>
+<p class="fd-description">
+  Spacing, sizing, radius, shadows, motion, layers and breakpoints, read from the design system's tokens.
+</p>
+
+<section class="fd-panel" aria-labelledby="space-heading">
+  <h2 id="space-heading" class="fd-panel-heading">Spacing</h2>
+  <div class="fd-table-wrapper">
+    <table class="fd-table" aria-describedby="space-heading">
+      <thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Sample</th></tr></thead>
+      <tbody>
+        @for (token of space(); track token.name) {
+          <tr>
+            <td class="fd-code">{{ token.name }}</td>
+            <td class="fd-code">{{ token.value }}</td>
+            <td>
+              <span
+                class="fd-sample"
+                [style.min-inline-size]="0"
+                [style.inline-size]="cssVar(token.name)"
+                [style.background-color]="cssVar('color-action-primary')"
+                aria-hidden="true"></span>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="fd-panel" aria-labelledby="radius-heading">
+  <h2 id="radius-heading" class="fd-panel-heading">Radius</h2>
+  <ul class="fd-swatches">
+    @for (token of radius(); track token.name) {
+      <li class="fd-swatch">
+        <span
+          class="fd-swatch-chip"
+          [style.border-radius]="cssVar(token.name)"
+          [style.background-color]="cssVar('color-surface-highlight')"
+          aria-hidden="true"></span>
+        <span class="fd-code">{{ token.name }} · {{ token.value }}</span>
+      </li>
+    }
+  </ul>
+</section>
+
+<section class="fd-panel" aria-labelledby="shadow-heading">
+  <h2 id="shadow-heading" class="fd-panel-heading">Shadows</h2>
+  <ul class="fd-swatches">
+    @for (token of shadow(); track token.name) {
+      <li class="fd-swatch">
+        <span
+          class="fd-swatch-chip"
+          [style.box-shadow]="cssVar(token.name)"
+          [style.background-color]="cssVar('color-surface')"
+          aria-hidden="true"></span>
+        <span class="fd-code">{{ token.name }}</span>
+        <span class="fd-code">{{ token.value }}</span>
+      </li>
+    }
+  </ul>
+</section>
+
+<section class="fd-panel" aria-labelledby="size-heading">
+  <h2 id="size-heading" class="fd-panel-heading">Sizing</h2>
+  <div class="fd-table-wrapper">
+    <table class="fd-table" aria-describedby="size-heading">
+      <thead><tr><th scope="col">Token</th><th scope="col">Value</th></tr></thead>
+      <tbody>
+        @for (token of size(); track token.name) {
+          <tr><td class="fd-code">{{ token.name }}</td><td class="fd-code">{{ token.value }}</td></tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="fd-panel" aria-labelledby="motion-heading">
+  <h2 id="motion-heading" class="fd-panel-heading">Motion and layers</h2>
+  <p class="fd-note">Durations become 0 when the operating system asks for reduced motion.</p>
+  <div class="fd-table-wrapper">
+    <table class="fd-table" aria-describedby="motion-heading">
+      <thead><tr><th scope="col">Token</th><th scope="col">Value</th></tr></thead>
+      <tbody>
+        @for (token of motion(); track token.name) {
+          <tr><td class="fd-code">{{ token.name }}</td><td class="fd-code">{{ token.value }}</td></tr>
+        }
+        @for (token of zIndex(); track token.name) {
+          <tr><td class="fd-code">{{ token.name }}</td><td class="fd-code">{{ token.value }}</td></tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>
+
+@if (breakpoints.length > 0) {
+<section class="fd-panel" aria-labelledby="breakpoint-heading">
+  <h2 id="breakpoint-heading" class="fd-panel-heading">Breakpoints</h2>
+  <p class="fd-note">Media queries cannot read custom properties, so breakpoints come from the playground configuration.</p>
+  <div class="fd-table-wrapper">
+    <table class="fd-table" aria-describedby="breakpoint-heading">
+      <thead><tr><th scope="col">Name</th><th scope="col">Min width</th><th scope="col">Use</th></tr></thead>
+      <tbody>
+        @for (breakpoint of breakpoints; track breakpoint.name) {
+          <tr>
+            <td class="fd-code">{{ breakpoint.name }}</td>
+            <td class="fd-code">{{ breakpoint.value }}</td>
+            <td>{{ breakpoint.use }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>
+}

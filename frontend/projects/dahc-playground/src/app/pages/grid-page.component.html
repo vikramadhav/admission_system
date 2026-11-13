@@ -1,0 +1,104 @@
+<dahc-playground-page
+  heading="Grid"
+  description="A 24-column responsive grid: span is out of 24 and xs to xxl apply from that breakpoint up. Ported from dubai-health-ui dh-row and dh-col; DERIVED layout helper."
+  selector="dahc-row / dahc-col"
+  [whenToUse]="whenToUse"
+  [sourceFiles]="sourceFiles">
+  <div preview>
+    <dahc-row data-testid="grid-demo" [gutter]="gutter()" [verticalGutter]="verticalGutter()">
+      <dahc-col [span]="24" [md]="12" [lg]="8"><div class="grid-cell">24 · md 12 · lg 8</div></dahc-col>
+      <dahc-col [span]="24" [md]="12" [lg]="8"><div class="grid-cell">24 · md 12 · lg 8</div></dahc-col>
+      <dahc-col [span]="24" [md]="24" [lg]="8"><div class="grid-cell">24 · lg 8</div></dahc-col>
+    </dahc-row>
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-choice label="gutter" [options]="gaps" [(value)]="gutter" />
+    <dahc-inspector-choice label="verticalGutter" [options]="gaps" [(value)]="verticalGutter" />
+  </div>
+
+  <div states class="pg-stack">
+    <dahc-row>
+      <dahc-col [span]="6"><div class="grid-cell">6</div></dahc-col>
+      <dahc-col [span]="6" [offset]="12"><div class="grid-cell">6 · offset 12</div></dahc-col>
+    </dahc-row>
+    <dahc-row justify="center">
+      <dahc-col [span]="8"><div class="grid-cell">8 centred</div></dahc-col>
+    </dahc-row>
+  </div>
+
+  <dahc-doc-example
+    examples
+    exampleId="basic"
+    heading="Basic grid"
+    description="Two halves, then three thirds."
+    template="grid-page.component.html">
+    <dahc-row>
+      <dahc-col [span]="12"><div class="grid-cell">12</div></dahc-col>
+      <dahc-col [span]="12"><div class="grid-cell">12</div></dahc-col>
+    </dahc-row>
+    <dahc-row>
+      <dahc-col [span]="8"><div class="grid-cell">8</div></dahc-col>
+      <dahc-col [span]="8"><div class="grid-cell">8</div></dahc-col>
+      <dahc-col [span]="8"><div class="grid-cell">8</div></dahc-col>
+    </dahc-row>
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="gutter"
+    heading="Gutter"
+    description="Horizontal and vertical space between columns."
+    template="grid-page.component.html">
+    <dahc-row gutter="md" verticalGutter="md">
+      <dahc-col [span]="6"><div class="grid-cell">6</div></dahc-col>
+      <dahc-col [span]="6"><div class="grid-cell">6</div></dahc-col>
+      <dahc-col [span]="6"><div class="grid-cell">6</div></dahc-col>
+      <dahc-col [span]="6"><div class="grid-cell">6</div></dahc-col>
+      <dahc-col [span]="12"><div class="grid-cell">12</div></dahc-col>
+      <dahc-col [span]="12"><div class="grid-cell">12</div></dahc-col>
+    </dahc-row>
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="offset"
+    heading="Offset"
+    description="Move a column to the right by a number of columns."
+    template="grid-page.component.html">
+    <dahc-row>
+      <dahc-col [span]="8"><div class="grid-cell">8</div></dahc-col>
+      <dahc-col [span]="8" [offset]="8"><div class="grid-cell">8, offset 8</div></dahc-col>
+    </dahc-row>
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="responsive"
+    heading="Responsive"
+    description="Full width on phones, halves from md, thirds from lg."
+    template="grid-page.component.html">
+    <dahc-row verticalGutter="md">
+      <dahc-col [md]="12" [lg]="8"><div class="grid-cell">md 12, lg 8</div></dahc-col>
+      <dahc-col [md]="12" [lg]="8"><div class="grid-cell">md 12, lg 8</div></dahc-col>
+      <dahc-col [md]="24" [lg]="8"><div class="grid-cell">md 24, lg 8</div></dahc-col>
+    </dahc-row>
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="alignment"
+    heading="Alignment"
+    description="Centre the columns of a row."
+    template="grid-page.component.html">
+    <dahc-row justify="center">
+      <dahc-col [span]="6"><div class="grid-cell">6</div></dahc-col>
+      <dahc-col [span]="6"><div class="grid-cell">6</div></dahc-col>
+    </dahc-row>
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>Visual layout only: rows and columns add no role, and the reading order is the source order at every width.</li>
+    <li>Columns stack to full width on small screens when only span 24 is set, so content reflows at 320 pixels.</li>
+  </ul>
+</dahc-playground-page>

@@ -1,0 +1,11 @@
+@if (href() !== '') {
+  <a class="dahc-float-button__button" [href]="href()" [attr.aria-label]="label()">
+    <dahc-icon [name]="icon()" size="lg" />
+    <span class="dahc-float-button__tip" aria-hidden="true">{{ label() }}</span>
+  </a>
+} @else {
+  <button type="button" class="dahc-float-button__button" [attr.aria-label]="label()">
+    <dahc-icon [name]="icon()" size="lg" />
+    <span class="dahc-float-button__tip" aria-hidden="true">{{ label() }}</span>
+  </button>
+}

@@ -1,0 +1,97 @@
+/* Figma Pagination 50:8033 (see the component comment). */
+
+:host {
+  display: block;
+}
+
+:host(.dahc-pagination--divider) {
+  padding-block-start: var(--dahc-space-6);
+  border-block-start: var(--dahc-size-border) solid var(--dahc-color-border-default);
+}
+
+.dahc-pagination__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--dahc-space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dahc-pagination__pages > .dahc-pagination__list {
+  justify-content: center;
+}
+
+.dahc-pagination__step {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--dahc-space-2);
+  min-block-size: var(--dahc-size-touch-target);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--dahc-color-text-primary);
+  font-family: inherit;
+  font-size: var(--dahc-font-size-18);
+  font-weight: var(--dahc-font-weight-bold);
+  line-height: var(--dahc-font-line-height-tight);
+  cursor: pointer;
+}
+
+.dahc-pagination__step:hover:not(:disabled) {
+  color: var(--dahc-color-action-primary-hover);
+  text-decoration: underline;
+}
+
+.dahc-pagination__step:disabled {
+  color: var(--dahc-color-text-disabled);
+  cursor: not-allowed;
+}
+
+.dahc-pagination__page {
+  display: inline-grid;
+  place-items: center;
+  min-inline-size: var(--dahc-size-touch-target);
+  block-size: var(--dahc-size-touch-target);
+  padding-inline: var(--dahc-space-3);
+  border: 0;
+  border-radius: var(--dahc-radius-pill);
+  background: transparent;
+  color: var(--dahc-color-text-primary);
+  font-family: inherit;
+  font-size: var(--dahc-font-size-16);
+  cursor: pointer;
+  transition: background-color var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard);
+}
+
+.dahc-pagination__page:hover:not([aria-current]) {
+  background-color: var(--dahc-color-surface-raised-1);
+}
+
+.dahc-pagination__page[aria-current='page'] {
+  background-color: var(--dahc-color-action-primary);
+  color: var(--dahc-color-text-inverse);
+  font-weight: var(--dahc-font-weight-bold);
+}
+
+.dahc-pagination__step:focus-visible,
+.dahc-pagination__page:focus-visible {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: var(--dahc-size-focus-offset);
+}
+
+.dahc-pagination__gap {
+  min-inline-size: var(--dahc-size-touch-target);
+  color: var(--dahc-color-text-primary);
+  text-align: center;
+}
+
+@media (forced-colors: active) {
+  .dahc-pagination__page[aria-current='page'] {
+    forced-color-adjust: none;
+    background-color: Highlight;
+    color: HighlightText;
+  }
+}

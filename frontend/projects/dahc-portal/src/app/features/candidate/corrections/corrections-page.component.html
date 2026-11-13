@@ -1,0 +1,126 @@
+<dahc-page-header
+  i18n-heading="@@portal.corrections.heading"
+  heading="Correct your application"
+  [description]="applicationLine()"
+  [focusOnLoad]="true" />
+
+<div class="dahc-portal-page">
+  @if (loading()) {
+    <p class="dahc-portal-text" role="status" i18n="@@portal.corrections.loading">Loading your application…</p>
+  } @else if (blocked()) {
+    <dahc-empty-state
+      [headingLevel]="2"
+      i18n-heading="@@portal.corrections.nothingHeading"
+      heading="There is nothing to correct"
+      i18n-description="@@portal.corrections.nothingText"
+      description="This application has not been returned to you for correction, or your corrections were already submitted.">
+      <a dahc-button variant="secondary" routerLink="/candidate/dashboard" i18n="@@portal.action.backToDashboard">Back to dashboard</a>
+    </dahc-empty-state>
+  } @else if (loadError() !== '') {
+    <dahc-alert variant="error" [announce]="true">{{ loadError() }}</dahc-alert>
+    <div class="dahc-portal-actions">
+      <a dahc-button variant="secondary" routerLink="/candidate/dashboard" i18n="@@portal.action.backToDashboard">Back to dashboard</a>
+    </div>
+  } @else {
+    <dahc-alert variant="warning" i18n-heading="@@portal.corrections.deadlineHeading" heading="Re-submit by {{ deadlineText() }}">
+      <p class="dahc-portal-text" i18n="@@portal.corrections.intro">
+        The admissions team returned your application. Change only the items listed under each section, then re-submit. Everything
+        else stays as you submitted it. If you do not re-submit by the deadline, your application will be archived.
+      </p>
+    </dahc-alert>
+
+    @if (invalidSteps().length > 0) {
+      <div #summary tabindex="-1" class="corrections-summary">
+        <dahc-alert variant="error" i18n-heading="@@portal.corrections.invalidHeading" heading="Some corrections still need attention">
+          <ul class="corrections-list">
+            @for (label of invalidStepLabels(); track label) {
+              <li>{{ label }}</li>
+            }
+          </ul>
+        </dahc-alert>
+      </div>
+    }
+
+    @if (submitError() !== '') {
+      <dahc-alert variant="error" [announce]="true">{{ submitError() }}</dahc-alert>
+    }
+
+    @for (block of blocks(); track block.step) {
+      <section class="corrections-block" [attr.aria-labelledby]="'correction-' + block.step">
+        <h2 class="corrections-heading" [id]="'correction-' + block.step">{{ block.heading }}</h2>
+        <dahc-alert variant="info" i18n-heading="@@portal.corrections.notesHeading" heading="What to correct">
+          <ul class="corrections-list">
+            @for (note of block.notes; track note.id) {
+              <li [id]="note.id"><strong>{{ note.label }}:</strong> {{ note.note }}</li>
+            }
+          </ul>
+        </dahc-alert>
+        @switch (block.step) {
+          @case ('application-information') {
+            <dahc-application-information-step />
+          }
+          @case ('personal-identity') {
+            <dahc-identity-step />
+          }
+          @case ('personal-contact') {
+            <dahc-contact-step />
+          }
+          @case ('personal-next-of-kin') {
+            <dahc-next-of-kin-step />
+          }
+          @case ('personal-attachments') {
+            <dahc-personal-attachments-step />
+          }
+          @case ('academic-information') {
+            <dahc-academic-step />
+          }
+          @case ('english-proficiency') {
+            <dahc-english-step />
+          }
+          @case ('internship-information') {
+            <dahc-internship-step />
+          }
+          @case ('residency-information') {
+            <dahc-residency-step />
+          }
+          @case ('board-license-information') {
+            <dahc-board-license-step />
+          }
+          @case ('residency-entrance-exam') {
+            <dahc-entrance-exam-step />
+          }
+        }
+      </section>
+    }
+
+    <div class="dahc-portal-actions corrections-actions">
+      <a dahc-button variant="secondary" routerLink="/candidate/dashboard" i18n="@@portal.action.cancel">Cancel</a>
+      <button dahc-button type="button" (click)="requestSubmit()" i18n="@@portal.corrections.resubmit">Re-submit corrections</button>
+    </div>
+
+    <dahc-modal [(open)]="confirming" size="sm" i18n-heading="@@portal.corrections.confirmHeading" heading="Re-submit your corrections?">
+      <p class="dahc-portal-text" i18n="@@portal.corrections.confirmText">
+        Your application goes back to the admissions officer for review. You cannot change it again unless it is returned to you.
+      </p>
+      <div dahcDialogFooter class="corrections-dialog-actions">
+        <button dahc-button type="button" variant="secondary" (click)="confirming.set(false)" i18n="@@portal.action.cancel">Cancel</button>
+        <button dahc-button type="button" [loading]="submitting()" (click)="submit()" i18n="@@portal.corrections.confirm">Re-submit</button>
+      </div>
+    </dahc-modal>
+
+    <dahc-modal
+      [open]="leaveOpen()"
+      (openChange)="leaveOpenChange($event)"
+      size="sm"
+      i18n-heading="@@portal.corrections.leaveHeading"
+      heading="Leave without sending your corrections?">
+      <p class="dahc-portal-text" i18n="@@portal.corrections.leaveText">
+        Your changes are not saved until you re-submit them. If you leave now, they will be lost.
+      </p>
+      <div dahcDialogFooter class="corrections-dialog-actions">
+        <button dahc-button type="button" variant="secondary" (click)="answerLeave(false)" i18n="@@portal.corrections.stay">Stay on this page</button>
+        <button dahc-button type="button" variant="danger" (click)="answerLeave(true)" i18n="@@portal.corrections.leave">Leave without sending</button>
+      </div>
+    </dahc-modal>
+  }
+</div>

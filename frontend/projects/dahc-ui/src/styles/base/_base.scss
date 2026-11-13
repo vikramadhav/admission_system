@@ -1,0 +1,36 @@
+// Document-level rules every component relies on.
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-block-size: 100vh;
+  background-color: var(--dahc-color-background);
+  color: var(--dahc-color-text-primary);
+  font-family: var(--dahc-font-family-base);
+  font-size: var(--dahc-type-body-size);
+  font-variant-numeric: lining-nums proportional-nums; // Typefaces 50:2394: "lnum", "pnum"
+  line-height: var(--dahc-font-line-height-normal);
+}
+
+a {
+  color: var(--dahc-color-text-link);
+}
+
+a:hover {
+  color: var(--dahc-color-text-link-hover);
+}
+
+:focus-visible {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: var(--dahc-size-focus-offset);
+}

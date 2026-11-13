@@ -1,0 +1,19 @@
+<dialog
+  #dialog
+  class="dahc-drawer"
+  [attr.aria-labelledby]="heading() ? headingId : null"
+  (cancel)="onCancel($event)">
+  <div class="dahc-drawer__panel">
+    <header class="dahc-drawer__header">
+      <h2 class="dahc-drawer__title" [id]="headingId">{{ heading() }}</h2>
+      @if (closable()) {
+        <button type="button" class="dahc-dialog-close" (click)="requestClose('close-button')">
+          <dahc-icon name="x-close" size="lg" />
+          <span class="dahc-visually-hidden">{{ closeLabel() }}</span>
+        </button>
+      }
+    </header>
+    <div class="dahc-drawer__body"><ng-content /></div>
+    <footer class="dahc-drawer__footer"><ng-content select="[dahcDialogFooter]" /></footer>
+  </div>
+</dialog>

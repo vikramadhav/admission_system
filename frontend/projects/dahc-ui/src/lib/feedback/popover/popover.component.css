@@ -1,0 +1,54 @@
+/* Ported from dubai-health-ui dh-popover / dh-popconfirm panels (DERIVED, DH dropdown panel). */
+
+:host {
+  display: inline-block;
+}
+
+.dahc-popover__trigger {
+  display: inline-flex;
+}
+
+.dahc-popover__panel {
+  inline-size: max-content;
+  max-inline-size: min(var(--dahc-size-measure-narrow) - var(--dahc-space-8), calc(100vw - 2 * var(--dahc-space-2)));
+  padding: var(--dahc-space-4);
+}
+
+.dahc-popover__panel:focus-visible {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: var(--dahc-size-focus-offset);
+}
+
+.dahc-popover__heading {
+  margin: 0 0 var(--dahc-space-2);
+  color: var(--dahc-color-text-primary);
+  font-size: var(--dahc-font-size-16);
+  font-weight: var(--dahc-font-weight-bold);
+  line-height: var(--dahc-font-line-height-tight);
+}
+
+.dahc-popover__body {
+  font-size: var(--dahc-font-size-14);
+  line-height: var(--dahc-type-body-sm-line-height);
+}
+
+.dahc-popconfirm__body {
+  margin-block: var(--dahc-space-2) var(--dahc-space-4);
+  font-size: var(--dahc-font-size-14);
+  line-height: var(--dahc-type-body-sm-line-height);
+}
+
+.dahc-popconfirm__body:empty {
+  margin-block-end: var(--dahc-space-2);
+}
+
+.dahc-popconfirm__heading {
+  margin: 0;
+}
+
+.dahc-popconfirm__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--dahc-space-2);
+}

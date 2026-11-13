@@ -1,0 +1,82 @@
+<dahc-playground-page
+  heading="Breadcrumbs and logo"
+  description="Where the page sits in the site: a trail of links ending with the current page; dark on light backgrounds and light on navy. Figma Breadcrumbs 50:9802 and the Dubai Health logo (50:2078)."
+  selector="dahc-breadcrumbs"
+  [whenToUse]="whenToUse"
+  [sourceFiles]="sourceFiles">
+  <div preview>
+    <div [class.on-navy]="tone() === 'light'">
+      <dahc-breadcrumbs [items]="items" [tone]="tone()" [homeIcon]="homeIcon()" />
+    </div>
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-choice label="tone" [options]="tones" [(value)]="tone" />
+    <dahc-inspector-toggle label="homeIcon" [(value)]="homeIcon" />
+  </div>
+
+  <div states class="pg-stack">
+    <div class="logos" data-testid="logos">
+      <dahc-logo />
+      <dahc-logo orientation="icon" />
+    </div>
+    <div class="logos on-navy">
+      <dahc-logo color="white" />
+      <dahc-logo orientation="icon" color="white" />
+    </div>
+  </div>
+
+  <dahc-doc-example
+    examples
+    exampleId="basic"
+    heading="Basic"
+    description="Three levels with the home icon."
+    template="breadcrumbs-page.component.html">
+    <dahc-breadcrumbs
+      label="Application trail"
+      [items]="[
+        { label: 'Home', href: '#home' },
+        { label: 'My applications', href: '#applications' },
+        { label: 'Medical application' }
+      ]" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="no-icon"
+    heading="Without the home icon"
+    description="Text only."
+    template="breadcrumbs-page.component.html">
+    <dahc-breadcrumbs
+      label="Guide trail"
+      [homeIcon]="false"
+      [items]="[
+        { label: 'Guides', href: '#guides' },
+        { label: 'Fees' }
+      ]" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="light"
+    heading="On navy"
+    description="The light tone for dark surfaces."
+    template="breadcrumbs-page.component.html">
+    <div class="on-navy">
+      <dahc-breadcrumbs
+        label="Program trail"
+        tone="light"
+        [items]="[
+          { label: 'Home', href: '#home' },
+          { label: 'Programs', href: '#programs' },
+          { label: 'Residency' }
+        ]" />
+    </div>
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>Breadcrumbs: a labelled nav with an ordered list; the last item is the current page (aria-current="page"), not a link.</li>
+    <li>Separators and the home icon are decorative; the home link keeps its text.</li>
+    <li>The logo is an image named "Dubai Health"; pass an empty label when the same name is next to it in text.</li>
+  </ul>
+</dahc-playground-page>

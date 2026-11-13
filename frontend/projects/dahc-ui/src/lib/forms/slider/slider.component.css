@@ -1,0 +1,141 @@
+/* DERIVED (dubai-health-ui dh-slider), see the component comment. */
+
+:host {
+  --_thumb: var(--dahc-size-icon-lg);
+  --_rail: var(--dahc-space-2);
+
+  display: block;
+  min-inline-size: 0;
+  color: var(--dahc-color-text-primary);
+}
+
+.dahc-slider__label {
+  display: block;
+  margin-block-end: var(--dahc-space-2);
+  font-size: var(--dahc-type-body-sm-size);
+  line-height: var(--dahc-type-body-sm-line-height);
+}
+
+.dahc-slider__area {
+  padding-block: calc((var(--_thumb) - var(--_rail)) / 2 + var(--dahc-space-0-5));
+  padding-inline: calc(var(--_thumb) / 2);
+  cursor: pointer;
+  touch-action: none;
+}
+
+:host(.dahc-slider--disabled) .dahc-slider__area {
+  cursor: not-allowed;
+}
+
+.dahc-slider__rail {
+  position: relative;
+  block-size: var(--_rail);
+  border-radius: var(--dahc-radius-pill);
+  background-color: var(--dahc-color-surface-muted);
+}
+
+.dahc-slider__track {
+  position: absolute;
+  inset-block: 0;
+  border-radius: inherit;
+  background-color: var(--dahc-color-action-primary);
+}
+
+:host(.dahc-slider--disabled) .dahc-slider__track {
+  background-color: var(--dahc-color-action-disabled-fg);
+}
+
+.dahc-slider__thumb {
+  position: absolute;
+  inset-block-start: 50%;
+  inline-size: var(--_thumb);
+  block-size: var(--_thumb);
+  border: var(--dahc-size-border-strong) solid var(--dahc-color-border-strong);
+  border-radius: var(--dahc-radius-pill);
+  background-color: var(--dahc-color-surface);
+  box-shadow: var(--dahc-shadow-3);
+  translate: -50% -50%;
+  transition: box-shadow var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard);
+}
+
+:host(:dir(rtl)) .dahc-slider__thumb {
+  translate: 50% -50%;
+}
+
+:host(.dahc-slider--disabled) .dahc-slider__thumb {
+  border-color: var(--dahc-color-action-disabled-fg);
+  box-shadow: none;
+}
+
+.dahc-slider__thumb:focus-visible {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: var(--dahc-size-focus-offset);
+}
+
+.dahc-slider__tip {
+  position: absolute;
+  inset-block-end: calc(100% + var(--dahc-space-2));
+  inset-inline-start: 50%;
+  padding-block: calc(var(--dahc-space-1) + var(--dahc-space-0-5));
+  padding-inline: var(--dahc-space-3);
+  border-radius: var(--dahc-radius-sm);
+  background-color: var(--dahc-color-surface-inverse);
+  color: var(--dahc-color-text-inverse);
+  font-size: var(--dahc-font-size-14);
+  line-height: var(--dahc-type-body-sm-line-height);
+  white-space: nowrap;
+  translate: -50% 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard);
+}
+
+:host(:dir(rtl)) .dahc-slider__tip {
+  translate: 50% 0;
+}
+
+.dahc-slider__thumb:hover .dahc-slider__tip,
+.dahc-slider__thumb:focus-visible .dahc-slider__tip,
+.dahc-slider__thumb--dragging .dahc-slider__tip {
+  opacity: 1;
+}
+
+.dahc-slider__marks {
+  position: relative;
+  block-size: var(--dahc-type-body-sm-line-height);
+  margin-inline: calc(var(--_thumb) / 2);
+  color: var(--dahc-color-text-tertiary);
+  font-size: var(--dahc-font-size-12);
+}
+
+.dahc-slider__mark {
+  position: absolute;
+  translate: -50% 0;
+}
+
+:host(:dir(rtl)) .dahc-slider__mark {
+  translate: 50% 0;
+}
+
+.dahc-slider__hint {
+  margin: var(--dahc-space-1) 0 0;
+  color: var(--dahc-color-text-tertiary);
+  font-size: var(--dahc-font-size-12);
+  font-weight: var(--dahc-font-weight-medium);
+  line-height: var(--dahc-type-overline-line-height);
+}
+
+@media (forced-colors: active) {
+  .dahc-slider__rail {
+    border: var(--dahc-size-border) solid CanvasText;
+  }
+
+  .dahc-slider__track {
+    background-color: Highlight;
+  }
+
+  .dahc-slider__thumb {
+    border-color: ButtonText;
+    background-color: ButtonFace;
+  }
+}

@@ -1,0 +1,117 @@
+<dahc-page-header
+  i18n-heading="@@portal.scoring.referee.heading"
+  heading="My portfolios"
+  i18n-description="@@portal.scoring.referee.description"
+  description="Retrieve anonymised portfolios from your pool and score them."
+  [focusOnLoad]="true" />
+
+<div class="dahc-portal-page">
+  <section class="section" aria-labelledby="referee-insights">
+    <h2 id="referee-insights" class="section-heading" i18n="@@portal.scoring.referee.insights">Your queue</h2>
+    <ul class="tiles">
+      @for (tile of tiles(); track tile.label) {
+        <li><dahc-stat-tile [label]="tile.label" [value]="tile.value" [color]="tile.color" /></li>
+      }
+    </ul>
+  </section>
+
+  <section class="section" aria-labelledby="referee-pools">
+    <h2 id="referee-pools" class="section-heading" i18n="@@portal.scoring.referee.yourPools">Your pools</h2>
+    @if (retrieveMessage(); as message) {
+      <dahc-alert [variant]="message.variant" [announce]="true">{{ message.text }}</dahc-alert>
+    }
+    @if (pools(); as pools) {
+      <ul class="pool-list">
+        @for (pool of pools; track pool.poolId) {
+          <li>
+            <dahc-card class="pool">
+              <h3 class="pool-name">{{ pool.programName }} – {{ pool.specialtyName }}</h3>
+              <p class="pool-text">{{ poolKind(pool) }}</p>
+              <p class="pool-text" i18n="@@portal.scoring.referee.waiting">{pool.waiting, plural, =0 {No portfolios waiting} =1 {1 portfolio waiting} other {{{ pool.waiting }} portfolios waiting}}</p>
+              <button
+                dahc-button
+                type="button"
+                size="sm"
+                [loading]="retrieving() === pool.poolId"
+                [disabled]="retrieving() !== null"
+                (click)="retrieve(pool)"
+                i18n="@@portal.scoring.referee.retrieve">
+                Retrieve portfolios<span class="dahc-visually-hidden"> from {{ pool.programName }} – {{ pool.specialtyName }}</span>
+              </button>
+            </dahc-card>
+          </li>
+        }
+      </ul>
+    } @else if (inbox.loaded()) {
+      <dahc-alert variant="warning" i18n="@@portal.scoring.referee.noPools">
+        Your pools are not available yet, so portfolios cannot be retrieved here. The admission service does not tell the portal which pools you are
+        assigned to (open question PQ-03).
+      </dahc-alert>
+    }
+  </section>
+
+  <section class="section" aria-labelledby="referee-inbox">
+    <h2 id="referee-inbox" class="section-heading" i18n="@@portal.scoring.referee.inbox">Inbox</h2>
+    <div class="toolbar">
+      <dahc-search [formControl]="search" i18n-label="@@portal.scoring.referee.search" label="Search by application ID" [showLabel]="true" />
+    </div>
+    @if (inbox.problem(); as problem) {
+      <dahc-alert variant="error" [announce]="true">
+        {{ problem.detail ?? problem.title }}
+        <button dahc-button type="button" variant="link" (click)="inbox.reload()" i18n="@@portal.action.tryAgain">Try again</button>
+      </dahc-alert>
+    }
+    @if (inbox.loaded() && rows().length === 0 && !inbox.loading()) {
+      <dahc-empty-state
+        [headingLevel]="3"
+        i18n-heading="@@portal.scoring.referee.emptyHeading"
+        heading="No portfolios in your inbox"
+        i18n-description="@@portal.scoring.referee.emptyText"
+        description="Retrieve portfolios from your pool to start scoring.">
+        @for (pool of pools() ?? []; track pool.poolId) {
+          <button
+            dahc-button
+            type="button"
+            variant="secondary"
+            [loading]="retrieving() === pool.poolId"
+            [disabled]="retrieving() !== null"
+            (click)="retrieve(pool)"
+            i18n="@@portal.scoring.referee.retrieveFrom">
+            Retrieve from {{ poolKind(pool) }}
+          </button>
+        }
+      </dahc-empty-state>
+    } @else {
+      <dahc-table
+        i18n-caption="@@portal.scoring.referee.inboxCaption"
+        caption="Portfolios assigned to you"
+        [columns]="columns"
+        [rows]="rows()"
+        [loading]="inbox.loading()"
+        [(sort)]="sort"
+        scrollX="760px">
+        <ng-template dahcTableCell="applicationNumber" let-row>
+          @if (asRow(row).open) {
+            <a [routerLink]="['/scoring/referee/portfolios', asRow(row).portfolioId]">{{ asRow(row).applicationNumber }}</a>
+          } @else {
+            {{ asRow(row).applicationNumber }}
+          }
+        </ng-template>
+        <ng-template dahcTableCell="dueAt" let-row>
+          @if (asRow(row).overdue) {
+            <span class="overdue">
+              {{ asRow(row).dueAt }}
+              <dahc-tag purpose="error" i18n="@@portal.scoring.referee.overdue">Overdue</dahc-tag>
+            </span>
+          } @else {
+            {{ asRow(row).dueAt }}
+          }
+        </ng-template>
+        <ng-template dahcTableCell="portfolioStatus" let-row>
+          <dahc-tag [purpose]="asRow(row).statusPurpose">{{ asRow(row).portfolioStatus }}</dahc-tag>
+        </ng-template>
+      </dahc-table>
+      <dahc-load-more [shown]="rows().length" [hasMore]="inbox.hasMore()" [loading]="inbox.loading()" (loadMore)="inbox.loadMore()" />
+    }
+  </section>
+</div>

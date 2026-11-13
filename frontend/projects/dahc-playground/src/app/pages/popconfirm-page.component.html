@@ -1,0 +1,52 @@
+<dahc-playground-page
+  heading="Popconfirm"
+  description="Asks for confirmation next to the button that triggered an action. Mark the trigger with dahcPopoverTrigger. Derived design."
+  selector="dahc-popconfirm"
+  [whenToUse]="whenToUse"
+  [sourceFiles]="sourceFiles">
+  <div preview class="pg-row">
+    <dahc-popconfirm
+      [heading]="heading()"
+      [okText]="okText()"
+      [cancelText]="cancelText()"
+      (confirmed)="record('confirmed')"
+      (cancelled)="record('cancelled')">
+      <button dahc-button type="button" variant="danger-outline" dahcPopoverTrigger>Remove CV</button>
+      You can upload a new file afterwards.
+    </dahc-popconfirm>
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-text label="heading" [(value)]="heading" />
+    <dahc-inspector-text label="okText" [(value)]="okText" />
+    <dahc-inspector-text label="cancelText" [(value)]="cancelText" />
+    <dahc-event-log [events]="events()" />
+  </div>
+
+  <div states class="pg-stack">
+    <p class="pg-value">Without content only the question and the two buttons show.</p>
+  </div>
+
+  <dahc-doc-example examples exampleId="basic" heading="Basic" description="Without inputs it asks Are you sure? with Yes and No." template="popconfirm-page.component.html">
+    <dahc-popconfirm>
+      <button dahc-button type="button" variant="secondary" size="sm" dahcPopoverTrigger>Clear the form</button>
+    </dahc-popconfirm>
+  </dahc-doc-example>
+  <dahc-doc-example examples exampleId="texts" heading="Custom texts" description="heading, okText and cancelText match the action." template="popconfirm-page.component.html">
+    <dahc-popconfirm heading="Remove this training site?" okText="Remove" cancelText="Keep">
+      <button dahc-button type="button" variant="danger-outline" size="sm" dahcPopoverTrigger>Remove Rashid Hospital</button>
+    </dahc-popconfirm>
+  </dahc-doc-example>
+  <dahc-doc-example examples exampleId="description" heading="With a description" description="Projected text explains the consequence below the question." template="popconfirm-page.component.html">
+    <dahc-popconfirm heading="Discard your changes?" okText="Discard" cancelText="Keep editing">
+      <button dahc-button type="button" variant="link" dahcPopoverTrigger>Discard changes</button>
+      Your edits since the last save will be lost.
+    </dahc-popconfirm>
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>role="alertdialog" named by the question and described by the content.</li>
+    <li>Focus moves to the confirm button; Escape or a click outside cancels and returns focus to the trigger.</li>
+    <li>Use a modal for consequences that cannot be undone or need more explanation.</li>
+  </ul>
+</dahc-playground-page>

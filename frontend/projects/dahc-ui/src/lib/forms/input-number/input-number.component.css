@@ -1,0 +1,51 @@
+/* DERIVED on the DH Input field (50:7763), see the component comment. */
+
+:host {
+  display: block;
+  min-inline-size: 0;
+}
+
+/* The input and buttons are declared here and projected into dahc-form-field, so these rules apply to them. */
+.dahc-input-number__control {
+  text-align: center;
+  appearance: textfield;
+}
+
+.dahc-input-number__control::-webkit-inner-spin-button,
+.dahc-input-number__control::-webkit-outer-spin-button {
+  margin: 0;
+  appearance: none;
+}
+
+.dahc-input-number__stepper {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  inline-size: calc(var(--dahc-size-control-sm) - var(--dahc-space-1));
+  block-size: calc(var(--dahc-size-control-sm) - var(--dahc-space-1));
+  padding: 0;
+  border: 0;
+  border-radius: var(--dahc-radius-pill);
+  background-color: var(--dahc-color-surface-muted);
+  color: var(--dahc-color-text-primary);
+  font: inherit;
+  font-size: var(--dahc-font-size-18);
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard);
+}
+
+.dahc-input-number__stepper:hover:not(:disabled) {
+  background-color: var(--dahc-color-border-default);
+}
+
+.dahc-input-number__stepper:disabled {
+  color: var(--dahc-color-text-disabled);
+  cursor: not-allowed;
+}
+
+@media (forced-colors: active) {
+  .dahc-input-number__stepper {
+    border: var(--dahc-size-border) solid ButtonText;
+  }
+}

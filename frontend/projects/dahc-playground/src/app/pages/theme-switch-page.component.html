@@ -1,0 +1,40 @@
+<dahc-playground-page
+  heading="Theme switch"
+  description="Switches between the light and dark themes through DahcThemeService, which follows the system setting until the user chooses and remembers the choice."
+  selector="dahc-theme-switch"
+  [whenToUse]="whenToUse"
+  [sourceFiles]="sourceFiles">
+  <div preview class="pg-stack">
+    <dahc-theme-switch [label]="label()" (themeChange)="onThemeChange($event)" />
+    <p class="pg-value" data-testid="theme-state">theme: {{ theme() }}, follows system: {{ followsSystem() }}</p>
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-text label="label" [(value)]="label" />
+    <button type="button" class="pg-switch" (click)="followSystem()">DahcThemeService.followSystem()</button>
+    <dahc-event-log [events]="events()" />
+  </div>
+
+  <div states class="pg-stack">
+    <p class="pg-value">Off (light theme) and on (dark theme): use the switch above or the one in the playground header; both share the same service.</p>
+  </div>
+
+  <dahc-doc-example examples exampleId="custom-label" heading="Custom label" description="label changes the accessible name and the visible text; the pressed state says whether dark is on." template="theme-switch-page.component.html">
+    <dahc-theme-switch label="Night mode" />
+  </dahc-doc-example>
+  <dahc-doc-example examples exampleId="service" heading="Theme service" description="Buttons that call DahcThemeService.setTheme() for an explicit choice." template="theme-switch-page.component.html">
+    <dahc-space [wrap]="true">
+      <button dahc-button type="button" variant="secondary" size="sm" (click)="setTheme('light')">Use the light theme</button>
+      <button dahc-button type="button" variant="secondary" size="sm" (click)="setTheme('dark')">Use the dark theme</button>
+    </dahc-space>
+  </dahc-doc-example>
+  <dahc-doc-example examples exampleId="follow-system" heading="Follow the system" description="followSystem() forgets the choice so the theme follows prefers-color-scheme again." template="theme-switch-page.component.html">
+    <button dahc-button type="button" variant="link" (click)="followSystem()">Follow my device setting</button>
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>A toggle button with aria-pressed; its name stays the same ("Dark theme") and the pressed state says whether it is on.</li>
+    <li>Both themes meet WCAG 2.2 AA contrast; motion tokens drop to zero with prefers-reduced-motion.</li>
+    <li>Only the theme choice is stored in localStorage; it is a display preference.</li>
+  </ul>
+</dahc-playground-page>

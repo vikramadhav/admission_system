@@ -1,0 +1,33 @@
+<dahc-form-field [label]="label()" [hint]="hint()" [error]="errorMessage()" [invalid]="invalid()" [required]="required()">
+  <input
+    #field
+    dahcInput
+    type="text"
+    role="combobox"
+    autocomplete="off"
+    aria-autocomplete="list"
+    [attr.aria-expanded]="expanded()"
+    [attr.aria-controls]="listId"
+    [attr.aria-activedescendant]="activeId()"
+    [attr.placeholder]="placeholder() || null"
+    [value]="display()"
+    [disabled]="isDisabled()"
+    (input)="onInput($event)"
+    (keydown)="onKeydown($event)"
+    (blur)="onBlur()" />
+</dahc-form-field>
+<div #popup class="dahc-popup dahc-auto-complete__popup" popover="manual">
+  <ul class="dahc-entry-list" role="listbox" [id]="listId" [attr.aria-label]="suggestionsLabel()">
+    @for (option of suggestions(); track option; let index = $index) {
+      <li
+        role="option"
+        class="dahc-entry-option"
+        [id]="optionId(index)"
+        [class.dahc-entry-option--active]="index === activeIndex()"
+        [attr.aria-selected]="index === activeIndex()"
+        [attr.data-index]="index">
+        {{ option }}
+      </li>
+    }
+  </ul>
+</div>

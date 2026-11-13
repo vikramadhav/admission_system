@@ -1,0 +1,26 @@
+// One bordered block per board entry (repeatable, US-1.3.8 AC4).
+.board-list {
+  display: grid;
+  gap: var(--dahc-space-5);
+}
+
+.board {
+  display: grid;
+  gap: var(--dahc-space-4);
+  margin: 0;
+  padding: var(--dahc-space-5);
+  border: var(--dahc-size-border) solid var(--dahc-color-border-subtle);
+  border-radius: var(--dahc-radius-lg);
+  min-inline-size: 0;
+}
+
+.board-legend {
+  padding-inline: var(--dahc-space-1);
+  color: var(--dahc-color-text-primary);
+  font-weight: var(--dahc-font-weight-bold);
+}
+
+.board-actions {
+  display: flex;
+  justify-content: flex-end;
+}

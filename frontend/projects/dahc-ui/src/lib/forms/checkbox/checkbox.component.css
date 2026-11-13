@@ -1,0 +1,131 @@
+/* Figma Controls 50:7880, Type=1. Checkbox (50:7881 unchecked, 50:7884 checked, 50:7904 with label). */
+
+:host {
+  display: inline-block;
+  min-inline-size: 0;
+}
+
+.dahc-checkbox {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: var(--dahc-space-2);
+  color: var(--dahc-color-text-primary);
+  font-size: var(--dahc-font-size-16);
+  line-height: var(--dahc-font-line-height-tight);
+  cursor: pointer;
+}
+
+/* 24px hit area with the 20px box centred in it. */
+.dahc-checkbox__control {
+  position: relative;
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  inline-size: var(--dahc-size-icon-lg);
+  block-size: var(--dahc-size-icon-lg);
+}
+
+.dahc-checkbox__input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: inherit;
+}
+
+.dahc-checkbox__box {
+  display: inline-grid;
+  place-items: center;
+  inline-size: var(--dahc-size-icon-md);
+  block-size: var(--dahc-size-icon-md);
+  border: var(--dahc-size-border-strong) solid var(--dahc-color-border-control);
+  border-radius: var(--dahc-radius-xs);
+  background-color: var(--dahc-color-surface);
+  /* GME checkbox: navy box with a white tick when checked. */
+  color: var(--dahc-color-text-inverse);
+  pointer-events: none;
+  transition:
+    background-color var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard),
+    border-color var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard);
+}
+
+.dahc-checkbox__tick {
+  visibility: hidden;
+}
+
+.dahc-checkbox__label {
+  min-inline-size: 0;
+  padding-block-start: var(--dahc-space-0-5);
+}
+
+/* The label is optional (a checkbox inside a table cell may be labelled by aria-label). */
+.dahc-checkbox__label:empty {
+  display: none;
+}
+
+.dahc-checkbox:hover .dahc-checkbox__input:not(:disabled) + .dahc-checkbox__box {
+  border-color: var(--dahc-color-border-strong);
+}
+
+.dahc-checkbox__input:checked + .dahc-checkbox__box,
+.dahc-checkbox__input:indeterminate + .dahc-checkbox__box {
+  border-color: var(--dahc-color-control-checked);
+  background-color: var(--dahc-color-control-checked);
+}
+
+.dahc-checkbox__input:checked:not(:indeterminate) + .dahc-checkbox__box .dahc-checkbox__tick {
+  visibility: visible;
+}
+
+/* dubai-health-ui dh-checkbox: the label turns bold while checked. */
+.dahc-checkbox:has(.dahc-checkbox__input:checked) .dahc-checkbox__label {
+  font-weight: var(--dahc-font-weight-bold);
+}
+
+/* Indeterminate: a dash (DAHC addition). */
+.dahc-checkbox__input:indeterminate + .dahc-checkbox__box::after {
+  content: '';
+  grid-area: 1 / 1;
+  inline-size: calc(var(--dahc-size-icon-sm) - var(--dahc-space-1));
+  block-size: var(--dahc-size-border-strong);
+  border-radius: var(--dahc-radius-pill);
+  background-color: currentcolor;
+}
+
+.dahc-checkbox__input:focus-visible + .dahc-checkbox__box {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: var(--dahc-size-focus-offset);
+}
+
+.dahc-checkbox__input[aria-invalid='true']:not(:checked) + .dahc-checkbox__box {
+  border-color: var(--dahc-color-error-border);
+  background-color: var(--dahc-color-error-surface);
+}
+
+.dahc-checkbox:has(:disabled) {
+  color: var(--dahc-color-text-disabled);
+  cursor: not-allowed;
+}
+
+.dahc-checkbox__input:disabled + .dahc-checkbox__box {
+  border-color: var(--dahc-color-action-disabled-fg);
+  background-color: var(--dahc-color-action-disabled-bg);
+  color: var(--dahc-color-action-disabled-fg);
+}
+
+.dahc-checkbox__input:disabled:checked + .dahc-checkbox__box {
+  background-color: var(--dahc-color-action-disabled-fg);
+  color: var(--dahc-color-surface);
+}
+
+@media (forced-colors: active) {
+  .dahc-checkbox__box {
+    border-color: FieldText;
+  }
+
+  .dahc-checkbox__input:checked + .dahc-checkbox__box {
+    border-color: Highlight;
+    background-color: Highlight;
+    color: HighlightText;
+  }
+}

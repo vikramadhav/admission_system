@@ -1,0 +1,45 @@
+<div class="dahc-calendar">
+  <div class="dahc-calendar__header">
+    <button type="button" class="dahc-calendar__nav" (click)="showMonth(-1)">
+      <dahc-icon name="chevron-left" size="sm" />
+      <span class="dahc-visually-hidden">{{ previousMonthLabel() }}</span>
+    </button>
+    <p class="dahc-calendar__month" aria-live="polite">{{ monthLabel() }}</p>
+    <button type="button" class="dahc-calendar__nav" (click)="showMonth(1)">
+      <dahc-icon name="chevron-right" size="sm" />
+      <span class="dahc-visually-hidden">{{ nextMonthLabel() }}</span>
+    </button>
+  </div>
+  <table class="dahc-calendar__grid" role="grid" [attr.aria-label]="monthLabel()">
+    <thead>
+      <tr>
+        @for (weekday of weekdays(); track weekday.long) {
+          <th scope="col" [attr.abbr]="weekday.long">{{ weekday.short }}</th>
+        }
+      </tr>
+    </thead>
+    <tbody>
+      @for (week of weeks(); track $index) {
+        <tr>
+          @for (day of week; track day.iso) {
+            <td role="gridcell" [attr.aria-selected]="day.selected">
+              <button
+                type="button"
+                class="dahc-calendar__day"
+                [class.dahc-calendar__day--outside]="day.outside"
+                [class.dahc-calendar__day--selected]="day.selected"
+                [class.dahc-calendar__day--today]="day.today"
+                [attr.tabindex]="day.focused ? 0 : -1"
+                [attr.aria-label]="day.label"
+                [attr.aria-current]="day.today ? 'date' : null"
+                [disabled]="day.disabled"
+                (click)="select(day)">
+                {{ day.number }}
+              </button>
+            </td>
+          }
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

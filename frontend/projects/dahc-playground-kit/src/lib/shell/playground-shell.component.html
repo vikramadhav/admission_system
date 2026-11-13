@@ -1,0 +1,60 @@
+<a class="pg-skip-link" href="#main-content" (click)="skipToMain($event)">Skip to main content</a>
+<header class="pg-header">
+  <a class="pg-brand" [routerLink]="'/' + homePath">
+    <dahc-logo class="pg-brand-logo" orientation="icon" label="" />
+    <span class="pg-brand-text">{{ title }}</span>
+  </a>
+  <dahc-playground-search class="pg-header-search" [entries]="entries" />
+  <nav class="pg-top-nav" aria-label="Site">
+    <a class="pg-top-link" [routerLink]="'/' + docsHome" [class.pg-top-link--active]="section() === 'docs'" [attr.aria-current]="section() === 'docs' ? 'page' : null">Docs</a>
+    <a class="pg-top-link" [routerLink]="'/' + overviewPath" [class.pg-top-link--active]="section() === 'components'" [attr.aria-current]="section() === 'components' ? 'page' : null">Components</a>
+  </nav>
+  <div class="pg-switchers">
+    @if (version) {
+      <span class="pg-version" [attr.aria-label]="'Version ' + version">{{ version }}</span>
+    }
+    <dahc-theme-switch />
+    <button type="button" class="pg-switch" [attr.aria-pressed]="direction() === 'rtl'" (click)="toggleDirection()">
+      Right-to-left
+    </button>
+  </div>
+</header>
+<div class="pg-layout">
+  <nav class="pg-nav" [attr.aria-label]="section() === 'docs' ? 'Docs' : 'Components'">
+    <button type="button" class="pg-nav-toggle" [attr.aria-expanded]="navOpen()" aria-controls="pg-nav-groups" (click)="navOpen.set(!navOpen())">
+      {{ section() === 'docs' ? 'Docs menu' : 'Components menu' }}
+    </button>
+    <div id="pg-nav-groups" class="pg-nav-groups" [class.pg-nav-groups--open]="navOpen()">
+      @if (section() === 'components') {
+        <ul class="pg-nav-list">
+          <li>
+            <a class="pg-nav-link" [routerLink]="'/' + overviewPath" routerLinkActive="pg-nav-link--active" ariaCurrentWhenActive="page">Overview</a>
+          </li>
+        </ul>
+      }
+      @for (group of visibleGroups(); track group) {
+        <h2 class="pg-nav-group" [id]="groupId(group)">
+          {{ group }}
+          @if (section() === 'components') {
+            <span class="pg-nav-count">{{ entriesIn(group).length }}</span>
+          }
+        </h2>
+        <ul class="pg-nav-list" [attr.aria-labelledby]="groupId(group)">
+          @for (entry of entriesIn(group); track entry.path) {
+            <li>
+              <a
+                class="pg-nav-link"
+                [routerLink]="'/' + entry.path"
+                routerLinkActive="pg-nav-link--active"
+                ariaCurrentWhenActive="page"
+                (click)="navOpen.set(false)">{{ entry.title }}</a>
+            </li>
+          }
+        </ul>
+      }
+    </div>
+  </nav>
+  <main class="pg-main" id="main-content" tabindex="-1">
+    <router-outlet />
+  </main>
+</div>

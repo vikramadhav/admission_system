@@ -1,0 +1,350 @@
+/api/v1/staff/screening/dashboard:
+  get:
+    tags:
+      - Screening and Announcements
+    operationId: getScreeningDashboard
+    summary: List screening-stage applications
+    description: >-
+      Supervisor-only. Lists the current cycle's applications with statuses, CASPER
+      attendance, appeal flag, the score components with program weights, announcement
+      dates and screen-out reason, ordered by shortlisting score (highest first).
+      Absent candidates are flagged by casperAttendance=ABSENT. Selection for actions
+      is by application number. Success: 200 with ScreeningDashboard. Empty: 200 with
+      an empty data list and a messageCode. Error: standard Problem response. BRD:
+      US-4.1.1, US-4.2.1 AC12. Roles (active role): ADMISSION_SUPERVISOR.
+    security:
+      - IdamBearer: []
+    parameters:
+      - $ref: "../components/parameters.yaml#/CycleIdOptional"
+      - name: programId
+        in: query
+        schema:
+          type: string
+          format: uuid
+      - name: specialtyId
+        in: query
+        schema:
+          type: string
+          format: uuid
+      - name: applicationStatus
+        in: query
+        schema:
+          $ref: "../components/schemas.yaml#/ApplicationStatus"
+      - name: verificationStatus
+        in: query
+        schema:
+          $ref: "../components/schemas.yaml#/VerificationStatus"
+      - name: portfolioStatus
+        in: query
+        schema:
+          $ref: "../components/schemas.yaml#/PortfolioStatus"
+      - name: announcementStatus
+        in: query
+        schema:
+          $ref: "../components/schemas.yaml#/AnnouncementStatus"
+      - name: casperAttendance
+        in: query
+        schema:
+          type: string
+          enum:
+            - NA
+            - ATTENDED
+            - ABSENT
+      - name: appealed
+        in: query
+        schema:
+          type: boolean
+      - name: q
+        in: query
+        description: Free-text search over application number and candidate name.
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 100
+      - $ref: "../components/parameters.yaml#/Limit"
+      - $ref: "../components/parameters.yaml#/Cursor"
+      - name: sort
+        in: query
+        description: >-
+          Allow-listed sort keys, comma-separated; prefix with - for descending. Allowed:
+          shortlistingScore, portfolioScore, gpaShortlistingScore, examShortlistingScore,
+          casperShortlistingScore, applicationId, candidateName, reviewCompletedAt,
+          announcementStatus. Unsupported keys return 400 request.invalid_sort.
+        schema:
+          type: string
+          default: -shortlistingScore
+    responses:
+      "200":
+        description: Screening dashboard; an empty filtered result is a successful
+          empty page.
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas.yaml#/ApiResponse"
+                - type: object
+                  properties:
+                    data:
+                      $ref: "../components/schemas.yaml#/ScreeningDashboard"
+      "400":
+        $ref: "../components/responses.yaml#/BadRequest"
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"
+      "403":
+        $ref: "../components/responses.yaml#/Forbidden"
+      "429":
+        $ref: "../components/responses.yaml#/RateLimited"
+      "500":
+        $ref: "../components/responses.yaml#/ServerError"
+      "503":
+        $ref: "../components/responses.yaml#/ServiceUnavailable"
+    x-dahc-roles:
+      - ADMISSION_SUPERVISOR
+
+/api/v1/staff/screening/casper-imports:
+  post:
+    tags:
+      - Screening and Announcements
+    operationId: uploadAndProcessCasperResults
+    summary: Validate and process a CASPER results workbook
+    description: >-
+      Validates workbook structure before processing rows; applies valid matched rows,
+      records unmatched/invalid/duplicate exceptions, calculates configured score
+      components, and preserves upload version history. Success: 200 with CasperImportResult.
+      Empty: valid workbook with no data rows returns a zero-row summary. Error: 409
+      for conflicting upload version, 413/415 file errors, 422 invalid workbook structure,
+      or standard Problem response. Scores remain hidden from candidates until announcement.
+      BRD: US-4.2.1. Roles (active role): ADMISSION_SUPERVISOR.
+    security:
+      - IdamBearer: []
+    parameters:
+      - $ref: "../components/parameters.yaml#/CycleId"
+      - name: Idempotency-Key
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 16
+          maxLength: 128
+    requestBody:
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            required:
+              - file
+            properties:
+              file:
+                type: string
+                format: binary
+                description: Approved Excel format only.
+    responses:
+      "200":
+        description: Import completed with applied row count and exception list.
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas.yaml#/ApiResponse"
+                - type: object
+                  properties:
+                    data:
+                      $ref: "../components/schemas.yaml#/CasperImportResult"
+      "400":
+        $ref: "../components/responses.yaml#/BadRequest"
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"
+      "403":
+        $ref: "../components/responses.yaml#/Forbidden"
+      "409":
+        $ref: "../components/responses.yaml#/Conflict"
+      "413":
+        description: File exceeds configured maximum size.
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas.yaml#/Problem"
+      "415":
+        description: File is not an allowed Excel format.
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas.yaml#/Problem"
+      "422":
+        $ref: "../components/responses.yaml#/Validation"
+      "500":
+        $ref: "../components/responses.yaml#/ServerError"
+      "503":
+        $ref: "../components/responses.yaml#/ServiceUnavailable"
+    x-dahc-roles:
+      - ADMISSION_SUPERVISOR
+
+/api/v1/staff/screening/announcements:
+  post:
+    tags:
+      - Screening and Announcements
+    operationId: announceInitialScores
+    summary: Publish eligible initial screening scores
+    description: >-
+      Validates all selected application readiness, records the announcement, reveals
+      only approved final scores, starts the appeal window, and queues candidate notifications.
+      CASPER attendance is not a gate for initial score announcement per the BRD.
+      Success: 200 with per-record processing results. Empty: not applicable. Error:
+      409 readiness/state conflict, 422 invalid selection, or standard Problem response.
+      BRD: US-4.3.1. Roles (active role): ADMISSION_SUPERVISOR.
+    security:
+      - IdamBearer: []
+    parameters:
+      - name: Idempotency-Key
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 16
+          maxLength: 128
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas.yaml#/BulkActionRequest"
+    responses:
+      "200":
+        description: Announcement results for the selected records.
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas.yaml#/ApiResponse"
+                - type: object
+                  properties:
+                    data:
+                      $ref: "../components/schemas.yaml#/BulkWorkflowResult"
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"
+      "403":
+        $ref: "../components/responses.yaml#/Forbidden"
+      "409":
+        $ref: "../components/responses.yaml#/Conflict"
+      "422":
+        $ref: "../components/responses.yaml#/Validation"
+      "500":
+        $ref: "../components/responses.yaml#/ServerError"
+      "503":
+        $ref: "../components/responses.yaml#/ServiceUnavailable"
+    x-dahc-roles:
+      - ADMISSION_SUPERVISOR
+
+/api/v1/staff/screening/bulk-screen-outs:
+  post:
+    tags:
+      - Screening and Announcements
+    operationId: bulkScreenOutApplications
+    summary: Screen out selected applications with one reason
+    description: >-
+      Supervisor applies one configured reason to explicit selected applications,
+      validates each record, and reports blocked records. Success: 200 with per-application
+      results. Empty: not applicable. Error: 409 for state conflicts, 422 for missing
+      reason/selection, or standard Problem response. This action does not open an
+      appeal window. BRD: US-4.4.1. Roles (active role): ADMISSION_SUPERVISOR.
+    security:
+      - IdamBearer: []
+    parameters:
+      - name: Idempotency-Key
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 16
+          maxLength: 128
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas.yaml#/BulkActionRequest"
+    responses:
+      "200":
+        description: >-
+          Results for every selected application; blocked items include a safe reason
+          code.
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas.yaml#/ApiResponse"
+                - type: object
+                  properties:
+                    data:
+                      $ref: "../components/schemas.yaml#/BulkWorkflowResult"
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"
+      "403":
+        $ref: "../components/responses.yaml#/Forbidden"
+      "409":
+        $ref: "../components/responses.yaml#/Conflict"
+      "422":
+        $ref: "../components/responses.yaml#/Validation"
+      "500":
+        $ref: "../components/responses.yaml#/ServerError"
+      "503":
+        $ref: "../components/responses.yaml#/ServiceUnavailable"
+    x-dahc-roles:
+      - ADMISSION_SUPERVISOR
+
+/api/v1/staff/screening/reannouncements:
+  post:
+    tags:
+      - Screening and Announcements
+    operationId: reannounceAppealScores
+    summary: Publish final scores after completed portfolio appeals
+    description: >-
+      Accepts only Ready for Reannouncement applications, publishes the second-evaluation
+      final score even if unchanged, recomputes shortlisting score, retains prior
+      values internally, closes further appeals, and queues notifications. Success:
+      200 with per-record results. Empty: not applicable. Error: 409 if any record
+      is not ready, 422 invalid selection, or standard Problem response. BRD: US-4.5.1.
+      Roles (active role): ADMISSION_SUPERVISOR.
+    security:
+      - IdamBearer: []
+    parameters:
+      - name: Idempotency-Key
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 16
+          maxLength: 128
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas.yaml#/BulkActionRequest"
+    responses:
+      "200":
+        description: Reannouncement results for selected applications.
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas.yaml#/ApiResponse"
+                - type: object
+                  properties:
+                    data:
+                      $ref: "../components/schemas.yaml#/BulkWorkflowResult"
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"
+      "403":
+        $ref: "../components/responses.yaml#/Forbidden"
+      "409":
+        $ref: "../components/responses.yaml#/Conflict"
+      "422":
+        $ref: "../components/responses.yaml#/Validation"
+      "500":
+        $ref: "../components/responses.yaml#/ServerError"
+      "503":
+        $ref: "../components/responses.yaml#/ServiceUnavailable"
+    x-dahc-roles:
+      - ADMISSION_SUPERVISOR

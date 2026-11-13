@@ -1,0 +1,87 @@
+<div class="dahc-transfer">
+  @for (panel of panels(); track panel.side; let first = $first) {
+    @if (!first) {
+      <div class="dahc-transfer__actions">
+        <button
+          type="button"
+          class="dahc-transfer__move dahc-transfer__move--to-target"
+          [disabled]="!canMoveToTarget() || isDisabled()"
+          [attr.aria-label]="moveLabel(targetTitle())"
+          (click)="move('source')">
+          <dahc-icon name="chevron-right" size="md" />
+        </button>
+        <button
+          type="button"
+          class="dahc-transfer__move dahc-transfer__move--to-source"
+          [disabled]="!canMoveToSource() || isDisabled()"
+          [attr.aria-label]="moveLabel(sourceTitle())"
+          (click)="move('target')">
+          <dahc-icon name="chevron-left" size="md" />
+        </button>
+      </div>
+    }
+    <section class="dahc-transfer__panel" [attr.aria-labelledby]="panel.listId + '-title'">
+      <header class="dahc-transfer__head">
+        <span
+          class="dahc-transfer__box"
+          role="checkbox"
+          [class.dahc-transfer__box--checked]="panel.all"
+          [class.dahc-transfer__box--mixed]="panel.mixed"
+          [attr.tabindex]="panel.items.length > 0 && !isDisabled() ? 0 : -1"
+          [attr.aria-checked]="panel.mixed ? 'mixed' : panel.all"
+          [attr.aria-label]="selectAllLabel(panel)"
+          [attr.aria-disabled]="isDisabled() ? 'true' : null"
+          (click)="toggleAll(panel)"
+          (keydown)="onAllKeydown($event, panel)">
+          <dahc-icon class="dahc-transfer__tick" name="check" size="sm" />
+          <span class="dahc-transfer__dash"></span>
+        </span>
+        <span class="dahc-transfer__title" [id]="panel.listId + '-title'">{{ panel.title }}</span>
+        <span class="dahc-transfer__count">{{ countText(panel) }}</span>
+      </header>
+      @if (searchable()) {
+        <div class="dahc-transfer__search-wrap">
+          <input
+            type="search"
+            class="dahc-transfer__search"
+            autocomplete="off"
+            [attr.aria-label]="searchLabel() + ' ' + panel.title"
+            [placeholder]="searchLabel()"
+            [value]="filters()[panel.side]"
+            [disabled]="isDisabled()"
+            (input)="onFilter($event, panel.side)" />
+        </div>
+      }
+      <ul
+        class="dahc-transfer__list"
+        [class.dahc-transfer__list--empty]="panel.items.length === 0"
+        role="listbox"
+        aria-multiselectable="true"
+        [id]="panel.listId"
+        [attr.aria-labelledby]="panel.listId + '-title'"
+        [attr.tabindex]="panel.items.length > 0 && !isDisabled() ? 0 : -1"
+        [attr.aria-activedescendant]="panel.items.length > 0 ? panel.listId + '-' + panel.active : null"
+        (keydown)="onListKeydown($event, panel)">
+        @for (item of panel.items; track item.value; let index = $index) {
+          <li
+            role="option"
+            class="dahc-transfer__option"
+            [id]="panel.listId + '-' + index"
+            [class.dahc-transfer__option--active]="index === panel.active"
+            [attr.aria-selected]="isChecked(item)"
+            [attr.aria-disabled]="item.disabled ? 'true' : null"
+            [attr.data-side]="panel.side"
+            [attr.data-index]="index">
+            <span class="dahc-transfer__box" [class.dahc-transfer__box--checked]="isChecked(item)" aria-hidden="true">
+              <dahc-icon class="dahc-transfer__tick" name="check" size="sm" />
+            </span>
+            <span>{{ item.label }}</span>
+          </li>
+        }
+      </ul>
+      @if (panel.items.length === 0) {
+        <p class="dahc-transfer__empty">{{ emptyText() }}</p>
+      }
+    </section>
+  }
+</div>

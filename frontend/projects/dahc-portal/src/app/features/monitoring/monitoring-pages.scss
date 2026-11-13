@@ -1,0 +1,55 @@
+// Layout shared by the central monitoring pages (US-2.1.4). Tokens only.
+.section {
+  display: grid;
+  // minmax(0, 1fr): wide tables and charts scroll inside their own region instead of widening the page.
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--dahc-space-4);
+}
+
+.section-heading {
+  margin: 0;
+  font-size: var(--dahc-type-heading-3-size);
+  line-height: var(--dahc-type-heading-3-line-height);
+}
+
+.section-text {
+  margin: 0;
+  color: var(--dahc-color-text-secondary);
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(calc(var(--dahc-space-20) * 2), 1fr));
+  gap: var(--dahc-space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--dahc-space-3);
+}
+
+.toolbar > dahc-select {
+  flex: 1 1 calc(var(--dahc-space-16) * 4);
+  min-inline-size: 0;
+}
+
+.chart-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, calc(var(--dahc-space-20) * 4)), 1fr));
+  gap: var(--dahc-space-6);
+}
+
+.chart-card {
+  min-inline-size: 0;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dahc-space-3);
+}

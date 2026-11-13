@@ -1,0 +1,160 @@
+/* Figma Web Footer 50:11046 / Mobile Footer 50:11129 (see the component comment). */
+
+:host {
+  display: block;
+}
+
+.dahc-footer {
+  background-color: var(--dahc-color-surface-footer);
+  color: var(--dahc-color-text-on-footer);
+}
+
+.dahc-footer__inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dahc-space-6);
+  max-inline-size: var(--dahc-size-container-max);
+  margin-inline: auto;
+  /* dh-footer spacing: 40px top and bottom on small screens. */
+  padding: var(--dahc-space-10) var(--dahc-space-4);
+}
+
+.dahc-footer__top,
+.dahc-footer__bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--dahc-space-6);
+  text-align: center;
+}
+
+.dahc-footer__top {
+  padding-block-end: var(--dahc-space-6);
+  border-block-end: var(--dahc-size-border) solid color-mix(in srgb, var(--dahc-color-text-on-footer) 25%, transparent);
+}
+
+.dahc-footer__logo {
+  block-size: var(--dahc-size-control-lg);
+}
+
+.dahc-footer__links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--dahc-space-3) var(--dahc-space-8);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dahc-footer__link {
+  color: var(--dahc-color-text-on-footer);
+  font-size: var(--dahc-font-size-16);
+  font-weight: var(--dahc-font-weight-bold);
+  line-height: var(--dahc-font-line-height-tight);
+  text-decoration: none;
+}
+
+.dahc-footer__link:hover {
+  color: var(--dahc-color-text-on-footer);
+  text-decoration: underline;
+}
+
+.dahc-footer__contact {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--dahc-space-1);
+  margin: 0;
+}
+
+.dahc-footer__contact-label {
+  font-size: var(--dahc-font-size-12);
+  line-height: var(--dahc-type-overline-line-height);
+}
+
+.dahc-footer__phone {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--dahc-space-2);
+  color: var(--dahc-color-text-on-footer-accent);
+  font-size: var(--dahc-type-heading-4-size);
+  font-weight: var(--dahc-font-weight-bold);
+  line-height: var(--dahc-type-heading-4-line-height);
+  text-decoration: none;
+}
+
+.dahc-footer__phone:hover {
+  color: var(--dahc-color-text-on-footer-accent);
+  text-decoration: underline;
+}
+
+.dahc-footer__copyright {
+  margin: 0;
+  color: var(--dahc-color-text-on-footer-muted);
+  font-size: var(--dahc-font-size-14);
+  line-height: var(--dahc-type-body-sm-line-height);
+}
+
+.dahc-footer__social {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--dahc-space-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dahc-footer__social-link {
+  display: inline-grid;
+  place-items: center;
+  min-inline-size: var(--dahc-size-touch-target);
+  min-block-size: var(--dahc-size-touch-target);
+  color: var(--dahc-color-text-on-footer-accent);
+}
+
+.dahc-footer__link:focus-visible,
+.dahc-footer__phone:focus-visible,
+.dahc-footer__social-link:focus-visible {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-text-on-footer);
+  outline-offset: var(--dahc-size-focus-offset);
+}
+
+/* Same content edge as the header, banner and page: 24px sides from md. */
+@media (min-width: 48rem) {
+  .dahc-footer__inner {
+    padding-inline: var(--dahc-space-6);
+  }
+}
+
+/* Breakpoint lg (tokens/_breakpoints.scss): the two Figma web rows. */
+@media (min-width: 64rem) {
+  /* dh-footer (Figma 50:11046): 64px top, 48px bottom, 40px between rows. The sides keep the
+     shared 24px content edge instead of Figma's 64px (owner decision). */
+  .dahc-footer__inner {
+    gap: var(--dahc-space-10);
+    padding: var(--dahc-space-16) var(--dahc-space-6) var(--dahc-space-12);
+  }
+
+  .dahc-footer__top,
+  .dahc-footer__bottom {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: start;
+  }
+
+  .dahc-footer__nav {
+    flex: 1;
+    padding-inline-start: var(--dahc-space-8);
+    border-inline-start: var(--dahc-size-border) solid color-mix(in srgb, var(--dahc-color-text-on-footer) 25%, transparent);
+  }
+
+  .dahc-footer__links {
+    justify-content: flex-start;
+  }
+
+  .dahc-footer__contact {
+    align-items: flex-end;
+  }
+}

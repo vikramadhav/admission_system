@@ -1,0 +1,49 @@
+{
+  "name": "dahc-frontend",
+  "version": "0.0.0",
+  "private": true,
+  "packageManager": "npm@11.20.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve dahc-portal",
+    "start:mock": "ng serve dahc-portal --configuration mock",
+    "start:playground": "ng serve dahc-playground",
+    "build": "npm run build:ui && npm run build:playground-kit && npm run build:playground && npm run build:portal",
+    "build:ui": "ng build dahc-ui",
+    "build:playground-kit": "ng build dahc-playground-kit",
+    "build:playground": "ng build dahc-playground",
+    "build:portal": "ng build dahc-portal",
+    "extract-i18n": "ng extract-i18n dahc-portal --format json --output-path projects/dahc-portal/src/locale",
+    "icons:registry": "node tools/generate-icon-registry.mjs",
+    "lint": "ng lint && eslint tests/playwright --max-warnings 0",
+    "e2e": "playwright test --config tests/playwright/playwright.config.ts",
+    "audit": "npm audit --audit-level=moderate"
+  },
+  "dependencies": {
+    "@angular/common": "22.2.5",
+    "@angular/compiler": "22.2.5",
+    "@angular/core": "22.2.5",
+    "@angular/forms": "22.2.5",
+    "@angular/localize": "22.2.5",
+    "@angular/platform-browser": "22.2.5",
+    "@angular/router": "22.2.5",
+    "angular-auth-oidc-client": "22.0.2",
+    "rxjs": "7.8.2",
+    "tslib": "2.9.1"
+  },
+  "devDependencies": {
+    "@angular/build": "22.2.6",
+    "@angular/cli": "22.2.6",
+    "@angular/compiler-cli": "22.2.5",
+    "@axe-core/playwright": "4.14.0",
+    "@playwright/test": "1.65.0",
+    "angular-eslint": "22.6.0",
+    "eslint": "10.14.0",
+    "ng-packagr": "22.2.6",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.72.2"
+  },
+  "overrides": {
+    "minimatch": "11.0.8"
+  }
+}

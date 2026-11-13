@@ -1,0 +1,83 @@
+<dahc-playground-page
+  heading="Splitter"
+  description="Resizable panes: drag a handle or use the arrow keys. Ported from dubai-health-ui dh-splitter; DERIVED design."
+  selector="dahc-splitter"
+  [whenToUse]="whenToUse"
+  [sourceFiles]="sourceFiles">
+  <div preview>
+    <dahc-splitter class="splitter-demo" data-testid="splitter-demo" [layout]="layout()" (resized)="onResized($event)">
+      <dahc-splitter-panel [size]="30" [min]="20" [max]="60" label="Resize the applications list">
+        <p class="splitter-pane">Applications</p>
+      </dahc-splitter-panel>
+      <dahc-splitter-panel [min]="20">
+        <p class="splitter-pane">Application details</p>
+      </dahc-splitter-panel>
+    </dahc-splitter>
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-choice label="layout" [options]="layouts" [(value)]="layout" />
+    <dahc-event-log [events]="events()" />
+  </div>
+
+  <div states class="pg-stack">
+    <dahc-splitter class="splitter-demo">
+      <dahc-splitter-panel [resizable]="false" label="Fixed divider"><p class="splitter-pane">Not resizable</p></dahc-splitter-panel>
+      <dahc-splitter-panel><p class="splitter-pane">Second pane</p></dahc-splitter-panel>
+    </dahc-splitter>
+  </div>
+
+  <dahc-doc-example
+    examples
+    exampleId="basic"
+    heading="Horizontal"
+    description="Two panes side by side, 30% and the rest."
+    template="splitter-page.component.html">
+    <dahc-splitter class="splitter-demo">
+      <dahc-splitter-panel [size]="30" label="Resize the review queue">
+        <p class="splitter-pane">Review queue</p>
+      </dahc-splitter-panel>
+      <dahc-splitter-panel>
+        <p class="splitter-pane">Selected application</p>
+      </dahc-splitter-panel>
+    </dahc-splitter>
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="vertical"
+    heading="Vertical"
+    description="Panes stacked one above the other."
+    template="splitter-page.component.html">
+    <dahc-splitter class="splitter-demo" layout="vertical">
+      <dahc-splitter-panel [size]="50" label="Resize the document preview">
+        <p class="splitter-pane">Document preview</p>
+      </dahc-splitter-panel>
+      <dahc-splitter-panel>
+        <p class="splitter-pane">Reviewer notes</p>
+      </dahc-splitter-panel>
+    </dahc-splitter>
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="limits"
+    heading="Minimum and maximum"
+    description="The first pane stays between 20% and 50%."
+    template="splitter-page.component.html">
+    <dahc-splitter class="splitter-demo">
+      <dahc-splitter-panel [size]="25" [min]="20" [max]="50" label="Resize the filters">
+        <p class="splitter-pane">Filters</p>
+      </dahc-splitter-panel>
+      <dahc-splitter-panel [min]="30">
+        <p class="splitter-pane">Results</p>
+      </dahc-splitter-panel>
+    </dahc-splitter>
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>Each handle is a focusable WAI-ARIA window splitter: role="separator" with aria-valuenow, aria-valuemin and aria-valuemax in %, and aria-controls pointing to its pane.</li>
+    <li>Arrow keys move it by 1% (Shift: 10%), Home and End go to the limits; left and right follow the reading direction in RTL.</li>
+    <li>A handle that cannot move is not focusable and reports aria-disabled.</li>
+  </ul>
+</dahc-playground-page>

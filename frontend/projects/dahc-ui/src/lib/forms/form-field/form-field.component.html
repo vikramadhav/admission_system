@@ -1,0 +1,31 @@
+<label class="dahc-form-field__label" [class.dahc-visually-hidden]="hideLabel()" [for]="controlId">
+  {{ label() }}
+  @if (required()) {
+    <span class="dahc-form-field__required" aria-hidden="true">*</span>
+  }
+</label>
+<div class="dahc-form-field__box">
+  <ng-content select="[dahcFieldStart]" />
+  <ng-content />
+  <ng-content select="[dahcFieldEnd]" />
+</div>
+@if (showError() || hint() !== '' || showCount()) {
+  <div class="dahc-form-field__footer">
+  @if (showError()) {
+    <p class="dahc-form-field__message dahc-form-field__message--error" [id]="errorId">
+      <dahc-icon name="information" size="sm" />
+      <span>{{ error() }}</span>
+    </p>
+  } @else if (hint() !== '') {
+    <p class="dahc-form-field__message" [id]="hintId">
+      @if (status() === 'success') {
+        <dahc-icon name="check" size="sm" />
+      }
+      <span>{{ hint() }}</span>
+    </p>
+  }
+    @if (showCount()) {
+      <p class="dahc-form-field__message dahc-form-field__count" [id]="countId">{{ countText() }}</p>
+    }
+  </div>
+}

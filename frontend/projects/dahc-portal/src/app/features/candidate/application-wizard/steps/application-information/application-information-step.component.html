@@ -1,0 +1,128 @@
+<div class="step" [formGroup]="form">
+  <div class="step-grid">
+    <dahc-select
+      formControlName="candidateStatus"
+      i18n-label="@@portal.info.candidateStatus"
+      label="Candidate Status"
+      i18n-description="@@portal.info.candidateStatusHint"
+      description="Values depend on the selected program."
+      [options]="statusOptions()"
+      [required]="true"
+      [invalid]="error('candidateStatus') !== ''"
+      [errorMessage]="error('candidateStatus')" />
+    <dahc-form-field
+      i18n-label="@@portal.info.idNumber"
+      label="ID number"
+      i18n-hint="@@portal.info.idNumberHint"
+      hint="Required for every status except external candidate."
+      [required]="isRequired('idNumber')"
+      [invalid]="error('idNumber') !== ''"
+      [error]="error('idNumber')">
+      <input dahcInput type="text" formControlName="idNumber" autocomplete="off" />
+    </dahc-form-field>
+
+    <dahc-radio-group
+      formControlName="sponsorship"
+      i18n-label="@@portal.info.sponsorship"
+      label="Will an external entity or your employer sponsor your training?"
+      [options]="yesNo"
+      [required]="true"
+      [invalid]="error('sponsorship') !== ''"
+      [errorMessage]="error('sponsorship')" />
+    @if (form.controls.sponsorship.value === 'YES') {
+      <dahc-select
+        formControlName="sponsorType"
+        i18n-label="@@portal.info.sponsorType"
+        label="Sponsor type"
+        [options]="sponsorTypes"
+        [required]="true"
+        [invalid]="error('sponsorType') !== ''"
+        [errorMessage]="error('sponsorType')" />
+      <dahc-form-field
+        class="step-full"
+        i18n-label="@@portal.info.sponsorName"
+        label="Sponsor name"
+        [required]="true"
+        [invalid]="error('sponsorName') !== ''"
+        [error]="error('sponsorName')">
+        <input dahcInput type="text" formControlName="sponsorName" />
+      </dahc-form-field>
+    }
+
+    @if (employmentQuestions()) {
+      <dahc-radio-group
+        formControlName="currentlyEmployed"
+        i18n-label="@@portal.info.employed"
+        label="Are you currently employed?"
+        i18n-hint="@@portal.info.employedHint"
+        hint="If yes, upload your employment letter under Documents."
+        [options]="yesNo"
+        [required]="true"
+        [invalid]="error('currentlyEmployed') !== ''"
+        [errorMessage]="error('currentlyEmployed')" />
+      <dahc-radio-group
+        formControlName="registeredInMbruResidency"
+        i18n-label="@@portal.info.mbruResidency"
+        label="Are you currently registered in the MBRU Residency Program?"
+        i18n-hint="@@portal.info.mbruResidencyHint"
+        hint="If yes, upload a no objection letter under Documents."
+        [options]="yesNo"
+        [required]="true"
+        [invalid]="error('registeredInMbruResidency') !== ''"
+        [errorMessage]="error('registeredInMbruResidency')" />
+    }
+  </div>
+
+  <section class="step-section" aria-labelledby="declarations-heading">
+    <h3 id="declarations-heading" class="step-section-heading" i18n="@@portal.info.declarations">Declarations</h3>
+    <div class="step-grid">
+      @for (declaration of declarations; track declaration.control) {
+        <dahc-radio-group
+          [formControlName]="declaration.control"
+          [label]="declaration.label"
+          [options]="yesNo"
+          [required]="true"
+          [invalid]="error(declaration.control) !== ''"
+          [errorMessage]="error(declaration.control)" />
+      }
+    </div>
+  </section>
+
+  <section class="step-section" aria-labelledby="documents-heading">
+    <h3 id="documents-heading" class="step-section-heading" i18n="@@portal.info.documents">Documents</h3>
+    <dahc-section-attachments sectionKey="application-information" [showRequired]="showAll()" />
+  </section>
+
+  <section class="step-section" aria-labelledby="terms-heading">
+    <h3 id="terms-heading" class="step-section-heading" i18n="@@portal.info.terms">Terms and conditions</h3>
+    <div class="terms" tabindex="0" role="region" aria-labelledby="terms-heading">
+      <p i18n="@@portal.terms.greeting">Dear {{ candidateName() }},</p>
+      <p i18n="@@portal.terms.intro">
+        Greetings! Thank you for your interest in the {{ programName() }} Program. Kindly read the following carefully before proceeding with your application.
+      </p>
+      <ol>
+        <li i18n="@@portal.terms.item1">
+          Candidates are shortlisted solely based on academic merit as outlined on the website; however, in some cases priority will be given to UAE Nationals.
+        </li>
+        <li i18n="@@portal.terms.item2">
+          Candidates must complete the application form and ensure that all the information filled in is correct. Any changes in the form will be the
+          responsibility of the candidate. Moreover, all required attachments should be clear and in PDF format with the exception of the photo. GME has the
+          right to screen out any incomplete or inaccurate application after the submission deadline.
+        </li>
+        <li i18n="@@portal.terms.item3">
+          GME has the right to reject any application if it is found to have false or manipulated information or documentation.
+        </li>
+        <li i18n="@@portal.terms.item4">
+          The application fee is non-refundable. This amount is paid for processing and reviewing the application and is mandatory to consider the
+          application complete.
+        </li>
+      </ol>
+    </div>
+    <dahc-checkbox formControlName="termsAccepted" [required]="true" [invalid]="error('termsAccepted') !== ''">
+      <span i18n="@@portal.terms.accept">I, {{ candidateName() }}, have read and accept the terms and conditions</span>
+    </dahc-checkbox>
+    @if (error('termsAccepted') !== '') {
+      <p class="terms-error" i18n="@@portal.terms.required">Accept the terms and conditions before you pay and submit.</p>
+    }
+  </section>
+</div>

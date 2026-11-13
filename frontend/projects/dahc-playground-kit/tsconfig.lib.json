@@ -1,0 +1,19 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../out-tsc/lib",
+    "declaration": true,
+    "declarationMap": true,
+    "paths": {
+      "dahc-ui": [
+        "../../dist/dahc-ui"
+      ]
+    },
+    "types": [
+      "@angular/localize"
+    ]
+  },
+  "include": [
+    "src/**/*.ts"
+  ]
+}

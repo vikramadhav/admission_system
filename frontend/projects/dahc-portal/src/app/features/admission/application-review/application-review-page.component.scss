@@ -1,0 +1,39 @@
+// Application review page layout (tokens only).
+.review-page-toolbar,
+.review-page-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dahc-space-3);
+}
+
+.review-page-actions {
+  margin-block-start: var(--dahc-space-3);
+}
+
+.review-page-text {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.review-page-meta {
+  margin: 0;
+  color: var(--dahc-color-text-secondary);
+  font-size: var(--dahc-type-body-sm-size);
+  line-height: var(--dahc-type-body-sm-line-height);
+}
+
+.review-page-error {
+  margin: var(--dahc-space-2) 0 0;
+  color: var(--dahc-color-error-text);
+}
+
+.review-page-notes {
+  display: grid;
+  gap: var(--dahc-space-4);
+
+  h2 {
+    margin: 0;
+    font-size: var(--dahc-type-heading-3-size);
+    line-height: var(--dahc-type-heading-3-line-height);
+  }
+}

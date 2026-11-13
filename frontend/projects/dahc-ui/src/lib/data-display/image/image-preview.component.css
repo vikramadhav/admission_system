@@ -1,0 +1,52 @@
+/* Image preview (DERIVED): image on a dark scrim, round close button in the top end corner. */
+
+:host {
+  display: contents;
+}
+
+.dahc-image-preview {
+  max-inline-size: 92vw;
+  max-block-size: 92dvh;
+  margin: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.dahc-image-preview::backdrop {
+  background-color: color-mix(in srgb, var(--dahc-color-scrim) 85%, transparent);
+}
+
+.dahc-image-preview__image {
+  display: block;
+  max-inline-size: 100%;
+  max-block-size: 88dvh;
+  border-radius: var(--dahc-radius-md);
+}
+
+.dahc-image-preview__close {
+  position: fixed;
+  inset-block-start: var(--dahc-space-4);
+  inset-inline-end: var(--dahc-space-4);
+  display: inline-grid;
+  place-items: center;
+  inline-size: var(--dahc-size-touch-target);
+  block-size: var(--dahc-size-touch-target);
+  padding: 0;
+  border: 0;
+  border-radius: var(--dahc-radius-pill);
+  background-color: var(--dahc-color-surface);
+  color: var(--dahc-color-text-primary);
+  cursor: pointer;
+}
+
+.dahc-image-preview__close:focus-visible {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: var(--dahc-size-focus-offset);
+}
+
+@media (forced-colors: active) {
+  .dahc-image-preview__close {
+    border: var(--dahc-size-border) solid ButtonText;
+  }
+}

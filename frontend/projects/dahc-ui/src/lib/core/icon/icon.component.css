@@ -1,0 +1,41 @@
+:host {
+  display: inline-block;
+  flex: none;
+  inline-size: var(--dahc-size-icon-md);
+  block-size: var(--dahc-size-icon-md);
+  background-color: currentcolor;
+  mask: var(--dahc-icon-image) center / contain no-repeat;
+  vertical-align: middle;
+}
+
+:host(.dahc-icon--xs) {
+  inline-size: var(--dahc-size-icon-xs);
+  block-size: var(--dahc-size-icon-xs);
+}
+
+:host(.dahc-icon--sm) {
+  inline-size: var(--dahc-size-icon-sm);
+  block-size: var(--dahc-size-icon-sm);
+}
+
+:host(.dahc-icon--lg) {
+  inline-size: var(--dahc-size-icon-lg);
+  block-size: var(--dahc-size-icon-lg);
+}
+
+:host(.dahc-icon--coloured) {
+  background: var(--dahc-icon-image) center / contain no-repeat;
+  mask: none;
+}
+
+:host(.dahc-icon--directional:dir(rtl)) {
+  transform: scaleX(-1);
+}
+
+/* Forced colours would replace the background with Canvas and hide the icon; keep currentcolor,
+   which the browser has already forced to the right system colour for the surrounding text. */
+@media (forced-colors: active) {
+  :host {
+    forced-color-adjust: none;
+  }
+}

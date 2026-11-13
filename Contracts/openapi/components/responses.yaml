@@ -1,0 +1,124 @@
+BadRequest:
+  description: Request or query parameter is malformed or unsupported.
+  headers:
+    X-Request-ID:
+      $ref: "#/headers/RequestId"
+  content:
+    application/problem+json:
+      schema:
+        $ref: "./schemas.yaml#/Problem"
+
+Unauthorized:
+  description: Missing, expired, malformed, or invalid access token.
+  headers:
+    X-Request-ID:
+      $ref: "#/headers/RequestId"
+  content:
+    application/problem+json:
+      schema:
+        $ref: "./schemas.yaml#/Problem"
+
+Forbidden:
+  description: Authenticated caller lacks the required scope, role, or resource ownership.
+  headers:
+    X-Request-ID:
+      $ref: "#/headers/RequestId"
+  content:
+    application/problem+json:
+      schema:
+        $ref: "./schemas.yaml#/Problem"
+
+NotFound:
+  description: Resource does not exist or is not visible to the caller.
+  headers:
+    X-Request-ID:
+      $ref: "#/headers/RequestId"
+  content:
+    application/problem+json:
+      schema:
+        $ref: "./schemas.yaml#/Problem"
+
+Conflict:
+  description: Current resource state or idempotency key conflicts with the request.
+  headers:
+    X-Request-ID:
+      $ref: "#/headers/RequestId"
+  content:
+    application/problem+json:
+      schema:
+        $ref: "./schemas.yaml#/Problem"
+
+Validation:
+  description: Request is syntactically valid but violates a business or field validation rule.
+  headers:
+    X-Request-ID:
+      $ref: "#/headers/RequestId"
+  content:
+    application/problem+json:
+      schema:
+        $ref: "./schemas.yaml#/Problem"
+
+PreconditionFailed:
+  description: If-Match does not match the current resource version.
+  headers:
+    X-Request-ID:
+      $ref: "#/headers/RequestId"
+  content:
+    application/problem+json:
+      schema:
+        $ref: "./schemas.yaml#/Problem"
+
+PreconditionRequired:
+  description: Required If-Match precondition was not supplied.
+  headers:
+    X-Request-ID:
+      $ref: "#/headers/RequestId"
+  content:
+    application/problem+json:
+      schema:
+        $ref: "./schemas.yaml#/Problem"
+
+RateLimited:
+  description: Caller exceeded the configured request rate.
+  headers:
+    X-Request-ID:
+      $ref: "#/headers/RequestId"
+    Retry-After:
+      description: Seconds to wait before retrying, when known.
+      schema:
+        type: integer
+  content:
+    application/problem+json:
+      schema:
+        $ref: "./schemas.yaml#/Problem"
+
+ServerError:
+  description: Unexpected server failure. A requestId is returned for support correlation.
+  headers:
+    X-Request-ID:
+      $ref: "#/headers/RequestId"
+  content:
+    application/problem+json:
+      schema:
+        $ref: "./schemas.yaml#/Problem"
+
+ServiceUnavailable:
+  description: A required dependency is unavailable; retry behavior depends on operation idempotency.
+  headers:
+    X-Request-ID:
+      $ref: "#/headers/RequestId"
+    Retry-After:
+      description: Seconds to wait before retrying, when known.
+      schema:
+        type: integer
+  content:
+    application/problem+json:
+      schema:
+        $ref: "./schemas.yaml#/Problem"
+
+headers:
+  RequestId:
+    description: Server-generated request correlation identifier.
+    schema:
+      type: string
+

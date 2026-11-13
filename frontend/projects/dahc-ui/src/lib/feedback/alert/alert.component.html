@@ -1,0 +1,16 @@
+<div class="dahc-alert__box" [attr.role]="role()">
+  <dahc-icon class="dahc-alert__icon" [name]="icon()" size="lg" />
+  <div class="dahc-alert__content">
+    <span class="dahc-visually-hidden">{{ variantLabel() }}: </span>
+    @if (heading() !== '') {
+      <p class="dahc-alert__heading">{{ heading() }}</p>
+    }
+    <div class="dahc-alert__body"><ng-content /></div>
+  </div>
+  @if (dismissible()) {
+    <button type="button" class="dahc-alert__dismiss" (click)="dismiss()">
+      <dahc-icon name="x-close" size="md" />
+      <span class="dahc-visually-hidden">{{ dismissLabel() }}</span>
+    </button>
+  }
+</div>

@@ -1,0 +1,48 @@
+<h1 class="fd-heading fd-page-title">Typography</h1>
+<p class="fd-description">
+  The base typeface in each weight, then every type role token group (size, line height, weight, case). Values are
+  those of the current viewport, so narrow the window to see mobile roles where the design system defines them.
+</p>
+
+<section class="fd-panel" aria-labelledby="family-heading">
+  <h2 id="family-heading" class="fd-panel-heading">Typeface</h2>
+  @for (weight of weights; track weight.label) {
+    <p class="fd-specimen" [style.font-weight]="weight.value">
+      {{ weight.label }}: Graduate Medical Education · <span lang="ar">التعليم الطبي للدراسات العليا</span> · 0123456789
+    </p>
+  }
+</section>
+
+<section class="fd-panel" aria-labelledby="roles-heading">
+  <h2 id="roles-heading" class="fd-panel-heading">Type roles</h2>
+  <div class="fd-table-wrapper">
+    <table class="fd-table" aria-describedby="roles-heading">
+      <thead>
+        <tr>
+          <th scope="col">Role</th>
+          <th scope="col">Sample</th>
+          <th scope="col">Size / line height</th>
+          <th scope="col">Weight</th>
+          <th scope="col">Case</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (role of roles(); track role.role) {
+          <tr data-testid="type-role">
+            <td class="fd-code">{{ role.role }}</td>
+            <td>
+              <span
+                [style.font-size]="role.size"
+                [style.line-height]="role.lineHeight"
+                [style.font-weight]="role.weight"
+                [style.text-transform]="role.transform">Medical application</span>
+            </td>
+            <td class="fd-code">{{ role.size }} / {{ role.lineHeight }}</td>
+            <td class="fd-code">{{ role.weight }}</td>
+            <td class="fd-code">{{ role.transform }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

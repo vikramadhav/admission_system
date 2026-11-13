@@ -1,0 +1,287 @@
+<div class="step" [formGroup]="group">
+  <h3 class="step-subheading" i18n="@@portal.personal.identityHeading">Identity Details</h3>
+
+  @if (prefilledFromIcp()) {
+    <dahc-alert variant="info" i18n="@@portal.personal.icpNote">Identity details were pre-filled from ICP through UAE Pass and can't be edited.</dahc-alert>
+  }
+
+  <div class="step-grid">
+    @for (field of names; track field.name) {
+      <dahc-form-field
+        [label]="field.label"
+        [hint]="hint(field.name)"
+        [status]="fromIcp(field.name) ? 'success' : 'none'"
+        [required]="isRequired(field.name)"
+        [invalid]="error(field.name) !== ''"
+        [error]="error(field.name)">
+        <input dahcInput type="text" [formControlName]="field.name" [attr.dir]="field.dir" [attr.lang]="field.dir === 'rtl' ? 'ar' : 'en'" autocomplete="off" />
+      </dahc-form-field>
+    }
+
+    @if (readOnly('dateOfBirth')) {
+      <dahc-form-field i18n-label="@@portal.personal.dateOfBirth" label="Date of birth" [hint]="hint('dateOfBirth')" [status]="fromIcp('dateOfBirth') ? 'success' : 'none'">
+        <input dahcInput type="text" [value]="display('dateOfBirth')" readonly />
+      </dahc-form-field>
+    } @else {
+      <dahc-date-picker
+        formControlName="dateOfBirth"
+        i18n-label="@@portal.personal.dateOfBirth"
+        label="Date of birth"
+        [required]="true"
+        [invalid]="error('dateOfBirth') !== ''"
+        [errorMessage]="error('dateOfBirth')" />
+    }
+
+    @if (readOnly('gender')) {
+      <dahc-form-field i18n-label="@@portal.personal.gender" label="Gender" [hint]="hint('gender')" [status]="fromIcp('gender') ? 'success' : 'none'">
+        <input dahcInput type="text" [value]="display('gender')" readonly />
+      </dahc-form-field>
+    } @else {
+      <dahc-radio-group
+        formControlName="gender"
+        i18n-label="@@portal.personal.gender"
+        label="Gender"
+        [options]="genders"
+        [required]="true"
+        [invalid]="error('gender') !== ''"
+        [errorMessage]="error('gender')" />
+    }
+
+    <dahc-select
+      formControlName="maritalStatus"
+      i18n-label="@@portal.personal.maritalStatus"
+      label="Marital status"
+      [options]="maritalStatuses"
+      [required]="true"
+      [invalid]="error('maritalStatus') !== ''"
+      [errorMessage]="error('maritalStatus')" />
+
+    @if (readOnly('nationality')) {
+      <dahc-form-field i18n-label="@@portal.personal.nationality" label="Nationality" [hint]="hint('nationality')" [status]="fromIcp('nationality') ? 'success' : 'none'">
+        <input dahcInput type="text" [value]="display('nationality')" readonly />
+      </dahc-form-field>
+    } @else {
+      <dahc-select
+        formControlName="nationality"
+        i18n-label="@@portal.personal.nationality"
+        label="Nationality"
+        [options]="countries"
+        [required]="true"
+        [invalid]="error('nationality') !== ''"
+        [errorMessage]="error('nationality')" />
+    }
+
+    <dahc-select
+      formControlName="countryOfBirth"
+      i18n-label="@@portal.personal.countryOfBirth"
+      label="Country of birth"
+      [options]="countries"
+      [required]="true"
+      [invalid]="error('countryOfBirth') !== ''"
+      [errorMessage]="error('countryOfBirth')" />
+
+    @if (conditions().nonEmirati) {
+      <dahc-radio-group
+        formControlName="childOfUaeMother"
+        i18n-label="@@portal.personal.childOfUaeMother"
+        label="Are you a child of a UAE National mother who holds a Family Book?"
+        [options]="yesNo"
+        [required]="true"
+        [invalid]="error('childOfUaeMother') !== ''"
+        [errorMessage]="error('childOfUaeMother')" />
+      <dahc-radio-group
+        formControlName="hasMarsoom"
+        i18n-label="@@portal.personal.hasMarsoom"
+        label="Do you have Marsoom?"
+        [options]="yesNo"
+        [required]="true"
+        [invalid]="error('hasMarsoom') !== ''"
+        [errorMessage]="error('hasMarsoom')" />
+    }
+
+    @if (readOnly('countryOfResidence')) {
+      <dahc-form-field
+        i18n-label="@@portal.personal.countryOfResidence"
+        label="Country of residence"
+        [hint]="hint('countryOfResidence')"
+        [status]="fromIcp('countryOfResidence') ? 'success' : 'none'">
+        <input dahcInput type="text" [value]="display('countryOfResidence')" readonly />
+      </dahc-form-field>
+    } @else {
+      <dahc-select
+        formControlName="countryOfResidence"
+        i18n-label="@@portal.personal.countryOfResidence"
+        label="Country of residence"
+        [options]="countries"
+        [required]="true"
+        [invalid]="error('countryOfResidence') !== ''"
+        [errorMessage]="error('countryOfResidence')" />
+    }
+
+    @if (conditions().residentInUae) {
+      <dahc-select
+        formControlName="cityOfResidence"
+        i18n-label="@@portal.personal.cityOfResidence"
+        label="UAE city of residence"
+        [options]="emirates"
+        [required]="true"
+        [invalid]="error('cityOfResidence') !== ''"
+        [errorMessage]="error('cityOfResidence')" />
+      <dahc-radio-group
+        formControlName="hasEmiratesId"
+        i18n-label="@@portal.personal.hasEmiratesId"
+        label="Do you have an Emirates ID?"
+        [options]="yesNo"
+        [required]="true"
+        [invalid]="error('hasEmiratesId') !== ''"
+        [errorMessage]="error('hasEmiratesId')" />
+    }
+
+    @if (conditions().hasEmiratesId) {
+      @if (readOnly('emiratesIdNumber')) {
+        <dahc-form-field
+          i18n-label="@@portal.personal.emiratesIdNumber"
+          label="Emirates ID number"
+          [hint]="hint('emiratesIdNumber')"
+          [status]="fromIcp('emiratesIdNumber') ? 'success' : 'none'">
+          <input dahcInput type="text" [value]="maskedEmiratesId()" dir="ltr" readonly />
+        </dahc-form-field>
+      } @else {
+        <dahc-form-field
+          i18n-label="@@portal.personal.emiratesIdNumber"
+          label="Emirates ID number"
+          i18n-hint="@@portal.personal.emiratesIdHint"
+          hint="Format 784-YYYY-NNNNNNN-N"
+          [required]="true"
+          [invalid]="error('emiratesIdNumber') !== ''"
+          [error]="error('emiratesIdNumber')">
+          <input dahcInput type="text" formControlName="emiratesIdNumber" dir="ltr" inputmode="numeric" autocomplete="off" />
+        </dahc-form-field>
+      }
+      @if (readOnly('emiratesIdExpiry')) {
+        <dahc-form-field
+          i18n-label="@@portal.personal.emiratesIdExpiry"
+          label="Emirates ID date of expiry"
+          [hint]="hint('emiratesIdExpiry')"
+          [status]="fromIcp('emiratesIdExpiry') ? 'success' : 'none'">
+          <input dahcInput type="text" [value]="display('emiratesIdExpiry')" readonly />
+        </dahc-form-field>
+      } @else {
+        <dahc-date-picker
+          formControlName="emiratesIdExpiry"
+          i18n-label="@@portal.personal.emiratesIdExpiry"
+          label="Emirates ID date of expiry"
+          [required]="true"
+          [invalid]="error('emiratesIdExpiry') !== ''"
+          [errorMessage]="error('emiratesIdExpiry')" />
+      }
+    }
+
+    @if (conditions().needsVisa) {
+      <dahc-form-field
+        i18n-label="@@portal.personal.visaUnifiedNumber"
+        label="Visa unified number"
+        [hint]="hint('visaUnifiedNumber')"
+        [status]="fromIcp('visaUnifiedNumber') ? 'success' : 'none'"
+        [required]="isRequired('visaUnifiedNumber')"
+        [invalid]="error('visaUnifiedNumber') !== ''"
+        [error]="error('visaUnifiedNumber')">
+        <input dahcInput type="text" formControlName="visaUnifiedNumber" dir="ltr" autocomplete="off" />
+      </dahc-form-field>
+      <dahc-form-field
+        i18n-label="@@portal.personal.visaFileNumber"
+        label="Visa file number"
+        [required]="isRequired('visaFileNumber')"
+        [invalid]="error('visaFileNumber') !== ''"
+        [error]="error('visaFileNumber')">
+        <input dahcInput type="text" formControlName="visaFileNumber" dir="ltr" autocomplete="off" />
+      </dahc-form-field>
+      <dahc-select
+        formControlName="visaPlaceOfIssue"
+        i18n-label="@@portal.personal.visaPlaceOfIssue"
+        label="Visa place of issue"
+        [options]="emirates"
+        [required]="true"
+        [invalid]="error('visaPlaceOfIssue') !== ''"
+        [errorMessage]="error('visaPlaceOfIssue')" />
+      <dahc-date-picker
+        formControlName="visaExpiry"
+        i18n-label="@@portal.personal.visaExpiry"
+        label="Visa expiry date"
+        [required]="true"
+        [invalid]="error('visaExpiry') !== ''"
+        [errorMessage]="error('visaExpiry')" />
+    }
+  </div>
+
+  <section class="step-section" aria-labelledby="passport-heading">
+    <h3 id="passport-heading" class="step-section-heading" i18n="@@portal.personal.passportHeading">Passport</h3>
+    <div class="step-grid">
+      <dahc-form-field
+        i18n-label="@@portal.personal.passportNumber"
+        label="Passport number"
+        [hint]="hint('passportNumber')"
+        [status]="fromIcp('passportNumber') ? 'success' : 'none'"
+        [required]="isRequired('passportNumber')"
+        [invalid]="error('passportNumber') !== ''"
+        [error]="error('passportNumber')">
+        <input dahcInput type="text" formControlName="passportNumber" dir="ltr" autocomplete="off" />
+      </dahc-form-field>
+      <dahc-select
+        formControlName="passportCountry"
+        i18n-label="@@portal.personal.passportCountry"
+        label="Passport country of issue"
+        [options]="countries"
+        [required]="true"
+        [invalid]="error('passportCountry') !== ''"
+        [errorMessage]="error('passportCountry')" />
+      <dahc-date-picker
+        formControlName="passportIssueDate"
+        i18n-label="@@portal.personal.passportIssueDate"
+        label="Passport date of issue"
+        [required]="true"
+        [invalid]="error('passportIssueDate') !== ''"
+        [errorMessage]="error('passportIssueDate')" />
+      <dahc-date-picker
+        formControlName="passportExpiry"
+        i18n-label="@@portal.personal.passportExpiry"
+        label="Passport date of expiry"
+        [required]="true"
+        [invalid]="error('passportExpiry') !== ''"
+        [errorMessage]="error('passportExpiry')" />
+      <dahc-form-field
+        i18n-label="@@portal.personal.passportCity"
+        label="Passport city of issue"
+        [required]="isRequired('passportCity')"
+        [invalid]="error('passportCity') !== ''"
+        [error]="error('passportCity')">
+        <input dahcInput type="text" formControlName="passportCity" />
+      </dahc-form-field>
+      @if (conditions().emirati) {
+        <dahc-form-field
+          i18n-label="@@portal.personal.passportUnifiedNumber"
+          label="Passport unified number"
+          [invalid]="error('passportUnifiedNumber') !== ''"
+          [error]="error('passportUnifiedNumber')">
+          <input dahcInput type="text" formControlName="passportUnifiedNumber" dir="ltr" autocomplete="off" />
+        </dahc-form-field>
+        <dahc-form-field
+          i18n-label="@@portal.personal.familyBookCityNumber"
+          label="Family book city number"
+          [required]="isRequired('familyBookCityNumber')"
+          [invalid]="error('familyBookCityNumber') !== ''"
+          [error]="error('familyBookCityNumber')">
+          <input dahcInput type="text" formControlName="familyBookCityNumber" dir="ltr" autocomplete="off" />
+        </dahc-form-field>
+        <dahc-form-field
+          i18n-label="@@portal.personal.familyId"
+          label="Family ID (khulasat qaid)"
+          [required]="isRequired('familyId')"
+          [invalid]="error('familyId') !== ''"
+          [error]="error('familyId')">
+          <input dahcInput type="text" formControlName="familyId" dir="ltr" autocomplete="off" />
+        </dahc-form-field>
+      }
+    </div>
+  </section>
+</div>

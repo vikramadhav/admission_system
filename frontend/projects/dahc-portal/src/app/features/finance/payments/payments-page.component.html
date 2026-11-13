@@ -1,0 +1,67 @@
+<dahc-page-header
+  i18n-heading="@@portal.finance.payments.heading"
+  heading="Payments"
+  i18n-description="@@portal.finance.payments.description"
+  description="Search application payments and export them to Excel."
+  [focusOnLoad]="true" />
+<div class="dahc-portal-page">
+  <section class="section" aria-labelledby="payment-filters-heading">
+    <h2 id="payment-filters-heading" class="section-heading" i18n="@@portal.finance.filtersHeading">Find payments</h2>
+    <form class="filters" [formGroup]="form" (ngSubmit)="search()" novalidate>
+      <dahc-select formControlName="cycleId" i18n-label="@@portal.finance.cycle" label="Admission cycle" [options]="cycleOptions" />
+      <dahc-select formControlName="programId" i18n-label="@@portal.finance.program" label="Program" [options]="programOptions()" />
+      <dahc-form-field i18n-label="@@portal.finance.applicationId" label="Application ID">
+        <input dahcInput type="text" inputmode="numeric" autocomplete="off" formControlName="applicationNumber" />
+      </dahc-form-field>
+      <dahc-date-picker formControlName="from" i18n-label="@@portal.finance.from" label="Payment date from" />
+      <dahc-date-picker
+        formControlName="to"
+        i18n-label="@@portal.finance.to"
+        label="Payment date to"
+        [invalid]="rangeError() !== ''"
+        [errorMessage]="rangeError()" />
+      <div class="filter-actions">
+        <button dahc-button type="submit" i18n="@@portal.finance.search">Search</button>
+        <button dahc-button type="button" variant="secondary" (click)="clear()" i18n="@@portal.finance.clear">Clear</button>
+      </div>
+    </form>
+  </section>
+
+  <section class="section" aria-labelledby="payment-results-heading">
+    <div class="results-header">
+      <h2 id="payment-results-heading" class="section-heading" i18n="@@portal.finance.resultsHeading">Payment records</h2>
+      <button dahc-button type="button" variant="secondary" [loading]="exporting()" (click)="export()" i18n="@@portal.finance.export">Export to Excel</button>
+    </div>
+    <p class="section-text" i18n="@@portal.finance.exportNote">The export includes every record that matches the filters, not only the rows shown.</p>
+    @if (exportError() !== '') {
+      <dahc-alert variant="error" [announce]="true">{{ exportError() }}</dahc-alert>
+    }
+    @if (list.problem(); as problem) {
+      <dahc-alert variant="error" [announce]="true">
+        {{ problem.detail ?? problem.title }}
+        <button dahc-button type="button" variant="link" (click)="list.reload()" i18n="@@portal.action.tryAgain">Try again</button>
+      </dahc-alert>
+    }
+    @if (list.loaded() && rows().length === 0 && !list.loading() && !list.problem()) {
+      <dahc-empty-state
+        [headingLevel]="3"
+        i18n-heading="@@portal.finance.emptyHeading"
+        heading="No payments found"
+        i18n-description="@@portal.finance.emptyText"
+        description="No payment records match these filters. Change the filters and search again." />
+    } @else {
+      <dahc-table
+        i18n-caption="@@portal.finance.caption"
+        caption="Application payments, newest payment first"
+        [columns]="columns"
+        [rows]="rows()"
+        [loading]="list.loading()"
+        scrollX="1100px">
+        <ng-template dahcTableCell="billStatus" let-row>
+          <dahc-tag [purpose]="asRow(row).billPurpose">{{ asRow(row).billStatus }}</dahc-tag>
+        </ng-template>
+      </dahc-table>
+      <dahc-load-more [shown]="rows().length" [hasMore]="list.hasMore()" [loading]="list.loading()" (loadMore)="list.loadMore()" />
+    }
+  </section>
+</div>

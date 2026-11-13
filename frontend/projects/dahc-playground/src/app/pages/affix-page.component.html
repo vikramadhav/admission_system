@@ -1,0 +1,78 @@
+<dahc-playground-page
+  heading="Affix"
+  description="Pins its content to the top of the viewport once it scrolls there, and reports when it is pinned. Ported from dubai-health-ui dh-affix; DERIVED."
+  selector="dahc-affix"
+  [whenToUse]="whenToUse"
+  [exampleColumns]="2"
+  [sourceFiles]="sourceFiles">
+  <div preview>
+    <dahc-affix data-testid="affix-demo" [offsetTop]="16" (affixedChange)="onAffixed($event)">
+      <div class="affix-bar">
+        <dahc-space>
+          <button dahc-button type="button" size="sm">Save</button>
+          <button dahc-button type="button" size="sm" variant="secondary">Back</button>
+        </dahc-space>
+      </div>
+    </dahc-affix>
+    @for (filler of fillers; track filler) {
+      <p class="affix-filler">Section {{ filler }} of the form. Keep scrolling: the actions stay pinned.</p>
+    }
+  </div>
+
+  <div inspector class="pg-stack">
+    <p class="pg-value">Inputs: offsetTop (pixels). Output: affixedChange.</p>
+    <dahc-event-log [events]="events()" />
+  </div>
+
+  <div states class="pg-stack">
+    <p class="pg-value">Not pinned: in the flow. Pinned: sticky at the offset with the raised shadow.</p>
+  </div>
+
+  <dahc-doc-example
+    examples
+    exampleId="basic"
+    heading="Basic"
+    description="The toolbar pins to the very top of the viewport."
+    template="affix-page.component.html">
+    <dahc-affix>
+      <dahc-space>
+        <button dahc-button type="button" size="sm">Save</button>
+        <button dahc-button type="button" size="sm" variant="secondary">Back</button>
+      </dahc-space>
+    </dahc-affix>
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="offset"
+    heading="Below a fixed header"
+    description="offsetTop keeps the pinned bar 80 pixels from the top, below an 80-pixel header."
+    template="affix-page.component.html">
+    <dahc-affix [offsetTop]="80">
+      <dahc-space>
+        <dahc-tag purpose="warning">Draft</dahc-tag>
+        <button dahc-button type="button" size="sm">Save as draft</button>
+      </dahc-space>
+    </dahc-affix>
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="filters"
+    heading="Filter bar"
+    description="Pins a row of filters above a long list."
+    template="affix-page.component.html">
+    <dahc-affix [offsetTop]="16">
+      <dahc-space [wrap]="true">
+        <dahc-tag purpose="information">Residency</dahc-tag>
+        <dahc-tag purpose="information">Submitted</dahc-tag>
+        <button dahc-button type="button" size="sm" variant="link">Clear filters</button>
+      </dahc-space>
+    </dahc-affix>
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>Only the position changes: the content keeps its place in the reading and tab order.</li>
+    <li>Pinned content must not cover focused controls; keep it small and allow for it with scroll-padding when needed.</li>
+  </ul>
+</dahc-playground-page>

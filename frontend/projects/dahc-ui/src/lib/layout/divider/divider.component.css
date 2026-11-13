@@ -1,0 +1,37 @@
+/* Ported from dubai-health-ui dh-divider: 1px DH divider line, 24px block margin, text 14 in the
+   middle with a 16px gap; vertical 8px inline margin. */
+:host {
+  display: flex;
+  align-items: center;
+  gap: var(--dahc-space-4);
+  margin-block: var(--dahc-space-6);
+  color: var(--dahc-color-text-secondary);
+  font-size: var(--dahc-font-size-14);
+  line-height: var(--dahc-font-line-height-tight);
+}
+
+.dahc-divider__line {
+  flex: 1;
+  border-block-start: var(--dahc-size-border) solid var(--dahc-color-border-subtle);
+}
+
+:host(.dahc-divider--vertical) {
+  display: inline-flex;
+  align-self: stretch;
+  min-block-size: 1em;
+  margin-block: 0;
+  margin-inline: var(--dahc-space-2);
+}
+
+:host(.dahc-divider--vertical) .dahc-divider__line {
+  flex: none;
+  align-self: stretch;
+  border-block-start: 0;
+  border-inline-start: var(--dahc-size-border) solid var(--dahc-color-border-subtle);
+}
+
+@media (forced-colors: active) {
+  .dahc-divider__line {
+    border-color: CanvasText;
+  }
+}

@@ -1,0 +1,134 @@
+<dahc-page-header
+  i18n-heading="@@portal.result.heading"
+  heading="Portfolio result"
+  i18n-description="@@portal.result.description"
+  description="Your announced portfolio score, the points awarded for each question and the referees' comments."
+  [breadcrumbs]="breadcrumbs"
+  [focusOnLoad]="true" />
+
+<div class="result">
+  @if (result.isLoading() && data() === null) {
+    <p class="result-text" role="status" i18n="@@portal.result.loading">Loading your portfolio result…</p>
+  } @else if (notAnnounced()) {
+    <dahc-empty-state
+      i18n-heading="@@portal.result.notAnnouncedHeading"
+      heading="Scores have not been announced yet"
+      i18n-description="@@portal.result.notAnnouncedText"
+      description="Your portfolio result appears here once the admissions team announces the scores. We will notify you by e-mail and SMS.">
+      <a dahc-button variant="secondary" routerLink="/candidate/dashboard" i18n="@@portal.action.backToDashboard">Back to dashboard</a>
+    </dahc-empty-state>
+  } @else if (result.error()) {
+    <dahc-alert variant="error" i18n-heading="@@portal.result.loadFailed" heading="Your portfolio result could not be loaded">
+      <p class="result-text" i18n="@@portal.result.loadFailedText">Please try again in a moment.</p>
+    </dahc-alert>
+    <div>
+      <button dahc-button type="button" variant="secondary" (click)="result.reload()" i18n="@@portal.action.tryAgain">Try again</button>
+    </div>
+  } @else if (data(); as current) {
+    <dahc-card i18n-heading="@@portal.result.summary" heading="Announced result">
+      <dahc-detail-list [items]="summary()" [columns]="2" />
+    </dahc-card>
+
+    @switch (current.appeal.status) {
+      @case ('OPEN') {
+        <dahc-alert variant="info" i18n-heading="@@portal.result.appealOpenHeading" heading="You can appeal this result">
+          <p class="result-text" i18n="@@portal.result.appealOpenText">
+            You can appeal once, until {{ appealDeadline() }}. Select the questions you want evaluated again and explain why in up to 200
+            characters each. You cannot add new attachments.
+          </p>
+        </dahc-alert>
+      }
+      @case ('SUBMITTED') {
+        <dahc-alert variant="success" i18n-heading="@@portal.result.appealSubmittedHeading" heading="Your appeal was submitted">
+          <p class="result-text" i18n="@@portal.result.appealSubmittedText">
+            You submitted your appeal on {{ appealSubmittedAt() }}. The appealed questions are being evaluated again.
+          </p>
+        </dahc-alert>
+      }
+      @case ('CLOSED') {
+        <dahc-alert variant="info">
+          <p class="result-text" i18n="@@portal.result.appealClosed">The appeal window for this result is closed.</p>
+        </dahc-alert>
+      }
+    }
+
+    <section class="result-questions" aria-labelledby="result-questions-heading">
+      <h2 id="result-questions-heading" class="result-section-title" i18n="@@portal.result.questions">Questions</h2>
+      @for (question of current.questions; track question.questionId; let index = $index) {
+        <dahc-card [eyebrow]="questionNumber(index)" [headingLevel]="3">
+          <div class="question">
+            <div class="question-head">
+              <p class="question-prompt">{{ question.prompt }}</p>
+              <dahc-tag purpose="informative-blue" i18n="@@portal.result.points">{{ question.awardedPoints }} / {{ question.maxPoints }} points</dahc-tag>
+            </div>
+            <p class="result-text">
+              <span class="question-label" i18n="@@portal.result.yourAnswer">Your answer:</span> {{ answerLabel(question) }}
+            </p>
+            @if (question.comments.length > 0) {
+              <div>
+                <p class="question-label" i18n="@@portal.result.comments">Referee comments</p>
+                <ul class="question-comments">
+                  @for (comment of question.comments; track $index) {
+                    <li>{{ comment }}</li>
+                  }
+                </ul>
+              </div>
+            }
+            @if (question.appealResponse) {
+              <p class="result-text">
+                <span class="question-label" i18n="@@portal.result.yourAppeal">Your appeal:</span> {{ question.appealResponse }}
+              </p>
+            }
+            @if (appealOpen() && group(question.questionId); as appeal) {
+              <div class="question-appeal" [formGroup]="appeal">
+                <dahc-checkbox formControlName="selected" i18n="@@portal.result.appealThis">Appeal this question</dahc-checkbox>
+                @if (appeal.controls.selected.value) {
+                  <dahc-form-field
+                    i18n-label="@@portal.result.response"
+                    label="Why should this question be evaluated again?"
+                    [required]="true"
+                    [hint]="appeal.controls.response.value.length + ' / ' + maxResponse"
+                    [invalid]="responseError(question.questionId) !== ''"
+                    [error]="responseError(question.questionId)">
+                    <textarea dahcInput formControlName="response" [attr.maxlength]="maxResponse"></textarea>
+                  </dahc-form-field>
+                }
+              </div>
+            }
+          </div>
+        </dahc-card>
+      }
+    </section>
+
+    @if (appealOpen()) {
+      @if (selectionError() !== '') {
+        <p class="result-error" role="alert">{{ selectionError() }}</p>
+      }
+      <div class="result-actions">
+        <a dahc-button variant="secondary" routerLink="/candidate/dashboard" i18n="@@portal.action.backToDashboard">Back to dashboard</a>
+        <button dahc-button type="button" (click)="review()" i18n="@@portal.result.reviewAppeal">Review and submit appeal</button>
+      </div>
+    }
+  }
+</div>
+
+<dahc-modal [(open)]="confirming" i18n-heading="@@portal.result.confirmHeading" heading="Submit your appeal?">
+  <div class="result-confirm">
+    <p class="result-text" i18n="@@portal.result.confirmText">You can appeal only once. These questions will be evaluated again:</p>
+    <ol class="result-confirm-list">
+      @for (choice of chosen(); track choice.questionId) {
+        <li>
+          <p class="question-label">{{ prompt(choice.questionId) }}</p>
+          <p class="result-text">{{ choice.response }}</p>
+        </li>
+      }
+    </ol>
+    @if (error() !== '') {
+      <dahc-alert variant="error" [announce]="true">{{ error() }}</dahc-alert>
+    }
+  </div>
+  <div dahcDialogFooter class="result-actions">
+    <button dahc-button type="button" variant="secondary" (click)="confirming.set(false)" i18n="@@portal.action.cancel">Cancel</button>
+    <button dahc-button type="button" [loading]="busy()" (click)="submit()" i18n="@@portal.result.submitAppeal">Submit appeal</button>
+  </div>
+</dahc-modal>

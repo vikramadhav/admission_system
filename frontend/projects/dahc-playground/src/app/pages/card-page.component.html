@@ -1,0 +1,84 @@
+<dahc-playground-page
+  heading="Card"
+  description="A surface for one item, such as an application in the inbox: heading, aside content and a footer for actions. GME panel: radius 16, border, no shadow."
+  selector="dahc-card"
+  [whenToUse]="whenToUse"
+  [sourceFiles]="sourceFiles">
+  <div preview>
+    <dahc-card
+      [variant]="variant()"
+      [eyebrow]="eyebrow()"
+      [heading]="heading()"
+      [headingLevel]="headingLevel()"
+      [subheading]="subheading()"
+      [elevated]="elevated()">
+      @if (showAside()) {
+        <dahc-tag card-aside purpose="warning">Draft</dahc-tag>
+      }
+      <p>Card body content.</p>
+      @if (showFooter()) {
+        <div card-footer>
+          <button dahc-button type="button">Resume draft</button>
+        </div>
+      }
+    </dahc-card>
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-choice label="variant" [options]="variants" [(value)]="variant" />
+    <dahc-inspector-text label="eyebrow" [(value)]="eyebrow" />
+    <dahc-inspector-text label="heading" [(value)]="heading" />
+    <dahc-inspector-choice label="headingLevel" [options]="headingLevels" [(value)]="headingLevel" />
+    <dahc-inspector-text label="subheading" [(value)]="subheading" />
+    <dahc-inspector-toggle label="card-aside content" [(value)]="showAside" />
+    <dahc-inspector-toggle label="card-footer content" [(value)]="showFooter" />
+    <dahc-inspector-toggle label="elevated" [(value)]="elevated" />
+    <p class="pg-value">Outputs: none.</p>
+  </div>
+
+  <div states class="pg-stack">
+    <dahc-card heading="Default with heading" [headingLevel]="3"><p>Body only.</p></dahc-card>
+    <dahc-card variant="subtle" heading="Subtle" [headingLevel]="3"><p>Used for supporting information.</p></dahc-card>
+    <dahc-card><p>No heading: a plain surface without a region name.</p></dahc-card>
+    <dahc-card heading="Elevated" [headingLevel]="3" [elevated]="true"><p>dubai-health-ui dh-card elevated: Shadow 3 instead of the border.</p></dahc-card>
+  </div>
+
+  <div examples>
+    <dahc-doc-example exampleId="basic" heading="Basic" description="A heading and body content." template="card-page.component.html">
+      <dahc-card heading="Medical Residency" [headingLevel]="3">
+        <p>Four to five years of supervised specialty training.</p>
+      </dahc-card>
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="eyebrow" heading="Eyebrow, subheading and aside" description="The eyebrow is read before the heading; aside content sits beside it." template="card-page.component.html">
+      <dahc-card eyebrow="Application ID" heading="20260000187" subheading="Medical Residency" [headingLevel]="3">
+        <dahc-tag card-aside purpose="information">Submitted</dahc-tag>
+        <p>Submitted on 3 October 2026.</p>
+      </dahc-card>
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="footer" heading="Footer actions" description="Content marked card-footer sits below a divider." template="card-page.component.html">
+      <dahc-card heading="Fellowship draft" [headingLevel]="3">
+        <p>Last saved 2 hours ago.</p>
+        <div card-footer>
+          <button dahc-button type="button">Resume application</button>
+        </div>
+      </dahc-card>
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="subtle" heading="Subtle variant" description="For supporting information that should not compete with the main content." template="card-page.component.html">
+      <dahc-card variant="subtle" heading="Before you begin" [headingLevel]="3">
+        <p>Have your passport, degree certificate and transcripts ready.</p>
+      </dahc-card>
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="raised" heading="Raised" description="elevated replaces the border with a shadow to lift one card." template="card-page.component.html">
+      <dahc-card heading="Announcement" [headingLevel]="3" [elevated]="true">
+        <p>Results are published on 15 November.</p>
+      </dahc-card>
+    </dahc-doc-example>
+  </div>
+
+  <ul accessibility class="pg-notes">
+    <li>With a heading the card is an article named by that heading (aria-labelledby), so it appears in the landmarks and headings lists.</li>
+    <li>Choose headingLevel to fit the page outline (h2 for top-level items, h3 inside a section).</li>
+    <li>elevated only changes the surface (shadow instead of border); it adds no semantics.</li>
+    <li>The eyebrow is read before the heading as normal text, so the heading reads naturally ("Application ID, 20270000001").</li>
+  </ul>
+</dahc-playground-page>

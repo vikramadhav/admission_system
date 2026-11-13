@@ -1,0 +1,253 @@
+/* Figma Top navigation 50:10831 and the GME header (see the component comment). */
+
+:host {
+  display: block;
+  position: relative;
+  z-index: var(--dahc-z-sticky);
+}
+
+.dahc-app-header__skip-link {
+  position: absolute;
+  inset-block-start: var(--dahc-space-2);
+  inset-inline-start: var(--dahc-space-2);
+  z-index: 1;
+  padding-block: var(--dahc-space-2);
+  padding-inline: var(--dahc-space-4);
+  border-radius: var(--dahc-radius-md);
+  background-color: var(--dahc-color-action-primary);
+  color: var(--dahc-color-text-inverse);
+  font-weight: var(--dahc-font-weight-bold);
+  transform: translateY(-200%);
+}
+
+.dahc-app-header__skip-link:focus {
+  transform: none;
+}
+
+/* White 80px bar with a navy-100 line (GME header; Figma web header 96 incl. overhang). */
+.dahc-app-header__bar {
+  border-block-end: var(--dahc-size-border) solid var(--dahc-color-border-subtle);
+  background-color: var(--dahc-color-surface);
+}
+
+.dahc-app-header__inner {
+  display: flex;
+  align-items: center;
+  gap: var(--dahc-space-4);
+  min-block-size: calc(var(--dahc-size-control-lg) + var(--dahc-space-8));
+  max-inline-size: var(--dahc-size-container-max);
+  margin-inline: auto;
+  padding-inline: var(--dahc-space-4);
+}
+
+/* Same content edge as the banner, the page and the footer: 1200 container, 24px sides from md. */
+@media (min-width: 48rem) {
+  .dahc-app-header__inner {
+    padding-inline: var(--dahc-space-6);
+  }
+}
+
+.dahc-app-header__brand {
+  display: flex;
+  flex: 0 1 auto;
+  align-items: center;
+  gap: var(--dahc-space-3);
+  margin: 0;
+  min-inline-size: 0;
+}
+
+/* Navy logo tile with the white Dubai Health mark. */
+.dahc-app-header__tile {
+  display: inline-grid;
+  place-items: center;
+  inline-size: var(--dahc-size-control-lg);
+  block-size: var(--dahc-size-control-lg);
+  border-radius: var(--dahc-radius-sm);
+  background-color: var(--dahc-color-surface-inverse);
+}
+
+.dahc-app-header__tile dahc-logo {
+  block-size: var(--dahc-size-icon-xl);
+}
+
+/* Image brand (GME MBRU tile): sits at the top of the bar; fills the 80px bar on small screens. */
+.dahc-app-header__brand--image {
+  align-self: flex-start;
+  align-items: flex-start;
+  /* Keeps the bar at 80px; a taller tile overflows below it onto the banner. */
+  block-size: calc(var(--dahc-size-control-lg) + var(--dahc-space-8));
+}
+
+.dahc-app-header__logo-image {
+  display: block;
+  inline-size: auto;
+  block-size: calc(var(--dahc-size-control-lg) + var(--dahc-space-8));
+}
+
+/* From 1024px the tile is 112px tall (Figma 111) and overhangs the bar onto the banner. */
+@media (min-width: 64rem) {
+  .dahc-app-header__logo-image {
+    block-size: calc(var(--dahc-size-control-lg) + var(--dahc-space-16));
+  }
+}
+
+.dahc-app-header__product {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+  color: var(--dahc-color-text-primary);
+  font-size: var(--dahc-font-size-18);
+  font-weight: var(--dahc-font-weight-bold);
+  line-height: var(--dahc-font-line-height-tight);
+}
+
+/* Menu items 50:11253: 80px tall, 16px padding, Regular 16/20; current Bold + 4px underline. */
+.dahc-app-header__nav {
+  display: none;
+  align-self: stretch;
+}
+
+.dahc-app-header__nav-list {
+  display: flex;
+  block-size: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dahc-app-header__nav-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  block-size: 100%;
+  padding-inline: var(--dahc-space-4);
+  color: var(--dahc-color-text-primary);
+  font-size: var(--dahc-font-size-16);
+  line-height: var(--dahc-font-line-height-tight);
+  text-decoration: none;
+}
+
+.dahc-app-header__nav-link:hover {
+  color: var(--dahc-color-action-primary-hover);
+}
+
+.dahc-app-header__nav-link[aria-current='page'] {
+  font-weight: var(--dahc-font-weight-bold);
+}
+
+.dahc-app-header__nav-link[aria-current='page']::after {
+  content: '';
+  position: absolute;
+  inset-inline: var(--dahc-space-4);
+  inset-block-end: 0;
+  block-size: var(--dahc-space-1);
+  border-start-start-radius: var(--dahc-radius-sm);
+  border-start-end-radius: var(--dahc-radius-sm);
+  background-color: var(--dahc-color-border-strong);
+}
+
+.dahc-app-header__nav-link:focus-visible,
+.dahc-app-header__pill:focus-visible,
+.dahc-app-header__menu-link:focus-visible {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: calc(var(--dahc-size-focus-ring) * -1);
+}
+
+.dahc-app-header__tools {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--dahc-space-3);
+  margin-inline-start: auto;
+}
+
+/* Ghost pills: 40px, navy at 4% (Figma rgba(0,47,112,.04)). */
+.dahc-app-header__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--dahc-space-2);
+  min-block-size: calc(var(--dahc-size-control-md) - var(--dahc-space-1));
+  margin: 0;
+  padding-inline: var(--dahc-space-4);
+  border-radius: var(--dahc-radius-pill);
+  background-color: color-mix(in srgb, var(--dahc-color-action-primary) 4%, transparent);
+  color: var(--dahc-color-text-primary);
+  font-size: var(--dahc-font-size-14);
+  font-weight: var(--dahc-font-weight-medium);
+  text-decoration: none;
+}
+
+.dahc-app-header__user-name {
+  max-inline-size: var(--dahc-size-measure-narrow);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dahc-app-header__notifications {
+  position: relative;
+  display: inline-flex;
+}
+
+.dahc-app-header__badge {
+  position: absolute;
+  inset-block-start: calc(var(--dahc-space-1) * -1);
+  inset-inline-end: calc(var(--dahc-space-1) * -1);
+}
+
+/* Below lg the navigation, language, profile and sign-out move into the menu drawer. */
+.dahc-app-header__tools .dahc-app-header__wide {
+  display: none;
+}
+
+/* Breakpoint lg (tokens/_breakpoints.scss) */
+@media (min-width: 64rem) {
+  .dahc-app-header__nav {
+    display: block;
+  }
+
+  .dahc-app-header__tools .dahc-app-header__wide {
+    display: inline-flex;
+  }
+
+  .dahc-app-header__burger {
+    display: none;
+  }
+}
+
+/* Mobile menu drawer (Burger Menu 50:10087, Menu Item 50:10172: 40px rows, Medium 14/18, navy-100 lines). */
+.dahc-app-header__menu-list {
+  margin: 0 0 var(--dahc-space-6);
+  padding: 0;
+  list-style: none;
+}
+
+.dahc-app-header__menu-link {
+  display: flex;
+  align-items: center;
+  min-block-size: var(--dahc-size-touch-target);
+  border-block-end: var(--dahc-size-border) solid var(--dahc-color-border-subtle);
+  color: var(--dahc-color-text-primary);
+  font-size: var(--dahc-font-size-14);
+  font-weight: var(--dahc-font-weight-medium);
+  text-decoration: none;
+}
+
+.dahc-app-header__menu-link[aria-current='page'] {
+  border-block-end: var(--dahc-size-border-strong) solid var(--dahc-color-border-strong);
+  font-weight: var(--dahc-font-weight-bold);
+}
+
+.dahc-app-header__menu-tools {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--dahc-space-4);
+}
+
+.dahc-app-header__user {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--dahc-space-2);
+  margin: 0;
+  color: var(--dahc-color-text-primary);
+}

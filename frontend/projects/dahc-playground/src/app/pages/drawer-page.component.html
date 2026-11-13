@@ -1,0 +1,55 @@
+<dahc-playground-page
+  heading="Drawer"
+  description="A panel that slides in from the start or end edge, built on the native modal dialog like dahc-modal. Derived design (DH has no drawer)."
+  selector="dahc-drawer"
+  [whenToUse]="whenToUse"
+  [sourceFiles]="sourceFiles">
+  <div preview>
+    <button dahc-button type="button" variant="secondary" (click)="open.set(true)">Open drawer</button>
+    <dahc-drawer [heading]="heading()" [placement]="placement()" [size]="size()" [(open)]="open">
+      <p>Filters for the application list go here.</p>
+      <div dahcDialogFooter>
+        <button dahc-button type="button" variant="secondary" (click)="open.set(false)">Clear</button>
+        <button dahc-button type="button" (click)="open.set(false)">Apply</button>
+      </div>
+    </dahc-drawer>
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-text label="heading" [(value)]="heading" />
+    <dahc-inspector-choice label="placement" [options]="placements" [(value)]="placement" />
+    <dahc-inspector-choice label="size" [options]="sizes" [(value)]="size" />
+  </div>
+
+  <div states class="pg-stack">
+    <p class="pg-value">Sizes: md 480px, sm 365px (the DH Hamburger Menu overlay width); never wider than the screen.</p>
+  </div>
+
+  <dahc-doc-example examples exampleId="start" heading="From the start edge" description="placement=&quot;start&quot; opens from the left in left-to-right and from the right in right-to-left." template="drawer-page.component.html">
+    <button dahc-button type="button" variant="secondary" (click)="startOpen.set(true)">Open from the start</button>
+    <dahc-drawer heading="Menu" placement="start" [(open)]="startOpen">
+      <p>Navigation links go here.</p>
+    </dahc-drawer>
+  </dahc-doc-example>
+  <dahc-doc-example examples exampleId="small" heading="Small" description="size=&quot;sm&quot; is 365px wide, the DH hamburger menu width." template="drawer-page.component.html">
+    <button dahc-button type="button" variant="secondary" (click)="smallOpen.set(true)">Open a small drawer</button>
+    <dahc-drawer heading="Help" size="sm" [(open)]="smallOpen">
+      <p>Call 800 60 or write to the admission team.</p>
+    </dahc-drawer>
+  </dahc-doc-example>
+  <dahc-doc-example examples exampleId="footer" heading="With actions" description="Content marked dahcDialogFooter becomes the sticky footer." template="drawer-page.component.html">
+    <button dahc-button type="button" (click)="footerOpen.set(true)">Edit preferences</button>
+    <dahc-drawer heading="Edit preferences" [(open)]="footerOpen">
+      <p>Change the order of your training sites.</p>
+      <dahc-space dahcDialogFooter>
+        <button dahc-button type="button" variant="secondary" (click)="footerOpen.set(false)">Cancel</button>
+        <button dahc-button type="button" (click)="footerOpen.set(false)">Save preferences</button>
+      </dahc-space>
+    </dahc-drawer>
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>Same behaviour as the modal: focus trap, inert page, Escape and backdrop request closing, focus returns.</li>
+    <li>"end" opens from the right in left-to-right and from the left in right-to-left.</li>
+  </ul>
+</dahc-playground-page>

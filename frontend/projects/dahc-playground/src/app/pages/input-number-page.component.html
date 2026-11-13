@@ -1,0 +1,69 @@
+<dahc-playground-page
+  heading="Input number"
+  description="A number field with decrease and increase buttons, kept within min and max. Ported from dubai-health-ui dh-input-number."
+  [sourceFiles]="sourceFiles"
+  selector="dahc-input-number"
+  [whenToUse]="whenToUse"
+  [exampleColumns]="2">
+  <div preview>
+    <dahc-input-number label="Number of dependants" hint="Between 0 and 10." [min]="min()" [max]="max()" [invalid]="invalid()" errorMessage="Enter a number from 0 to 10." [formControl]="control" />
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-toggle label="invalid" [(value)]="invalid" />
+    <p class="pg-value" data-testid="form-value">Form value: {{ valueText() }}</p>
+  </div>
+
+  <div states class="pg-stack">
+    <dahc-input-number label="Empty, step 0.5" [step]="0.5" />
+    <dahc-input-number label="Disabled" [formControl]="disabledControl" />
+  </div>
+
+  <dahc-doc-example
+    examples
+    exampleId="basic"
+    heading="Basic"
+    description="An empty number field."
+    template="input-number-page.component.html">
+    <dahc-input-number label="Number of children" [min]="0" [formControl]="exampleChildren" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="limits"
+    heading="Min and max"
+    description="Values outside the limits are clamped when committed."
+    template="input-number-page.component.html">
+    <dahc-input-number label="Years in practice" hint="Between 0 and 50." [min]="0" [max]="50" [formControl]="examplePractice" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="decimal"
+    heading="Decimal step"
+    description="Steps of 0.1 for a grade point average."
+    template="input-number-page.component.html">
+    <dahc-input-number label="Grade point average" [min]="0" [max]="4" [step]="0.1" [formControl]="exampleGpa" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="required"
+    heading="Required with error"
+    description="The error shows after the field was touched without a value."
+    template="input-number-page.component.html">
+    <dahc-input-number
+      label="Household size"
+      [min]="1"
+      [required]="true"
+      [invalid]="exampleHousehold.invalid && exampleHousehold.touched"
+      errorMessage="Enter the number of people in your household."
+      [formControl]="exampleHousehold" />
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>The native number input keeps its spinbutton role: ArrowUp / ArrowDown step, and the label names it.</li>
+    <li>The decrease and increase buttons are not in the tab order and have accessible names; they are disabled at the limits.</li>
+    <li>Typed values are clamped to min and max when committed (change or blur).</li>
+  </ul>
+</dahc-playground-page>

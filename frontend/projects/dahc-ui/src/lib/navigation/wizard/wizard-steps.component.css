@@ -1,0 +1,135 @@
+/* GME wizard stepper (see the component comment). Rows: 12px radius, Medium 14/18 labels. */
+
+:host {
+  --_marker: calc(var(--dahc-size-control-sm) - var(--dahc-space-1));
+
+  display: block;
+}
+
+.dahc-wizard-steps,
+.dahc-wizard-steps__substeps {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dahc-space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dahc-wizard-steps__row {
+  display: flex;
+  align-items: center;
+  gap: var(--dahc-space-3);
+  inline-size: 100%;
+  min-block-size: var(--dahc-size-control-lg);
+  padding-block: var(--dahc-space-2);
+  padding-inline: var(--dahc-space-3);
+  border: var(--dahc-size-border) solid transparent;
+  border-radius: var(--dahc-radius-md);
+  background: transparent;
+  color: var(--dahc-color-text-secondary);
+  font: inherit;
+  font-size: var(--dahc-font-size-14);
+  font-weight: var(--dahc-font-weight-medium);
+  line-height: var(--dahc-type-body-sm-line-height);
+  text-align: start;
+}
+
+button.dahc-wizard-steps__row {
+  cursor: pointer;
+}
+
+button.dahc-wizard-steps__row:hover {
+  background-color: var(--dahc-color-background);
+}
+
+.dahc-wizard-steps__step[data-status='current'] > .dahc-wizard-steps__row {
+  border-color: var(--dahc-color-border-strong);
+  background-color: var(--dahc-color-surface-highlight);
+  color: var(--dahc-color-text-primary);
+  font-weight: var(--dahc-font-weight-bold);
+}
+
+.dahc-wizard-steps__marker {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  inline-size: var(--_marker);
+  block-size: var(--_marker);
+  border: var(--dahc-size-border-strong) solid var(--dahc-color-text-disabled);
+  border-radius: var(--dahc-radius-pill);
+  background-color: var(--dahc-color-surface);
+  color: var(--dahc-color-text-tertiary);
+  font-size: var(--dahc-font-size-14);
+  font-weight: var(--dahc-font-weight-bold);
+}
+
+.dahc-wizard-steps__step[data-status='complete'] .dahc-wizard-steps__marker {
+  border-color: var(--dahc-color-action-primary);
+  background-color: var(--dahc-color-action-primary);
+  color: var(--dahc-color-text-inverse);
+}
+
+.dahc-wizard-steps__step[data-status='current'] .dahc-wizard-steps__marker {
+  border-color: var(--dahc-color-border-strong);
+  color: var(--dahc-color-text-primary);
+}
+
+.dahc-wizard-steps__step[data-status='error'] .dahc-wizard-steps__marker {
+  border-color: var(--dahc-color-error-border);
+  background-color: var(--dahc-color-error-surface);
+  color: var(--dahc-color-error-text);
+}
+
+.dahc-wizard-steps__step[data-status='error'] .dahc-wizard-steps__label {
+  color: var(--dahc-color-error-text);
+}
+
+.dahc-wizard-steps__label {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.dahc-wizard-steps__substeps {
+  margin-block: var(--dahc-space-1);
+  padding-inline-start: calc(var(--_marker) + var(--dahc-space-6));
+}
+
+.dahc-wizard-steps__substep {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--dahc-space-1);
+  min-block-size: var(--dahc-size-control-sm);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--dahc-color-text-secondary);
+  font: inherit;
+  font-size: var(--dahc-font-size-14);
+  text-align: start;
+}
+
+button.dahc-wizard-steps__substep {
+  cursor: pointer;
+}
+
+button.dahc-wizard-steps__substep:hover {
+  text-decoration: underline;
+}
+
+.dahc-wizard-steps__substep[aria-current='step'] {
+  color: var(--dahc-color-text-link);
+  font-weight: var(--dahc-font-weight-bold);
+}
+
+.dahc-wizard-steps__row:focus-visible,
+.dahc-wizard-steps__substep:focus-visible {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: var(--dahc-size-focus-offset);
+}
+
+@media (forced-colors: active) {
+  .dahc-wizard-steps__step[data-status='current'] > .dahc-wizard-steps__row {
+    border-color: Highlight;
+  }
+}

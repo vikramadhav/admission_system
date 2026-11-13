@@ -1,0 +1,640 @@
+/api/v1/auth/sign-in:
+  post:
+    tags:
+      - Identity
+    operationId: signIn
+    summary: "Sign in: provision a candidate or match a pre-registered staff user"
+    description: >-
+      Called by the client after IDAM sign-in. The API validates the opaque access
+      token by introspection, calls IDAM UserInfo itself and refreshes the stored
+      profile attributes. An unknown identity becomes a Candidate (Candidate role
+      only); an identity pre-registered by an Administrator signs in as staff and
+      no Candidate is created. The duplicate-account check runs here (BRD US-1.1.1):
+      when the Emirates ID, passport or mobile from IDAM matches another candidate,
+      the pair is recorded for supervisors and 409 account.duplicate tells the candidate
+      to sign in with the original account. Identity, profile and role data are never
+      accepted from the request. Success: 200 with the session (profile, roles, active
+      role, preferences). Empty: not applicable. Error: 401 invalid token, 403 account.deactivated,
+      409 account.duplicate, 503 when IDAM is unreachable (fails closed). BRD: US-1.1.1,
+      US-1.1.2, US-2.1.1, US-3.1.1. Roles (active role): any user with a valid IDAM
+      token.
+    security:
+      - IdamBearer: []
+    x-dahc-roles:
+      - VALID_TOKEN
+    responses:
+      "200":
+        description: Signed-in session.
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas.yaml#/ApiResponse"
+                - type: object
+                  properties:
+                    data:
+                      $ref: "../components/schemas.yaml#/AuthSession"
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"
+      "403":
+        $ref: "../components/responses.yaml#/Forbidden"
+      "409":
+        $ref: "../components/responses.yaml#/Conflict"
+      "429":
+        $ref: "../components/responses.yaml#/RateLimited"
+      "500":
+        $ref: "../components/responses.yaml#/ServerError"
+      "503":
+        $ref: "../components/responses.yaml#/ServiceUnavailable"
+
+/api/v1/auth/me:
+  get:
+    tags:
+      - Identity
+    operationId: getCurrentSession
+    summary: Get the current user, roles and active role
+    description: >-
+      Same as sign-in without provisioning or profile refresh. Success: 200 with the
+      session. Empty: not applicable. Error: 401 invalid token, 403 account.not_registered
+      for an identity that never signed in, 403 account.deactivated, otherwise standard
+      Problem response. BRD: US-1.1.2, US-2.1.1 AC5. Roles (active role): any user
+      with a valid IDAM token.
+    security:
+      - IdamBearer: []
+    x-dahc-roles:
+      - VALID_TOKEN
+    responses:
+      "200":
+        description: Current session.
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas.yaml#/ApiResponse"
+                - type: object
+                  properties:
+                    data:
+                      $ref: "../components/schemas.yaml#/AuthSession"
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"
+      "403":
+        $ref: "../components/responses.yaml#/Forbidden"
+      "429":
+        $ref: "../components/responses.yaml#/RateLimited"
+      "500":
+        $ref: "../components/responses.yaml#/ServerError"
+      "503":
+        $ref: "../components/responses.yaml#/ServiceUnavailable"
+
+/api/v1/auth/active-role:
+  put:
+    tags:
+      - Identity
+    operationId: switchActiveRole
+    summary: Switch the staff user's active role
+    description: >-
+      Sets the active role used for all authorization, on every tab and device (BRD
+      role switcher). The role must be one the user holds; the switch is audited.
+      Candidates hold one role and cannot switch. Success: 200 with the updated session.
+      Empty: not applicable. Error: 403 when the role is not held, otherwise standard
+      Problem response. BRD: US-2.1.1 AC5, US-3.1.1 AC5. Roles (active role): ADMISSION_OFFICER,
+      ADMISSION_SUPERVISOR, CENTRAL_MONITOR, FINANCE_OFFICER, REFEREE, THIRD_REFEREE,
+      SECOND_EVALUATION_REFEREE, SENIOR_REFEREE, ADMINISTRATOR.
+    security:
+      - IdamBearer: []
+    x-dahc-roles:
+      - ADMISSION_OFFICER
+      - ADMISSION_SUPERVISOR
+      - CENTRAL_MONITOR
+      - FINANCE_OFFICER
+      - REFEREE
+      - THIRD_REFEREE
+      - SECOND_EVALUATION_REFEREE
+      - SENIOR_REFEREE
+      - ADMINISTRATOR
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - roleCode
+            properties:
+              roleCode:
+                $ref: "../components/schemas.yaml#/StaffRoleCode"
+    responses:
+      "200":
+        description: Active role switched.
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas.yaml#/ApiResponse"
+                - type: object
+                  properties:
+                    data:
+                      $ref: "../components/schemas.yaml#/AuthSession"
+      "400":
+        $ref: "../components/responses.yaml#/BadRequest"
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"
+      "403":
+        $ref: "../components/responses.yaml#/Forbidden"
+      "429":
+        $ref: "../components/responses.yaml#/RateLimited"
+      "500":
+        $ref: "../components/responses.yaml#/ServerError"
+
+/api/v1/admin/staff-users:
+  get:
+    tags:
+      - Administration
+    operationId: listStaffUsers
+    summary: List staff users
+    description: >-
+      Administrator-only list of pre-registered and active staff users with their
+      roles. Success: 200 with a page of staff users. Empty: 200 with an empty data
+      list and a messageCode. Error: standard Problem response. Roles (active role):
+      ADMINISTRATOR.
+    security:
+      - IdamBearer: []
+    x-dahc-roles:
+      - ADMINISTRATOR
+    parameters:
+      - name: roleCode
+        in: query
+        schema:
+          $ref: "../components/schemas.yaml#/StaffRoleCode"
+      - name: isActive
+        in: query
+        schema:
+          type: boolean
+      - name: q
+        in: query
+        description: Search over name and email.
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 100
+      - $ref: "../components/parameters.yaml#/Limit"
+      - $ref: "../components/parameters.yaml#/Cursor"
+    responses:
+      "200":
+        description: Staff users.
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas.yaml#/ApiListResponse"
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: "../components/schemas.yaml#/StaffUser"
+      "400":
+        $ref: "../components/responses.yaml#/BadRequest"
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"
+      "403":
+        $ref: "../components/responses.yaml#/Forbidden"
+      "429":
+        $ref: "../components/responses.yaml#/RateLimited"
+      "500":
+        $ref: "../components/responses.yaml#/ServerError"
+  post:
+    tags:
+      - Administration
+    operationId: preRegisterStaffUser
+    summary: Pre-register a staff user
+    description: >-
+      Administrator-only. Creates a staff user with their IDAM user identifier and
+      staff roles before their first sign-in; at that sign-in the identity is matched
+      to this record and no Candidate is created. A person who is also a candidate
+      is linked by linkedCandidateId so they can never act on their own applications.
+      Audited. Success: 201 with the staff user. Empty: not applicable. Error: 409
+      staff.already_registered for a known IDAM identifier, 422 invalid roles or scopes,
+      otherwise standard Problem response. Roles (active role): ADMINISTRATOR.
+    security:
+      - IdamBearer: []
+    x-dahc-roles:
+      - ADMINISTRATOR
+    parameters:
+      - name: Idempotency-Key
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 16
+          maxLength: 128
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas.yaml#/StaffUserInput"
+    responses:
+      "201":
+        description: Staff user pre-registered.
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas.yaml#/ApiResponse"
+                - type: object
+                  properties:
+                    data:
+                      $ref: "../components/schemas.yaml#/StaffUser"
+      "400":
+        $ref: "../components/responses.yaml#/BadRequest"
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"
+      "403":
+        $ref: "../components/responses.yaml#/Forbidden"
+      "409":
+        $ref: "../components/responses.yaml#/Conflict"
+      "422":
+        $ref: "../components/responses.yaml#/Validation"
+      "500":
+        $ref: "../components/responses.yaml#/ServerError"
+
+/api/v1/admin/staff-users/{staffUserId}:
+  get:
+    tags:
+      - Administration
+    operationId: getStaffUser
+    summary: Read a staff user
+    description: >-
+      Administrator-only. Success: 200 with the staff user. Empty: 404 when missing.
+      Error: standard Problem response. Roles (active role): ADMINISTRATOR.
+    security:
+      - IdamBearer: []
+    x-dahc-roles:
+      - ADMINISTRATOR
+    parameters:
+      - name: staffUserId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: Staff user.
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas.yaml#/ApiResponse"
+                - type: object
+                  properties:
+                    data:
+                      $ref: "../components/schemas.yaml#/StaffUser"
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"
+      "403":
+        $ref: "../components/responses.yaml#/Forbidden"
+      "404":
+        $ref: "../components/responses.yaml#/NotFound"
+      "429":
+        $ref: "../components/responses.yaml#/RateLimited"
+      "500":
+        $ref: "../components/responses.yaml#/ServerError"
+
+/api/v1/admin/staff-users/{staffUserId}/roles:
+  put:
+    tags:
+      - Administration
+    operationId: setStaffUserRoles
+    summary: Grant or revoke a staff user's roles and pool scopes
+    description: >-
+      Administrator-only. Replaces the user's staff roles and their program/specialty
+      pool scopes. Refuses self-elevation. Removing the active role makes the next
+      request fall back to the user's default role. Removing every role is refused:
+      deactivate the user instead. Every change is audited (who, whom, which role,
+      when). Success: 200 with the staff user. Empty: not applicable. Error: 403 self-elevation,
+      409 a concurrent change (If-Match), 422 no roles or an invalid scope, otherwise
+      standard Problem response. Roles (active role): ADMINISTRATOR.
+    security:
+      - IdamBearer: []
+    x-dahc-roles:
+      - ADMINISTRATOR
+    parameters:
+      - name: staffUserId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: If-Match
+        in: header
+        required: true
+        schema:
+          type: string
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - roles
+            properties:
+              roles:
+                type: array
+                minItems: 1
+                items:
+                  $ref: "../components/schemas.yaml#/StaffRoleAssignment"
+    responses:
+      "200":
+        description: Roles updated.
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas.yaml#/ApiResponse"
+                - type: object
+                  properties:
+                    data:
+                      $ref: "../components/schemas.yaml#/StaffUser"
+      "400":
+        $ref: "../components/responses.yaml#/BadRequest"
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"
+      "403":
+        $ref: "../components/responses.yaml#/Forbidden"
+      "404":
+        $ref: "../components/responses.yaml#/NotFound"
+      "409":
+        $ref: "../components/responses.yaml#/Conflict"
+      "422":
+        $ref: "../components/responses.yaml#/Validation"
+      "500":
+        $ref: "../components/responses.yaml#/ServerError"
+
+/api/v1/admin/staff-users/{staffUserId}/deactivation:
+  post:
+    tags:
+      - Administration
+    operationId: deactivateStaffUser
+    summary: Deactivate a staff user
+    description: >-
+      Administrator-only. A deactivated user is refused on the next request and is
+      never reactivated by signing in. Open work assigned to the user stays assigned
+      until a supervisor reassigns it. Audited. Success: 200 with the staff user.
+      Empty: not applicable. Error: 409 already inactive or the caller's own account,
+      otherwise standard Problem response. Roles (active role): ADMINISTRATOR.
+    security:
+      - IdamBearer: []
+    x-dahc-roles:
+      - ADMINISTRATOR
+    parameters:
+      - name: staffUserId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - reason
+            properties:
+              reason:
+                type: string
+                minLength: 3
+                maxLength: 500
+    responses:
+      "200":
+        description: Staff user deactivated.
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas.yaml#/ApiResponse"
+                - type: object
+                  properties:
+                    data:
+                      $ref: "../components/schemas.yaml#/StaffUser"
+      "400":
+        $ref: "../components/responses.yaml#/BadRequest"
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"
+      "403":
+        $ref: "../components/responses.yaml#/Forbidden"
+      "404":
+        $ref: "../components/responses.yaml#/NotFound"
+      "409":
+        $ref: "../components/responses.yaml#/Conflict"
+      "422":
+        $ref: "../components/responses.yaml#/Validation"
+      "500":
+        $ref: "../components/responses.yaml#/ServerError"
+
+/api/v1/admin/staff-users/{staffUserId}/reactivation:
+  post:
+    tags:
+      - Administration
+    operationId: reactivateStaffUser
+    summary: Reactivate a staff user
+    description: >-
+      Administrator-only, audited. Success: 200 with the staff user. Empty: not applicable.
+      Error: 409 already active, otherwise standard Problem response. Roles (active
+      role): ADMINISTRATOR.
+    security:
+      - IdamBearer: []
+    x-dahc-roles:
+      - ADMINISTRATOR
+    parameters:
+      - name: staffUserId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: Staff user reactivated.
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas.yaml#/ApiResponse"
+                - type: object
+                  properties:
+                    data:
+                      $ref: "../components/schemas.yaml#/StaffUser"
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"
+      "403":
+        $ref: "../components/responses.yaml#/Forbidden"
+      "404":
+        $ref: "../components/responses.yaml#/NotFound"
+      "409":
+        $ref: "../components/responses.yaml#/Conflict"
+      "500":
+        $ref: "../components/responses.yaml#/ServerError"
+
+/api/v1/admin/integration-clients:
+  get:
+    tags:
+      - Administration
+    operationId: listIntegrationClients
+    summary: List integration clients
+    description: >-
+      Administrator-only list of third-party middleware registered as IDAM confidential
+      clients, with their internal permissions. Success: 200 with a page. Empty: 200
+      with an empty data list and a messageCode. Error: standard Problem response.
+      Roles (active role): ADMINISTRATOR.
+    security:
+      - IdamBearer: []
+    x-dahc-roles:
+      - ADMINISTRATOR
+    parameters:
+      - $ref: "../components/parameters.yaml#/Limit"
+      - $ref: "../components/parameters.yaml#/Cursor"
+    responses:
+      "200":
+        description: Integration clients.
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas.yaml#/ApiListResponse"
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: "../components/schemas.yaml#/IntegrationClient"
+      "400":
+        $ref: "../components/responses.yaml#/BadRequest"
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"
+      "403":
+        $ref: "../components/responses.yaml#/Forbidden"
+      "429":
+        $ref: "../components/responses.yaml#/RateLimited"
+      "500":
+        $ref: "../components/responses.yaml#/ServerError"
+  post:
+    tags:
+      - Administration
+    operationId: registerIntegrationClient
+    summary: Register an integration client
+    description: >-
+      Administrator-only. Records a middleware's IDAM client id and internal permissions.
+      Records are never created automatically and IDAM scopes or claims never grant
+      a permission. Audited. Success: 201 with the client. Empty: not applicable.
+      Error: 409 integration.already_registered, 422 unknown permission, otherwise
+      standard Problem response. Roles (active role): ADMINISTRATOR.
+    security:
+      - IdamBearer: []
+    x-dahc-roles:
+      - ADMINISTRATOR
+    parameters:
+      - name: Idempotency-Key
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 16
+          maxLength: 128
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas.yaml#/IntegrationClientInput"
+    responses:
+      "201":
+        description: Integration client registered.
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas.yaml#/ApiResponse"
+                - type: object
+                  properties:
+                    data:
+                      $ref: "../components/schemas.yaml#/IntegrationClient"
+      "400":
+        $ref: "../components/responses.yaml#/BadRequest"
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"
+      "403":
+        $ref: "../components/responses.yaml#/Forbidden"
+      "409":
+        $ref: "../components/responses.yaml#/Conflict"
+      "422":
+        $ref: "../components/responses.yaml#/Validation"
+      "500":
+        $ref: "../components/responses.yaml#/ServerError"
+
+/api/v1/admin/integration-clients/{integrationClientId}:
+  put:
+    tags:
+      - Administration
+    operationId: updateIntegrationClient
+    summary: Change an integration client's name, permissions or active flag
+    description: >-
+      Administrator-only, audited. A deactivated client gets 403 on its next request.
+      Success: 200 with the client. Empty: not applicable. Error: 409 concurrent change
+      (If-Match), 422 unknown permission, otherwise standard Problem response. Roles
+      (active role): ADMINISTRATOR.
+    security:
+      - IdamBearer: []
+    x-dahc-roles:
+      - ADMINISTRATOR
+    parameters:
+      - name: integrationClientId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: If-Match
+        in: header
+        required: true
+        schema:
+          type: string
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas.yaml#/IntegrationClientInput"
+    responses:
+      "200":
+        description: Integration client updated.
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas.yaml#/ApiResponse"
+                - type: object
+                  properties:
+                    data:
+                      $ref: "../components/schemas.yaml#/IntegrationClient"
+      "400":
+        $ref: "../components/responses.yaml#/BadRequest"
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"
+      "403":
+        $ref: "../components/responses.yaml#/Forbidden"
+      "404":
+        $ref: "../components/responses.yaml#/NotFound"
+      "409":
+        $ref: "../components/responses.yaml#/Conflict"
+      "422":
+        $ref: "../components/responses.yaml#/Validation"
+      "500":
+        $ref: "../components/responses.yaml#/ServerError"

@@ -1,0 +1,69 @@
+<dahc-playground-page
+  heading="Icon button"
+  description="A button that shows only an icon. Its text content is the accessible name and is visually hidden. Figma Buttons 50:6786, type Icon only."
+  selector="button[dahc-icon-button]"
+  [whenToUse]="whenToUse"
+  [sourceFiles]="sourceFiles">
+  <div preview>
+    <button
+      dahc-icon-button
+      type="button"
+      [icon]="icon()"
+      [variant]="variant()"
+      [size]="size()"
+      [disabled]="disabled()"
+      (click)="recordClick()">{{ label() }}</button>
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-choice label="icon" [options]="icons" [(value)]="icon" />
+    <dahc-inspector-text label="content" [(value)]="label" />
+    <dahc-inspector-choice label="variant" [options]="variants" [(value)]="variant" />
+    <dahc-inspector-choice label="size" [options]="sizes" [(value)]="size" />
+    <dahc-inspector-toggle label="disabled" [(value)]="disabled" />
+    <dahc-event-log [events]="events()" />
+  </div>
+
+  <div states class="pg-stack">
+    @for (state of variants; track state) {
+      <div>
+        <p class="pg-state-label">{{ state }}</p>
+        <div class="pg-row">
+          @for (buttonSize of sizes; track buttonSize) {
+            <button dahc-icon-button type="button" icon="menu" [variant]="state" [size]="buttonSize">Menu {{ buttonSize }}</button>
+          }
+          <button dahc-icon-button type="button" icon="trash" [variant]="state" [disabled]="true">Delete (disabled)</button>
+        </div>
+      </div>
+    }
+  </div>
+
+  <dahc-doc-example examples exampleId="variants" heading="Variants" description="outline (48px ring) is the default; ghost (40px, no ring) suits toolbars and headers." template="icon-button-page.component.html">
+    <dahc-space [wrap]="true">
+      <button dahc-icon-button type="button" icon="search">Search applications</button>
+      <button dahc-icon-button type="button" icon="menu" variant="ghost">Open the menu</button>
+    </dahc-space>
+  </dahc-doc-example>
+  <dahc-doc-example examples exampleId="sizes" heading="Sizes" description="lg is 48 by 48 pixels and md 40 by 40; both stay above the minimum target size." template="icon-button-page.component.html">
+    <dahc-space [wrap]="true">
+      <button dahc-icon-button type="button" icon="copy" size="md">Copy, medium</button>
+      <button dahc-icon-button type="button" icon="copy">Copy, large</button>
+    </dahc-space>
+  </dahc-doc-example>
+  <dahc-doc-example examples exampleId="tooltip" heading="With a tooltip" description="A tooltip shows the name to sighted users on hover and focus." template="icon-button-page.component.html">
+    <dahc-space [wrap]="true">
+      <button dahc-icon-button type="button" icon="print" dahcTooltip="Print the application">Print</button>
+      <button dahc-icon-button type="button" icon="copy" variant="ghost" dahcTooltip="Copy the link">Copy link</button>
+    </dahc-space>
+  </dahc-doc-example>
+  <dahc-doc-example examples exampleId="disabled" heading="Disabled" description="A disabled icon button keeps its shape and leaves the tab order." template="icon-button-page.component.html">
+    <button dahc-icon-button type="button" icon="trash" [disabled]="true">Delete document</button>
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>The button's text content is its accessible name; it is visually hidden but always required, so lint rejects an empty icon button.</li>
+    <li>Native button semantics: Enter and Space activate it; disabled buttons leave the tab order.</li>
+    <li>Both sizes are at least 40 by 40 pixels, above the 24-pixel minimum target (WCAG 2.5.8).</li>
+    <li>Hover darkens the ring and icon to navy-700 (Figma 50:7054); focus shows the focus ring.</li>
+  </ul>
+</dahc-playground-page>

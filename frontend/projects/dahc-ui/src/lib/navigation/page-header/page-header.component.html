@@ -1,0 +1,29 @@
+<div class="dahc-page-header__band">
+  <div class="dahc-page-header__inner">
+    @if (breadcrumbs().length > 0) {
+      <dahc-breadcrumbs class="dahc-page-header__breadcrumbs" [items]="breadcrumbs()" />
+    }
+    <div class="dahc-page-header__row">
+      <div class="dahc-page-header__titles">
+        <div class="dahc-page-header__title-line">
+          <h1 #headingElement class="dahc-page-header__heading" tabindex="-1">{{ heading() }}</h1>
+          <div class="dahc-page-header__status"><ng-content select="[page-header-status]" /></div>
+        </div>
+        @if (description() !== '') {
+          <p class="dahc-page-header__description">{{ description() }}</p>
+        }
+        @if (meta().length > 0) {
+          <dl class="dahc-page-header__meta">
+            @for (entry of meta(); track entry.label) {
+              <div class="dahc-page-header__meta-item">
+                <dt>{{ entry.label }}</dt>
+                <dd>{{ entry.value }}</dd>
+              </div>
+            }
+          </dl>
+        }
+      </div>
+      <div class="dahc-page-header__actions"><ng-content select="[page-header-actions]" /></div>
+    </div>
+  </div>
+</div>

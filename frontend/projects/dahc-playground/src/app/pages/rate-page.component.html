@@ -1,0 +1,52 @@
+<dahc-playground-page
+  heading="Rate"
+  description="A star rating; the form value is the number of stars. Ported from dubai-health-ui dh-rate."
+  [sourceFiles]="sourceFiles"
+  selector="dahc-rate"
+  [whenToUse]="whenToUse">
+  <div preview>
+    <dahc-rate label="Rate your visit" [allowClear]="allowClear()" [formControl]="control" />
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-toggle label="allowClear" [(value)]="allowClear" />
+    <p class="pg-value" data-testid="form-value">Form value: {{ valueText() }}</p>
+  </div>
+
+  <div states class="pg-stack">
+    <dahc-rate label="Read-only rating" [readonly]="true" [formControl]="readonlyControl" />
+  </div>
+
+  <dahc-doc-example
+    examples
+    exampleId="basic"
+    heading="Basic"
+    description="Choose a star; choosing the same star again clears the rating."
+    template="rate-page.component.html">
+    <dahc-rate label="Rate the interview experience" [formControl]="exampleInterview" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="readonly"
+    heading="Read-only"
+    description="Display a rating without letting it change."
+    template="rate-page.component.html">
+    <dahc-rate label="Average patient rating" [readonly]="true" [formControl]="exampleAverage" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="count"
+    heading="More stars, no clearing"
+    description="A ten-point score that always keeps a value."
+    template="rate-page.component.html">
+    <dahc-rate label="Satisfaction score" [count]="10" [allowClear]="false" [formControl]="exampleScore" />
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>A radio group with a roving tab stop; each star is a radio named "n of 5".</li>
+    <li>Arrow keys change the rating (mirrored in RTL), Home / End jump to 1 and 5; clicking the current rating clears it unless allowClear is off.</li>
+    <li>Read-only ratings are an image with a text alternative ("Rate your visit: 3 of 5").</li>
+  </ul>
+</dahc-playground-page>

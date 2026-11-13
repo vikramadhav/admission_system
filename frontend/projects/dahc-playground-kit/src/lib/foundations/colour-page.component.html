@@ -1,0 +1,77 @@
+<h1 class="fd-heading fd-page-title">Colour</h1>
+<p class="fd-description">
+  Primitives are the palette values; components use only the semantic roles, which each theme maps to a primitive.
+  Values are read from the loaded stylesheet, so this page always matches the code. Switch the theme to check it.
+</p>
+
+@if (contrast().length > 0) {
+  <section class="fd-panel" aria-labelledby="contrast-heading">
+    <h2 id="contrast-heading" class="fd-panel-heading">Contrast checks</h2>
+    <p class="fd-note" data-testid="contrast-summary">
+      @if (failures() === 0) {
+        All {{ contrast().length }} pairs meet WCAG 2.2 AA in this theme.
+      } @else {
+        <span class="fd-fail">{{ failures() }} of {{ contrast().length }} pairs fail WCAG 2.2 AA in this theme.</span>
+      }
+    </p>
+    <div class="fd-table-wrapper">
+      <table class="fd-table" aria-describedby="contrast-heading">
+        <thead>
+          <tr>
+            <th scope="col">Foreground</th>
+            <th scope="col">Background</th>
+            <th scope="col">Sample</th>
+            <th scope="col">Ratio</th>
+            <th scope="col">Minimum</th>
+            <th scope="col">Result</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of contrast(); track row.foreground + row.background) {
+            <tr data-testid="contrast-row">
+              <td class="fd-code">{{ row.foreground }}</td>
+              <td class="fd-code">{{ row.background }}</td>
+              <td>
+                <span
+                  class="fd-sample"
+                  [style.background-color]="colorVar(row.background)"
+                  [style.color]="colorVar(row.foreground)"
+                  [style.border-color]="colorVar(row.foreground)"
+                  aria-hidden="true">Aa</span>
+              </td>
+              <td>{{ row.ratio === null ? 'n/a' : (row.ratio | number: '1.2-2') + ':1' }}</td>
+              <td>{{ row.minimum }}:1</td>
+              <td [class.fd-fail]="!row.passes">{{ row.passes ? 'Pass' : 'Fail' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+}
+
+<section class="fd-panel" aria-labelledby="semantic-heading">
+  <h2 id="semantic-heading" class="fd-panel-heading">Semantic roles</h2>
+  <ul class="fd-swatches">
+    @for (token of semantic(); track token.name) {
+      <li class="fd-swatch">
+        <span class="fd-swatch-chip" [style.background-color]="token.value" aria-hidden="true"></span>
+        <span class="fd-code">{{ colorPrefix }}{{ token.name }}</span>
+        <span class="fd-code">{{ token.primitive }} · {{ token.value }}</span>
+      </li>
+    }
+  </ul>
+</section>
+
+<section class="fd-panel" aria-labelledby="palette-heading">
+  <h2 id="palette-heading" class="fd-panel-heading">Primitive palette</h2>
+  <ul class="fd-swatches">
+    @for (token of palette(); track token.name) {
+      <li class="fd-swatch">
+        <span class="fd-swatch-chip" [style.background-color]="token.value" aria-hidden="true"></span>
+        <span class="fd-code">{{ token.name }}</span>
+        <span class="fd-code">{{ token.value }}</span>
+      </li>
+    }
+  </ul>
+</section>

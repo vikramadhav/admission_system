@@ -1,0 +1,58 @@
+<dahc-playground-page
+  heading="Switch"
+  description="An on / off switch for settings that take effect immediately. Ported from dubai-health-ui; DERIVED design."
+  [sourceFiles]="sourceFiles"
+  selector="dahc-switch"
+  [whenToUse]="whenToUse"
+  [apiFiles]="apiFiles">
+  <div preview>
+    <dahc-switch [formControl]="control">{{ text() }}</dahc-switch>
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-text label="content" [(value)]="text" />
+    <p class="pg-value" data-testid="form-value">Form value: {{ valueText() }}</p>
+  </div>
+
+  <div states class="pg-stack">
+    <dahc-switch>Off</dahc-switch>
+    <dahc-switch [formControl]="onControl">On</dahc-switch>
+    <dahc-switch [formControl]="disabledControl">Disabled</dahc-switch>
+  </div>
+
+  <dahc-doc-example
+    examples
+    exampleId="basic"
+    heading="Basic"
+    description="A switch bound to a form control."
+    template="switch-page.component.html">
+    <dahc-switch [formControl]="exampleNotify">E-mail notifications</dahc-switch>
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="settings"
+    heading="Settings list"
+    description="Related settings in a group."
+    template="switch-page.component.html">
+    <fieldset [formGroup]="exampleSettings">
+      <legend>Notification settings</legend>
+      <dahc-switch formControlName="reminders">Appointment reminders</dahc-switch>
+      <dahc-switch formControlName="newsletter">Monthly newsletter</dahc-switch>
+    </fieldset>
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="disabled"
+    heading="Disabled"
+    description="A setting the user cannot change."
+    template="switch-page.component.html">
+    <dahc-switch [formControl]="exampleRenewal">Automatic renewal (locked)</dahc-switch>
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>A native checkbox with role="switch": Space toggles it and screen readers announce on / off.</li>
+    <li>The 44 by 24 pixel track meets the target-size minimum; the thumb moves in the reading direction.</li>
+  </ul>
+</dahc-playground-page>

@@ -1,0 +1,84 @@
+<dahc-playground-page
+  heading="Ranked selection"
+  description="Choose several options, then order them with move buttons; the value is the ordered array. GME preference picker."
+  [sourceFiles]="sourceFiles"
+  selector="dahc-ranked-selection"
+  [whenToUse]="whenToUse">
+  <div preview class="pg-stack">
+    <dahc-ranked-selection
+      [formControl]="control"
+      [label]="label()"
+      [options]="sites"
+      [description]="description()"
+      [errorMessage]="errorMessage()"
+      [orderHeading]="orderHeading()"
+      [invalid]="invalid()"
+      [required]="required()" />
+    <p class="pg-value" data-testid="ranked-value">value: {{ valueText() }}</p>
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-text label="label" [(value)]="label" />
+    <dahc-inspector-text label="description" [(value)]="description" />
+    <dahc-inspector-text label="errorMessage" [(value)]="errorMessage" />
+    <dahc-inspector-text label="orderHeading" [(value)]="orderHeading" />
+    <dahc-inspector-toggle label="invalid" [(value)]="invalid" />
+    <dahc-inspector-toggle label="required" [(value)]="required" />
+    <dahc-inspector-toggle label="disabled" [(value)]="disabled" />
+    <p class="pg-value">Outputs: none. The ordered value is reported through the form control (ControlValueAccessor).</p>
+  </div>
+
+  <div states class="pg-stack">
+    <dahc-ranked-selection label="Nothing chosen" [options]="sites" [formControl]="emptyControl" />
+    <dahc-ranked-selection label="One chosen (no ordering needed)" [options]="sites" [formControl]="singleControl" />
+    <dahc-ranked-selection
+      label="Invalid"
+      [options]="sites"
+      [required]="true"
+      [invalid]="true"
+      errorMessage="Select at least one training site." />
+    <dahc-ranked-selection label="Disabled" [options]="sites" [formControl]="disabledControl" />
+    <dahc-ranked-selection label="Disabled by input" [options]="sites" [disabled]="true" />
+  </div>
+
+  <dahc-doc-example
+    examples
+    exampleId="basic"
+    heading="Basic"
+    description="Chosen items appear in the order list with move buttons."
+    template="ranked-selection-page.component.html">
+    <dahc-ranked-selection label="Preferred specialties" [options]="exampleSpecialties" [formControl]="exampleSpecialtyOrder" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="description"
+    heading="With a description"
+    description="Explain how the order is used."
+    template="ranked-selection-page.component.html">
+    <dahc-ranked-selection label="Interview locations" description="We try your first choice first." [options]="exampleLocations" [formControl]="exampleLocationOrder" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="required"
+    heading="Required with error"
+    description="The error shows after the control was touched without a choice."
+    template="ranked-selection-page.component.html">
+    <dahc-ranked-selection
+      label="Rotation order"
+      [options]="exampleSpecialties"
+      [required]="true"
+      [invalid]="exampleRotation.invalid && exampleRotation.touched"
+      errorMessage="Choose at least one rotation."
+      [formControl]="exampleRotation" />
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>The options are a fieldset with a legend, so the group name is read with each checkbox; description and error are linked to the group with aria-describedby.</li>
+    <li>The order is an ordered list; each item has "Move … up" and "Move … down" buttons named after the item.</li>
+    <li>After a move, focus stays on the moved item and a polite live region announces its new position ("Rashid Hospital moved to position 1 of 2").</li>
+    <li>Move buttons at either end stay focusable with aria-disabled="true", so focus is never lost.</li>
+    <li>Works without drag and drop (WCAG 2.5.7) and with targets of at least 44 by 44 pixels.</li>
+  </ul>
+</dahc-playground-page>

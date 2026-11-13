@@ -1,0 +1,93 @@
+<dahc-playground-page
+  heading="Anchor"
+  description="In-page navigation that highlights the section in view and scrolls to a section when a link is chosen. Ported from dubai-health-ui dh-anchor; DERIVED design."
+  selector="dahc-anchor"
+  [whenToUse]="whenToUse"
+  [sourceFiles]="sourceFiles">
+  <div preview class="anchor-demo">
+    <dahc-anchor container="#anchor-scroller" [(current)]="current" (currentChange)="record($event)">
+      <dahc-anchor-link href="#anchor-eligibility" heading="Eligibility" />
+      <dahc-anchor-link href="#anchor-documents" heading="Documents">
+        <dahc-anchor-link href="#anchor-academic" heading="Academic records" />
+      </dahc-anchor-link>
+      <dahc-anchor-link href="#anchor-fees" heading="Fees" />
+    </dahc-anchor>
+    <div id="anchor-scroller" class="anchor-scroller" tabindex="0" role="region" aria-label="Program details">
+      <section id="anchor-eligibility"><h3>Eligibility</h3><p>Who can apply to the program.</p></section>
+      <section id="anchor-documents"><h3>Documents</h3><p>What to upload.</p></section>
+      <section id="anchor-academic"><h3>Academic records</h3><p>Transcripts and certificates.</p></section>
+      <section id="anchor-fees"><h3>Fees</h3><p>The non-refundable application fee.</p></section>
+    </div>
+  </div>
+
+  <div inspector class="pg-stack">
+    <p class="pg-value">current: {{ current() || '—' }}</p>
+    <dahc-event-log [events]="events()" />
+  </div>
+
+  <div states class="pg-stack">
+    <p class="pg-value">Links nest for sub-sections; the active link is bold with the indicator.</p>
+  </div>
+
+  <dahc-doc-example
+    examples
+    exampleId="basic"
+    heading="Basic"
+    description="Links to the sections of a scroll box."
+    template="anchor-page.component.html">
+    <div class="anchor-demo">
+      <dahc-anchor label="Guide sections" container="#guide-scroller">
+        <dahc-anchor-link href="#guide-apply" heading="How to apply" />
+        <dahc-anchor-link href="#guide-dates" heading="Key dates" />
+      </dahc-anchor>
+      <div id="guide-scroller" class="anchor-scroller" tabindex="0" role="region" aria-label="Admission guide">
+        <section id="guide-apply"><h3>How to apply</h3><p>Create a draft and complete every step.</p></section>
+        <section id="guide-dates"><h3>Key dates</h3><p>Applications close on 31 December.</p></section>
+      </div>
+    </div>
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="nested"
+    heading="Nested links"
+    description="Sub-sections are indented under their section."
+    template="anchor-page.component.html">
+    <div class="anchor-demo">
+      <dahc-anchor label="Fee sections" container="#fees-scroller">
+        <dahc-anchor-link href="#fees-amounts" heading="Fees">
+          <dahc-anchor-link href="#fees-refunds" heading="Refunds" />
+        </dahc-anchor-link>
+        <dahc-anchor-link href="#fees-payment" heading="Paying online" />
+      </dahc-anchor>
+      <div id="fees-scroller" class="anchor-scroller" tabindex="0" role="region" aria-label="Fees">
+        <section id="fees-amounts"><h3>Fees</h3><p>Internship 230 AED, residency 650 AED.</p></section>
+        <section id="fees-refunds"><h3>Refunds</h3><p>The application fee is non-refundable.</p></section>
+        <section id="fees-payment"><h3>Paying online</h3><p>Pay with a card on the Dubai Health gateway.</p></section>
+      </div>
+    </div>
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="offset"
+    heading="Offset"
+    description="offsetTop keeps 40 pixels above a section when scrolling to it."
+    template="anchor-page.component.html">
+    <div class="anchor-demo">
+      <dahc-anchor label="Eligibility sections" container="#rules-scroller" [offsetTop]="40">
+        <dahc-anchor-link href="#rules-who" heading="Who can apply" />
+        <dahc-anchor-link href="#rules-documents" heading="Documents" />
+      </dahc-anchor>
+      <div id="rules-scroller" class="anchor-scroller" tabindex="0" role="region" aria-label="Eligibility">
+        <section id="rules-who"><h3>Who can apply</h3><p>Graduates of recognised medical schools.</p></section>
+        <section id="rules-documents"><h3>Documents</h3><p>Passport, transcript and CV.</p></section>
+      </div>
+    </div>
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>A labelled navigation landmark with a list of links; the active link has aria-current="location".</li>
+    <li>Following a link scrolls (instantly under reduced motion), updates the address and moves focus to the section.</li>
+  </ul>
+</dahc-playground-page>

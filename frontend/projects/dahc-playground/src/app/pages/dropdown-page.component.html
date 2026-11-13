@@ -1,0 +1,73 @@
+<dahc-playground-page
+  heading="Dropdown"
+  description="A menu of actions opened from your own trigger: put dahcDropdownTrigger on it and dahcDropdownItem on buttons or links. Ported from dubai-health-ui dh-dropdown; list styling Figma 50:13293."
+  selector="dahc-dropdown"
+  [whenToUse]="whenToUse"
+  [exampleColumns]="2"
+  [sourceFiles]="sourceFiles">
+  <div preview>
+    <dahc-dropdown label="Application actions" [placement]="placement()" (itemSelected)="record($event)">
+      <button dahc-button dahcDropdownTrigger type="button" variant="secondary" iconEnd="chevron-down">Actions</button>
+      <button dahcDropdownItem="view" type="button">View application</button>
+      <button dahcDropdownItem="print" type="button">Print summary</button>
+      <a dahcDropdownItem="help" href="#help">Help centre</a>
+      <button dahcDropdownItem="appeal" type="button" [disabled]="true">Appeal score</button>
+      <button dahcDropdownItem="withdraw" type="button" [danger]="true">Withdraw application</button>
+    </dahc-dropdown>
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-choice label="placement" [options]="placements" [(value)]="placement" />
+    <dahc-event-log [events]="events()" />
+  </div>
+
+  <div states class="pg-stack">
+    <p class="pg-value">Items: buttons, a link ("Help centre"), a disabled action ("Appeal score", skipped by the arrow keys) and a destructive action (error colour).</p>
+  </div>
+
+  <dahc-doc-example
+    examples
+    exampleId="basic"
+    heading="Basic"
+    description="Buttons as items."
+    template="dropdown-page.component.html">
+    <dahc-dropdown label="Document options">
+      <button dahc-button dahcDropdownTrigger type="button" variant="secondary" iconEnd="chevron-down">Document</button>
+      <button dahcDropdownItem="preview" type="button">Preview</button>
+      <button dahcDropdownItem="download" type="button">Download</button>
+      <button dahcDropdownItem="replace" type="button">Replace</button>
+    </dahc-dropdown>
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="links"
+    heading="Links and states"
+    description="A link item, a disabled item and a destructive item."
+    template="dropdown-page.component.html">
+    <dahc-dropdown label="Draft options">
+      <button dahc-button dahcDropdownTrigger type="button" variant="secondary" iconEnd="chevron-down">Draft</button>
+      <a dahcDropdownItem="guide" href="#guide">Read the guide</a>
+      <button dahcDropdownItem="duplicate" type="button" [disabled]="true">Duplicate</button>
+      <button dahcDropdownItem="discard" type="button" [danger]="true">Discard draft</button>
+    </dahc-dropdown>
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="placement"
+    heading="Placement"
+    description="Opens above the trigger."
+    template="dropdown-page.component.html">
+    <dahc-dropdown label="Sort options" placement="top">
+      <button dahc-button dahcDropdownTrigger type="button" variant="link">Sort</button>
+      <button dahcDropdownItem="newest" type="button">Newest first</button>
+      <button dahcDropdownItem="oldest" type="button">Oldest first</button>
+    </dahc-dropdown>
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>The trigger gets aria-haspopup="menu", aria-expanded and aria-controls; Enter, Space or ArrowDown opens on the first item, ArrowUp on the last.</li>
+    <li>In the menu: ArrowUp / ArrowDown / Home / End move, Enter or Space choose, Escape closes back to the trigger, Tab closes.</li>
+  </ul>
+</dahc-playground-page>

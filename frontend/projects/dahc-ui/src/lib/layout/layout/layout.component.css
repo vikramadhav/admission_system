@@ -1,0 +1,12 @@
+/* Ported from dubai-health-ui dh-layout. */
+:host {
+  display: flex;
+  flex: auto;
+  flex-direction: column;
+  min-block-size: 0;
+  background-color: var(--dahc-color-background);
+}
+
+:host(.dahc-layout--has-sider) {
+  flex-direction: row;
+}

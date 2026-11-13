@@ -1,0 +1,93 @@
+<dahc-page-header [heading]="heading()" [breadcrumbs]="breadcrumbs()" [focusOnLoad]="true" />
+
+<div class="dahc-portal-page">
+  @if (facade.loading() && facade.portfolio() === null) {
+    <dahc-skeleton [rows]="6" />
+  } @else if (facade.loadProblem(); as problem) {
+    <dahc-alert variant="error" [announce]="true">{{ problem.detail ?? problem.title }}</dahc-alert>
+    <div>
+      <a dahc-button variant="secondary" routerLink="/scoring/referee" i18n="@@portal.scoring.portfolio.backLink">Back to my portfolios</a>
+    </div>
+  } @else if (facade.portfolio()) {
+    <section class="section" aria-labelledby="scoring-info">
+      <h2 id="scoring-info" class="section-heading" i18n="@@portal.scoring.portfolio.infoHeading">Key information</h2>
+      <p class="section-text" i18n="@@portal.scoring.portfolio.anonymous">The candidate's identity is hidden. If an attachment shows you know the candidate, return the portfolio for conflict of interest.</p>
+      <dahc-detail-list [items]="keyInfo()" [columns]="3" />
+    </section>
+
+    @if (facade.stale()) {
+      <dahc-alert variant="warning" [announce]="true" i18n-heading="@@portal.scoring.portfolio.staleHeading" heading="These scores were changed elsewhere">
+        <p class="alert-text" i18n="@@portal.scoring.portfolio.staleText">Your scores for this portfolio were saved in another window. Reload to see the latest version; your unsaved changes here are lost.</p>
+        <button dahc-button type="button" size="sm" variant="secondary" (click)="reload()" i18n="@@portal.scoring.portfolio.reload">Reload</button>
+      </dahc-alert>
+    }
+
+    @if (summary().length > 0) {
+      <div id="scoring-summary" class="summary" tabindex="-1">
+        <dahc-alert variant="error" [announce]="true" i18n-heading="@@portal.scoring.portfolio.summaryHeading" heading="Score every question before you submit">
+          <ul class="summary-list">
+            @for (item of summary(); track item.questionId) {
+              <li><button dahc-button type="button" variant="link" (click)="jumpTo(item.questionId)">{{ item.text }}</button></li>
+            }
+          </ul>
+        </dahc-alert>
+      </div>
+    }
+
+    <section class="section" aria-labelledby="scoring-questions">
+      <h2 id="scoring-questions" class="section-heading" i18n="@@portal.scoring.portfolio.questionsHeading">Questions</h2>
+      @if (isSecondEvaluation()) {
+        <p class="section-text" i18n="@@portal.scoring.portfolio.appealIntro">Only the questions the candidate appealed are shown. Your score replaces the final score for these questions.</p>
+      }
+      <dahc-accordion [multiple]="true">
+        @for (question of facade.questions(); track question.questionId; let index = $index) {
+          <dahc-accordion-item
+            [heading]="itemHeading(question, index)"
+            [headingLevel]="3"
+            [expanded]="isExpanded(question.questionId)"
+            (expandedChange)="setExpanded(question.questionId, $event)">
+            <div class="question-anchor" [id]="'question-' + question.questionId" tabindex="-1">
+              <dahc-question-score-card [question]="question" [number]="index + 1" [showProblems]="attempted()" />
+            </div>
+          </dahc-accordion-item>
+        }
+      </dahc-accordion>
+    </section>
+
+    <section class="actions" aria-labelledby="scoring-actions">
+      <h2 id="scoring-actions" class="dahc-visually-hidden" i18n="@@portal.scoring.portfolio.actionsHeading">Scoring actions</h2>
+      <p class="total" aria-live="polite">
+        @if (facade.total().estimate) {
+          <span i18n="@@portal.scoring.portfolio.totalEstimate">Total: <strong>{{ facade.total().points }} out of {{ facade.totalPossible() }}</strong> (estimate until saved)</span>
+        } @else {
+          <span i18n="@@portal.scoring.portfolio.total">Total: <strong>{{ facade.total().points }} out of {{ facade.totalPossible() }}</strong></span>
+        }
+      </p>
+      @if (saveMessage(); as message) {
+        <dahc-alert [variant]="message.variant" [announce]="true">{{ message.text }}</dahc-alert>
+      }
+      <div class="buttons">
+        <button dahc-button type="button" variant="danger-outline" (click)="coiOpen.set(true)" i18n="@@portal.scoring.portfolio.coiButton">Return for conflict of interest</button>
+        <span class="spacer"></span>
+        <button dahc-button type="button" variant="secondary" [loading]="saving()" [disabled]="facade.stale()" (click)="save()" i18n="@@portal.scoring.portfolio.saveDraft">Save draft</button>
+        <button dahc-button type="button" [disabled]="facade.stale()" (click)="requestSubmit()" i18n="@@portal.scoring.portfolio.submit">Submit</button>
+      </div>
+    </section>
+
+    <dahc-submit-scoring-dialog [(open)]="submitOpen" (finished)="submitted()" />
+    <dahc-conflict-of-interest-dialog [(open)]="coiOpen" (returned)="returned()" />
+  }
+
+  <dahc-modal
+    [open]="leaveOpen()"
+    (openChange)="leaveDialogChanged($event)"
+    size="sm"
+    i18n-heading="@@portal.scoring.portfolio.leaveHeading"
+    heading="Leave without saving?">
+    <p class="alert-text" i18n="@@portal.scoring.portfolio.leaveText">You have changes that are not saved. If you leave now, they are lost.</p>
+    <div dahcDialogFooter class="buttons">
+      <button dahc-button type="button" variant="secondary" (click)="answerLeave(false)" i18n="@@portal.scoring.portfolio.stay">Stay on this page</button>
+      <button dahc-button type="button" variant="danger" (click)="answerLeave(true)" i18n="@@portal.scoring.portfolio.leave">Leave without saving</button>
+    </div>
+  </dahc-modal>
+</div>

@@ -1,0 +1,69 @@
+<dahc-modal [(open)]="open" i18n-heading="@@portal.withdraw.heading" heading="Withdraw application">
+  @if (step() === 'reason') {
+    <form class="action-form" (ngSubmit)="sendCode()" novalidate>
+      <p class="action-text" i18n="@@portal.withdraw.text">
+        You are about to withdraw application {{ applicationNumber() }}. The application fee is non-refundable if you withdraw.
+      </p>
+      <dahc-select
+        [formControl]="reasonCode"
+        i18n-label="@@portal.withdraw.reason"
+        label="Reason for withdrawal"
+        [options]="reasonOptions()"
+        [required]="true"
+        [invalid]="reasonError() !== ''"
+        [errorMessage]="reasonError()" />
+      @if (isOther()) {
+        <dahc-form-field
+          i18n-label="@@portal.withdraw.otherReason"
+          label="Other reason"
+          [required]="true"
+          [invalid]="otherError() !== ''"
+          [error]="otherError()">
+          <textarea dahcInput [formControl]="otherReason" maxlength="500"></textarea>
+        </dahc-form-field>
+      }
+      <p class="action-muted" i18n="@@portal.withdraw.codeNote">
+        To confirm, we will send a one-time code to your registered e-mail address and mobile number.
+      </p>
+      @if (error() !== '') {
+        <dahc-alert variant="error" [announce]="true">{{ error() }}</dahc-alert>
+      }
+    </form>
+  } @else {
+    <form class="action-form" (ngSubmit)="confirm()" novalidate>
+      <p class="action-text" aria-live="polite" i18n="@@portal.withdraw.codeSent">We sent a code to {{ destinations() }}.</p>
+      <dahc-form-field
+        i18n-label="@@portal.withdraw.code"
+        label="One-time code"
+        [required]="true"
+        [invalid]="otpError() !== ''"
+        [error]="otpError()">
+        <input dahcInput [formControl]="otp" inputmode="numeric" autocomplete="one-time-code" maxlength="12" />
+      </dahc-form-field>
+      <div>
+        <button dahc-button type="button" variant="link" [disabled]="resendIn() > 0 || busy()" (click)="resend()">
+          @if (resendIn() > 0) {
+            <ng-container i18n="@@portal.otp.resendIn">Resend code in {{ resendIn() }} seconds</ng-container>
+          } @else {
+            <ng-container i18n="@@portal.otp.resend">Resend code</ng-container>
+          }
+        </button>
+      </div>
+      @if (error() !== '') {
+        <dahc-alert variant="error" [announce]="true">{{ error() }}</dahc-alert>
+      }
+    </form>
+  }
+  <div dahcDialogFooter class="action-buttons">
+    <button dahc-button type="button" variant="secondary" (click)="open.set(false)" i18n="@@portal.action.cancel">Cancel</button>
+    @if (step() === 'reason') {
+      <button dahc-button type="button" variant="danger" [loading]="busy()" (click)="sendCode()" i18n="@@portal.withdraw.sendCode">
+        Send code
+      </button>
+    } @else {
+      <button dahc-button type="button" variant="danger" [loading]="busy()" (click)="confirm()" i18n="@@portal.withdraw.confirm">
+        Withdraw application
+      </button>
+    }
+  </div>
+</dahc-modal>

@@ -1,0 +1,13 @@
+<div class="dahc-list-item__avatar"><ng-content select="[dahcListAvatar]" /></div>
+@if (icon(); as name) {
+  <dahc-icon class="dahc-list-item__icon" [name]="name" size="lg" />
+}
+<div class="dahc-list-item__text">
+  <p class="dahc-list-item__heading">{{ heading() }}</p>
+  @if (description() !== '') {
+    <p class="dahc-list-item__description">{{ description() }}</p>
+  }
+  <ng-content />
+</div>
+<div class="dahc-list-item__aside"><ng-content select="[dahcListAside]" /></div>
+<div class="dahc-list-item__actions"><ng-content select="[dahcListActions]" /></div>

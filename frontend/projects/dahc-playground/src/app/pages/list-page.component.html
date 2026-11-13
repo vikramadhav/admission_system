@@ -1,0 +1,84 @@
+<dahc-playground-page
+  heading="List"
+  description="Items with leading media, a description, trailing content and actions, optionally in a bordered frame, for example the GME section checklist. Ported from dubai-health-ui dh-list; DERIVED."
+  selector="dahc-list"
+  [whenToUse]="whenToUse"
+  [sourceFiles]="sourceFiles">
+  <div preview>
+    <dahc-list [divided]="divided()" [bordered]="bordered()">
+      <dahc-list-item heading="Program and preferences" icon="check">
+        <dahc-tag dahcListAside purpose="success">Complete</dahc-tag>
+      </dahc-list-item>
+      <dahc-list-item heading="Personal information" description="Identification attachments are missing" icon="information">
+        <dahc-tag dahcListAside purpose="warning">Incomplete</dahc-tag>
+      </dahc-list-item>
+      <dahc-list-item heading="University grades" icon="view-learning">
+        <button dahcListAside dahc-button type="button" variant="link" size="sm">Edit</button>
+      </dahc-list-item>
+    </dahc-list>
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-toggle label="divided" [(value)]="divided" />
+    <dahc-inspector-toggle label="bordered (implies divided)" [(value)]="bordered" />
+  </div>
+
+  <div states class="pg-stack">
+    <dahc-list [bordered]="true" aria-label="Referees">
+      <dahc-list-item heading="Dr Sara Hazim" description="Consultant, Rashid Hospital">
+        <dahc-avatar dahcListAvatar name="Sara Hazim" />
+        <button dahcListActions dahc-button type="button" variant="secondary" size="sm">Contact Dr Sara Hazim</button>
+      </dahc-list-item>
+      <dahc-list-item heading="Dr Omar Haddad" description="Specialist, Dubai Hospital">
+        <dahc-avatar dahcListAvatar name="Omar Haddad" />
+        <button dahcListActions dahc-button type="button" variant="secondary" size="sm">Contact Dr Omar Haddad</button>
+      </dahc-list-item>
+    </dahc-list>
+    <dahc-list>
+      <dahc-list-item heading="Passport copy" />
+      <dahc-list-item heading="Emirates ID" />
+      <dahc-list-item heading="Degree certificate" description="Attested by the Ministry of Education" />
+    </dahc-list>
+  </div>
+
+  <div examples>
+    <dahc-doc-example exampleId="basic" heading="Basic" description="Items with a heading only." template="list-page.component.html">
+      <dahc-list aria-label="Required documents">
+        <dahc-list-item heading="Passport copy" />
+        <dahc-list-item heading="Degree certificate" />
+        <dahc-list-item heading="Academic transcript" />
+      </dahc-list>
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="described" heading="Icons and descriptions" description="A leading icon and a second line of text, separated by dividers." template="list-page.component.html">
+      <dahc-list [divided]="true" aria-label="Application sections">
+        <dahc-list-item heading="Program and preferences" description="Completed on 1 October" icon="check" />
+        <dahc-list-item heading="University grades" description="Transcript missing" icon="information" />
+      </dahc-list>
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="aside" heading="Trailing content" description="Content marked dahcListAside sits at the end of the row." template="list-page.component.html">
+      <dahc-list [divided]="true" aria-label="Section status">
+        <dahc-list-item heading="Personal information">
+          <dahc-tag dahcListAside purpose="success">Complete</dahc-tag>
+        </dahc-list-item>
+        <dahc-list-item heading="English proficiency">
+          <dahc-tag dahcListAside purpose="warning">Incomplete</dahc-tag>
+        </dahc-list-item>
+      </dahc-list>
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="people" heading="Avatars and actions" description="The bordered frame with avatars and named actions." template="list-page.component.html">
+      <dahc-list [bordered]="true" aria-label="Program contacts">
+        <dahc-list-item heading="Dr Layla Ahmed" description="Program Director">
+          <dahc-avatar dahcListAvatar name="Layla Ahmed" />
+          <button dahcListActions dahc-button type="button" variant="secondary" size="sm">E-mail Dr Layla Ahmed</button>
+        </dahc-list-item>
+      </dahc-list>
+    </dahc-doc-example>
+  </div>
+
+  <ul accessibility class="pg-notes">
+    <li>A list with list items (role list / listitem), so screen readers announce the number of items.</li>
+    <li>bordered draws the frame and the dividers; the list keeps role list / listitem.</li>
+    <li>An avatar in [dahcListAvatar] needs no extra label when the heading already names the person; give actions specific names.</li>
+    <li>Icons are decorative; trailing content (tags, buttons) is read after the item text.</li>
+  </ul>
+</dahc-playground-page>

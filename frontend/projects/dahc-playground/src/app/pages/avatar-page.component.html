@@ -1,0 +1,49 @@
+<dahc-playground-page
+  heading="Avatar"
+  description="A person shown by photo or initials (navy circle, white bold initials, 12.8:1). Ported from dubai-health-ui dh-avatar; DERIVED."
+  selector="dahc-avatar"
+  [whenToUse]="whenToUse"
+  [exampleColumns]="2"
+  [sourceFiles]="sourceFiles">
+  <div preview class="pg-row">
+    <dahc-avatar [name]="name()" [size]="size()" />
+    <dahc-avatar name="محمد بن راشد" [size]="size()" />
+    <dahc-avatar name="Photo that fails" src="missing-photo.jpg" [size]="size()" />
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-text label="name" [(value)]="name" />
+    <dahc-inspector-choice label="size" [options]="sizes" [(value)]="size" />
+  </div>
+
+  <div states class="pg-row">
+    <dahc-avatar name="Small" size="sm" />
+    <dahc-avatar name="Medium Size" />
+    <dahc-avatar name="Large Size" size="lg" />
+    <dahc-avatar />
+  </div>
+
+  <div examples>
+    <dahc-doc-example exampleId="initials" heading="Initials" description="Initials come from the first and last words of the name." template="avatar-page.component.html">
+      <dahc-avatar name="Layla Ahmed" />
+      <dahc-avatar name="Khalid bin Saeed Nasser" />
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="sizes" heading="Sizes" description="sm, md (default) and lg." template="avatar-page.component.html">
+      <dahc-avatar name="Small Example" size="sm" />
+      <dahc-avatar name="Medium Example" />
+      <dahc-avatar name="Large Example" size="lg" />
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="photo" heading="Photo" description="src shows a picture; a broken one falls back to initials." template="avatar-page.component.html">
+      <dahc-avatar name="Dubai Health" src="dahc-ui/logo/dh-logo-icon-navy.svg" />
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="arabic" heading="Arabic names" description="Initials work for Arabic script." template="avatar-page.component.html">
+      <dahc-avatar name="ليلى أحمد" />
+    </dahc-doc-example>
+  </div>
+
+  <ul accessibility class="pg-notes">
+    <li>The avatar is an image named after the person (role img, aria-label); the initials and photo are hidden from assistive technology.</li>
+    <li>A photo that fails to load falls back to the initials.</li>
+    <li>Initials take the first letters of the first and last words and work for Arabic names.</li>
+  </ul>
+</dahc-playground-page>

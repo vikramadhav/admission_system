@@ -1,0 +1,80 @@
+<dahc-playground-page
+  heading="Checkbox"
+  description="A checkbox for yes / no answers and multiple choices, with indeterminate, invalid and disabled states. Figma Controls 50:7880."
+  [sourceFiles]="sourceFiles"
+  selector="dahc-checkbox"
+  [whenToUse]="whenToUse"
+  [exampleColumns]="2">
+  <div preview>
+    <dahc-checkbox [indeterminate]="indeterminate()" [invalid]="invalid()" [formControl]="control">{{ text() }}</dahc-checkbox>
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-text label="content" [(value)]="text" />
+    <dahc-inspector-toggle label="indeterminate" [(value)]="indeterminate" />
+    <dahc-inspector-toggle label="invalid" [(value)]="invalid" />
+    <p class="pg-value" data-testid="form-value">Form value: {{ valueText() }}</p>
+  </div>
+
+  <div states class="pg-stack">
+    <dahc-checkbox>Unchecked</dahc-checkbox>
+    <dahc-checkbox [formControl]="checkedControl">Checked</dahc-checkbox>
+    <dahc-checkbox [indeterminate]="true">Indeterminate</dahc-checkbox>
+    <dahc-checkbox [invalid]="true">Invalid</dahc-checkbox>
+    <dahc-checkbox [formControl]="disabledControl">Disabled</dahc-checkbox>
+    <dahc-checkbox [formControl]="disabledCheckedControl">Disabled and checked</dahc-checkbox>
+  </div>
+
+  <dahc-doc-example
+    examples
+    exampleId="basic"
+    heading="Basic"
+    description="A single checkbox bound to a form control."
+    template="checkbox-page.component.html">
+    <dahc-checkbox [formControl]="exampleConsent">I agree to be contacted about my application</dahc-checkbox>
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="group"
+    heading="Group"
+    description="Several options answer one question; the fieldset legend names the group."
+    template="checkbox-page.component.html">
+    <fieldset [formGroup]="exampleChannels">
+      <legend>Preferred contact channels</legend>
+      <dahc-checkbox formControlName="email">E-mail updates</dahc-checkbox>
+      <dahc-checkbox formControlName="sms">Text messages</dahc-checkbox>
+      <dahc-checkbox formControlName="call">Phone calls</dahc-checkbox>
+    </fieldset>
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="required"
+    heading="Required"
+    description="Validators.requiredTrue; the error state shows once the box was touched."
+    template="checkbox-page.component.html">
+    <dahc-checkbox
+      [formControl]="exampleTerms"
+      [required]="true"
+      [invalid]="exampleTerms.invalid && exampleTerms.touched">
+      I accept the terms and conditions
+    </dahc-checkbox>
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="disabled"
+    heading="Disabled"
+    description="Disable the form control, not the element."
+    template="checkbox-page.component.html">
+    <dahc-checkbox [formControl]="exampleManaged">Newsletter (managed by your organisation)</dahc-checkbox>
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>A native checkbox inside its label: Space toggles it and clicking the label toggles it too.</li>
+    <li>The 24 by 24 pixel hit area meets the minimum target size (WCAG 2.5.8).</li>
+    <li>The checked box and tick meet 3:1 non-text contrast in both themes.</li>
+    <li>The label stays Regular when checked (Figma switches to Bold), so long labels do not reflow.</li>
+  </ul>
+</dahc-playground-page>

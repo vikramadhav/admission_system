@@ -1,0 +1,37 @@
+// Finance payments (US-1.3.13). Tokens only.
+.section {
+  display: grid;
+  // minmax(0, 1fr): the wide table scrolls inside its own region instead of widening the page.
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--dahc-space-4);
+}
+
+.section-heading {
+  margin: 0;
+  font-size: var(--dahc-type-heading-3-size);
+  line-height: var(--dahc-type-heading-3-line-height);
+}
+
+.section-text {
+  margin: 0;
+  color: var(--dahc-color-text-secondary);
+}
+
+.filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, calc(var(--dahc-space-16) * 4)), 1fr));
+  align-items: end;
+  gap: var(--dahc-space-4);
+}
+
+.filter-actions,
+.results-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--dahc-space-3);
+}
+
+.results-header {
+  justify-content: space-between;
+}

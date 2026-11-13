@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Services\DAHC.Service\DAHC.Service.csproj" />
+    <ProjectReference Include="..\..\Core\DAHC.Catalog.Core\DAHC.Catalog.Core.csproj" />
+  </ItemGroup>
+
+</Project>

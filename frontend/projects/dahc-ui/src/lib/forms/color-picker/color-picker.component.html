@@ -1,0 +1,64 @@
+<dahc-form-field [label]="label()" [hint]="hint()" [error]="errorMessage()" [invalid]="invalid()" [required]="required()">
+  <span dahcFieldStart class="dahc-color-picker__preview" [style.background]="value() || null" aria-hidden="true"></span>
+  <button
+    #trigger
+    dahcInput
+    type="button"
+    role="combobox"
+    class="dahc-color-picker__trigger"
+    aria-haspopup="dialog"
+    [attr.aria-expanded]="open()"
+    [attr.aria-controls]="panelId"
+    [disabled]="isDisabled()"
+    (click)="toggleOpen()"
+    (keydown)="onTriggerKeydown($event)"
+    (blur)="onBlur()">
+    <span class="dahc-color-picker__value" [class.dahc-color-picker__value--placeholder]="value() === ''">
+      {{ value() ? value().toUpperCase() : placeholder() }}
+    </span>
+  </button>
+  <dahc-icon dahcFieldEnd class="dahc-color-picker__chevron" [class.dahc-color-picker__chevron--open]="open()" name="chevron-down" size="lg" />
+</dahc-form-field>
+<div
+  #popup
+  class="dahc-popup dahc-color-picker__panel"
+  popover="manual"
+  role="dialog"
+  [id]="panelId"
+  [attr.aria-label]="label()"
+  (keydown)="onPanelKeydown($event)">
+  <div class="dahc-color-picker__grid" role="listbox" [attr.aria-label]="presetsLabel()">
+    @for (swatch of swatches(); track swatch.hex + swatch.name; let index = $index) {
+      <div
+        role="option"
+        class="dahc-color-picker__swatch"
+        [id]="panelId + '-' + index"
+        [style.background]="swatch.hex"
+        [attr.tabindex]="index === focusIndex() ? 0 : -1"
+        [attr.aria-selected]="swatch.hex === value()"
+        [attr.aria-label]="swatchLabel(swatch)"
+        [attr.title]="swatchLabel(swatch)"
+        [attr.data-index]="index"></div>
+    }
+  </div>
+  <div class="dahc-color-picker__custom">
+    <input
+      type="color"
+      class="dahc-color-picker__native"
+      [attr.aria-label]="customLabel()"
+      [value]="nativeValue()"
+      (input)="onDraft($event)" />
+    <input
+      type="text"
+      class="dahc-color-picker__hex"
+      maxlength="7"
+      spellcheck="false"
+      autocomplete="off"
+      [attr.aria-label]="hexLabel()"
+      [attr.aria-invalid]="draft() !== '' && !draftValid() ? 'true' : null"
+      [value]="draft().toUpperCase()"
+      (input)="onDraft($event)"
+      (keydown)="onHexKeydown($event)" />
+    <button dahc-button type="button" size="sm" variant="secondary" [disabled]="!draftValid()" (click)="apply()">{{ applyLabel() }}</button>
+  </div>
+</div>

@@ -1,0 +1,28 @@
+<nav [attr.aria-label]="label()">
+  <ol class="dahc-breadcrumbs__list">
+    @for (item of items(); track $index; let first = $first; let last = $last) {
+      <li class="dahc-breadcrumbs__item">
+        @if (!first) {
+          <dahc-icon class="dahc-breadcrumbs__separator" name="chevron-right" size="sm" />
+        }
+        @if (last) {
+          <span class="dahc-breadcrumbs__current" aria-current="page">{{ item.label }}</span>
+        } @else if (item.route) {
+          <a class="dahc-breadcrumbs__link" [routerLink]="item.route">
+            @if (first && homeIcon()) {
+              <dahc-icon name="view-health-centre-2" size="md" />
+            }
+            {{ item.label }}
+          </a>
+        } @else {
+          <a class="dahc-breadcrumbs__link" [href]="item.href ?? '#'">
+            @if (first && homeIcon()) {
+              <dahc-icon name="view-health-centre-2" size="md" />
+            }
+            {{ item.label }}
+          </a>
+        }
+      </li>
+    }
+  </ol>
+</nav>

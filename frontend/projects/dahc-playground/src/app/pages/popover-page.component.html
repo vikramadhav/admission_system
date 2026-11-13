@@ -1,0 +1,62 @@
+<dahc-playground-page
+  heading="Popover"
+  description="A click-triggered panel with extra details next to its trigger, in the top layer. Mark the trigger with dahcPopoverTrigger. Derived design."
+  selector="dahc-popover"
+  [whenToUse]="whenToUse"
+  [sourceFiles]="sourceFiles">
+  <div preview class="pg-row">
+    <dahc-popover [heading]="heading()" [placement]="placement()" (opened)="record('opened')">
+      <button dahc-button type="button" variant="secondary" dahcPopoverTrigger>Portfolio points</button>
+      Each question has indicative points. Referees set your final portfolio score.
+    </dahc-popover>
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-text label="heading" [(value)]="heading" />
+    <dahc-inspector-choice label="placement" [options]="placements" [(value)]="placement" />
+    <dahc-event-log [events]="events()" />
+  </div>
+
+  <div states class="pg-stack">
+    <p class="pg-value">The panel flips to the other side when there is no room and stays inside the screen.</p>
+  </div>
+
+  <dahc-doc-example examples exampleId="placements" heading="Placements" description="bottom (default), top, start and end; the panel flips when there is no room." template="popover-page.component.html">
+    <dahc-space [wrap]="true">
+      <dahc-popover heading="Below" placement="bottom">
+        <button dahc-button type="button" variant="secondary" size="sm" dahcPopoverTrigger>Open below</button>
+        Shown below the trigger.
+      </dahc-popover>
+      <dahc-popover heading="Above" placement="top">
+        <button dahc-button type="button" variant="secondary" size="sm" dahcPopoverTrigger>Open above</button>
+        Shown above the trigger.
+      </dahc-popover>
+      <dahc-popover heading="At the end" placement="end">
+        <button dahc-button type="button" variant="secondary" size="sm" dahcPopoverTrigger>Open at the end</button>
+        Shown after the trigger in the reading direction.
+      </dahc-popover>
+    </dahc-space>
+  </dahc-doc-example>
+  <dahc-doc-example examples exampleId="no-heading" heading="Without heading" description="Without heading the panel is named by fallbackLabel (Details)." template="popover-page.component.html">
+    <dahc-popover>
+      <button dahc-button type="button" variant="link" dahcPopoverTrigger>Why do we ask?</button>
+      We use your Emirates ID to pre-fill your identity details.
+    </dahc-popover>
+  </dahc-doc-example>
+  <dahc-doc-example examples exampleId="rich" heading="Rich content" description="Lists and links are fine; keep it short." template="popover-page.component.html">
+    <dahc-popover heading="Accepted documents">
+      <button dahc-button type="button" variant="secondary" size="sm" dahcPopoverTrigger>Which documents?</button>
+      <ul>
+        <li>Passport</li>
+        <li>Emirates ID</li>
+        <li>Graduation certificate</li>
+      </ul>
+    </dahc-popover>
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>The trigger gets aria-haspopup="dialog", aria-expanded and aria-controls; the panel is a labelled dialog.</li>
+    <li>Focus moves to the panel; Escape or a click outside closes it and returns focus to the trigger; Tab moves on.</li>
+    <li>Use a tooltip for a short hint and a modal for anything the user must act on.</li>
+  </ul>
+</dahc-playground-page>

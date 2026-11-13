@@ -1,0 +1,47 @@
+<dahc-form-field [label]="label()" [hint]="hint()" [error]="errorMessage()" [invalid]="invalid()" [required]="required()">
+  <button
+    #trigger
+    dahcInput
+    type="button"
+    role="combobox"
+    class="dahc-cascader__trigger"
+    aria-haspopup="listbox"
+    [attr.aria-expanded]="open()"
+    [attr.aria-controls]="popupId"
+    [attr.aria-activedescendant]="activeId()"
+    [disabled]="isDisabled()"
+    (click)="toggleOpen()"
+    (keydown)="onKeydown($event)"
+    (blur)="onBlur()">
+    <span class="dahc-cascader__value" [class.dahc-cascader__value--placeholder]="displayText() === ''">
+      {{ displayText() || placeholder() }}
+    </span>
+  </button>
+  <dahc-icon dahcFieldEnd class="dahc-cascader__chevron" [class.dahc-cascader__chevron--open]="open()" name="chevron-down" size="lg" />
+</dahc-form-field>
+<div #popup class="dahc-popup dahc-cascader__popup" popover="manual" [id]="popupId">
+  <div class="dahc-cascader__columns">
+    @for (nodes of columns(); track $index; let column = $index) {
+      <ul class="dahc-entry-list dahc-cascader__column" role="listbox" [attr.aria-label]="columnLabel(column)">
+        @for (node of nodes; track node.value; let index = $index) {
+          <li
+            role="option"
+            class="dahc-entry-option"
+            [id]="optionId(column, index)"
+            [class.dahc-entry-option--active]="path()[column] === index && column === activeColumn()"
+            [class.dahc-cascader__option--trail]="path()[column] === index && column !== activeColumn()"
+            [class.dahc-entry-option--selected]="isOnPath(column, node)"
+            [attr.aria-selected]="isOnPath(column, node)"
+            [attr.aria-disabled]="node.disabled ? 'true' : null"
+            [attr.data-column]="column"
+            [attr.data-index]="index">
+            <span class="dahc-cascader__label">{{ node.label }}</span>
+            @if (node.children?.length) {
+              <dahc-icon class="dahc-cascader__sub" name="chevron-right" size="sm" />
+            }
+          </li>
+        }
+      </ul>
+    }
+  </div>
+</div>

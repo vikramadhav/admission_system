@@ -1,0 +1,37 @@
+@if (readonly()) {
+  <div class="dahc-rate__stars" role="img" [attr.aria-label]="readonlyLabel()">
+    @for (star of stars(); track star) {
+      <span class="dahc-rate__star" [class.dahc-rate__star--on]="star <= value()">
+        <ng-container [ngTemplateOutlet]="starIcon" />
+      </span>
+    }
+  </div>
+} @else {
+  <div
+    class="dahc-rate__stars"
+    role="radiogroup"
+    [attr.aria-label]="label()"
+    [attr.aria-disabled]="isDisabled() ? 'true' : null">
+    @for (star of stars(); track star) {
+      <span
+        class="dahc-rate__star"
+        role="radio"
+        [class.dahc-rate__star--on]="star <= shown()"
+        [attr.tabindex]="isDisabled() ? -1 : star === focusable() ? 0 : -1"
+        [attr.aria-checked]="star === value()"
+        [attr.aria-label]="starLabel(star)"
+        [attr.aria-posinset]="star"
+        [attr.aria-setsize]="count()"
+        [attr.data-star]="star"
+        (blur)="onBlur()">
+        <ng-container [ngTemplateOutlet]="starIcon" />
+      </span>
+    }
+  </div>
+}
+
+<ng-template #starIcon>
+  <svg class="dahc-rate__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+  </svg>
+</ng-template>

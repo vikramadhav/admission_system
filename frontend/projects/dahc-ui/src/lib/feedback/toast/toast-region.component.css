@@ -1,0 +1,116 @@
+/* Toasts stack at the top end of the screen (top right; top left in RTL), just below the 80px
+   app header so they never cover it; full width (minus margins) on small screens.
+   Card as dubai-health-ui notify(): white, 1px navy-100 border, radius 12, Shadow 4, status-coloured
+   icon and a 28px round close button in the status tint. The 4px status edge of the original is
+   left out (owner decision). */
+
+.dahc-toast-region {
+  position: fixed;
+  inset-block-start: calc(var(--dahc-size-control-lg) + var(--dahc-space-8) + var(--dahc-space-4));
+  inset-inline-end: var(--dahc-space-6);
+  z-index: var(--dahc-z-toast);
+  inline-size: min(var(--dahc-size-measure-narrow), calc(100vw - 2 * var(--dahc-space-4)));
+  pointer-events: none;
+}
+
+.dahc-toast-region__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dahc-space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dahc-toast {
+  --_tint: var(--dahc-color-info-surface);
+  --_icon: var(--dahc-color-info-icon);
+
+  display: flex;
+  align-items: flex-start;
+  gap: var(--dahc-space-3);
+  padding: var(--dahc-space-4);
+  border: var(--dahc-size-border) solid var(--dahc-color-border-subtle);
+  border-radius: var(--dahc-radius-md);
+  background-color: var(--dahc-color-surface);
+  color: var(--dahc-color-text-primary);
+  box-shadow: var(--dahc-shadow-4);
+  pointer-events: auto;
+  animation: dahc-toast-in var(--dahc-motion-duration-normal) var(--dahc-motion-easing-standard);
+}
+
+@keyframes dahc-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(calc(-1 * var(--dahc-space-2)));
+  }
+}
+
+.dahc-toast--success {
+  --_tint: var(--dahc-color-success-surface);
+  --_icon: var(--dahc-color-success-icon);
+}
+
+.dahc-toast--warning {
+  --_tint: var(--dahc-color-warning-surface);
+  --_icon: var(--dahc-color-warning-icon);
+}
+
+.dahc-toast--error {
+  --_tint: var(--dahc-color-error-surface);
+  --_icon: var(--dahc-color-error-icon);
+}
+
+.dahc-toast__icon {
+  flex: none;
+  color: var(--_icon);
+}
+
+.dahc-toast__body {
+  flex: 1;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.dahc-toast__heading {
+  margin: 0;
+  font-size: var(--dahc-font-size-16);
+  font-weight: var(--dahc-font-weight-bold);
+  line-height: var(--dahc-font-line-height-tight);
+}
+
+.dahc-toast__message {
+  margin: var(--dahc-space-1) 0 0;
+  color: var(--dahc-color-text-secondary);
+  font-size: var(--dahc-font-size-14);
+  line-height: var(--dahc-type-body-sm-line-height);
+}
+
+.dahc-toast__dismiss {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  inline-size: calc(var(--dahc-space-6) + var(--dahc-space-1));
+  block-size: calc(var(--dahc-space-6) + var(--dahc-space-1));
+  padding: 0;
+  border: 0;
+  border-radius: var(--dahc-radius-pill);
+  background-color: var(--_tint);
+  color: inherit;
+  cursor: pointer;
+}
+
+.dahc-toast__dismiss:hover {
+  background-color: color-mix(in srgb, var(--dahc-color-text-primary) 12%, var(--_tint));
+}
+
+.dahc-toast__dismiss:focus-visible {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: var(--dahc-size-focus-offset);
+}
+
+@media (forced-colors: active) {
+  .dahc-toast {
+    border-color: CanvasText;
+  }
+}

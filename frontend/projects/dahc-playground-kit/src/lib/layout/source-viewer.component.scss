@@ -1,0 +1,47 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dahc-space-3);
+  min-inline-size: 0;
+}
+
+.pg-source-files {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dahc-space-2);
+}
+
+.pg-source-file {
+  min-block-size: var(--dahc-size-control-sm);
+  padding-inline: var(--dahc-space-3);
+  border: var(--dahc-size-border) solid var(--dahc-color-border-control);
+  border-radius: var(--dahc-radius-md);
+  background-color: var(--dahc-color-surface);
+  color: var(--dahc-color-text-primary);
+  font-family: var(--dahc-font-family-mono);
+  font-size: var(--dahc-font-size-14);
+  // File paths include the group folder (actions/button/…), so they must wrap at 320px.
+  max-inline-size: 100%;
+  overflow-wrap: anywhere;
+  text-align: start;
+  cursor: pointer;
+}
+
+.pg-source-file[aria-pressed='true'] {
+  background-color: var(--dahc-color-action-primary);
+  color: var(--dahc-color-text-inverse);
+}
+
+.pg-source-code {
+  max-block-size: var(--dahc-size-measure);
+  margin: 0;
+  padding: var(--dahc-space-4);
+  overflow: auto;
+  border-radius: var(--dahc-radius-md);
+  background-color: var(--dahc-color-surface-muted);
+  color: var(--dahc-color-text-primary);
+  font-family: var(--dahc-font-family-mono);
+  font-size: var(--dahc-font-size-14);
+  direction: ltr;
+  text-align: start;
+}

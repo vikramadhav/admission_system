@@ -1,0 +1,127 @@
+/* Figma Modal 50:17179 (see the component comment). */
+
+:host {
+  --_width: var(--dahc-size-dialog-md);
+
+  display: contents;
+}
+
+:host(.dahc-modal--sm) {
+  --_width: var(--dahc-size-dialog-sm);
+}
+
+:host(.dahc-modal--lg) {
+  --_width: var(--dahc-size-dialog-lg);
+}
+
+.dahc-modal {
+  inline-size: min(var(--_width), calc(100vw - 2 * var(--dahc-space-4)));
+  max-block-size: calc(100dvh - 2 * var(--dahc-space-8));
+  margin: auto;
+  padding: 0;
+  border: var(--dahc-size-border) solid var(--dahc-color-border-subtle);
+  border-radius: var(--dahc-radius-xl);
+  background-color: var(--dahc-color-surface);
+  color: var(--dahc-color-text-secondary);
+  box-shadow: var(--dahc-shadow-1);
+}
+
+.dahc-modal::backdrop {
+  background-color: color-mix(in srgb, var(--dahc-color-scrim) 45%, transparent);
+}
+
+.dahc-modal[open] {
+  animation: dahc-modal-in var(--dahc-motion-duration-normal) var(--dahc-motion-easing-standard);
+}
+
+@keyframes dahc-modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--dahc-space-3));
+  }
+}
+
+.dahc-modal__panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dahc-space-4);
+  padding: var(--dahc-space-10);
+}
+
+.dahc-modal__header {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--dahc-space-4);
+  min-block-size: var(--dahc-size-control-sm);
+  padding-inline-end: var(--dahc-size-control-sm);
+}
+
+.dahc-modal__title {
+  margin: 0;
+  color: var(--dahc-color-text-primary);
+  font-size: var(--dahc-type-heading-2-size);
+  font-weight: var(--dahc-type-heading-2-weight);
+  line-height: var(--dahc-type-heading-2-line-height);
+}
+
+.dahc-dialog-close {
+  position: absolute;
+  inset-block-start: calc(var(--dahc-space-4) * -1);
+  inset-inline-end: calc(var(--dahc-space-4) * -1);
+  display: inline-grid;
+  place-items: center;
+  inline-size: var(--dahc-size-control-sm);
+  block-size: var(--dahc-size-control-sm);
+  padding: 0;
+  border: 0;
+  border-radius: var(--dahc-radius-pill);
+  background-color: var(--dahc-color-surface-muted);
+  color: var(--dahc-color-text-primary);
+  cursor: pointer;
+}
+
+.dahc-dialog-close:hover {
+  background-color: var(--dahc-color-border-default);
+}
+
+.dahc-dialog-close:focus-visible {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: var(--dahc-size-focus-offset);
+}
+
+.dahc-modal__body {
+  overflow-y: auto;
+  font-size: var(--dahc-font-size-16);
+  line-height: var(--dahc-font-line-height-tight);
+}
+
+.dahc-modal__footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--dahc-space-3);
+}
+
+.dahc-modal__footer:empty {
+  display: none;
+}
+
+/* Below the sm breakpoint (tokens/_breakpoints.scss) */
+@media (max-width: 35.98rem) {
+  .dahc-modal__panel {
+    padding: var(--dahc-space-6);
+  }
+
+  .dahc-dialog-close {
+    inset-block-start: calc(var(--dahc-space-2) * -1);
+    inset-inline-end: calc(var(--dahc-space-2) * -1);
+  }
+}
+
+@media (forced-colors: active) {
+  .dahc-modal {
+    border-color: CanvasText;
+  }
+}

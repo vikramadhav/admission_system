@@ -1,0 +1,36 @@
+<dahc-form-field [label]="label()" [hint]="hint()" [error]="errorMessage()" [invalid]="invalid()" [required]="required()">
+  <button
+    dahcFieldStart
+    type="button"
+    class="dahc-input-number__stepper"
+    tabindex="-1"
+    [attr.aria-label]="decreaseLabel()"
+    [disabled]="isDisabled() || atMin()"
+    (click)="stepBy(-1)">
+    <span aria-hidden="true">−</span>
+  </button>
+  <input
+    dahcInput
+    type="number"
+    inputmode="decimal"
+    class="dahc-input-number__control"
+    [value]="display()"
+    [attr.min]="min()"
+    [attr.max]="max()"
+    [attr.step]="step()"
+    [attr.placeholder]="placeholder() || null"
+    [disabled]="isDisabled()"
+    (input)="onInput($event)"
+    (change)="onCommit($event)"
+    (blur)="onBlur()" />
+  <button
+    dahcFieldEnd
+    type="button"
+    class="dahc-input-number__stepper"
+    tabindex="-1"
+    [attr.aria-label]="increaseLabel()"
+    [disabled]="isDisabled() || atMax()"
+    (click)="stepBy(1)">
+    <span aria-hidden="true">+</span>
+  </button>
+</dahc-form-field>

@@ -1,0 +1,20 @@
+@if (disabled() || (route() === null && href() === '')) {
+  <span class="dahc-nav-menu-item__item" [attr.aria-disabled]="disabled() ? 'true' : null">
+    <ng-container *ngTemplateOutlet="content" />
+  </span>
+} @else if (route(); as link) {
+  <a class="dahc-nav-menu-item__item" [routerLink]="link" [attr.aria-current]="selected() ? 'page' : null">
+    <ng-container *ngTemplateOutlet="content" />
+  </a>
+} @else {
+  <a class="dahc-nav-menu-item__item" [href]="href()" [attr.aria-current]="selected() ? 'page' : null">
+    <ng-container *ngTemplateOutlet="content" />
+  </a>
+}
+
+<ng-template #content>
+  @if (icon(); as name) {
+    <dahc-icon class="dahc-nav-menu-item__icon" [name]="name" size="md" />
+  }
+  <span class="dahc-nav-menu-item__label"><ng-content /></span>
+</ng-template>

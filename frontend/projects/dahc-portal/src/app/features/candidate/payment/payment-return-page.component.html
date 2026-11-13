@@ -1,0 +1,67 @@
+<dahc-page-header i18n-heading="@@portal.payment.heading" heading="Payment" [breadcrumbs]="breadcrumbs()" [focusOnLoad]="true" />
+
+<div class="payment-page">
+  @switch (state()) {
+    @case ('confirming') {
+      <p class="payment-text" role="status" i18n="@@portal.payment.confirming">We are confirming your payment… Please don't close this page.</p>
+    }
+    @case ('unconfirmed') {
+      <dahc-alert variant="info" [announce]="true" i18n-heading="@@portal.payment.unconfirmedHeading" heading="Your payment is still being confirmed">
+        <p class="payment-text" i18n="@@portal.payment.unconfirmedText">
+          This can take a few minutes. Don't pay again. Check again shortly; your application is submitted as soon as the payment is confirmed.
+        </p>
+      </dahc-alert>
+      <div class="payment-actions">
+        <button dahc-button type="button" (click)="retry()" i18n="@@portal.payment.checkAgain">Check again</button>
+        <a dahc-button variant="secondary" routerLink="/candidate/dashboard" i18n="@@portal.action.backToDashboard">Back to dashboard</a>
+      </div>
+    }
+    @case ('failed') {
+      <dahc-alert variant="error" [announce]="true" i18n-heading="@@portal.payment.failedHeading" heading="Your payment was not completed">
+        <p class="payment-text" i18n="@@portal.payment.failedText">
+          No money was taken and your application is still a draft. You can try the payment again.
+        </p>
+      </dahc-alert>
+      <div class="payment-actions">
+        <a dahc-button [routerLink]="['/candidate/applications', applicationId(), 'steps', 'pay-and-submit']" i18n="@@portal.payment.tryAgain">
+          Try payment again
+        </a>
+        <a dahc-button variant="secondary" routerLink="/candidate/dashboard" i18n="@@portal.action.backToDashboard">Back to dashboard</a>
+      </div>
+    }
+    @case ('error') {
+      <dahc-alert variant="error" [announce]="true" i18n-heading="@@portal.payment.errorHeading" heading="We could not finish your submission">
+        <p class="payment-text">{{ problem()?.detail ?? problem()?.title }}</p>
+        @if (problem()?.traceId; as traceId) {
+          <p class="payment-text" i18n="@@portal.problem.traceId">Reference for support: {{ traceId }}</p>
+        }
+      </dahc-alert>
+      <div class="payment-actions">
+        <button dahc-button type="button" (click)="retry()" i18n="@@portal.action.tryAgain">Try again</button>
+        <a dahc-button variant="secondary" routerLink="/candidate/dashboard" i18n="@@portal.action.backToDashboard">Back to dashboard</a>
+      </div>
+    }
+    @case ('submitted') {
+      <dahc-alert variant="success" i18n-heading="@@portal.payment.submittedHeading" heading="Your application has been submitted">
+        <p class="payment-text" i18n="@@portal.payment.submittedText">
+          Payment received. The admission team will review your application and you can follow progress on your dashboard.
+        </p>
+      </dahc-alert>
+      <dahc-detail-list [items]="receipt()" [columns]="2" />
+      <div class="payment-actions">
+        <a dahc-button routerLink="/candidate/dashboard" i18n="@@portal.payment.goToDashboard">Go to dashboard</a>
+      </div>
+    }
+  }
+</div>
+
+<dahc-modal [(open)]="successOpen" [closable]="false" [closeOnBackdrop]="false" size="md" i18n-heading="@@portal.payment.submittedHeading" heading="Your application has been submitted">
+  <span dahcDialogIcon class="payment-featured-icon"><dahc-icon name="check" size="lg" /></span>
+  <p class="payment-text" i18n="@@portal.payment.submittedText">
+    Payment received. The admission team will review your application and you can follow progress on your dashboard.
+  </p>
+  <dahc-detail-list class="payment-details" [items]="receipt()" [columns]="2" />
+  <div dahcDialogFooter class="payment-dialog-actions">
+    <button dahc-button type="button" (click)="goToDashboard()" i18n="@@portal.payment.goToDashboard">Go to dashboard</button>
+  </div>
+</dahc-modal>

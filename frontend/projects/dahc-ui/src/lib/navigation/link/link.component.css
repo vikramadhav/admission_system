@@ -1,0 +1,79 @@
+/* Figma Buttons › Type=3. Links (50:6786). Ported from dubai-health-ui dh-link. */
+
+:host {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--dahc-space-1);
+  border-radius: var(--dahc-radius-xs);
+  text-decoration-line: none;
+  text-underline-offset: 0.15em;
+  vertical-align: baseline;
+  transition: color var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard);
+}
+
+:host(:hover) .dahc-link__text {
+  text-decoration-line: underline;
+}
+
+:host(:focus-visible) {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: var(--dahc-size-focus-offset);
+}
+
+.dahc-link__icon {
+  flex: none;
+}
+
+/* Sizes: Large 18/24 Bold, Medium Bold 16/20, Small Regular 14/18. */
+:host(.dahc-link--lg) {
+  gap: var(--dahc-space-2);
+  font-size: var(--dahc-font-size-18);
+  font-weight: var(--dahc-font-weight-bold);
+  line-height: var(--dahc-type-body-lg-line-height);
+}
+
+:host(.dahc-link--md) {
+  font-size: var(--dahc-font-size-16);
+  font-weight: var(--dahc-font-weight-bold);
+  line-height: var(--dahc-font-line-height-tight);
+}
+
+:host(.dahc-link--sm) {
+  font-size: var(--dahc-font-size-14);
+  font-weight: var(--dahc-font-weight-regular);
+  line-height: var(--dahc-type-body-sm-line-height);
+}
+
+/* Navy Large is Medium in Figma. */
+:host(.dahc-link--navy.dahc-link--lg) {
+  font-weight: var(--dahc-font-weight-medium);
+}
+
+:host(.dahc-link--navy) {
+  color: var(--dahc-color-text-primary);
+}
+
+:host(.dahc-link--navy:hover) {
+  color: var(--dahc-color-action-primary-hover);
+}
+
+/* Blue uses the accessible link colour; hover underlines only (Figma's lighter tint fails AA). */
+:host(.dahc-link--blue) {
+  color: var(--dahc-color-text-link);
+}
+
+:host(.dahc-link--blue:hover) {
+  color: var(--dahc-color-text-link-hover);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  :host {
+    color: LinkText;
+  }
+}

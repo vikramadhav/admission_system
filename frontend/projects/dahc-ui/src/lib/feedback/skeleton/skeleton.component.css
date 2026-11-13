@@ -1,0 +1,75 @@
+/* Ported from dubai-health-ui dh-skeleton: navy-100 blocks with a shimmer (DERIVED). */
+
+:host {
+  display: block;
+}
+
+.dahc-skeleton {
+  display: flex;
+  gap: var(--dahc-space-4);
+}
+
+.dahc-skeleton__lines {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--dahc-space-3);
+  min-inline-size: 0;
+}
+
+.dahc-skeleton__block {
+  display: block;
+  background: linear-gradient(
+    90deg,
+    var(--dahc-color-surface-muted) 25%,
+    var(--dahc-color-background) 37%,
+    var(--dahc-color-surface-muted) 63%
+  );
+  background-size: 400% 100%;
+  animation: dahc-shimmer 1.4s ease infinite;
+}
+
+.dahc-skeleton__avatar {
+  flex: none;
+  inline-size: var(--dahc-size-control-lg);
+  block-size: var(--dahc-size-control-lg);
+  border-radius: var(--dahc-radius-pill);
+}
+
+.dahc-skeleton__line {
+  block-size: var(--dahc-space-4);
+  border-radius: var(--dahc-radius-xs);
+}
+
+.dahc-skeleton__line--last {
+  inline-size: 60%;
+}
+
+.dahc-skeleton__heading {
+  inline-size: 40%;
+  block-size: var(--dahc-space-5);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dahc-skeleton__block {
+    animation: none;
+    background: var(--dahc-color-surface-muted);
+  }
+}
+
+@keyframes dahc-shimmer {
+  from {
+    background-position: 100% 50%;
+  }
+
+  to {
+    background-position: 0 50%;
+  }
+}
+
+@media (forced-colors: active) {
+  .dahc-skeleton__block {
+    border: var(--dahc-size-border) solid GrayText;
+    background: Canvas;
+  }
+}

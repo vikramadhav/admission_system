@@ -1,0 +1,238 @@
+/* DERIVED (dubai-health-ui dh-transfer), see the component comment. */
+
+:host {
+  display: block;
+  inline-size: 100%;
+  container-type: inline-size;
+  color: var(--dahc-color-text-primary);
+}
+
+.dahc-transfer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: var(--dahc-space-4);
+}
+
+.dahc-transfer__panel {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  border: var(--dahc-size-border) solid var(--dahc-color-border-control);
+  border-radius: var(--dahc-radius-md);
+  background-color: var(--dahc-color-surface);
+  overflow: hidden;
+}
+
+.dahc-transfer__head {
+  display: flex;
+  align-items: center;
+  gap: var(--dahc-space-2);
+  padding-block: var(--dahc-space-3);
+  padding-inline: var(--dahc-space-4);
+  border-block-end: var(--dahc-size-border) solid var(--dahc-color-border-subtle);
+  background-color: var(--dahc-color-surface-raised-1);
+}
+
+.dahc-transfer__title {
+  flex: 1;
+  font-weight: var(--dahc-font-weight-bold);
+}
+
+.dahc-transfer__count {
+  color: var(--dahc-color-text-tertiary);
+  font-size: var(--dahc-font-size-14);
+}
+
+/* Same box as dahc-checkbox: 20px, 2px slate border; checked = navy with a white tick. */
+.dahc-transfer__box {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  inline-size: var(--dahc-size-icon-md);
+  block-size: var(--dahc-size-icon-md);
+  border: var(--dahc-size-border-strong) solid var(--dahc-color-border-control);
+  border-radius: var(--dahc-radius-xs);
+  background-color: var(--dahc-color-surface);
+  color: var(--dahc-color-text-inverse);
+}
+
+.dahc-transfer__box[role='checkbox'] {
+  cursor: pointer;
+}
+
+.dahc-transfer__tick,
+.dahc-transfer__dash {
+  grid-area: 1 / 1;
+  visibility: hidden;
+}
+
+.dahc-transfer__dash {
+  inline-size: calc(var(--dahc-size-icon-sm) - var(--dahc-space-1));
+  block-size: var(--dahc-size-border-strong);
+  border-radius: var(--dahc-radius-pill);
+  background-color: currentcolor;
+}
+
+.dahc-transfer__box--checked,
+.dahc-transfer__box--mixed {
+  border-color: var(--dahc-color-control-checked);
+  background-color: var(--dahc-color-control-checked);
+}
+
+.dahc-transfer__box--checked .dahc-transfer__tick,
+.dahc-transfer__box--mixed .dahc-transfer__dash {
+  visibility: visible;
+}
+
+.dahc-transfer__box--mixed .dahc-transfer__tick {
+  visibility: hidden;
+}
+
+.dahc-transfer__box:focus-visible,
+.dahc-transfer__list:focus-visible {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: var(--dahc-size-focus-offset);
+}
+
+.dahc-transfer__list:focus-visible {
+  outline-offset: calc(var(--dahc-size-focus-ring) * -1);
+}
+
+.dahc-transfer__search-wrap {
+  padding: var(--dahc-space-2);
+  border-block-end: var(--dahc-size-border) solid var(--dahc-color-border-subtle);
+}
+
+.dahc-transfer__search {
+  inline-size: 100%;
+  block-size: calc(var(--dahc-size-control-sm) + var(--dahc-space-1));
+  padding-inline: var(--dahc-space-3);
+  border: var(--dahc-size-border) solid var(--dahc-color-border-control);
+  border-radius: var(--dahc-radius-sm);
+  background-color: var(--dahc-color-surface);
+  color: var(--dahc-color-text-primary);
+  font: inherit;
+  font-size: var(--dahc-font-size-14);
+}
+
+.dahc-transfer__search::placeholder {
+  color: var(--dahc-color-text-placeholder);
+}
+
+.dahc-transfer__search:focus-visible {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: 0;
+}
+
+.dahc-transfer__list {
+  block-size: calc(5 * var(--dahc-size-control-lg));
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+  outline: none;
+}
+
+.dahc-transfer__option {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--dahc-space-1) + var(--dahc-space-0-5));
+  min-block-size: var(--dahc-size-control-lg);
+  padding-block: var(--dahc-space-3);
+  padding-inline: var(--dahc-space-4);
+  font-size: var(--dahc-font-size-14);
+  line-height: var(--dahc-font-line-height-tight);
+  cursor: pointer;
+}
+
+.dahc-transfer__option:hover:not([aria-disabled='true']) {
+  background-color: var(--dahc-color-surface-raised-1);
+}
+
+/* The keyboard cursor shows only while the list has keyboard focus. */
+.dahc-transfer__list:focus-visible .dahc-transfer__option--active {
+  background-color: var(--dahc-color-surface-raised-1);
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: calc(var(--dahc-size-focus-ring) * -1);
+}
+
+.dahc-transfer__option[aria-disabled='true'] {
+  color: var(--dahc-color-text-disabled);
+  cursor: not-allowed;
+}
+
+.dahc-transfer__list--empty {
+  display: none;
+}
+
+/* Shown instead of the list (a listbox needs options), at the list's height. */
+.dahc-transfer__empty {
+  block-size: calc(5 * var(--dahc-size-control-lg));
+  margin: 0;
+  padding: var(--dahc-space-4);
+  color: var(--dahc-color-text-tertiary);
+  font-size: var(--dahc-font-size-14);
+}
+
+.dahc-transfer__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dahc-space-2);
+}
+
+.dahc-transfer__move {
+  display: grid;
+  place-items: center;
+  inline-size: var(--dahc-size-control-sm);
+  block-size: var(--dahc-size-control-sm);
+  padding: 0;
+  border: var(--dahc-size-border) solid var(--dahc-color-border-strong);
+  border-radius: var(--dahc-radius-pill);
+  background-color: var(--dahc-color-surface);
+  color: var(--dahc-color-text-primary);
+  cursor: pointer;
+  transition: background-color var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard);
+}
+
+.dahc-transfer__move:hover:not(:disabled) {
+  background-color: var(--dahc-color-surface-raised-1);
+}
+
+.dahc-transfer__move:focus-visible {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: var(--dahc-size-focus-offset);
+}
+
+.dahc-transfer__move:disabled {
+  border-color: var(--dahc-color-action-disabled-fg);
+  color: var(--dahc-color-action-disabled-fg);
+  cursor: not-allowed;
+}
+
+/* Stack when the component is narrower than two list widths (528px). */
+@container (width < 33rem) {
+  .dahc-transfer {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .dahc-transfer__actions {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .dahc-transfer__move dahc-icon {
+    rotate: 90deg;
+  }
+}
+
+@media (forced-colors: active) {
+  .dahc-transfer__box {
+    border-color: CanvasText;
+  }
+
+  .dahc-transfer__box--checked,
+  .dahc-transfer__box--mixed {
+    background-color: Highlight;
+  }
+}

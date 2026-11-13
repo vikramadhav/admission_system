@@ -1,0 +1,85 @@
+<section class="question" [attr.aria-labelledby]="headingId()">
+  <div class="question-header">
+    <h3 class="question-prompt" [id]="headingId()">
+      <span i18n="@@portal.portfolio.questionNumber">Q{{ question().number }}.</span> {{ question().prompt }}
+    </h3>
+    <dahc-tag class="question-points" purpose="informative-blue">{{ question().pointsLabel }}</dahc-tag>
+  </div>
+
+  <div [formGroup]="group()">
+    <dahc-radio-group
+      formControlName="answer"
+      i18n-label="@@portal.portfolio.answer"
+      label="Answer"
+      [options]="yesNo"
+      [required]="true"
+      [invalid]="answerError() !== ''"
+      [errorMessage]="answerError()" />
+  </div>
+
+  @if (isYes()) {
+    @if (question().note; as note) {
+      <p class="step-note">{{ note }}</p>
+    }
+    @if (question().fields.length > 0) {
+      <div class="step-grid" [formGroup]="group().controls.details">
+        @for (field of question().fields; track field.key) {
+          @switch (field.type) {
+            @case ('date') {
+              <dahc-date-picker
+                [formControlName]="field.key"
+                [label]="field.label"
+                [required]="true"
+                [invalid]="detailError(field.key) !== ''"
+                [errorMessage]="detailError(field.key)" />
+            }
+            @case ('select') {
+              <dahc-select
+                [formControlName]="field.key"
+                [label]="field.label"
+                [options]="field.options ?? []"
+                [required]="true"
+                [invalid]="detailError(field.key) !== ''"
+                [errorMessage]="detailError(field.key)" />
+              @if (field.otherKey && isOther(field.key)) {
+                <dahc-form-field
+                  i18n-label="@@portal.portfolio.otherSpecify"
+                  label="Please specify"
+                  [required]="true"
+                  [invalid]="detailError(field.otherKey) !== ''"
+                  [error]="detailError(field.otherKey)">
+                  <input dahcInput type="text" [formControlName]="field.otherKey" />
+                </dahc-form-field>
+              }
+            }
+            @case ('url') {
+              <dahc-form-field
+                class="step-full"
+                [label]="field.label"
+                i18n-hint="@@portal.portfolio.urlHint"
+                hint="For example https://doi.org/10.1000/xyz123"
+                [required]="true"
+                [invalid]="detailError(field.key) !== ''"
+                [error]="detailError(field.key)">
+                <input dahcInput type="url" inputmode="url" placeholder="https://doi.org/" [formControlName]="field.key" />
+              </dahc-form-field>
+            }
+            @default {
+              <dahc-form-field
+                [label]="field.label"
+                [required]="true"
+                [invalid]="detailError(field.key) !== ''"
+                [error]="detailError(field.key)">
+                <input dahcInput type="text" [formControlName]="field.key" />
+              </dahc-form-field>
+            }
+          }
+        }
+      </div>
+    }
+    <dahc-section-attachments sectionKey="portfolio" [portfolioQuestionId]="question().id" [showRequired]="false" />
+    @if (evidenceMissing()) {
+      <p class="question-error" i18n="@@portal.portfolio.evidenceRequired">Upload the supporting documents for this question.</p>
+    }
+  }
+</section>

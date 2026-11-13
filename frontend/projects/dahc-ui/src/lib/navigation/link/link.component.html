@@ -1,0 +1,7 @@
+@if (iconStart(); as icon) {
+  <dahc-icon class="dahc-link__icon" [name]="icon" [size]="iconSize()" />
+}
+<span class="dahc-link__text"><ng-content /></span>
+@if (iconEnd(); as icon) {
+  <dahc-icon class="dahc-link__icon" [name]="icon" [size]="iconSize()" />
+}

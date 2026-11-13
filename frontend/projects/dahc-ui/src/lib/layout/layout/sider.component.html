@@ -1,0 +1,13 @@
+<nav class="dahc-sider__nav" [attr.aria-label]="label()">
+  <div class="dahc-sider__body"><ng-content /></div>
+  @if (collapsible()) {
+    <button
+      type="button"
+      class="dahc-sider__trigger"
+      [attr.aria-expanded]="!collapsed()"
+      [attr.aria-label]="collapsed() ? expandLabel() : collapseLabel()"
+      (click)="toggle()">
+      <span class="dahc-sider__chevron"><dahc-icon name="chevron-left" /></span>
+    </button>
+  }
+</nav>

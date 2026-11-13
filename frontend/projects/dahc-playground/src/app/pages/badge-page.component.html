@@ -1,0 +1,59 @@
+<dahc-playground-page
+  heading="Badge"
+  description="A small count or dot for something new, like the GME header notification badge. For a status label (Draft, Submitted) use Tag."
+  selector="dahc-badge"
+  [whenToUse]="whenToUse"
+  [exampleColumns]="2"
+  [sourceFiles]="sourceFiles">
+  <div preview class="pg-row">
+    <span class="badge-anchor">
+      <button dahc-icon-button type="button" icon="information" variant="ghost" size="md">Notifications</button>
+      <dahc-badge [count]="+count()" [tone]="tone()" [dot]="dot()" [label]="label()" />
+    </span>
+    <dahc-badge [count]="+count()" [tone]="tone()" [dot]="dot()" [label]="label()" />
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-choice label="count" [options]="counts" [(value)]="count" />
+    <dahc-inspector-choice label="tone" [options]="tones" [(value)]="tone" />
+    <dahc-inspector-toggle label="dot" [(value)]="dot" />
+    <dahc-inspector-text label="label" [(value)]="label" />
+  </div>
+
+  <div states class="pg-row">
+    <dahc-badge [count]="5" label="5 new messages" />
+    <dahc-badge [count]="150" label="150 new messages" />
+    <dahc-badge [count]="2" tone="primary" label="2 drafts" />
+    <dahc-badge [dot]="true" label="New" />
+  </div>
+
+  <div examples>
+    <dahc-doc-example exampleId="count" heading="Count" description="The count is shown as a number; at 0 the badge hides." template="badge-page.component.html">
+      <dahc-badge [count]="5" label="5 unread messages" />
+      <dahc-badge [count]="42" label="42 pending reviews" />
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="overflow" heading="Overflow" description="Counts above max show a plus sign." template="badge-page.component.html">
+      <dahc-badge [count]="150" label="150 new applications" />
+      <dahc-badge [count]="12" [max]="9" label="12 new comments" />
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="dot" heading="Dot" description="A dot marks something new without a number." template="badge-page.component.html">
+      <dahc-badge [dot]="true" label="New updates" />
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="tone" heading="Tone" description="Primary tone for neutral counts such as drafts." template="badge-page.component.html">
+      <dahc-badge [count]="2" tone="primary" label="2 drafts" />
+      <dahc-badge [count]="7" tone="alert" label="7 overdue tasks" />
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="anchored" heading="On an icon button" description="Place the badge over the corner of an icon button." template="badge-page.component.html">
+      <span class="badge-anchor">
+        <button dahc-icon-button type="button" icon="information" variant="ghost" size="md">Messages</button>
+        <dahc-badge [count]="4" label="4 unread messages" />
+      </span>
+    </dahc-doc-example>
+  </div>
+
+  <ul accessibility class="pg-notes">
+    <li>The number is hidden from screen readers; the label says what it counts ("3 unread notifications").</li>
+    <li>At 0 the badge is hidden; counts above max show as "99+".</li>
+    <li>Navy text on the red badge meets 4.5:1.</li>
+  </ul>
+</dahc-playground-page>

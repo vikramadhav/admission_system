@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Data\DAHC.Data\DAHC.Data.csproj" />
+    <ProjectReference Include="..\..\Services\DAHC.Identity.Service\DAHC.Identity.Service.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="DAHC.Test.Data" />
+  </ItemGroup>
+
+</Project>

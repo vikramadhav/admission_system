@@ -1,0 +1,11 @@
+.contact-field {
+  display: grid;
+  gap: var(--dahc-space-2);
+}
+
+.contact-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--dahc-space-3);
+}

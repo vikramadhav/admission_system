@@ -1,0 +1,132 @@
+/* DERIVED (dubai-health-ui dh-color-picker), see the component comment. Swatch colours are data
+   (palette values or user hex), set inline. */
+
+:host {
+  --_swatch: calc(var(--dahc-size-control-sm) - var(--dahc-space-1));
+
+  display: block;
+  min-inline-size: 0;
+}
+
+.dahc-color-picker__trigger {
+  margin-inline-end: calc(-1 * (var(--dahc-size-icon-lg) + var(--dahc-space-2)));
+  padding-inline-end: calc(var(--dahc-size-icon-lg) + var(--dahc-space-2));
+}
+
+.dahc-color-picker__value {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dahc-color-picker__value--placeholder {
+  color: var(--dahc-color-text-placeholder);
+}
+
+.dahc-color-picker__chevron {
+  pointer-events: none;
+  transition: transform var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard);
+}
+
+.dahc-color-picker__chevron--open {
+  transform: rotate(180deg);
+}
+
+/* Checkerboard behind an empty value. */
+.dahc-color-picker__preview {
+  flex: none;
+  inline-size: var(--dahc-size-icon-lg);
+  block-size: var(--dahc-size-icon-lg);
+  border: var(--dahc-size-border) solid var(--dahc-color-border-default);
+  border-radius: var(--dahc-radius-xs);
+  background: repeating-conic-gradient(var(--dahc-color-surface-muted) 0 25%, var(--dahc-color-surface) 0 50%) 0 / var(--dahc-space-2)
+    var(--dahc-space-2);
+}
+
+.dahc-color-picker__panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--dahc-space-4);
+  inline-size: var(--dahc-size-dialog-sm);
+  padding: var(--dahc-space-4);
+}
+
+.dahc-color-picker__panel:not(:popover-open) {
+  display: none;
+}
+
+.dahc-color-picker__grid {
+  display: grid;
+  grid-template-columns: repeat(4, var(--_swatch));
+  justify-content: space-between;
+  row-gap: var(--dahc-space-3);
+}
+
+.dahc-color-picker__swatch {
+  inline-size: var(--_swatch);
+  block-size: var(--_swatch);
+  border: var(--dahc-size-border) solid var(--dahc-color-border-default);
+  border-radius: var(--dahc-radius-xs);
+  cursor: pointer;
+}
+
+.dahc-color-picker__swatch[aria-selected='true'] {
+  box-shadow:
+    0 0 0 var(--dahc-size-border-strong) var(--dahc-color-surface),
+    0 0 0 calc(2 * var(--dahc-size-border-strong)) var(--dahc-color-border-strong);
+}
+
+.dahc-color-picker__swatch:focus-visible {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: var(--dahc-space-1);
+}
+
+.dahc-color-picker__custom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--dahc-space-2);
+}
+
+.dahc-color-picker__native {
+  flex: none;
+  inline-size: var(--dahc-size-control-sm);
+  block-size: var(--dahc-size-control-sm);
+  padding: 0;
+  border: var(--dahc-size-border) solid var(--dahc-color-border-control);
+  border-radius: var(--dahc-radius-sm);
+  background: none;
+  cursor: pointer;
+}
+
+.dahc-color-picker__hex {
+  flex: 1 1 7.5rem;
+  min-inline-size: 0;
+  inline-size: 0;
+  block-size: var(--dahc-size-control-sm);
+  padding-inline: var(--dahc-space-3);
+  border: var(--dahc-size-border) solid var(--dahc-color-border-control);
+  border-radius: var(--dahc-radius-sm);
+  background-color: var(--dahc-color-surface);
+  color: var(--dahc-color-text-primary);
+  font: inherit;
+  font-size: var(--dahc-font-size-14);
+}
+
+.dahc-color-picker__hex[aria-invalid='true'] {
+  border-color: var(--dahc-color-error-border);
+}
+
+.dahc-color-picker__native:focus-visible,
+.dahc-color-picker__hex:focus-visible {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: 0;
+}
+
+@media (forced-colors: active) {
+  .dahc-color-picker__swatch,
+  .dahc-color-picker__preview {
+    forced-color-adjust: none;
+  }
+}

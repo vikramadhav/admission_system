@@ -1,0 +1,22 @@
+@use '../../../../../../dahc-ui/src/styles/tokens/breakpoints';
+
+.screening-filters,
+.screening-toolbar {
+  display: grid;
+  gap: var(--dahc-space-4);
+}
+
+.screening-filter-grid {
+  display: grid;
+  gap: var(--dahc-space-4);
+}
+
+@include breakpoints.up('md') {
+  .screening-filter-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.screening-buttons--start {
+  justify-content: flex-start;
+}

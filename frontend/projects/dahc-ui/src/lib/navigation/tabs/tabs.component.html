@@ -1,0 +1,21 @@
+<div class="dahc-tabs__list" role="tablist" [attr.aria-label]="label()">
+  @for (panel of panels(); track panel.name()) {
+    <button
+      type="button"
+      role="tab"
+      class="dahc-tabs__tab"
+      [id]="panel.tabId"
+      [attr.aria-selected]="panel.name() === activeName()"
+      [attr.aria-controls]="panel.panelId"
+      [attr.tabindex]="panel.name() === activeName() ? 0 : -1"
+      [disabled]="panel.disabled()"
+      (click)="select(panel, false)"
+      (keydown)="onKeydown($event)">
+      @if (panel.icon(); as icon) {
+        <dahc-icon [name]="icon" size="lg" />
+      }
+      <span class="dahc-tabs__label" [attr.data-label]="panel.label()">{{ panel.label() }}</span>
+    </button>
+  }
+</div>
+<ng-content />

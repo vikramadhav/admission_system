@@ -1,0 +1,57 @@
+/* Option lists inside the .dahc-popup panel of the ported pickers (auto-complete, mention,
+   cascader, tree select). Figma Dropdown list 50:13293: 48px rows, 12/16 padding, Regular 14,
+   hover blue-100; the keyboard-active row also gets the focus ring (DAHC addition). Shared by
+   adding this file to each component's styleUrls. */
+
+.dahc-entry-list {
+  max-block-size: calc(6 * var(--dahc-size-control-lg));
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.dahc-entry-option {
+  display: flex;
+  align-items: center;
+  gap: var(--dahc-space-2);
+  min-block-size: var(--dahc-size-control-lg);
+  padding-block: var(--dahc-space-3);
+  padding-inline: var(--dahc-space-4);
+  color: var(--dahc-color-text-primary);
+  font-size: var(--dahc-font-size-14);
+  line-height: var(--dahc-font-line-height-tight);
+  cursor: pointer;
+}
+
+.dahc-entry-option:hover:not([aria-disabled='true']),
+.dahc-entry-option--active {
+  background-color: var(--dahc-color-surface-raised-1);
+}
+
+.dahc-entry-option--active {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: calc(var(--dahc-size-focus-ring) * -1);
+}
+
+.dahc-entry-option--selected {
+  font-weight: var(--dahc-font-weight-bold);
+}
+
+.dahc-entry-option[aria-disabled='true'] {
+  color: var(--dahc-color-text-disabled);
+  cursor: not-allowed;
+}
+
+.dahc-entry-empty {
+  padding-block: var(--dahc-space-3);
+  padding-inline: var(--dahc-space-4);
+  color: var(--dahc-color-text-tertiary);
+  font-size: var(--dahc-font-size-14);
+}
+
+@media (forced-colors: active) {
+  .dahc-entry-option--active {
+    outline-color: Highlight;
+  }
+}

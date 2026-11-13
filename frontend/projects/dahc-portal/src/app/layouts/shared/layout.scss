@@ -1,0 +1,15 @@
+// Shared by the public and role layouts: header, a main area that fills the page, footer.
+:host {
+  display: flex;
+  flex-direction: column;
+  min-block-size: 100vh;
+  background-color: var(--dahc-color-background);
+}
+
+.dahc-layout-main {
+  flex: 1;
+}
+
+.dahc-layout-main:focus {
+  outline: none;
+}

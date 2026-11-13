@@ -1,0 +1,25 @@
+<section class="dahc-notification-region" [attr.aria-label]="label()">
+  <ol class="dahc-notification-region__list" aria-live="polite">
+    @for (item of service.notifications(); track item.id) {
+      <li
+        [class]="'dahc-notification dahc-notification--' + item.variant"
+        [attr.role]="item.variant === 'error' ? 'alert' : null"
+        (pointerenter)="pause(item)"
+        (pointerleave)="resume(item)"
+        (focusin)="pause(item)"
+        (focusout)="resume(item)">
+        <span class="dahc-notification__icon"><dahc-icon [name]="icons[item.variant]" size="md" /></span>
+        <div class="dahc-notification__body">
+          <p class="dahc-notification__heading">{{ item.heading }}</p>
+          @if (item.message) {
+            <p class="dahc-notification__message">{{ item.message }}</p>
+          }
+        </div>
+        <button type="button" class="dahc-notification__dismiss" (click)="service.dismiss(item.id)">
+          <dahc-icon name="x-close" size="sm" />
+          <span class="dahc-visually-hidden">{{ dismissLabel() }}</span>
+        </button>
+      </li>
+    }
+  </ol>
+</section>

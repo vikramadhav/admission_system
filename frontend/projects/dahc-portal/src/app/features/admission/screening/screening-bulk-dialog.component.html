@@ -1,0 +1,122 @@
+<dahc-modal [(open)]="open" [heading]="heading()" size="lg">
+  @if (result(); as done) {
+    <div class="screening-form">
+      <dahc-alert [variant]="done.blockedCount === 0 ? 'success' : 'warning'" [announce]="true" i18n-heading="@@portal.admission.screening.result.heading" heading="Result">
+        <p class="screening-text" i18n="@@portal.admission.screening.result.summary">
+          {{ done.processedCount }} of {{ done.selectedCount }} processed, {{ done.blockedCount }} not processed.
+        </p>
+      </dahc-alert>
+      @if (blocked().length > 0) {
+        <h3 class="screening-subheading" i18n="@@portal.admission.screening.result.blockedHeading">Not processed</h3>
+        <ul class="screening-list">
+          @for (row of blocked(); track row.applicationNumber) {
+            <li><strong>{{ row.applicationNumber }}</strong>: {{ row.reason }}</li>
+          }
+        </ul>
+      }
+    </div>
+  } @else {
+    <form class="screening-form" (ngSubmit)="submit()" novalidate>
+      <dahc-detail-list [columns]="2">
+        @if (kind() !== 'screen-out') {
+          <div dahc-detail-item i18n-label="@@portal.admission.screening.summary.type" label="Announcement type">{{ announcementType() }}</div>
+        }
+        <div dahc-detail-item i18n-label="@@portal.admission.screening.summary.selected" label="Selected applications">{{ selected().length }}</div>
+        @if (kind() === 'screen-out') {
+          <div dahc-detail-item i18n-label="@@portal.admission.screening.summary.toScreenOut" label="To be screened out">{{ ready().length }}</div>
+          <div dahc-detail-item i18n-label="@@portal.admission.screening.summary.alreadyScreenedOut" label="Already screened out">{{ notReady().length }}</div>
+        } @else {
+          <div dahc-detail-item i18n-label="@@portal.admission.screening.summary.ready" label="Ready">{{ ready().length }}</div>
+          <div dahc-detail-item i18n-label="@@portal.admission.screening.summary.notReady" label="Not ready">{{ notReady().length }}</div>
+        }
+      </dahc-detail-list>
+
+      @if (kind() === 'announce') {
+        <p class="screening-muted" i18n="@@portal.admission.screening.announce.appealNote">
+          Announced candidates can see their final portfolio score and shortlisting score and can appeal once, within the appeal window
+          configured for the cycle (48 hours by default). Round scores stay hidden.
+        </p>
+      }
+      @if (kind() === 'reannounce') {
+        <p class="screening-muted" i18n="@@portal.admission.screening.reannounce.note">
+          Reannouncement is needed even when the score did not change. Candidates see the updated final score and cannot appeal again.
+        </p>
+      }
+
+      @if (notReady().length > 0) {
+        <div class="screening-highlight">
+          <h3 class="screening-subheading">
+            @if (kind() === 'screen-out') {
+              <ng-container i18n="@@portal.admission.screening.screenOut.alreadyHeading">Already screened out (no change)</ng-container>
+            } @else {
+              <ng-container i18n="@@portal.admission.screening.notReadyHeading">Not ready (will not be published)</ng-container>
+            }
+          </h3>
+          <ul class="screening-list">
+            @for (row of notReady(); track row.applicationNumber) {
+              <li>
+                <strong>{{ row.applicationNumber }}</strong> {{ row.candidateName }}
+                <dahc-tag [purpose]="row.status.purpose">{{ row.status.label }}</dahc-tag>
+              </li>
+            }
+          </ul>
+        </div>
+      }
+
+      @if (kind() === 'screen-out') {
+        <dahc-select
+          [formControl]="reasonCode"
+          i18n-label="@@portal.admission.screening.screenOut.reason"
+          label="Screen-out reason"
+          i18n-description="@@portal.admission.screening.screenOut.reasonHint"
+          description="The same reason is recorded for every selected application. Screen-out cannot be appealed."
+          [options]="reasonOptions()"
+          [required]="true"
+          [invalid]="reasonError() !== ''"
+          [errorMessage]="reasonError()" />
+      }
+
+      <dahc-checkbox [formControl]="confirmed" [required]="true" [invalid]="confirmError() !== ''">
+        @switch (kind()) {
+          @case ('announce') {
+            <ng-container i18n="@@portal.admission.screening.announce.confirm">I confirm the ready applications should be announced now.</ng-container>
+          }
+          @case ('screen-out') {
+            <ng-container i18n="@@portal.admission.screening.screenOut.confirm">I confirm these applications should be screened out and the candidates told.</ng-container>
+          }
+          @case ('reannounce') {
+            <ng-container i18n="@@portal.admission.screening.reannounce.confirm">I confirm the updated scores should be reannounced now.</ng-container>
+          }
+        }
+      </dahc-checkbox>
+      @if (confirmError() !== '') {
+        <p class="screening-error" role="alert">{{ confirmError() }}</p>
+      }
+
+      @if (error() !== '') {
+        <dahc-alert variant="error" [announce]="true">{{ error() }}</dahc-alert>
+      }
+    </form>
+  }
+
+  <div dahcDialogFooter class="screening-buttons">
+    @if (result()) {
+      <button dahc-button type="button" (click)="open.set(false)" i18n="@@portal.admission.screening.done">Done</button>
+    } @else {
+      <button dahc-button type="button" variant="secondary" (click)="open.set(false)" i18n="@@portal.action.cancel">Cancel</button>
+      <button dahc-button type="button" [variant]="kind() === 'screen-out' ? 'danger' : 'primary'" [loading]="busy()" (click)="submit()">
+        @switch (kind()) {
+          @case ('announce') {
+            <ng-container i18n="@@portal.admission.screening.announce.submit">Announce</ng-container>
+          }
+          @case ('screen-out') {
+            <ng-container i18n="@@portal.admission.screening.screenOut.submit">Screen out</ng-container>
+          }
+          @case ('reannounce') {
+            <ng-container i18n="@@portal.admission.screening.reannounce.submit">Reannounce</ng-container>
+          }
+        }
+      </button>
+    }
+  </div>
+</dahc-modal>

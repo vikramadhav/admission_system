@@ -1,0 +1,36 @@
+<nav [attr.aria-label]="label()">
+  <ul class="dahc-pagination__list">
+    <li>
+      <button type="button" class="dahc-pagination__step" [disabled]="page() <= 1" (click)="go(page() - 1)">
+        <dahc-icon name="chevron-left" size="lg" />
+        <span>{{ previousLabel() }}</span>
+      </button>
+    </li>
+    <li class="dahc-pagination__pages">
+      <ul class="dahc-pagination__list">
+        @for (item of items(); track item) {
+          @if (isPage(item)) {
+            <li>
+              <button
+                type="button"
+                class="dahc-pagination__page"
+                [attr.aria-current]="item === page() ? 'page' : null"
+                [attr.aria-label]="pageLabel() + ' ' + item"
+                (click)="go(item)">
+                {{ item }}
+              </button>
+            </li>
+          } @else {
+            <li class="dahc-pagination__gap" aria-hidden="true">…</li>
+          }
+        }
+      </ul>
+    </li>
+    <li>
+      <button type="button" class="dahc-pagination__step" [disabled]="page() >= pageCount()" (click)="go(page() + 1)">
+        <span>{{ nextLabel() }}</span>
+        <dahc-icon name="chevron-right" size="lg" />
+      </button>
+    </li>
+  </ul>
+</nav>

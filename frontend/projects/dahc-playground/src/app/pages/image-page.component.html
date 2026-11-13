@@ -1,0 +1,40 @@
+<dahc-playground-page
+  heading="Image"
+  description="An image with an optional full-size preview in a modal dialog. DH image overlay guidance 50:6676; preview DERIVED. Ported from dubai-health-ui dh-image."
+  selector="dahc-image"
+  [whenToUse]="whenToUse"
+  [exampleColumns]="2"
+  [sourceFiles]="sourceFiles">
+  <div preview>
+    <dahc-image src="dahc-ui/logo/dh-logo-horizontal-navy.svg" alt="Dubai Health logo" [radius]="radius()" [preview]="preview()" />
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-toggle label="preview" [(value)]="preview" />
+    <dahc-inspector-choice label="radius" [options]="radii" [(value)]="radius" />
+  </div>
+
+  <div states class="pg-row">
+    <dahc-image src="dahc-ui/logo/dh-logo-icon-navy.svg" alt="Dubai Health mark" radius="md" />
+    <dahc-image src="dahc-ui/logo/dh-logo-icon-navy.svg" alt="" radius="none" />
+  </div>
+
+  <div examples>
+    <dahc-doc-example exampleId="basic" heading="Basic" description="An image with alternative text." template="image-page.component.html">
+      <dahc-image src="dahc-ui/logo/dh-logo-horizontal-navy.svg" alt="Dubai Health wordmark" />
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="preview" heading="Full-size view" description="The image becomes a button that opens a full-size dialog." template="image-page.component.html">
+      <dahc-image src="dahc-ui/logo/dh-logo-horizontal-navy.svg" alt="Wordmark in full size" [preview]="true" />
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="radius" heading="Radius" description="none, md or lg (default)." template="image-page.component.html">
+      <dahc-image src="dahc-ui/logo/dh-logo-icon-navy.svg" alt="Mark with no radius" radius="none" />
+      <dahc-image src="dahc-ui/logo/dh-logo-icon-navy.svg" alt="Mark with medium radius" radius="md" />
+    </dahc-doc-example>
+  </div>
+
+  <ul accessibility class="pg-notes">
+    <li>With preview, the image is a button named "View larger: &lt;alt&gt;" that opens a native modal dialog.</li>
+    <li>Escape, the backdrop and the close button close the preview; focus returns to the image.</li>
+    <li>An empty alt marks a decorative image.</li>
+  </ul>
+</dahc-playground-page>

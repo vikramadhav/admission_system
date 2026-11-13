@@ -1,0 +1,149 @@
+/* Figma Dropdown › Multi select dropdown (50:13367, 50:13417), see the component comment. */
+
+:host {
+  display: block;
+  min-inline-size: 0;
+}
+
+/* The trigger reaches under the chevron so a click anywhere in the box opens the list. */
+.dahc-multi-select__trigger {
+  margin-inline-end: calc(-1 * (var(--dahc-size-icon-lg) + var(--dahc-space-2)));
+  padding-inline-end: calc(var(--dahc-size-icon-lg) + var(--dahc-space-2));
+}
+
+.dahc-multi-select__value {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dahc-multi-select__value--placeholder {
+  color: var(--dahc-color-text-placeholder);
+}
+
+.dahc-multi-select__chevron {
+  pointer-events: none;
+  transition: transform var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard);
+}
+
+.dahc-multi-select__chevron--open {
+  transform: rotate(180deg);
+}
+
+.dahc-multi-select__search {
+  display: flex;
+  align-items: center;
+  gap: var(--dahc-space-2);
+  margin: var(--dahc-space-2);
+  padding-inline: var(--dahc-space-4);
+  border: var(--dahc-size-border) solid var(--dahc-color-border-control);
+  border-radius: var(--dahc-radius-md);
+  color: var(--dahc-color-text-tertiary);
+}
+
+.dahc-multi-select__search:focus-within {
+  border-color: var(--dahc-color-border-strong);
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: var(--dahc-size-focus-offset);
+}
+
+.dahc-multi-select__search-input {
+  flex: 1;
+  min-inline-size: 0;
+  min-block-size: var(--dahc-size-control-lg);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--dahc-color-text-primary);
+  font: inherit;
+  font-size: var(--dahc-font-size-16);
+  outline: none;
+}
+
+.dahc-multi-select__search-input::placeholder {
+  color: var(--dahc-color-text-placeholder);
+}
+
+.dahc-multi-select__search-input::-webkit-search-cancel-button {
+  appearance: none;
+}
+
+.dahc-multi-select__list {
+  max-block-size: calc(6 * var(--dahc-size-control-lg));
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.dahc-multi-select__option {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--dahc-space-1) + var(--dahc-space-0-5));
+  min-block-size: var(--dahc-size-control-lg);
+  padding-block: var(--dahc-space-3);
+  padding-inline: var(--dahc-space-4);
+  color: var(--dahc-color-text-primary);
+  /* dubai-health-ui popup option: Regular 16/20. */
+  font-size: var(--dahc-type-input-size);
+  line-height: var(--dahc-type-input-line-height);
+  cursor: pointer;
+}
+
+.dahc-multi-select__option:hover:not([aria-disabled='true']),
+.dahc-multi-select__option--active {
+  background-color: var(--dahc-color-surface-raised-1);
+}
+
+.dahc-multi-select__option--active {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: calc(var(--dahc-size-focus-ring) * -1);
+}
+
+.dahc-multi-select__option[aria-disabled='true'] {
+  color: var(--dahc-color-text-disabled);
+  cursor: not-allowed;
+}
+
+/* Same box as dahc-checkbox: 20px, 2px slate border; checked = navy with a white tick. */
+.dahc-multi-select__box {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  inline-size: var(--dahc-size-icon-md);
+  block-size: var(--dahc-size-icon-md);
+  margin: var(--dahc-space-0-5);
+  border: var(--dahc-size-border-strong) solid var(--dahc-color-border-control);
+  border-radius: var(--dahc-radius-xs);
+  background-color: var(--dahc-color-surface);
+  color: var(--dahc-color-text-inverse);
+}
+
+.dahc-multi-select__box dahc-icon {
+  visibility: hidden;
+}
+
+.dahc-multi-select__option[aria-selected='true'] .dahc-multi-select__box {
+  border-color: var(--dahc-color-control-checked);
+  background-color: var(--dahc-color-control-checked);
+}
+
+.dahc-multi-select__option[aria-selected='true'] .dahc-multi-select__box dahc-icon {
+  visibility: visible;
+}
+
+.dahc-multi-select__option[aria-disabled='true'] .dahc-multi-select__box {
+  border-color: var(--dahc-color-action-disabled-fg);
+}
+
+.dahc-multi-select__empty {
+  padding: var(--dahc-space-4);
+  color: var(--dahc-color-text-tertiary);
+  font-size: var(--dahc-font-size-14);
+}
+
+@media (forced-colors: active) {
+  .dahc-multi-select__option--active {
+    outline-color: Highlight;
+  }
+}

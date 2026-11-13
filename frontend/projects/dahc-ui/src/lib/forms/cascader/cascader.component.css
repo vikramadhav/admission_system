@@ -1,0 +1,66 @@
+/* DERIVED (dubai-health-ui dh-cascader): DH dropdown list columns; options use ../entry-popup/entry-options.css. */
+
+:host {
+  display: block;
+  min-inline-size: 0;
+}
+
+/* The trigger reaches under the chevron so a click anywhere in the box opens the list. */
+.dahc-cascader__trigger {
+  margin-inline-end: calc(-1 * (var(--dahc-size-icon-lg) + var(--dahc-space-2)));
+  padding-inline-end: calc(var(--dahc-size-icon-lg) + var(--dahc-space-2));
+}
+
+.dahc-cascader__value {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dahc-cascader__value--placeholder {
+  color: var(--dahc-color-text-placeholder);
+}
+
+.dahc-cascader__chevron {
+  pointer-events: none;
+  transition: transform var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard);
+}
+
+.dahc-cascader__chevron--open {
+  transform: rotate(180deg);
+}
+
+.dahc-cascader__popup {
+  overflow: hidden;
+}
+
+.dahc-cascader__columns {
+  display: flex;
+  max-inline-size: 100%;
+  overflow-x: auto;
+}
+
+.dahc-cascader__column {
+  flex: none;
+  min-inline-size: 11.25rem;
+}
+
+.dahc-cascader__column + .dahc-cascader__column {
+  border-inline-start: var(--dahc-size-border) solid var(--dahc-color-border-subtle);
+}
+
+/* The option that opened the next column. */
+.dahc-cascader__option--trail {
+  background-color: var(--dahc-color-surface-muted);
+}
+
+.dahc-cascader__label {
+  flex: 1;
+}
+
+.dahc-cascader__sub {
+  flex: none;
+}
+
+/* chevron-right is a directional icon: dahc-icon mirrors it in RTL. */

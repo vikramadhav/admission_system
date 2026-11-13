@@ -1,0 +1,70 @@
+<div class="dahc-file-upload" role="group" [attr.aria-labelledby]="labelId" [attr.aria-describedby]="message().text ? messageId : null">
+  <p class="dahc-file-upload__label" [id]="labelId">
+    {{ label() }}
+    @if (required()) {
+      <span class="dahc-file-upload__required" aria-hidden="true">*</span>
+    }
+  </p>
+
+  @if (value()) {
+    <div class="dahc-file-upload__file">
+      <dahc-tag purpose="success" iconStart="check">{{ uploadedLabel() }}</dahc-tag>
+      <p class="dahc-file-upload__name">
+        <span class="dahc-file-upload__file-name">{{ fileName() }}</span>
+        <span class="dahc-file-upload__size">{{ fileSize() }}</span>
+      </p>
+      <button dahc-button type="button" variant="link" size="sm" iconStart="view" [disabled]="isDisabled()" (click)="preview()">
+        {{ previewLabel() }}
+      </button>
+      <button dahc-icon-button type="button" icon="trash" variant="ghost" size="md" [disabled]="isDisabled()" (click)="remove()">
+        {{ removeLabel() }} {{ fileName() }}
+      </button>
+    </div>
+  } @else {
+    <div
+      class="dahc-file-upload__drop"
+      [class.dahc-file-upload__drop--dragging]="dragging()"
+      [class.dahc-file-upload__drop--error]="message().error"
+      (dragover)="onDragOver($event)"
+      (dragleave)="dragging.set(false)"
+      (drop)="onDrop($event)">
+      <dahc-icon name="upload" size="lg" />
+      <button
+        dahc-button
+        type="button"
+        variant="secondary"
+        size="sm"
+        [disabled]="isDisabled()"
+        [attr.aria-describedby]="message().text ? messageId : null"
+        [attr.aria-invalid]="message().error ? 'true' : null"
+        (click)="choose()">
+        {{ chooseLabel() }}
+      </button>
+      <span class="dahc-file-upload__drop-text">{{ dropLabel() }}</span>
+      <span class="dahc-visually-hidden">{{ emptyLabel() }}</span>
+    </div>
+  }
+
+  @if (progress() !== null) {
+    <progress class="dahc-file-upload__progress" max="100" [value]="progress()" [attr.aria-label]="progressLabel()"></progress>
+  }
+
+  @if (message().text) {
+    <p class="dahc-file-upload__message" [class.dahc-file-upload__message--error]="message().error" [id]="messageId">
+      @if (message().error) {
+        <dahc-icon name="information" size="sm" />
+      }
+      <span>{{ message().text }}</span>
+    </p>
+  }
+
+  <input
+    #fileInput
+    class="dahc-visually-hidden"
+    type="file"
+    tabindex="-1"
+    aria-hidden="true"
+    [accept]="accept()"
+    [disabled]="isDisabled()"
+    (change)="onFileInput($event)" />
+</div>

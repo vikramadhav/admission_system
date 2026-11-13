@@ -1,0 +1,63 @@
+<dahc-playground-page
+  heading="Float button"
+  description="A round action button fixed to a corner of the viewport; its label is the accessible name and a tip. Ported from dubai-health-ui dh-float-button; DERIVED design."
+  selector="dahc-float-button"
+  [whenToUse]="whenToUse"
+  [exampleColumns]="2"
+  [sourceFiles]="sourceFiles">
+  <div preview class="float-row">
+    <dahc-float-button
+      [label]="label()"
+      icon="gov-chat"
+      [variant]="variant()"
+      [placement]="placement()"
+      [inline]="inline()"
+      (click)="record()" />
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-text label="label" [(value)]="label" />
+    <dahc-inspector-choice label="variant" [options]="variants" [(value)]="variant" />
+    <dahc-inspector-choice label="placement" [options]="placements" [(value)]="placement" />
+    <dahc-inspector-toggle label="inline" [(value)]="inline" />
+    <dahc-event-log [events]="events()" />
+  </div>
+
+  <div states class="pg-stack float-row">
+    <dahc-float-button label="Call us" icon="phone" [inline]="true" />
+    <dahc-float-button label="Help" icon="gov-chat" variant="default" [inline]="true" />
+    <dahc-float-button label="Open help page" icon="gov-chat" href="#help" [inline]="true" />
+  </div>
+
+  <dahc-doc-example
+    examples
+    exampleId="primary"
+    heading="Primary"
+    description="The navy button for the main floating action."
+    template="float-button-page.component.html">
+    <dahc-float-button label="Chat with admissions" icon="gov-chat" [inline]="true" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="default"
+    heading="Default"
+    description="The white variant for a quieter action."
+    template="float-button-page.component.html">
+    <dahc-float-button label="Call the admissions team" icon="phone" variant="default" [inline]="true" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="link"
+    heading="As a link"
+    description="href renders a link instead of a button."
+    template="float-button-page.component.html">
+    <dahc-float-button label="Open the questions page" icon="information" href="#faq" [inline]="true" />
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>A native button (or a link with href) named by its label; the tip repeats the label for sighted users and is hidden from screen readers.</li>
+    <li>Use one float button per page, for an action that should always be reachable.</li>
+  </ul>
+</dahc-playground-page>

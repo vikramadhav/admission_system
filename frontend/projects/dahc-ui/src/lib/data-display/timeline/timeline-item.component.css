@@ -1,0 +1,93 @@
+/* Ported from dubai-health-ui dh-timeline-item (DERIVED): 14px dot, 2px line, 24px spacing. */
+
+:host {
+  --_dot: calc(var(--dahc-size-icon-xs) + var(--dahc-space-0-5));
+
+  position: relative;
+  display: flex;
+  gap: var(--dahc-space-4);
+  padding-block-end: var(--dahc-space-6);
+  font-family: var(--dahc-font-family-base);
+}
+
+:host(:not(:last-child))::before {
+  content: '';
+  position: absolute;
+  inset-block: calc(var(--_dot) + var(--dahc-space-1)) 0;
+  inset-inline-start: calc((var(--_dot) - var(--dahc-size-border-strong)) / 2);
+  inline-size: var(--dahc-size-border-strong);
+  background-color: var(--dahc-color-border-default);
+}
+
+.dahc-timeline-item__dot {
+  position: relative;
+  flex: none;
+  inline-size: var(--_dot);
+  block-size: var(--_dot);
+  margin-block-start: var(--dahc-space-0-5);
+  border: var(--dahc-size-border-strong) solid var(--dahc-color-action-primary);
+  border-radius: var(--dahc-radius-pill);
+  background-color: var(--dahc-color-action-primary);
+}
+
+:host(.dahc-timeline-item--current) .dahc-timeline-item__dot {
+  background-color: var(--dahc-color-surface);
+  box-shadow: 0 0 0 var(--dahc-space-1) var(--dahc-color-surface-highlight);
+}
+
+:host(.dahc-timeline-item--pending) .dahc-timeline-item__dot {
+  border-color: var(--dahc-color-border-control);
+  background-color: var(--dahc-color-surface);
+}
+
+:host(.dahc-timeline-item--error) .dahc-timeline-item__dot {
+  border-color: var(--dahc-color-error-icon);
+  background-color: var(--dahc-color-error-icon);
+}
+
+.dahc-timeline-item__content {
+  min-inline-size: 0;
+}
+
+.dahc-timeline-item__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--dahc-space-2);
+  margin: 0;
+}
+
+.dahc-timeline-item__heading {
+  color: var(--dahc-color-text-primary);
+  font-size: var(--dahc-font-size-16);
+  font-weight: var(--dahc-font-weight-bold);
+}
+
+.dahc-timeline-item__time {
+  color: var(--dahc-color-text-tertiary);
+  font-size: var(--dahc-font-size-12);
+}
+
+.dahc-timeline-item__body {
+  margin-block-start: var(--dahc-space-1);
+  color: var(--dahc-color-text-secondary);
+  font-size: var(--dahc-font-size-14);
+  line-height: var(--dahc-font-line-height-normal);
+}
+
+.dahc-timeline-item__body:empty {
+  display: none;
+}
+
+@media (forced-colors: active) {
+  .dahc-timeline-item__dot {
+    border-color: CanvasText;
+    forced-color-adjust: none;
+    background-color: CanvasText;
+  }
+
+  :host(.dahc-timeline-item--current) .dahc-timeline-item__dot,
+  :host(.dahc-timeline-item--pending) .dahc-timeline-item__dot {
+    background-color: Canvas;
+  }
+}

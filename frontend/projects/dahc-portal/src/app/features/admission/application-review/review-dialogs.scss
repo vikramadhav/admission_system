@@ -1,0 +1,33 @@
+// Shared layout of the application review dialogs.
+.review-form {
+  display: grid;
+  gap: var(--dahc-space-4);
+}
+
+.review-text {
+  margin: 0;
+}
+
+.review-muted {
+  margin: 0;
+  color: var(--dahc-color-text-secondary);
+}
+
+.review-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--dahc-space-3);
+}
+
+.review-list {
+  display: grid;
+  gap: var(--dahc-space-2);
+  margin: 0;
+  padding-inline-start: var(--dahc-space-5);
+}
+
+textarea[dahcInput] {
+  min-block-size: calc(var(--dahc-size-control-lg) * 2);
+  resize: vertical;
+}

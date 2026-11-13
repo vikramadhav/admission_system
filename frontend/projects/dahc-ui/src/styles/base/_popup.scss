@@ -1,0 +1,52 @@
+// Floating panels shown in the top layer with the Popover API (date picker, menus, lists).
+// Figma Dropdown panel 50:13311: white, 1px border, radius 12, Shadow 4. Positioned by
+// core/overlay/position.ts. Global because the same panel serves several components.
+
+.dahc-popup {
+  // Stays inside small viewports; matches the 8px viewport margin of the positioning helper.
+  max-inline-size: calc(100vw - 2 * var(--dahc-space-2));
+  margin: 0;
+  padding: 0;
+  border: var(--dahc-size-border) solid var(--dahc-color-border-popup);
+  border-radius: var(--dahc-radius-md);
+  background-color: var(--dahc-color-surface);
+  color: var(--dahc-color-text-primary);
+  box-shadow: var(--dahc-shadow-4);
+}
+
+.dahc-popup:not(:popover-open) {
+  display: none;
+}
+
+@media (forced-colors: active) {
+  .dahc-popup {
+    border-color: CanvasText;
+  }
+}
+
+// Tooltip (feedback/tooltip/tooltip.directive.ts): DERIVED design, navy surface, white Regular
+// 14/18, radius 8, Shadow 3, 6/12 padding (DH tag padding), at most 280px wide.
+.dahc-tooltip {
+  max-inline-size: var(--dahc-size-tooltip-max);
+  margin: 0;
+  padding-block: calc(var(--dahc-space-1) + var(--dahc-space-0-5));
+  padding-inline: var(--dahc-space-3);
+  border: 0;
+  border-radius: var(--dahc-radius-sm);
+  background-color: var(--dahc-color-surface-inverse);
+  color: var(--dahc-color-text-inverse);
+  font-family: var(--dahc-font-family-base);
+  font-size: var(--dahc-font-size-14);
+  line-height: var(--dahc-type-body-sm-line-height);
+  box-shadow: var(--dahc-shadow-3);
+}
+
+.dahc-tooltip:not(:popover-open) {
+  display: none;
+}
+
+@media (forced-colors: active) {
+  .dahc-tooltip {
+    border: var(--dahc-size-border) solid CanvasText;
+  }
+}

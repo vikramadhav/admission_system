@@ -1,0 +1,84 @@
+/* Ported from dubai-health-ui dh-tree (DERIVED): 40px rows, 24px indent per level. */
+
+:host {
+  display: block;
+  font-family: var(--dahc-font-family-base);
+}
+
+.dahc-tree__root,
+.dahc-tree__group {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dahc-tree__item {
+  outline: none;
+}
+
+.dahc-tree__row {
+  display: flex;
+  align-items: center;
+  gap: var(--dahc-space-1);
+  min-block-size: var(--dahc-size-target-min);
+  padding-inline: calc(var(--_depth, 0) * var(--dahc-space-6) + var(--dahc-space-2)) var(--dahc-space-2);
+  border-radius: var(--dahc-radius-md);
+  color: var(--dahc-color-text-primary);
+  font-size: var(--dahc-font-size-14);
+  line-height: var(--dahc-font-line-height-tight);
+  cursor: pointer;
+  transition: background-color var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard);
+}
+
+.dahc-tree__row:hover {
+  background-color: var(--dahc-color-surface-muted);
+}
+
+.dahc-tree__item:focus-visible > .dahc-tree__row {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: calc(-1 * var(--dahc-size-focus-ring));
+}
+
+.dahc-tree__item[aria-selected='true'] > .dahc-tree__row {
+  background-color: var(--dahc-color-surface-highlight);
+  font-weight: var(--dahc-font-weight-bold);
+}
+
+.dahc-tree__item[aria-disabled='true'] > .dahc-tree__row {
+  color: var(--dahc-color-text-disabled);
+  cursor: not-allowed;
+}
+
+.dahc-tree__toggle {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  inline-size: var(--dahc-size-icon-md);
+  block-size: var(--dahc-size-icon-md);
+}
+
+.dahc-tree__chevron {
+  transition: transform var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard);
+}
+
+/* The chevron points inward; it turns down when open (the other way in RTL, where it is mirrored). */
+.dahc-tree__item[aria-expanded='true'] > .dahc-tree__row .dahc-tree__chevron {
+  transform: rotate(90deg);
+}
+
+:host-context([dir='rtl']) .dahc-tree__item[aria-expanded='true'] > .dahc-tree__row .dahc-tree__chevron {
+  transform: rotate(-90deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dahc-tree__row,
+  .dahc-tree__chevron {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .dahc-tree__item[aria-selected='true'] > .dahc-tree__row {
+    outline: var(--dahc-size-border) solid Highlight;
+  }
+}

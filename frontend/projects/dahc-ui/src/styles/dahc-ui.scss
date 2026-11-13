@@ -1,0 +1,45 @@
+// Global entry point of DAHC-UI: emits the token custom properties for the light and dark
+// themes, the Dubai font and the base rules every component relies on.
+// A custom theme is a block of semantic-token overrides under [data-theme='<name>'].
+// Spec: frontend/docs/design-system/03-design-tokens.md.
+@use 'tokens/breakpoints';
+@use 'themes/theme';
+@use 'base/fonts';
+@use 'base/base';
+@use 'base/typography';
+@use 'base/forms';
+@use 'base/popup';
+@use 'base/utilities';
+
+:root {
+  @include theme.static-tokens;
+  @include theme.light;
+}
+
+@include breakpoints.down('md') {
+  :root {
+    @include theme.mobile-type-roles;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    @include theme.dark;
+  }
+}
+
+[data-theme='light'] {
+  @include theme.light;
+}
+
+[data-theme='dark'] {
+  @include theme.dark;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dahc-motion-duration-fast: 0ms;
+    --dahc-motion-duration-normal: 0ms;
+    --dahc-motion-duration-slow: 0ms;
+  }
+}

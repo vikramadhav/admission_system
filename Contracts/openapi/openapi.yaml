@@ -1,0 +1,238 @@
+openapi: 3.1.0
+
+info:
+  title: MBRU Unified Admission Platform API
+  version: 0.10.0
+  summary: Modular API contract covering GME Release 5 user stories.
+  description: >-
+    Contract for the GME Release 5 user stories, aligned with the DAHC engineering
+    standard (decisions D-01 to D-21 in Open-Questions.md). Success responses use
+    the ApiResponse envelope; errors are top-level RFC 7807 Problem documents with
+    dotted codes. Callers send an IDAM access token; authorization uses the internal
+    active role listed in each operation (x-dahc-roles), never OAuth scopes. Resources
+    are addressed by UUID; candidate and application numbers are display fields. Coverage
+    does not mean unresolved business rules are approved or that the APIs are implemented.
+    Not an MBBS or interview API.
+  contact:
+    name: Admission Platform API Contract Owners
+
+servers:
+  - url: /
+    description: >-
+      Relative to the API host configured for the environment. Paths start with /api/v1.
+
+tags:
+  - name: Identity
+  - name: Administration
+  - name: Catalog
+  - name: Applications
+  - name: Candidate Lifecycle
+  - name: Payments
+  - name: Admission Operations
+  - name: Portfolio Scoring
+  - name: Screening and Announcements
+
+paths:
+  /api/v1/auth/sign-in:
+    $ref: "./paths/identity.yaml#/~1api~1v1~1auth~1sign-in"
+  /api/v1/auth/me:
+    $ref: "./paths/identity.yaml#/~1api~1v1~1auth~1me"
+  /api/v1/auth/active-role:
+    $ref: "./paths/identity.yaml#/~1api~1v1~1auth~1active-role"
+  /api/v1/admin/staff-users:
+    $ref: "./paths/identity.yaml#/~1api~1v1~1admin~1staff-users"
+  /api/v1/admin/staff-users/{staffUserId}:
+    $ref: "./paths/identity.yaml#/~1api~1v1~1admin~1staff-users~1%7BstaffUserId%7D"
+  /api/v1/admin/staff-users/{staffUserId}/roles:
+    $ref: "./paths/identity.yaml#/~1api~1v1~1admin~1staff-users~1%7BstaffUserId%7D~1roles"
+  /api/v1/admin/staff-users/{staffUserId}/deactivation:
+    $ref: "./paths/identity.yaml#/~1api~1v1~1admin~1staff-users~1%7BstaffUserId%7D~1deactivation"
+  /api/v1/admin/staff-users/{staffUserId}/reactivation:
+    $ref: "./paths/identity.yaml#/~1api~1v1~1admin~1staff-users~1%7BstaffUserId%7D~1reactivation"
+  /api/v1/admin/integration-clients:
+    $ref: "./paths/identity.yaml#/~1api~1v1~1admin~1integration-clients"
+  /api/v1/admin/integration-clients/{integrationClientId}:
+    $ref: "./paths/identity.yaml#/~1api~1v1~1admin~1integration-clients~1%7BintegrationClientId%7D"
+  /api/v1/programs:
+    $ref: "./paths/catalog.yaml#/~1api~1v1~1programs"
+  /api/v1/programs/{programId}/specialties:
+    $ref: "./paths/catalog.yaml#/~1api~1v1~1programs~1%7BprogramId%7D~1specialties"
+  /api/v1/specialties/{specialtyId}/sites:
+    $ref: "./paths/catalog.yaml#/~1api~1v1~1specialties~1%7BspecialtyId%7D~1sites"
+  /api/v1/lookups/{lookupType}:
+    $ref: "./paths/catalog.yaml#/~1api~1v1~1lookups~1%7BlookupType%7D"
+  /api/v1/applications:
+    $ref: "./paths/applications.yaml#/~1api~1v1~1applications"
+  /api/v1/applications/{applicationId}:
+    $ref: "./paths/applications.yaml#/~1api~1v1~1applications~1%7BapplicationId%7D"
+  /api/v1/me/dashboard:
+    $ref: "./paths/candidate-lifecycle.yaml#/~1api~1v1~1me~1dashboard"
+  /api/v1/applications/{applicationId}/sections/{sectionKey}:
+    $ref: "./paths/candidate-lifecycle.yaml#/~1api~1v1~1applications~1%7BapplicationId%7D~1sections~1%7BsectionKey%7D"
+  /api/v1/applications/{applicationId}/form-schema:
+    $ref: "./paths/candidate-lifecycle.yaml#/~1api~1v1~1applications~1%7BapplicationId%7D~1form-schema"
+  /api/v1/applications/{applicationId}/contact-verifications:
+    $ref: "./paths/candidate-lifecycle.yaml#/~1api~1v1~1applications~1%7BapplicationId%7D~1contact-verifications"
+  /api/v1/applications/{applicationId}/contact-verifications/{verificationId}/confirmation:
+    $ref: "./paths/candidate-lifecycle.yaml#/~1api~1v1~1applications~1%7BapplicationId%7D~1contact-verifications~1%7BverificationId%7D~1confirmation"
+  /api/v1/applications/{applicationId}/contact-verifications/{verificationId}/otp-resend:
+    $ref: "./paths/candidate-lifecycle.yaml#/~1api~1v1~1applications~1%7BapplicationId%7D~1contact-verifications~1%7BverificationId%7D~1otp-resend"
+  /api/v1/applications/{applicationId}/attachments:
+    $ref: "./paths/candidate-lifecycle.yaml#/~1api~1v1~1applications~1%7BapplicationId%7D~1attachments"
+  /api/v1/applications/{applicationId}/attachments/{slotId}:
+    $ref: "./paths/candidate-lifecycle.yaml#/~1api~1v1~1applications~1%7BapplicationId%7D~1attachments~1%7BslotId%7D"
+  /api/v1/applications/{applicationId}/attachments/{slotId}/content:
+    $ref: "./paths/candidate-lifecycle.yaml#/~1api~1v1~1applications~1%7BapplicationId%7D~1attachments~1%7BslotId%7D~1content"
+  /api/v1/applications/{applicationId}/portfolio:
+    $ref: "./paths/candidate-lifecycle.yaml#/~1api~1v1~1applications~1%7BapplicationId%7D~1portfolio"
+  /api/v1/applications/{applicationId}/portfolio-submission:
+    $ref: "./paths/candidate-lifecycle.yaml#/~1api~1v1~1applications~1%7BapplicationId%7D~1portfolio-submission"
+  /api/v1/applications/{applicationId}/preferences:
+    $ref: "./paths/candidate-lifecycle.yaml#/~1api~1v1~1applications~1%7BapplicationId%7D~1preferences"
+  /api/v1/applications/{applicationId}/site-exclusions:
+    $ref: "./paths/candidate-lifecycle.yaml#/~1api~1v1~1applications~1%7BapplicationId%7D~1site-exclusions"
+  /api/v1/applications/{applicationId}/withdrawal-requests:
+    $ref: "./paths/candidate-lifecycle.yaml#/~1api~1v1~1applications~1%7BapplicationId%7D~1withdrawal-requests"
+  /api/v1/applications/{applicationId}/withdrawal-requests/{requestId}/confirmation:
+    $ref: "./paths/candidate-lifecycle.yaml#/~1api~1v1~1applications~1%7BapplicationId%7D~1withdrawal-requests~1%7BrequestId%7D~1confirmation"
+  /api/v1/applications/{applicationId}/withdrawal-requests/{requestId}/otp-resend:
+    $ref: "./paths/candidate-lifecycle.yaml#/~1api~1v1~1applications~1%7BapplicationId%7D~1withdrawal-requests~1%7BrequestId%7D~1otp-resend"
+  /api/v1/applications/{applicationId}/reinstatement-requests:
+    $ref: "./paths/candidate-lifecycle.yaml#/~1api~1v1~1applications~1%7BapplicationId%7D~1reinstatement-requests"
+  /api/v1/applications/{applicationId}/portfolio-result:
+    $ref: "./paths/candidate-lifecycle.yaml#/~1api~1v1~1applications~1%7BapplicationId%7D~1portfolio-result"
+  /api/v1/applications/{applicationId}/appeals:
+    $ref: "./paths/candidate-lifecycle.yaml#/~1api~1v1~1applications~1%7BapplicationId%7D~1appeals"
+  /api/v1/applications/{applicationId}/payment-sessions:
+    $ref: "./paths/candidate-lifecycle.yaml#/~1api~1v1~1applications~1%7BapplicationId%7D~1payment-sessions"
+  /api/v1/applications/{applicationId}/payment-sessions/{paymentSessionId}:
+    $ref: "./paths/candidate-lifecycle.yaml#/~1api~1v1~1applications~1%7BapplicationId%7D~1payment-sessions~1%7BpaymentSessionId%7D"
+  /api/v1/applications/{applicationId}/submission:
+    $ref: "./paths/candidate-lifecycle.yaml#/~1api~1v1~1applications~1%7BapplicationId%7D~1submission"
+  /api/v1/finance/payments:
+    $ref: "./paths/candidate-lifecycle.yaml#/~1api~1v1~1finance~1payments"
+  /api/v1/finance/payments/export:
+    $ref: "./paths/candidate-lifecycle.yaml#/~1api~1v1~1finance~1payments~1export"
+  /api/v1/applications/{applicationId}/draft:
+    $ref: "./paths/candidate-lifecycle.yaml#/~1api~1v1~1applications~1%7BapplicationId%7D~1draft"
+  /api/v1/integrations/payment-events:
+    $ref: "./paths/integrations.yaml#/~1api~1v1~1integrations~1payment-events"
+  /api/v1/staff/admission/dashboard:
+    $ref: "./paths/admission-operations.yaml#/~1api~1v1~1staff~1admission~1dashboard"
+  /api/v1/staff/supervisor/dashboard:
+    $ref: "./paths/admission-operations.yaml#/~1api~1v1~1staff~1supervisor~1dashboard"
+  /api/v1/staff/site-monitoring/dashboard:
+    $ref: "./paths/admission-operations.yaml#/~1api~1v1~1staff~1site-monitoring~1dashboard"
+  /api/v1/staff/site-monitoring/applications:
+    $ref: "./paths/admission-operations.yaml#/~1api~1v1~1staff~1site-monitoring~1applications"
+  /api/v1/staff/pools/{poolId}/application-retrievals:
+    $ref: "./paths/admission-operations.yaml#/~1api~1v1~1staff~1pools~1%7BpoolId%7D~1application-retrievals"
+  /api/v1/staff/officers/{officerId}/workload:
+    $ref: "./paths/admission-operations.yaml#/~1api~1v1~1staff~1officers~1%7BofficerId%7D~1workload"
+  /api/v1/staff/applications/{applicationId}/assignment:
+    $ref: "./paths/admission-operations.yaml#/~1api~1v1~1staff~1applications~1%7BapplicationId%7D~1assignment"
+  /api/v1/staff/application-reassignments:
+    $ref: "./paths/admission-operations.yaml#/~1api~1v1~1staff~1application-reassignments"
+  /api/v1/staff/pools/{poolId}/officers:
+    $ref: "./paths/admission-operations.yaml#/~1api~1v1~1staff~1pools~1%7BpoolId%7D~1officers"
+  /api/v1/staff/applications/{applicationId}:
+    $ref: "./paths/admission-operations.yaml#/~1api~1v1~1staff~1applications~1%7BapplicationId%7D"
+  /api/v1/staff/applications/{applicationId}/attachments:
+    $ref: "./paths/admission-operations.yaml#/~1api~1v1~1staff~1applications~1%7BapplicationId%7D~1attachments"
+  /api/v1/staff/applications/{applicationId}/attachments/{attachmentId}/content:
+    $ref: "./paths/admission-operations.yaml#/~1api~1v1~1staff~1applications~1%7BapplicationId%7D~1attachments~1%7BattachmentId%7D~1content"
+  /api/v1/staff/applications/{applicationId}/correction-flags:
+    $ref: "./paths/admission-operations.yaml#/~1api~1v1~1staff~1applications~1%7BapplicationId%7D~1correction-flags"
+  /api/v1/staff/applications/{applicationId}/correction-requests:
+    $ref: "./paths/admission-operations.yaml#/~1api~1v1~1staff~1applications~1%7BapplicationId%7D~1correction-requests"
+  /api/v1/applications/{applicationId}/corrections:
+    $ref: "./paths/admission-operations.yaml#/~1api~1v1~1applications~1%7BapplicationId%7D~1corrections"
+  /api/v1/staff/applications/{applicationId}/verification-completion:
+    $ref: "./paths/admission-operations.yaml#/~1api~1v1~1staff~1applications~1%7BapplicationId%7D~1verification-completion"
+  /api/v1/staff/applications/{applicationId}/verification-actions:
+    $ref: "./paths/admission-operations.yaml#/~1api~1v1~1staff~1applications~1%7BapplicationId%7D~1verification-actions"
+  /api/v1/staff/applications/{applicationId}/attachments/{attachmentId}/replacement:
+    $ref: "./paths/admission-operations.yaml#/~1api~1v1~1staff~1applications~1%7BapplicationId%7D~1attachments~1%7BattachmentId%7D~1replacement"
+  /api/v1/staff/applications/{applicationId}/screen-out-recommendations:
+    $ref: "./paths/admission-operations.yaml#/~1api~1v1~1staff~1applications~1%7BapplicationId%7D~1screen-out-recommendations"
+  /api/v1/staff/applications/{applicationId}/screen-out-decisions:
+    $ref: "./paths/admission-operations.yaml#/~1api~1v1~1staff~1applications~1%7BapplicationId%7D~1screen-out-decisions"
+  /api/v1/staff/applications/{applicationId}/clarification-requests:
+    $ref: "./paths/admission-operations.yaml#/~1api~1v1~1staff~1applications~1%7BapplicationId%7D~1clarification-requests"
+  /api/v1/staff/applications/{applicationId}/clarification-responses:
+    $ref: "./paths/admission-operations.yaml#/~1api~1v1~1staff~1applications~1%7BapplicationId%7D~1clarification-responses"
+  /api/v1/staff/reinstatement-requests:
+    $ref: "./paths/admission-operations.yaml#/~1api~1v1~1staff~1reinstatement-requests"
+  /api/v1/staff/duplicate-accounts:
+    $ref: "./paths/admission-operations.yaml#/~1api~1v1~1staff~1duplicate-accounts"
+  /api/v1/staff/reinstatement-requests/{requestId}:
+    $ref: "./paths/admission-operations.yaml#/~1api~1v1~1staff~1reinstatement-requests~1%7BrequestId%7D"
+  /api/v1/staff/reinstatement-requests/{requestId}/decision:
+    $ref: "./paths/admission-operations.yaml#/~1api~1v1~1staff~1reinstatement-requests~1%7BrequestId%7D~1decision"
+  /api/v1/staff/applications/{applicationId}/reinstatement:
+    $ref: "./paths/admission-operations.yaml#/~1api~1v1~1staff~1applications~1%7BapplicationId%7D~1reinstatement"
+  /api/v1/staff/candidates/{candidateId}/icp-refresh:
+    $ref: "./paths/admission-operations.yaml#/~1api~1v1~1staff~1candidates~1%7BcandidateId%7D~1icp-refresh"
+  /api/v1/staff/candidates/{candidateId}/icp-refresh-preview:
+    $ref: "./paths/admission-operations.yaml#/~1api~1v1~1staff~1candidates~1%7BcandidateId%7D~1icp-refresh-preview"
+  /api/v1/referee/dashboard:
+    $ref: "./paths/portfolio-scoring.yaml#/~1api~1v1~1referee~1dashboard"
+  /api/v1/senior-referee/dashboard:
+    $ref: "./paths/portfolio-scoring.yaml#/~1api~1v1~1senior-referee~1dashboard"
+  /api/v1/senior-referee/referees/{refereeId}/portfolios:
+    $ref: "./paths/portfolio-scoring.yaml#/~1api~1v1~1senior-referee~1referees~1%7BrefereeId%7D~1portfolios"
+  /api/v1/referee/pools/{poolId}/portfolio-retrievals:
+    $ref: "./paths/portfolio-scoring.yaml#/~1api~1v1~1referee~1pools~1%7BpoolId%7D~1portfolio-retrievals"
+  /api/v1/referee/portfolios/{portfolioId}:
+    $ref: "./paths/portfolio-scoring.yaml#/~1api~1v1~1referee~1portfolios~1%7BportfolioId%7D"
+  /api/v1/referee/portfolios/{portfolioId}/evidence/{evidenceId}/content:
+    $ref: "./paths/portfolio-scoring.yaml#/~1api~1v1~1referee~1portfolios~1%7BportfolioId%7D~1evidence~1%7BevidenceId%7D~1content"
+  /api/v1/referee/portfolios/{portfolioId}/conflict-of-interest:
+    $ref: "./paths/portfolio-scoring.yaml#/~1api~1v1~1referee~1portfolios~1%7BportfolioId%7D~1conflict-of-interest"
+  /api/v1/referee/portfolios/{portfolioId}/scores:
+    $ref: "./paths/portfolio-scoring.yaml#/~1api~1v1~1referee~1portfolios~1%7BportfolioId%7D~1scores"
+  /api/v1/referee/portfolios/{portfolioId}/score-submission:
+    $ref: "./paths/portfolio-scoring.yaml#/~1api~1v1~1referee~1portfolios~1%7BportfolioId%7D~1score-submission"
+  /api/v1/senior-referee/portfolios/{portfolioId}/assignment:
+    $ref: "./paths/portfolio-scoring.yaml#/~1api~1v1~1senior-referee~1portfolios~1%7BportfolioId%7D~1assignment"
+  /api/v1/senior-referee/portfolios/{portfolioId}/eligible-referees:
+    $ref: "./paths/portfolio-scoring.yaml#/~1api~1v1~1senior-referee~1portfolios~1%7BportfolioId%7D~1eligible-referees"
+  /api/v1/senior-referee/portfolios/{portfolioId}/score-overrides:
+    $ref: "./paths/portfolio-scoring.yaml#/~1api~1v1~1senior-referee~1portfolios~1%7BportfolioId%7D~1score-overrides"
+  /api/v1/senior-referee/portfolios/{portfolioId}:
+    $ref: "./paths/portfolio-scoring.yaml#/~1api~1v1~1senior-referee~1portfolios~1%7BportfolioId%7D"
+  /api/v1/senior-referee/portfolios/{portfolioId}/evidence/{evidenceId}/replacement:
+    $ref: "./paths/portfolio-scoring.yaml#/~1api~1v1~1senior-referee~1portfolios~1%7BportfolioId%7D~1evidence~1%7BevidenceId%7D~1replacement"
+  /api/v1/senior-referee/portfolios/{portfolioId}/evidence/{evidenceId}/content:
+    $ref: "./paths/portfolio-scoring.yaml#/~1api~1v1~1senior-referee~1portfolios~1%7BportfolioId%7D~1evidence~1%7BevidenceId%7D~1content"
+  /api/v1/staff/screening/dashboard:
+    $ref: "./paths/screening.yaml#/~1api~1v1~1staff~1screening~1dashboard"
+  /api/v1/staff/screening/casper-imports:
+    $ref: "./paths/screening.yaml#/~1api~1v1~1staff~1screening~1casper-imports"
+  /api/v1/staff/screening/announcements:
+    $ref: "./paths/screening.yaml#/~1api~1v1~1staff~1screening~1announcements"
+  /api/v1/staff/screening/bulk-screen-outs:
+    $ref: "./paths/screening.yaml#/~1api~1v1~1staff~1screening~1bulk-screen-outs"
+  /api/v1/staff/screening/reannouncements:
+    $ref: "./paths/screening.yaml#/~1api~1v1~1staff~1screening~1reannouncements"
+
+components:
+  securitySchemes:
+    IdamBearer:
+      type: http
+      scheme: bearer
+      description: >-
+        Opaque IDAM access token in the Authorization header, validated by IDAM introspection
+        (RFC 7662). Only tokens issued to registered DAHC clients are accepted; ID
+        tokens never are. Identity comes from introspection and UserInfo only. Authorization
+        uses internal roles (x-dahc-roles) and, for middleware, internal integration
+        permissions (x-dahc-integration-permission). 401 for a missing, inactive or
+        rejected token; 503 when IDAM is unreachable (fails closed).
+
+security:
+  - IdamBearer: []
+
+externalDocs:
+  description: Shared API conventions, authentication decisions, and implementation
+    guidance.
+  url: ../decisions.md

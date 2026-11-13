@@ -1,0 +1,77 @@
+<dahc-playground-page
+  heading="Navigation menu"
+  description="Site navigation: a horizontal header menu or a vertical side menu with expandable sub-menus. Ported from dubai-health-ui dh-menu; Figma Menu items 50:11253 and Hamburger Menu Item 50:10172."
+  selector="dahc-nav-menu"
+  [whenToUse]="whenToUse"
+  [sourceFiles]="sourceFiles">
+  <div preview>
+    <dahc-nav-menu [mode]="mode()" label="Main" [class.nav-menu-vertical]="mode() === 'vertical'">
+      <dahc-nav-menu-item href="#home" [selected]="true">Home</dahc-nav-menu-item>
+      <dahc-nav-menu-item href="#programs">Programs</dahc-nav-menu-item>
+      <dahc-nav-menu-item href="#news">News</dahc-nav-menu-item>
+      <dahc-nav-menu-item [disabled]="true">Archive</dahc-nav-menu-item>
+    </dahc-nav-menu>
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-choice label="mode" [options]="modes" [(value)]="mode" />
+  </div>
+
+  <div states class="pg-stack">
+    <dahc-nav-menu label="Side menu" class="nav-menu-vertical">
+      <dahc-nav-menu-item href="#dashboard" icon="view-health-centre-2" [selected]="true">Dashboard</dahc-nav-menu-item>
+      <dahc-nav-sub-menu heading="Applications" [(open)]="subMenuOpen">
+        <dahc-nav-menu-item href="#drafts">Drafts</dahc-nav-menu-item>
+        <dahc-nav-menu-item href="#submitted">Submitted</dahc-nav-menu-item>
+      </dahc-nav-sub-menu>
+      <dahc-nav-menu-item href="#account">My account</dahc-nav-menu-item>
+    </dahc-nav-menu>
+  </div>
+
+  <dahc-doc-example
+    examples
+    exampleId="horizontal"
+    heading="Horizontal"
+    description="A header menu; the current page is bold and underlined."
+    template="nav-menu-page.component.html">
+    <dahc-nav-menu mode="horizontal" label="Portal sections">
+      <dahc-nav-menu-item href="#start" [selected]="true">Start</dahc-nav-menu-item>
+      <dahc-nav-menu-item href="#programs">Programs</dahc-nav-menu-item>
+      <dahc-nav-menu-item href="#contact">Contact</dahc-nav-menu-item>
+    </dahc-nav-menu>
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="vertical"
+    heading="Vertical with icons"
+    description="A side menu with an icon before each item."
+    template="nav-menu-page.component.html">
+    <dahc-nav-menu label="Candidate sections" class="nav-menu-vertical">
+      <dahc-nav-menu-item href="#overview" icon="view-health-centre-2" [selected]="true">Overview</dahc-nav-menu-item>
+      <dahc-nav-menu-item href="#profile" icon="account">Profile</dahc-nav-menu-item>
+    </dahc-nav-menu>
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="submenu"
+    heading="Sub-menus"
+    description="A group that expands and collapses."
+    template="nav-menu-page.component.html">
+    <dahc-nav-menu label="Back office sections" class="nav-menu-vertical">
+      <dahc-nav-menu-item href="#queue" [selected]="true">Review queue</dahc-nav-menu-item>
+      <dahc-nav-sub-menu heading="Reports" [open]="true">
+        <dahc-nav-menu-item href="#reports-daily">Daily</dahc-nav-menu-item>
+        <dahc-nav-menu-item href="#reports-cycle">Admission cycle</dahc-nav-menu-item>
+      </dahc-nav-sub-menu>
+    </dahc-nav-menu>
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>A labelled navigation landmark with a list of links; the current page has aria-current="page".</li>
+    <li>Arrow keys move between items (Left / Right in a horizontal menu, Up / Down in a vertical one; Home / End); Tab leaves the menu.</li>
+    <li>A sub-menu is a disclosure button with aria-expanded and aria-controls.</li>
+    <li>Disabled items are plain text and are skipped.</li>
+  </ul>
+</dahc-playground-page>

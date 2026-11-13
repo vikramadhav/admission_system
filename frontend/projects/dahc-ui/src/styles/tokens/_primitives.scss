@@ -1,0 +1,100 @@
+// Primitive colour palette: a one-to-one copy of the Figma variables in
+// DH Design System REF (FozlGvhO1ZjI2GbklegqFf), page Colors 50:2565.
+// Only semantic tokens (themes/) may reference these; components never do.
+// Spec: frontend/docs/design-system/03-design-tokens.md §3.2.
+
+$palette: (
+  // Primary/Navy Blue and tints: frames 50:2719 (base), 50:2566 (tints)
+  'navy': #002f70,
+  'navy-900': #1a4775,
+  'navy-800': #335c85,
+  'navy-700': #4d7094,
+  'navy-600': #6685a3,
+  'navy-500': #8099b2,
+  'navy-400': #99adc2,
+  'navy-300': #b2c2d1,
+  'navy-200': #ccd6e0,
+  'navy-100': #e5ebf0,
+  // Primary/Page background: 50:2719
+  'page': #ecf2f5,
+  // Secondary/10. White
+  'white': #ffffff,
+  // Secondary/1. Blue and Secondary Tints/1. Blue: 50:2954, 50:3140
+  'blue': #32affc,
+  'blue-500': #5bbffd,
+  'blue-400': #84cffd,
+  'blue-300': #addffe,
+  'blue-200': #d6effe,
+  'blue-100': #ebf7ff,
+  // Secondary/2. Light Blue: 50:3218
+  'light-blue': #77defc,
+  'light-blue-500': #92e4fd,
+  'light-blue-400': #adebfd,
+  'light-blue-300': #c9f2fe,
+  'light-blue-200': #e4f8fe,
+  'light-blue-100': #f1fcff,
+  // Secondary/3. Green: 50:3298
+  'green': #a5ffbc,
+  'green-500': #b7ffc9,
+  'green-400': #c9ffd7,
+  'green-300': #dbffe4,
+  'green-200': #edfff1,
+  'green-100': #f6fff8,
+  // Secondary/4. Yellow: not on the Colors page, but bound by the In progress tag (Informational
+  // tags 50:7451). It is the hue missing from the Secondary numbering.
+  'yellow': #ffff6a,
+  // Secondary/5. Orange: 50:3378
+  'orange': #fabc4c,
+  'orange-500': #fbc970,
+  'orange-400': #fcd794,
+  'orange-300': #fde4b7,
+  'orange-200': #fef1db,
+  'orange-100': #fef8ed,
+  // Secondary/6. Red: 50:3458
+  'red': #ff8f8a,
+  'red-500': #ffa5a1,
+  'red-400': #ffbcb9,
+  'red-300': #ffd2d0,
+  'red-200': #ffe9e8,
+  'red-100': #fff4f3,
+  // Secondary/7. Purple: 50:3541
+  'purple': #ac9dff,
+  'purple-500': #bdb1ff,
+  'purple-400': #cdc4ff,
+  'purple-300': #ded8ff,
+  'purple-200': #eeebff,
+  'purple-100': #f7f5ff,
+  // Secondary/8. Pink: 50:3621
+  'pink': #efbfe2,
+  'pink-500': #f2cce8,
+  'pink-400': #f5d8ee,
+  'pink-300': #f9e5f4,
+  'pink-200': #fcf2f9,
+  'pink-100': #fdf9fc,
+  // Secondary/9. Blue Black: 50:3701
+  'blue-black': #0a233c,
+  'blue-black-500': #3b4f63,
+  'blue-black-400': #6c7b8a,
+  'blue-black-300': #9da7b1,
+  'blue-black-200': #ced3d8,
+  'blue-black-100': #e6e9eb,
+  // Link colour chosen by the designer in annotation 50:7083 (4.52:1 on white).
+  'blue-link': #037bc5,
+  // A11y fix: #037bc5 is only 4.0:1 on the page background (#ecf2f5); this passes 4.5:1 on white,
+  // the page background and the Blue/200 banner.
+  'blue-link-strong': #026dae,
+  // A11y fix: Figma has no colour for these roles that passes WCAG 2.2 AA (doc 03 §3.2).
+  'red-strong': #b42318,
+  'red-strong-hover': #912018,
+  'green-strong': #0b5a2a,
+  'orange-strong': #6b4100,
+  // DAHC proposal: dark-theme surfaces (no dark mode in Figma, decision D2).
+  'navy-dark-950': #06101c,
+  'navy-dark-900': #0b1a2e,
+  'navy-dark-800': #12263f,
+  'navy-dark-700': #1b3352,
+  'navy-dark-600': #2c4566,
+  'green-dark': #0f3d24,
+  'orange-dark': #3d2a07,
+  'red-dark': #3d1412,
+);

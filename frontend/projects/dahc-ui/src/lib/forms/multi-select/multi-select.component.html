@@ -1,0 +1,71 @@
+<dahc-form-field
+  [label]="label()"
+  [hint]="hint()"
+  [error]="errorMessage()"
+  [invalid]="invalid()"
+  [required]="required()">
+  <button
+    #trigger
+    dahcInput
+    type="button"
+    role="combobox"
+    class="dahc-multi-select__trigger"
+    aria-haspopup="listbox"
+    [attr.aria-expanded]="open()"
+    [attr.aria-controls]="listId"
+    [attr.aria-activedescendant]="searchable() ? null : activeId()"
+    [disabled]="isDisabled()"
+    (click)="toggleOpen()"
+    (keydown)="onKeydown($event)"
+    (blur)="onBlur()">
+    <span class="dahc-multi-select__value" [class.dahc-multi-select__value--placeholder]="summary() === ''">
+      {{ summary() || placeholder() }}
+    </span>
+  </button>
+  <dahc-icon
+    dahcFieldEnd
+    class="dahc-multi-select__chevron"
+    [class.dahc-multi-select__chevron--open]="open()"
+    name="chevron-down"
+    size="lg" />
+</dahc-form-field>
+<div #popup class="dahc-popup dahc-multi-select__popup" popover="manual">
+  @if (searchable()) {
+    <div class="dahc-multi-select__search">
+      <dahc-icon name="search" size="sm" />
+      <input
+        #search
+        type="search"
+        role="combobox"
+        class="dahc-multi-select__search-input"
+        autocomplete="off"
+        aria-expanded="true"
+        [attr.aria-label]="searchLabel()"
+        [attr.aria-controls]="listId"
+        [attr.aria-activedescendant]="activeId()"
+        [placeholder]="searchLabel()"
+        [value]="query()"
+        (input)="onQuery($event)"
+        (keydown)="onKeydown($event)" />
+    </div>
+  }
+  <ul class="dahc-multi-select__list" role="listbox" aria-multiselectable="true" [id]="listId" [attr.aria-label]="label()">
+    @for (option of visibleOptions(); track option.value; let index = $index) {
+      <li
+        role="option"
+        class="dahc-multi-select__option"
+        [id]="optionId(index)"
+        [class.dahc-multi-select__option--active]="index === activeIndex()"
+        [attr.aria-selected]="isSelected(option)"
+        [attr.aria-disabled]="option.disabled ? 'true' : null"
+        [attr.data-index]="index">
+        <span class="dahc-multi-select__box" aria-hidden="true">
+          <dahc-icon name="check" size="sm" />
+        </span>
+        <span>{{ option.label }}</span>
+      </li>
+    } @empty {
+      <li class="dahc-multi-select__empty" role="presentation">{{ noResultsText() }}</li>
+    }
+  </ul>
+</div>

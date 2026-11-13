@@ -1,0 +1,72 @@
+<div class="step" [formGroup]="group">
+  <h3 class="step-subheading" i18n="@@portal.personal.contactHeading">Contact Details</h3>
+  <p class="step-note" i18n="@@portal.personal.contactNote">
+    Your registered e-mail and mobile come from your Dubai Health account. If you use different contact details, we send a one-time code to
+    check them before your changes can be saved.
+  </p>
+
+  <div class="step-grid">
+    <dahc-form-field i18n-label="@@portal.personal.registeredEmail" label="Registered e-mail" [hint]="accountHint">
+      <input dahcInput type="email" formControlName="registeredEmail" dir="ltr" readonly />
+    </dahc-form-field>
+    <dahc-form-field i18n-label="@@portal.personal.registeredMobile" label="Registered mobile number" [hint]="accountHint">
+      <input dahcInput type="tel" formControlName="registeredMobile" dir="ltr" readonly />
+    </dahc-form-field>
+
+    <div class="contact-field">
+      <dahc-form-field
+        i18n-label="@@portal.personal.contactEmail"
+        label="Contact e-mail"
+        [required]="true"
+        [invalid]="error('contactEmail') !== ''"
+        [error]="error('contactEmail')">
+        <input dahcInput type="email" formControlName="contactEmail" autocomplete="email" dir="ltr" />
+      </dahc-form-field>
+      @if (needsVerification('contactEmail')) {
+        <div class="contact-status">
+          <dahc-tag purpose="warning" i18n="@@portal.personal.notVerified">Not verified</dahc-tag>
+          <button dahc-button type="button" size="sm" variant="secondary" (click)="verify('contactEmail')" i18n="@@portal.personal.verify">Verify</button>
+        </div>
+      } @else if (changed('contactEmail') && verified('contactEmail')) {
+        <div class="contact-status">
+          <dahc-tag purpose="success" i18n="@@portal.personal.verified">Verified</dahc-tag>
+        </div>
+      }
+    </div>
+
+    <div class="contact-field">
+      <dahc-phone-input
+        formControlName="contactMobile"
+        i18n-label="@@portal.personal.contactMobile"
+        label="Contact mobile number"
+        [required]="true"
+        [invalid]="error('contactMobile') !== ''"
+        [errorMessage]="error('contactMobile')" />
+      @if (needsVerification('contactMobile')) {
+        <div class="contact-status">
+          <dahc-tag purpose="warning" i18n="@@portal.personal.notVerified">Not verified</dahc-tag>
+          <button dahc-button type="button" size="sm" variant="secondary" (click)="verify('contactMobile')" i18n="@@portal.personal.verify">Verify</button>
+        </div>
+      } @else if (changed('contactMobile') && verified('contactMobile')) {
+        <div class="contact-status">
+          <dahc-tag purpose="success" i18n="@@portal.personal.verified">Verified</dahc-tag>
+        </div>
+      }
+    </div>
+  </div>
+
+  @if (needsVerification('contactEmail') || needsVerification('contactMobile')) {
+    <dahc-alert variant="warning" i18n="@@portal.personal.verifyBeforeSave">
+      Verify your changed contact details. Until they are verified, this section cannot be saved.
+    </dahc-alert>
+  }
+</div>
+
+@if (verifying(); as current) {
+  <dahc-contact-verification-dialog
+    [applicationId]="applicationId()"
+    [channel]="current.channel"
+    [value]="current.value"
+    [(open)]="dialogOpen"
+    (verified)="onVerified($event)" />
+}

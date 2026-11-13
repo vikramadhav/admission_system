@@ -1,0 +1,37 @@
+/* Ported from dubai-health-ui dh-image (see the component comment). */
+
+:host {
+  --_radius: var(--dahc-radius-lg);
+
+  display: inline-block;
+  max-inline-size: 100%;
+}
+
+:host(.dahc-image--radius-md) {
+  --_radius: var(--dahc-radius-md);
+}
+
+:host(.dahc-image--radius-none) {
+  --_radius: 0;
+}
+
+.dahc-image__image {
+  display: block;
+  max-inline-size: 100%;
+  block-size: auto;
+  border-radius: var(--_radius);
+}
+
+.dahc-image__open {
+  display: block;
+  padding: 0;
+  border: 0;
+  border-radius: var(--_radius);
+  background: none;
+  cursor: zoom-in;
+}
+
+.dahc-image__open:focus-visible {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: var(--dahc-size-focus-offset);
+}

@@ -1,0 +1,94 @@
+/* DERIVED switch (see the component comment): track 44 x 24, thumb 18 inset 3, label 16/20, gap 8. */
+
+:host {
+  --_track-width: var(--dahc-size-touch-target);
+  --_track-height: var(--dahc-size-icon-lg);
+  --_thumb: calc(var(--dahc-size-icon-lg) - var(--dahc-space-1) - var(--dahc-space-0-5));
+  --_inset: calc((var(--_track-height) - var(--_thumb)) / 2);
+
+  display: inline-flex;
+  vertical-align: middle;
+}
+
+.dahc-switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--dahc-space-2);
+  color: var(--dahc-color-text-primary);
+  font-size: var(--dahc-font-size-16);
+  line-height: var(--dahc-font-line-height-tight);
+  cursor: pointer;
+}
+
+.dahc-switch__input {
+  position: absolute;
+  inset-inline-start: 0;
+  inline-size: var(--_track-width);
+  block-size: var(--_track-height);
+  margin: 0;
+  opacity: 0;
+  cursor: inherit;
+}
+
+.dahc-switch__track {
+  position: relative;
+  flex: none;
+  inline-size: var(--_track-width);
+  block-size: var(--_track-height);
+  border-radius: var(--dahc-radius-pill);
+  background-color: var(--dahc-color-text-tertiary);
+  transition: background-color var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard);
+}
+
+.dahc-switch__thumb {
+  position: absolute;
+  inset-block-start: var(--_inset);
+  inset-inline-start: var(--_inset);
+  inline-size: var(--_thumb);
+  block-size: var(--_thumb);
+  border-radius: var(--dahc-radius-pill);
+  background-color: var(--dahc-color-surface);
+  transition: inset-inline-start var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard);
+}
+
+.dahc-switch__input:checked + .dahc-switch__track {
+  background-color: var(--dahc-color-action-primary);
+}
+
+.dahc-switch__input:checked + .dahc-switch__track .dahc-switch__thumb {
+  inset-inline-start: calc(var(--_track-width) - var(--_thumb) - var(--_inset));
+}
+
+.dahc-switch__input:focus-visible + .dahc-switch__track {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: var(--dahc-size-focus-offset);
+}
+
+.dahc-switch:has(:disabled) {
+  color: var(--dahc-color-text-disabled);
+  cursor: not-allowed;
+}
+
+.dahc-switch__input:disabled + .dahc-switch__track {
+  background-color: var(--dahc-color-action-disabled-bg);
+}
+
+.dahc-switch__input:disabled + .dahc-switch__track .dahc-switch__thumb {
+  background-color: var(--dahc-color-action-disabled-fg);
+}
+
+.dahc-switch__label:empty {
+  display: none;
+}
+
+@media (forced-colors: active) {
+  .dahc-switch__track {
+    border: var(--dahc-size-border) solid CanvasText;
+  }
+
+  .dahc-switch__input:checked + .dahc-switch__track {
+    forced-color-adjust: none;
+    background-color: Highlight;
+  }
+}

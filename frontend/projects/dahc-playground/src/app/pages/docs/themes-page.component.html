@@ -1,0 +1,32 @@
+<article class="pg-doc-article">
+  <h1 class="pg-doc-title">Themes and languages</h1>
+  <p class="pg-doc-lead">DAHC UI supports a light and a dark theme, Arabic and other right-to-left languages, and translation of every built-in text.</p>
+
+  <section class="pg-doc-section" aria-labelledby="th-theme">
+    <h2 id="th-theme" class="pg-doc-h2">Light and dark theme</h2>
+    <p class="pg-doc-text">
+      Components use semantic colour roles only (for example <code>--dahc-color-surface</code>), so a theme is one attribute on the root element:
+      <code>data-theme="light"</code> or <code>data-theme="dark"</code>. The theme service remembers the user's choice and otherwise follows the
+      system setting.
+    </p>
+    <pre class="pg-doc-code" tabindex="0" aria-label="Theme example"><code>{{ theme }}</code></pre>
+  </section>
+
+  <section class="pg-doc-section" aria-labelledby="th-rtl">
+    <h2 id="th-rtl" class="pg-doc-h2">Right-to-left</h2>
+    <p class="pg-doc-text">
+      Layouts use logical CSS properties and directional icons mirror automatically, so setting <code>dir="rtl"</code> on the document (or on a
+      <code>dahc-config-provider</code> for one part of a page) is all that is needed. Use the Right-to-left switch in the header to try any page.
+    </p>
+    <pre class="pg-doc-code" tabindex="0" aria-label="Direction example"><code>{{ direction }}</code></pre>
+  </section>
+
+  <section class="pg-doc-section" aria-labelledby="th-i18n">
+    <h2 id="th-i18n" class="pg-doc-h2">Translations</h2>
+    <p class="pg-doc-text">
+      Built-in texts (loading labels, close buttons, pagination, calendar names and so on) use Angular <code>$localize</code> with ids that
+      start with <code>dahcUi.</code>, and each one is also an input you can set directly.
+    </p>
+    <pre class="pg-doc-code" tabindex="0" aria-label="Translation example"><code>{{ i18n }}</code></pre>
+  </section>
+</article>

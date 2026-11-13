@@ -1,0 +1,84 @@
+<dahc-playground-page
+  heading="Page header"
+  description="The page title band: breadcrumbs, the page h1, a description, a meta row, a status and actions. Figma Page header 50:16877 and the GME banner."
+  selector="dahc-page-header"
+  [whenToUse]="whenToUse"
+  [sourceFiles]="sourceFiles">
+  <div preview>
+    @if (focusOnLoad()) {
+      <p class="pg-value">focusOnLoad applies when the page header is first rendered, as on a new route.</p>
+    }
+    <dahc-page-header
+      [heading]="heading()"
+      [description]="description()"
+      [focusOnLoad]="focusOnLoad()"
+      [breadcrumbs]="showBreadcrumbs() ? breadcrumbs : []"
+      [meta]="showMeta() ? meta : []">
+      @if (showStatus()) {
+        <dahc-tag page-header-status purpose="warning" size="lg">Draft</dahc-tag>
+      }
+      @if (showActions()) {
+        <div page-header-actions>
+          <button dahc-button type="button">Start new application</button>
+        </div>
+      }
+    </dahc-page-header>
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-text label="heading" [(value)]="heading" />
+    <dahc-inspector-text label="description" [(value)]="description" />
+    <dahc-inspector-toggle label="focusOnLoad" [(value)]="focusOnLoad" />
+    <dahc-inspector-toggle label="page-header-actions content" [(value)]="showActions" />
+    <dahc-inspector-toggle label="breadcrumbs" [(value)]="showBreadcrumbs" />
+    <dahc-inspector-toggle label="meta" [(value)]="showMeta" />
+    <dahc-inspector-toggle label="page-header-status content" [(value)]="showStatus" />
+    <p class="pg-value">Outputs: none.</p>
+  </div>
+
+  <div states class="pg-stack">
+    <p class="pg-value">The page header renders an h1, so this page shows one instance. Remove the description or the actions with the inspector to see those states.</p>
+  </div>
+
+  <dahc-doc-example
+    examples
+    exampleId="basic"
+    heading="Basic"
+    description="Heading and description."
+    template="page-header-page.component.html">
+    <dahc-page-header heading="Programs" description="Choose a program to see who can apply and the key dates." />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="breadcrumbs"
+    heading="With breadcrumbs and meta"
+    description="The application page of the GME portal."
+    template="page-header-page.component.html">
+    <dahc-page-header
+      heading="Medical application"
+      [breadcrumbs]="[{ label: 'Home', href: '#home' }, { label: 'Medical application' }]"
+      [meta]="[{ label: 'Application ID', value: '20260000123' }, { label: 'Created on', value: '7 Nov 2026' }]">
+      <dahc-tag page-header-status purpose="warning" size="lg">Draft</dahc-tag>
+    </dahc-page-header>
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="actions"
+    heading="With an action"
+    description="The main action of the page at the end of the band."
+    template="page-header-page.component.html">
+    <dahc-page-header heading="My applications" description="Every application you have started.">
+      <div page-header-actions>
+        <button dahc-button type="button">New application</button>
+      </div>
+    </dahc-page-header>
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>Use one page header per page: it holds the page's only h1.</li>
+    <li>With focusOnLoad the heading (tabindex="-1") receives focus after a route change, so screen-reader users hear the new page title; it shows a focus ring only for keyboard focus.</li>
+    <li>Actions are projected content and keep their own semantics.</li>
+  </ul>
+</dahc-playground-page>

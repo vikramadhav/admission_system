@@ -1,0 +1,47 @@
+/* A projected pair of dahc-detail-list: same look as the list's own pairs, including the
+   bordered variant (read from the parent list's class). */
+
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dahc-space-1);
+  min-inline-size: 0;
+}
+
+.dahc-detail-item__label {
+  color: var(--dahc-color-text-secondary);
+  font-size: var(--dahc-font-size-12);
+  font-weight: var(--dahc-font-weight-regular);
+  line-height: var(--dahc-type-overline-line-height);
+}
+
+.dahc-detail-item__value {
+  margin: 0;
+  color: var(--dahc-color-text-primary);
+  font-size: var(--dahc-font-size-16);
+  font-weight: var(--dahc-font-weight-medium);
+  line-height: var(--dahc-font-line-height-tight);
+  overflow-wrap: anywhere;
+}
+
+:host-context(.dahc-detail-list--bordered) {
+  margin-block-end: calc(var(--dahc-size-border) * -1);
+  padding-block: var(--dahc-space-3);
+  padding-inline: var(--dahc-space-4);
+  border-block-end: var(--dahc-size-border) solid var(--dahc-color-border-subtle);
+}
+
+:host-context(.dahc-detail-list--bordered) .dahc-detail-item__label {
+  font-size: var(--dahc-font-size-14);
+  line-height: var(--dahc-type-body-sm-line-height);
+}
+
+:host-context(.dahc-detail-list--bordered) .dahc-detail-item__value {
+  font-weight: var(--dahc-font-weight-bold);
+}
+
+@media (forced-colors: active) {
+  :host-context(.dahc-detail-list--bordered) {
+    border-color: CanvasText;
+  }
+}

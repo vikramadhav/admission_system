@@ -1,0 +1,89 @@
+/* DERIVED (DH has no alert; "Notification banners" use Orange, error/success messages use the red
+   and green tints). Aligned with the dubai-health-ui alert: status tint, 1px status border (the 4px
+   start edge is removed on purpose, owner decision), radius 8, 24px icon, navy text, heading Bold 16/20,
+   body Regular 14/18. Pending UX sign-off. */
+
+:host {
+  --_surface: var(--dahc-color-info-surface);
+  --_border: var(--dahc-color-info-border);
+
+  display: block;
+}
+
+:host(.dahc-alert--success) {
+  --_surface: var(--dahc-color-success-surface);
+  --_border: var(--dahc-color-success-border);
+}
+
+:host(.dahc-alert--warning) {
+  --_surface: var(--dahc-color-warning-surface);
+  --_border: var(--dahc-color-warning-border);
+}
+
+:host(.dahc-alert--error) {
+  --_surface: var(--dahc-color-error-surface);
+  --_border: var(--dahc-color-error-border);
+}
+
+.dahc-alert__box {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--dahc-space-3);
+  padding: var(--dahc-space-4);
+  border: var(--dahc-size-border) solid var(--_border);
+  border-radius: var(--dahc-radius-sm);
+  background-color: var(--_surface);
+  color: var(--dahc-color-text-primary);
+}
+
+.dahc-alert__content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--dahc-space-1);
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.dahc-alert__heading {
+  margin: 0;
+  font-size: var(--dahc-font-size-16);
+  font-weight: var(--dahc-font-weight-bold);
+  line-height: var(--dahc-font-line-height-tight);
+}
+
+.dahc-alert__body {
+  font-size: var(--dahc-font-size-14);
+  line-height: var(--dahc-type-body-sm-line-height);
+}
+
+.dahc-alert__dismiss {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  inline-size: var(--dahc-size-touch-target);
+  block-size: var(--dahc-size-touch-target);
+  margin-block: calc(var(--dahc-space-3) * -1);
+  margin-inline-end: calc(var(--dahc-space-3) * -1);
+  padding: 0;
+  border: 0;
+  border-radius: var(--dahc-radius-pill);
+  background-color: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.dahc-alert__dismiss:hover {
+  background-color: color-mix(in srgb, var(--dahc-color-text-primary) 8%, transparent);
+}
+
+.dahc-alert__dismiss:focus-visible {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: calc(var(--dahc-size-focus-offset) * -1);
+}
+
+@media (forced-colors: active) {
+  .dahc-alert__box {
+    border-color: CanvasText;
+  }
+}

@@ -1,0 +1,66 @@
+<dahc-playground-page
+  heading="Back to top"
+  description="A floating button that appears after the page or a container has scrolled down, and scrolls back to the top. Ported from dubai-health-ui dh-back-top; DERIVED design."
+  selector="dahc-back-top"
+  [whenToUse]="whenToUse"
+  [sourceFiles]="sourceFiles">
+  <div preview>
+    <div id="back-top-scroller" class="back-top-scroller" tabindex="0" role="region" aria-label="Long content">
+      <p class="back-top-content">Scroll down in this box: the back to top button appears.</p>
+      <div class="back-top-sticky">
+        <dahc-back-top target="#back-top-scroller" [visibilityHeight]="100" [inline]="true" (backToTop)="record()" />
+      </div>
+    </div>
+  </div>
+
+  <div inspector class="pg-stack">
+    <p class="pg-value">Inputs: label, visibilityHeight (400), target (window), variant (default), placement, inline.</p>
+    <dahc-event-log [events]="events()" />
+  </div>
+
+  <div states class="pg-stack">
+    <p class="pg-value">Hidden until the scroll distance reaches visibilityHeight.</p>
+  </div>
+
+  <dahc-doc-example
+    examples
+    exampleId="container"
+    heading="In a scroll container"
+    description="Appears after 100 pixels of scrolling in the box."
+    template="back-top-page.component.html">
+    <div id="terms-scroller" class="back-top-scroller" tabindex="0" role="region" aria-label="Terms and conditions">
+      <p class="back-top-content">Scroll down in this box to show the button.</p>
+      <div class="back-top-sticky">
+        <dahc-back-top target="#terms-scroller" [visibilityHeight]="100" [inline]="true" />
+      </div>
+    </div>
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="primary"
+    heading="Primary"
+    description="The navy variant stands out more on light pages."
+    template="back-top-page.component.html">
+    <div id="guide-box" class="back-top-scroller" tabindex="0" role="region" aria-label="Applicant guide">
+      <p class="back-top-content">Scroll down in this box to show the navy button.</p>
+      <div class="back-top-sticky">
+        <dahc-back-top target="#guide-box" variant="primary" [visibilityHeight]="100" [inline]="true" />
+      </div>
+    </div>
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="window"
+    heading="For the whole page"
+    description="Without target it follows the window and is fixed to the corner."
+    template="back-top-page.component.html">
+    <dahc-back-top [visibilityHeight]="600" />
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>A native button named "Back to top"; it scrolls instantly under reduced motion.</li>
+    <li>Keyboard users can also use Home; the button helps pointer and touch users on long pages.</li>
+  </ul>
+</dahc-playground-page>

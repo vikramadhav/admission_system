@@ -1,0 +1,45 @@
+<dahc-form-field [label]="label()" [hint]="hint()" [error]="errorText()" [invalid]="showError()" [required]="required()">
+  <input
+    #field
+    dahcInput
+    type="text"
+    inputmode="numeric"
+    autocomplete="off"
+    [placeholder]="placeholder()"
+    [value]="text()"
+    [disabled]="isDisabled()"
+    [required]="required()"
+    (input)="onTextInput($event)"
+    (change)="onTextChange()"
+    (keydown)="onFieldKeydown($event)"
+    (blur)="onBlur()" />
+  <button
+    #toggleButton
+    dahcFieldEnd
+    type="button"
+    class="dahc-date-picker__toggle"
+    aria-haspopup="dialog"
+    [attr.aria-expanded]="open()"
+    [attr.aria-controls]="popupId"
+    [disabled]="isDisabled()"
+    (click)="toggle()">
+    <dahc-icon name="calendar" size="lg" />
+    <span class="dahc-visually-hidden">{{ chooseDateLabel() }}</span>
+  </button>
+</dahc-form-field>
+<div
+  #popup
+  class="dahc-popup"
+  popover="manual"
+  role="dialog"
+  [id]="popupId"
+  [attr.aria-label]="chooseDateLabel()"
+  (keydown)="onPopupKeydown($event)">
+  <dahc-calendar
+    [value]="value()"
+    [min]="min()"
+    [max]="max()"
+    [locale]="locale()"
+    [firstDayOfWeek]="firstDayOfWeek()"
+    (dateSelected)="onDateSelected($event)" />
+</div>

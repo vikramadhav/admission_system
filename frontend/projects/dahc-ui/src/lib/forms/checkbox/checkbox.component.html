@@ -1,0 +1,18 @@
+<label class="dahc-checkbox">
+  <span class="dahc-checkbox__control">
+    <input
+      class="dahc-checkbox__input"
+      type="checkbox"
+      [checked]="value()"
+      [indeterminate]="indeterminate()"
+      [disabled]="isDisabled()"
+      [required]="required()"
+      [attr.aria-invalid]="invalid() ? 'true' : null"
+      (change)="onToggle($event)"
+      (blur)="onBlur()" />
+    <span class="dahc-checkbox__box" aria-hidden="true">
+      <dahc-icon class="dahc-checkbox__tick" name="check" size="sm" />
+    </span>
+  </span>
+  <span class="dahc-checkbox__label"><ng-content /></span>
+</label>

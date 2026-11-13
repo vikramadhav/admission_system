@@ -1,0 +1,47 @@
+<dahc-playground-page
+  heading="Empty state"
+  description="Explains why an area is empty and offers the next action through projected content."
+  selector="dahc-empty-state"
+  [whenToUse]="whenToUse"
+  [sourceFiles]="sourceFiles">
+  <div preview>
+    <dahc-empty-state [heading]="heading()" [description]="description()" [headingLevel]="headingLevel()">
+      @if (showAction()) {
+        <button dahc-button type="button">Start new application</button>
+      }
+    </dahc-empty-state>
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-text label="heading" [(value)]="heading" />
+    <dahc-inspector-text label="description" [(value)]="description" />
+    <dahc-inspector-choice label="headingLevel" [options]="headingLevels" [(value)]="headingLevel" />
+    <dahc-inspector-toggle label="projected action" [(value)]="showAction" />
+    <p class="pg-value">Outputs: none. Actions are projected content.</p>
+  </div>
+
+  <div states class="pg-stack">
+    <dahc-empty-state heading="Heading only" [headingLevel]="3" />
+    <dahc-empty-state heading="With description" description="Nothing has been added yet." [headingLevel]="3" />
+  </div>
+
+  <dahc-doc-example examples exampleId="action" heading="With an action" description="A projected button leads to the next step." template="empty-state-page.component.html">
+    <dahc-empty-state heading="No applications yet" description="Start an application to see its status here." [headingLevel]="3">
+      <button dahc-button type="button">Start application</button>
+    </dahc-empty-state>
+  </dahc-doc-example>
+  <dahc-doc-example examples exampleId="search" heading="No results" description="For empty search results, explain and offer to clear the filters." template="empty-state-page.component.html">
+    <dahc-empty-state heading="No matching programs" description="Try another specialty or clear the filters." [headingLevel]="3">
+      <button dahc-button type="button" variant="secondary">Clear filters</button>
+    </dahc-empty-state>
+  </dahc-doc-example>
+  <dahc-doc-example examples exampleId="simple" heading="Simple" description="Only a heading for small areas such as a side panel." template="empty-state-page.component.html">
+    <dahc-empty-state heading="No notifications" [headingLevel]="3" />
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>The heading is a real heading at the level chosen with headingLevel, so the empty area is found by heading navigation.</li>
+    <li>The illustration is decorative and hidden from assistive technology.</li>
+    <li>Projected actions keep their own semantics (use dahc-button on a button or link).</li>
+  </ul>
+</dahc-playground-page>

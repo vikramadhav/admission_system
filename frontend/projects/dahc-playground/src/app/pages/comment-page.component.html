@@ -1,0 +1,60 @@
+<dahc-playground-page
+  heading="Comment"
+  description="Author, role, time, text, actions and nested replies for review threads. Ported from dubai-health-ui dh-comment; DERIVED."
+  selector="dahc-comment"
+  [whenToUse]="whenToUse"
+  [sourceFiles]="sourceFiles">
+  <div preview>
+    <dahc-comment author="Sara Al Hashimi" authorRole="Admission Officer" datetime="12 Mar 2026, 10:24" datetimeValue="2026-03-12T10:24">
+      The transcript is missing the final year. Please upload the complete document.
+      <div dahcCommentActions>
+        <button dahc-button type="button" variant="link" size="sm">Reply</button>
+      </div>
+      <div dahcCommentReplies>
+        <dahc-comment author="Aisha Khan" authorRole="Candidate" datetime="12 Mar 2026, 14:02">I have uploaded the complete transcript.</dahc-comment>
+      </div>
+    </dahc-comment>
+  </div>
+
+  <div inspector class="pg-stack">
+    <p class="pg-value">Inputs: author, authorRole, datetime, datetimeValue, avatarSrc. Slots: content, [dahcCommentActions], [dahcCommentReplies].</p>
+  </div>
+
+  <div states class="pg-stack">
+    <dahc-comment author="Omar Haddad">A comment without role or time.</dahc-comment>
+  </div>
+
+  <div examples>
+    <dahc-doc-example exampleId="basic" heading="Basic" description="Author, role, time and text." template="comment-page.component.html">
+      <dahc-comment author="Hessa Al Marri" authorRole="Program Coordinator" datetime="2 Oct 2026, 09:10" datetimeValue="2026-10-02T09:10">
+        Your interview is scheduled for 14 October.
+      </dahc-comment>
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="actions" heading="With actions" description="Content marked dahcCommentActions sits under the text." template="comment-page.component.html">
+      <dahc-comment author="Yousef Karim" datetime="3 Oct 2026">
+        Can I change my preferred training site?
+        <div dahcCommentActions>
+          <button dahc-button type="button" variant="link" size="sm">Reply to Yousef Karim</button>
+        </div>
+      </dahc-comment>
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="replies" heading="Replies" description="Content marked dahcCommentReplies nests the answers." template="comment-page.component.html">
+      <dahc-comment author="Noura Abbas" authorRole="Candidate">
+        Is the English test required for UAE graduates?
+        <div dahcCommentReplies>
+          <dahc-comment author="Admissions team">Yes, unless your degree was taught in English.</dahc-comment>
+        </div>
+      </dahc-comment>
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="avatar" heading="With photo" description="avatarSrc shows a photo instead of initials." template="comment-page.component.html">
+      <dahc-comment author="Dubai Health" avatarSrc="dahc-ui/logo/dh-logo-icon-navy.svg">
+        Results are published on the dashboard.
+      </dahc-comment>
+    </dahc-doc-example>
+  </div>
+
+  <ul accessibility class="pg-notes">
+    <li>Each comment is an article named "Comment by &lt;author&gt;"; the time is a time element with a machine-readable value.</li>
+    <li>The avatar is decorative here because the author's name is in the text.</li>
+  </ul>
+</dahc-playground-page>

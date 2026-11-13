@@ -1,0 +1,18 @@
+.applications {
+  display: grid;
+  gap: var(--dahc-space-6);
+  max-inline-size: var(--dahc-size-container-max);
+  margin-inline: auto;
+  padding-block: var(--dahc-space-8) var(--dahc-space-12);
+  padding-inline: var(--dahc-space-4);
+}
+
+@media (min-width: 48rem) {
+  .applications {
+    padding-inline: var(--dahc-space-6);
+  }
+}
+
+.applications-text {
+  margin: 0;
+}

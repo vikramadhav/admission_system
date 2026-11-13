@@ -1,0 +1,129 @@
+:host {
+  display: block;
+}
+
+.dahc-page-header__band {
+  padding-block: var(--dahc-space-8);
+  background-color: var(--dahc-color-surface-highlight);
+  color: var(--dahc-color-text-primary);
+}
+
+/* Breakpoint md (tokens/_breakpoints.scss) */
+@media (min-width: 48rem) {
+  .dahc-page-header__band {
+    padding-block: var(--dahc-space-12);
+  }
+}
+
+.dahc-page-header__inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dahc-space-6);
+  max-inline-size: var(--dahc-size-container-max);
+  margin-inline: auto;
+  padding-inline: var(--dahc-space-4);
+}
+
+/* Same content edge as the header, the page and the footer: 1200 container, 24px sides from md. */
+@media (min-width: 48rem) {
+  .dahc-page-header__inner {
+    padding-inline: var(--dahc-space-6);
+  }
+}
+
+.dahc-page-header__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--dahc-space-6);
+}
+
+.dahc-page-header__title-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--dahc-space-3);
+}
+
+.dahc-page-header__status:empty {
+  display: none;
+}
+
+/* GME banner meta row: "Label - Value" pairs, the value bold. */
+.dahc-page-header__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dahc-space-2) var(--dahc-space-6);
+  margin: 0;
+  color: var(--dahc-color-text-secondary);
+  font-size: var(--dahc-font-size-14);
+}
+
+.dahc-page-header__meta-item {
+  display: flex;
+  gap: var(--dahc-space-1);
+}
+
+.dahc-page-header__meta-item dt::after {
+  content: ' -';
+}
+
+.dahc-page-header__meta-item dd {
+  margin: 0;
+  color: var(--dahc-color-text-primary);
+  font-weight: var(--dahc-font-weight-bold);
+}
+
+.dahc-page-header__titles {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dahc-space-3);
+  min-inline-size: 0;
+}
+
+.dahc-page-header__heading {
+  margin: 0;
+  color: var(--dahc-color-text-primary);
+  font-size: var(--dahc-font-size-26);
+  font-weight: var(--dahc-font-weight-bold);
+  line-height: var(--dahc-font-line-height-tight);
+  overflow-wrap: anywhere;
+}
+
+/* Breakpoint md (tokens/_breakpoints.scss) */
+@media (min-width: 48rem) {
+  .dahc-page-header__heading {
+    font-size: var(--dahc-font-size-36);
+  }
+}
+
+.dahc-page-header__heading:focus {
+  outline: none;
+}
+
+.dahc-page-header__heading:focus-visible {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: var(--dahc-size-focus-offset-wide);
+}
+
+.dahc-page-header__description {
+  margin: 0;
+  max-inline-size: var(--dahc-size-measure-wide);
+  /* A11y fix: Figma navy-700 on the blue-200 band is about 4.3:1; navy-900 passes. */
+  color: var(--dahc-color-text-secondary);
+  font-size: var(--dahc-type-body-lg-size);
+  line-height: var(--dahc-type-body-lg-line-height);
+}
+
+.dahc-page-header__actions:empty {
+  display: none;
+}
+
+.dahc-page-header__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--dahc-space-2);
+  max-inline-size: 100%;
+}
