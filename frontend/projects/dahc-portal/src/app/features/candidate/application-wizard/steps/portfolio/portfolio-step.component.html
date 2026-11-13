@@ -1,0 +1,62 @@
+<div class="step">
+  @if (submittedAt()) {
+    <dahc-alert variant="success" i18n-heading="@@portal.portfolio.submittedOnHeading" heading="Portfolio submitted">
+      <p class="step-text" i18n="@@portal.portfolio.submittedOn">You submitted your portfolio on {{ submittedOn() }}. It can no longer be changed.</p>
+    </dahc-alert>
+  } @else if (state.editable()) {
+    <dahc-alert variant="warning" i18n-heading="@@portal.portfolio.warningHeading" heading="Check your answers carefully">
+      <p class="step-text" i18n="@@portal.portfolio.warningText">
+        Your portfolio is a one-time submission. After you confirm it, you can't change it, even if your application is returned for correction.
+        Points shown are indicative; your final portfolio score is set by the referees.
+      </p>
+    </dahc-alert>
+    <p class="step-note" i18n="@@portal.portfolio.draftNote">
+      Your answers stay on this page while you are signed in, and are saved only when you submit the portfolio. Documents you upload are saved straight away.
+    </p>
+  }
+
+  @if (problem(); as current) {
+    <dahc-alert variant="error" [announce]="true" [dismissible]="true" (dismissed)="problem.set(null)">
+      <p class="step-text">{{ current.detail ?? current.title }}</p>
+    </dahc-alert>
+  }
+
+  <div class="portfolio-questions">
+    @for (question of questions(); track question.id) {
+      @if (form.controls[question.id]; as group) {
+        <dahc-portfolio-question-card [question]="question" [group]="group" [showAllErrors]="showAll()" />
+      }
+    }
+  </div>
+</div>
+
+<dahc-modal
+  [(open)]="confirmOpen"
+  size="md"
+  i18n-heading="@@portal.portfolio.confirmHeading"
+  heading="Submit your portfolio?">
+  <p class="step-text" i18n="@@portal.portfolio.confirmText">Check your answers. After you submit, you cannot change your portfolio.</p>
+  <table class="portfolio-summary">
+    <caption class="dahc-visually-hidden" i18n="@@portal.portfolio.summaryCaption">Your portfolio answers</caption>
+    <thead>
+      <tr>
+        <th scope="col" i18n="@@portal.portfolio.summaryQuestion">Question</th>
+        <th scope="col" i18n="@@portal.portfolio.summaryAnswer">Answer</th>
+        <th scope="col" i18n="@@portal.portfolio.summaryAttachments">Attachments</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of confirmationRows(); track row.number) {
+        <tr>
+          <td i18n="@@portal.portfolio.questionNumber">Q{{ row.number }}.</td>
+          <td>{{ row.answer }}</td>
+          <td>{{ row.attachments }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+  <div dahcDialogFooter class="portfolio-actions">
+    <button dahc-button type="button" variant="secondary" (click)="confirmOpen.set(false)" i18n="@@portal.action.cancel">Cancel</button>
+    <button dahc-button type="button" [loading]="submitting()" (click)="submit()" i18n="@@portal.portfolio.confirmSubmit">Confirm and submit</button>
+  </div>
+</dahc-modal>

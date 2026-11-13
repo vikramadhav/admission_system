@@ -1,0 +1,12 @@
+<p class="dahc-stat-tile__label">{{ label() }}</p>
+<p class="dahc-stat-tile__value">
+  @if (value() !== '') {
+    {{ value() }}
+  } @else {
+    <span aria-hidden="true">—</span>
+    <span class="dahc-visually-hidden">{{ emptyLabel() }}</span>
+  }
+</p>
+@if (caption() !== '') {
+  <p class="dahc-stat-tile__caption">{{ caption() }}</p>
+}

@@ -1,0 +1,40 @@
+<fieldset
+  class="dahc-radio-group"
+  [disabled]="isDisabled()"
+  [attr.aria-describedby]="describedBy()"
+  [attr.aria-invalid]="showError() ? 'true' : null">
+  <legend class="dahc-radio-group__legend">
+    {{ label() }}
+    @if (required()) {
+      <span class="dahc-radio-group__required" aria-hidden="true">*</span>
+    }
+  </legend>
+  <div class="dahc-radio-group__options">
+    @for (option of options(); track option.value) {
+      <label class="dahc-radio">
+        <span class="dahc-radio__control">
+          <input
+            class="dahc-radio__input"
+            type="radio"
+            [name]="groupId"
+            [value]="option.value"
+            [checked]="option.value === value()"
+            [disabled]="option.disabled ?? false"
+            [required]="required()"
+            (change)="select(option)"
+            (blur)="onBlur()" />
+          <span class="dahc-radio__ring" aria-hidden="true"></span>
+        </span>
+        <span>{{ option.label }}</span>
+      </label>
+    }
+  </div>
+  @if (showError()) {
+    <p class="dahc-radio-group__message dahc-radio-group__message--error" [id]="errorId">
+      <dahc-icon name="information" size="sm" />
+      <span>{{ errorMessage() }}</span>
+    </p>
+  } @else if (hint() !== '') {
+    <p class="dahc-radio-group__message" [id]="hintId">{{ hint() }}</p>
+  }
+</fieldset>

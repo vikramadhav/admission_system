@@ -1,0 +1,69 @@
+/* DERIVED (dubai-health-ui dh-tree-select), see the component comment; rows use ../entry-popup/entry-options.css. */
+
+:host {
+  display: block;
+  min-inline-size: 0;
+}
+
+.dahc-tree-select__trigger {
+  margin-inline-end: calc(-1 * (var(--dahc-size-icon-lg) + var(--dahc-space-2)));
+  padding-inline-end: calc(var(--dahc-size-icon-lg) + var(--dahc-space-2));
+}
+
+.dahc-tree-select__value {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dahc-tree-select__value--placeholder {
+  color: var(--dahc-color-text-placeholder);
+}
+
+.dahc-tree-select__chevron {
+  pointer-events: none;
+  transition: transform var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard);
+}
+
+.dahc-tree-select__chevron--open {
+  transform: rotate(180deg);
+}
+
+.dahc-tree-select__tree {
+  padding-block: var(--dahc-space-2);
+}
+
+/* 16px indent per level below the first. */
+.dahc-tree-select__item {
+  gap: var(--dahc-space-1);
+  padding-inline-start: calc(var(--dahc-space-2) + (var(--_level, 1) - 1) * var(--dahc-space-4));
+  outline: none;
+}
+
+.dahc-tree-select__item:focus-visible {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: calc(var(--dahc-size-focus-ring) * -1);
+  background-color: var(--dahc-color-surface-raised-1);
+}
+
+.dahc-tree-select__toggle,
+.dahc-tree-select__spacer {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  inline-size: var(--dahc-size-icon-md);
+  block-size: var(--dahc-size-icon-md);
+}
+
+.dahc-tree-select__toggle {
+  transition: rotate var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard);
+}
+
+.dahc-tree-select__toggle--open {
+  rotate: 90deg;
+}
+
+:host(:dir(rtl)) .dahc-tree-select__toggle--open {
+  rotate: -90deg;
+}

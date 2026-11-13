@@ -1,0 +1,123 @@
+/* Figma Chips and Tags 50:7519, Selection chip (Light background):
+   selected 50:7520 navy fill, white Bold 16/18; unselected 50:7536 navy-100 fill, 1px navy-200,
+   Regular 16/18; Medium 36px 8/16 gap 8, Small 30px 6/12; pill.
+   Hover, focus and disabled are not in Figma: derived, pending UX. */
+
+:host {
+  display: block;
+}
+
+.dahc-button-group {
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.dahc-button-group__legend {
+  margin-block-end: var(--dahc-space-2);
+  padding: 0;
+  color: var(--dahc-color-text-primary);
+  font-size: var(--dahc-type-label-size);
+  font-weight: var(--dahc-type-label-weight);
+  line-height: var(--dahc-type-label-line-height);
+}
+
+.dahc-button-group__options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dahc-space-2);
+}
+
+.dahc-button-group__option {
+  position: relative;
+  display: inline-grid;
+  align-items: center;
+  min-block-size: var(--dahc-size-control-sm);
+  padding-block: var(--dahc-space-2);
+  padding-inline: var(--dahc-space-4);
+  border: var(--dahc-size-border) solid var(--dahc-color-border-default);
+  border-radius: var(--dahc-radius-pill);
+  background-color: var(--dahc-color-surface-muted);
+  color: var(--dahc-color-text-primary);
+  font-size: var(--dahc-font-size-16);
+  font-weight: var(--dahc-font-weight-regular);
+  line-height: var(--dahc-font-line-height-tight);
+  cursor: pointer;
+  transition:
+    background-color var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard),
+    border-color var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard),
+    color var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard);
+}
+
+/* The selected label is bold. A hidden bold copy reserves its width so selecting an option does
+   not shift the others (Figma Controls/Chips gap: weight change moves the layout). */
+.dahc-button-group__option::after {
+  content: attr(data-label);
+  grid-area: 1 / 1;
+  block-size: 0;
+  font-weight: var(--dahc-font-weight-bold);
+  visibility: hidden;
+}
+
+.dahc-button-group__text {
+  grid-area: 1 / 1;
+  text-align: center;
+}
+
+/* The native radio stays in the accessibility tree and keyboard order, visually covered. */
+.dahc-button-group__input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: inherit;
+}
+
+:host(.dahc-button-group--sm) .dahc-button-group__option {
+  min-block-size: calc(var(--dahc-size-control-sm) - var(--dahc-space-2) + var(--dahc-space-0-5));
+  padding-block: calc(var(--dahc-space-2) - var(--dahc-space-0-5));
+  padding-inline: var(--dahc-space-3);
+  font-size: var(--dahc-font-size-14);
+}
+
+.dahc-button-group__option:hover {
+  border-color: var(--dahc-color-border-strong);
+}
+
+.dahc-button-group__option:has(:checked) {
+  border-color: var(--dahc-color-action-primary);
+  background-color: var(--dahc-color-action-primary);
+  color: var(--dahc-color-text-inverse);
+  font-weight: var(--dahc-font-weight-bold);
+}
+
+.dahc-button-group__option:has(:focus-visible) {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: var(--dahc-size-focus-offset);
+}
+
+.dahc-button-group__option:has(:disabled) {
+  border-color: transparent;
+  background-color: var(--dahc-color-action-disabled-bg);
+  color: var(--dahc-color-action-disabled-fg);
+  cursor: not-allowed;
+}
+
+.dahc-button-group__option:has(:disabled:checked) {
+  background-color: var(--dahc-color-action-disabled-fg);
+  color: var(--dahc-color-surface);
+}
+
+@media (forced-colors: active) {
+  .dahc-button-group__option {
+    border-color: ButtonText;
+  }
+
+  .dahc-button-group__option:has(:checked) {
+    forced-color-adjust: none;
+    border-color: Highlight;
+    background-color: Highlight;
+    color: HighlightText;
+  }
+}

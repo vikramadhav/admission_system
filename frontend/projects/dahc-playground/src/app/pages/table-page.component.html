@@ -1,0 +1,90 @@
+<dahc-playground-page
+  heading="Table"
+  description="Data table with sorting, selection, pagination, custom cells, fixed columns and a sticky header (NG-ZORRO behaviour). Ported from dubai-health-ui dh-table; DERIVED."
+  selector="dahc-table"
+  [whenToUse]="whenToUse"
+  [sourceFiles]="sourceFiles">
+  <div preview>
+    <dahc-table
+      caption="Applications"
+      [columns]="columns"
+      [rows]="rows"
+      [selectable]="selectable()"
+      [striped]="striped()"
+      [loading]="loading()"
+      [pageSize]="paginated() ? 5 : 0"
+      [(selectedKeys)]="selectedKeys"
+      [(sort)]="sort"
+      [(page)]="page">
+      <ng-template dahcTableCell="status" let-value="value">
+        <dahc-tag [purpose]="purposeOf(value)">{{ value }}</dahc-tag>
+      </ng-template>
+    </dahc-table>
+
+    <h3 class="pg-subheading">Fixed columns and scroll</h3>
+    <dahc-table
+      caption="Candidate register"
+      [columns]="wideColumns()"
+      [rows]="wideRows"
+      [selectable]="true"
+      [striped]="striped()"
+      scrollX="1300px"
+      [scrollY]="scrollY() ? '320px' : ''"
+      [(selectedKeys)]="wideSelectedKeys">
+      <ng-template dahcTableCell="status" let-value="value">
+        <dahc-tag [purpose]="purposeOf(value)">{{ value }}</dahc-tag>
+      </ng-template>
+      <ng-template dahcTableCell="action" let-row>
+        <button dahc-button type="button" variant="link" size="sm">View {{ row['id'] }}</button>
+      </ng-template>
+    </dahc-table>
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-toggle label="selectable" [(value)]="selectable" />
+    <dahc-inspector-toggle label="striped" [(value)]="striped" />
+    <dahc-inspector-toggle label="paginated (5 per page)" [(value)]="paginated" />
+    <dahc-inspector-toggle label="loading" [(value)]="loading" />
+    <dahc-inspector-toggle label="scrollY 320px (sticky header)" [(value)]="scrollY" />
+    <dahc-inspector-toggle label="fixed columns" [(value)]="fixedColumns" />
+    <p class="pg-value" data-testid="table-state">{{ stateText() }}</p>
+  </div>
+
+  <div states class="pg-stack">
+    <dahc-table caption="Empty table" [columns]="columns" [rows]="[]" emptyText="No applications yet" />
+  </div>
+
+  <div examples>
+    <dahc-doc-example exampleId="basic" heading="Basic" description="Columns and rows with a caption." template="table-page.component.html">
+      <dahc-table caption="Training sites" [columns]="siteColumns" [rows]="siteRows" />
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="sorting" heading="Sorting" description="Sortable columns cycle ascending, descending and off; bind [(sort)]." template="table-page.component.html">
+      <dahc-table caption="Training sites by seats" [columns]="siteColumns" [rows]="siteRows" [(sort)]="siteSort" />
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="selection" heading="Selection" description="Checkboxes select rows by rowKey; bind [(selectedKeys)]." template="table-page.component.html">
+      <dahc-table caption="Sites to contact" [columns]="siteColumns" [rows]="siteRows" [selectable]="true" [(selectedKeys)]="siteSelection" />
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="pagination" heading="Pagination" description="pageSize splits rows into pages; bind [(page)]." template="table-page.component.html">
+      <dahc-table caption="Admission cycles" [columns]="cycleColumns" [rows]="cycleRows" [pageSize]="3" [(page)]="cyclePage" />
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="custom" heading="Custom cells" description="A dahcTableCell template renders any content in a column." template="table-page.component.html">
+      <dahc-table caption="Reference statuses" [columns]="statusColumns" [rows]="statusRows">
+        <ng-template dahcTableCell="status" let-value="value">
+          <dahc-tag [purpose]="purposeOf(value)">{{ value }}</dahc-tag>
+        </ng-template>
+      </dahc-table>
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="fixed-header" heading="Fixed header" description="scrollY limits the height; the header row stays visible." template="table-page.component.html">
+      <dahc-table caption="Candidates" [columns]="longColumns" [rows]="longRows" scrollY="240px" />
+    </dahc-doc-example>
+  </div>
+
+  <ul accessibility class="pg-notes">
+    <li>A native table with a caption; column headers use scope="col"; sortable headers are buttons and report aria-sort.</li>
+    <li>The scrolling wrapper is a labelled, focusable region so keyboard users can scroll wide tables.</li>
+    <li>Row checkboxes are named; "select all" applies to the current page and shows a mixed state.</li>
+    <li>While loading, the table is aria-busy and shows a status message.</li>
+    <li>Fixed columns and the sticky header are CSS only (position: sticky): reading and tab order stay the table's own order.</li>
+    <li>The scroll region keeps focus with arrow-key scrolling; fixed columns mirror in right-to-left layouts.</li>
+  </ul>
+</dahc-playground-page>

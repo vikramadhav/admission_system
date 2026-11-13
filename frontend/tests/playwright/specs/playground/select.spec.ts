@@ -41,7 +41,8 @@ for (const mode of DISPLAY_MODES) {
       await playground.property('invalid').check();
 
       await expect(select).toHaveAttribute('aria-invalid', 'true');
-      await expect(select).toHaveAccessibleDescription('Only programs open in this cycle are listed. Select a program.');
+      // Figma Input field: the error replaces the hint.
+      await expect(select).toHaveAccessibleDescription('Select a program.');
     });
 
     test('follows the disabled input and the form control disabled state', async () => {
@@ -64,6 +65,6 @@ test('select serves its real source and reflows at 320 pixels', async ({ page })
   await page.setViewportSize({ width: 320, height: 800 });
   await playground.open('select', { theme: 'light', direction: 'ltr' });
 
-  await playground.expectSourceFile('select/select.component.ts', 'implements ControlValueAccessor');
+  await playground.expectSourceFile('forms/select/select.component.ts', 'extends DahcFormControl<string>');
   await expectNoHorizontalScroll(page);
 });

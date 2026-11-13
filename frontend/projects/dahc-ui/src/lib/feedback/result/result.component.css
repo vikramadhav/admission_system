@@ -1,0 +1,79 @@
+/* Ported from dubai-health-ui dh-result: featured status icon, heading, subtitle, actions (DERIVED). */
+
+:host {
+  --_surface: var(--dahc-color-success-surface);
+  --_accent: var(--dahc-color-success-icon);
+
+  display: block;
+}
+
+:host(.dahc-result--error) {
+  --_surface: var(--dahc-color-error-surface);
+  --_accent: var(--dahc-color-error-icon);
+}
+
+:host(.dahc-result--warning) {
+  --_surface: var(--dahc-color-warning-surface);
+  --_accent: var(--dahc-color-warning-icon);
+}
+
+:host(.dahc-result--info) {
+  --_surface: var(--dahc-color-info-surface);
+  --_accent: var(--dahc-color-info-icon);
+}
+
+.dahc-result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--dahc-space-3);
+  padding: var(--dahc-space-10) var(--dahc-space-6);
+  text-align: center;
+}
+
+.dahc-result__icon {
+  box-sizing: border-box;
+  inline-size: var(--dahc-size-featured-icon);
+  block-size: var(--dahc-size-featured-icon);
+  padding: var(--dahc-space-3);
+  border-radius: var(--dahc-radius-pill);
+  background-color: var(--_surface);
+  color: var(--dahc-color-text-primary);
+  box-shadow: 0 0 0 calc(var(--dahc-space-1) + var(--dahc-space-0-5)) color-mix(in srgb, var(--_accent) 25%, transparent);
+}
+
+.dahc-result__title {
+  margin: var(--dahc-space-2) 0 0;
+  color: var(--dahc-color-text-primary);
+  font-size: var(--dahc-type-heading-2-size);
+  font-weight: var(--dahc-type-heading-2-weight);
+  line-height: var(--dahc-type-heading-2-line-height);
+  overflow-wrap: anywhere;
+}
+
+.dahc-result__subtitle {
+  max-inline-size: var(--dahc-size-measure);
+  margin: 0;
+  color: var(--dahc-color-text-secondary);
+  font-size: var(--dahc-font-size-16);
+  line-height: var(--dahc-font-line-height-normal);
+}
+
+.dahc-result__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--dahc-space-3);
+  margin-block-start: var(--dahc-space-2);
+}
+
+.dahc-result__actions:empty {
+  display: none;
+}
+
+@media (forced-colors: active) {
+  .dahc-result__icon {
+    border: var(--dahc-size-border) solid CanvasText;
+    box-shadow: none;
+  }
+}

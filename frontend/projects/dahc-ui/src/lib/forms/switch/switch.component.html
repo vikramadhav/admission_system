@@ -1,0 +1,12 @@
+<label class="dahc-switch">
+  <input
+    class="dahc-switch__input"
+    type="checkbox"
+    role="switch"
+    [checked]="value()"
+    [disabled]="isDisabled()"
+    (change)="onToggle($event)"
+    (blur)="onBlur()" />
+  <span class="dahc-switch__track" aria-hidden="true"><span class="dahc-switch__thumb"></span></span>
+  <span class="dahc-switch__label"><ng-content /></span>
+</label>

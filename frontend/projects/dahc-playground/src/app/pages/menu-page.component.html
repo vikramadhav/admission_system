@@ -1,0 +1,75 @@
+<dahc-playground-page
+  heading="Menu"
+  description="An action menu: a button that opens a list of actions, following the WAI-ARIA menu button pattern. List styling Figma Dropdown 50:13293; behaviour DERIVED."
+  selector="dahc-menu"
+  [whenToUse]="whenToUse"
+  [exampleColumns]="2"
+  [sourceFiles]="sourceFiles">
+  <div preview>
+    <dahc-menu
+      [label]="label()"
+      [items]="items"
+      [variant]="variant()"
+      [size]="size()"
+      [disabled]="disabled()"
+      (itemSelected)="record($event)" />
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-text label="label" [(value)]="label" />
+    <dahc-inspector-choice label="variant" [options]="variants" [(value)]="variant" />
+    <dahc-inspector-choice label="size" [options]="sizes" [(value)]="size" />
+    <dahc-inspector-toggle label="disabled" [(value)]="disabled" />
+    <dahc-event-log [events]="events()" />
+  </div>
+
+  <div states class="pg-stack">
+    <p class="pg-value">Items: with icons, disabled ("Appeal score") and destructive ("Withdraw application", error colour).</p>
+  </div>
+
+  <dahc-doc-example
+    examples
+    exampleId="basic"
+    heading="Basic"
+    description="A secondary button with three actions."
+    template="menu-page.component.html">
+    <dahc-menu
+      label="Options"
+      [items]="[
+        { value: 'view', label: 'View application', icon: 'view' },
+        { value: 'print', label: 'Print summary', icon: 'print' },
+        { value: 'withdraw', label: 'Withdraw application', icon: 'trash', danger: true }
+      ]" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="primary"
+    heading="Primary and small"
+    description="Any button variant and size."
+    template="menu-page.component.html">
+    <dahc-menu
+      label="Create"
+      variant="primary"
+      size="sm"
+      [items]="[
+        { value: 'draft', label: 'New draft' },
+        { value: 'copy', label: 'Copy of last application' }
+      ]" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="disabled"
+    heading="Disabled"
+    description="The whole menu can be disabled."
+    template="menu-page.component.html">
+    <dahc-menu label="Manage" [disabled]="true" [items]="[{ value: 'edit', label: 'Edit' }]" />
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>The button reports aria-haspopup="menu" and aria-expanded; Enter, Space or ArrowDown opens on the first item, ArrowUp on the last.</li>
+    <li>In the menu: ArrowUp / ArrowDown / Home / End move, Enter or Space choose, Escape closes back to the button, Tab closes and moves on.</li>
+    <li>Disabled items stay in the list for discoverability but are skipped by the arrow keys.</li>
+  </ul>
+</dahc-playground-page>

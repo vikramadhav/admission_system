@@ -1,0 +1,48 @@
+// Section checklist (Figma 1:5351): step name and status tag per row, dividers between rows.
+.pay-checklist {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pay-checklist-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--dahc-space-3);
+  padding-block: var(--dahc-space-3);
+  border-block-end: var(--dahc-size-border) solid var(--dahc-color-border-subtle);
+}
+
+.pay-checklist-row:last-child {
+  border-block-end: 0;
+}
+
+.pay-checklist-label {
+  color: var(--dahc-color-text-primary);
+  font-weight: var(--dahc-font-weight-medium);
+}
+
+.pay-checklist-status {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--dahc-space-3);
+}
+
+.pay-list {
+  margin-block: var(--dahc-space-2) 0;
+  padding-inline-start: var(--dahc-space-6);
+}
+
+.pay-focus:focus {
+  outline: none;
+}
+
+.pay-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--dahc-space-3);
+}

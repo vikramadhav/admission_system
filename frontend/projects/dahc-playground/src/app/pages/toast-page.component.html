@@ -1,0 +1,43 @@
+<dahc-playground-page
+  heading="Toast"
+  description="Short notifications shown by DahcToastService in the dahc-toast-region that the application places once. They appear at the top end below the header."
+  selector="dahc-toast-region"
+  [whenToUse]="whenToUse"
+  [sourceFiles]="sourceFiles">
+  <div preview>
+    <button dahc-button type="button" (click)="show()">Show toast</button>
+    <dahc-toast-region />
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-text label="heading" [(value)]="heading" />
+    <dahc-inspector-text label="message" [(value)]="message" />
+    <dahc-inspector-choice label="variant" [options]="variants" [(value)]="variant" />
+    <dahc-inspector-choice label="duration (ms, 0 = until dismissed)" [options]="durations" [(value)]="duration" />
+  </div>
+
+  <div states class="pg-stack">
+    <p class="pg-value">Toasts stack at the bottom end of the screen, newest last; full width on small screens.</p>
+  </div>
+
+  <dahc-doc-example examples exampleId="variants" heading="Variants" description="info, success, warning and error, each with its own icon and colour." template="toast-page.component.html">
+    <dahc-space [wrap]="true">
+      <button dahc-button type="button" variant="secondary" size="sm" (click)="showToast('info')">Info toast</button>
+      <button dahc-button type="button" variant="secondary" size="sm" (click)="showToast('success')">Success toast</button>
+      <button dahc-button type="button" variant="secondary" size="sm" (click)="showToast('warning')">Warning toast</button>
+      <button dahc-button type="button" variant="secondary" size="sm" (click)="showToast('error')">Error toast</button>
+    </dahc-space>
+  </dahc-doc-example>
+  <dahc-doc-example examples exampleId="persistent" heading="Until dismissed" description="duration 0 keeps the toast until the user closes it." template="toast-page.component.html">
+    <button dahc-button type="button" variant="secondary" size="sm" (click)="showPersistent()">Show a persistent toast</button>
+  </dahc-doc-example>
+  <dahc-doc-example examples exampleId="heading-only" heading="Heading only" description="A heading alone is enough for simple confirmations." template="toast-page.component.html">
+    <button dahc-button type="button" variant="secondary" size="sm" (click)="showHeadingOnly()">Copy the link</button>
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>The list is a permanent polite live region, so new toasts are announced; errors use role="alert".</li>
+    <li>The timer pauses while the pointer or keyboard focus is on a toast (WCAG 2.2.1); every toast can be dismissed.</li>
+    <li>Use toasts for confirmations only; put anything the user must act on in the page (alert) or a dialog.</li>
+  </ul>
+</dahc-playground-page>

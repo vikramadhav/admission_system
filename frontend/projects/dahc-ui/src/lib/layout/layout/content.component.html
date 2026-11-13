@@ -1,0 +1,6 @@
+<ng-template #body><ng-content /></ng-template>
+@if (landmark()) {
+  <main class="dahc-content__main"><ng-container [ngTemplateOutlet]="body" /></main>
+} @else {
+  <div class="dahc-content__main"><ng-container [ngTemplateOutlet]="body" /></div>
+}

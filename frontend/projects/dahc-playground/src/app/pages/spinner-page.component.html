@@ -1,0 +1,43 @@
+<dahc-playground-page
+  heading="Spinner"
+  description="A navy arc on a navy-100 ring for work of unknown length, in three sizes (sm 20px, md 32px, lg 48px)."
+  selector="dahc-spinner"
+  [whenToUse]="whenToUse"
+  [sourceFiles]="sourceFiles">
+  <div preview class="pg-row">
+    <dahc-spinner [label]="label()" [size]="size()" />
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-text label="label" [(value)]="label" />
+    <dahc-inspector-choice label="size" [options]="sizes" [(value)]="size" />
+  </div>
+
+  <div states class="pg-row">
+    <dahc-spinner size="sm" label="Loading small" />
+    <dahc-spinner label="Loading medium" />
+    <dahc-spinner size="lg" label="Loading large" />
+  </div>
+
+  <dahc-doc-example examples exampleId="sizes" heading="Sizes" description="sm for inline use, md by default, lg for a whole page." template="spinner-page.component.html">
+    <dahc-space [wrap]="true">
+      <dahc-spinner size="sm" label="Loading, small" />
+      <dahc-spinner label="Loading, medium" />
+      <dahc-spinner size="lg" label="Loading, large" />
+    </dahc-space>
+  </dahc-doc-example>
+  <dahc-doc-example examples exampleId="label" heading="Meaningful label" description="The label says what is loading; it is announced politely." template="spinner-page.component.html">
+    <dahc-spinner label="Loading your training sites" />
+  </dahc-doc-example>
+  <dahc-doc-example examples exampleId="section" heading="In a section" description="Centre the spinner in the area that is loading." template="spinner-page.component.html">
+    <dahc-space [vertical]="true" [block]="true" align="center">
+      <dahc-spinner label="Loading the key dates" />
+    </dahc-space>
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>role="status" announces the label politely; the ring is decorative.</li>
+    <li>Under reduced motion the ring turns three times slower instead of stopping, so activity stays visible.</li>
+    <li>For buttons use the button's own loading state instead.</li>
+  </ul>
+</dahc-playground-page>

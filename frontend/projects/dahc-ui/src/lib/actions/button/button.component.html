@@ -1,0 +1,10 @@
+@if (loading()) {
+  <span class="dahc-button__spinner" aria-hidden="true"></span>
+  <span class="dahc-visually-hidden">{{ loadingLabel() }}</span>
+} @else if (iconStart(); as icon) {
+  <dahc-icon [name]="icon" [size]="iconSize()" />
+}
+<span class="dahc-button__label"><ng-content /></span>
+@if (iconEnd(); as icon) {
+  <dahc-icon [name]="icon" [size]="iconSize()" />
+}

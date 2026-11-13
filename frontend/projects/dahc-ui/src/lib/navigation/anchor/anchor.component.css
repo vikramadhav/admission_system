@@ -1,0 +1,9 @@
+/* DERIVED (dubai-health-ui UDD-019): links on a 1px divider; the active link has a 2px navy indicator. */
+
+:host {
+  display: block;
+}
+
+.dahc-anchor__list {
+  border-inline-start: var(--dahc-size-border) solid var(--dahc-color-border-subtle);
+}

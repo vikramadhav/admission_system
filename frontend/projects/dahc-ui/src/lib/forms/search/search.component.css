@@ -1,0 +1,37 @@
+/* Figma Search 50:8605. Map / Facility: 48px box (the form field box); Hero / Facility web: 64px. */
+
+:host {
+  display: block;
+  min-inline-size: 0;
+}
+
+:host(.dahc-search--lg) {
+  --_lg-height: calc(var(--dahc-size-control-lg) + var(--dahc-space-4));
+}
+
+:host(.dahc-search--lg) input {
+  min-block-size: calc(var(--_lg-height) - 2 * var(--dahc-size-border));
+}
+
+.dahc-search__clear {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  inline-size: var(--dahc-size-icon-lg);
+  block-size: var(--dahc-size-icon-lg);
+  padding: 0;
+  border: 0;
+  border-radius: var(--dahc-radius-pill);
+  background: transparent;
+  color: var(--dahc-color-text-tertiary);
+  cursor: pointer;
+}
+
+.dahc-search__clear:hover {
+  color: var(--dahc-color-text-primary);
+}
+
+.dahc-search__clear:focus-visible {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: var(--dahc-size-focus-offset);
+}

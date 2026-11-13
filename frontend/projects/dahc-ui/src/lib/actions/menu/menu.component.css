@@ -1,0 +1,51 @@
+/* Figma Dropdown frames (50:13293, 50:13311): option rows 48px, padding 12/16, gap 6,
+   Regular 14/20, hover blue-100 (Secondary Tints/1. Blue/100). The panel is .dahc-popup. */
+
+:host {
+  display: inline-block;
+}
+
+.dahc-menu {
+  min-inline-size: calc(var(--dahc-size-measure-narrow) / 2);
+  padding-block: var(--dahc-space-1);
+  list-style: none;
+}
+
+.dahc-menu__item {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--dahc-space-1) + var(--dahc-space-0-5));
+  min-block-size: var(--dahc-size-control-lg);
+  padding-block: var(--dahc-space-3);
+  padding-inline: var(--dahc-space-4);
+  color: var(--dahc-color-text-primary);
+  font-size: var(--dahc-font-size-14);
+  line-height: var(--dahc-font-line-height-tight);
+  cursor: pointer;
+  outline: none;
+}
+
+.dahc-menu__item:hover:not([aria-disabled='true']),
+.dahc-menu__item:focus {
+  background-color: var(--dahc-color-surface-raised-1);
+}
+
+.dahc-menu__item:focus-visible {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: calc(var(--dahc-size-focus-ring) * -1);
+}
+
+.dahc-menu__item--danger {
+  color: var(--dahc-color-error-text);
+}
+
+.dahc-menu__item[aria-disabled='true'] {
+  color: var(--dahc-color-text-disabled);
+  cursor: not-allowed;
+}
+
+@media (forced-colors: active) {
+  .dahc-menu__item:focus {
+    outline: var(--dahc-size-focus-ring) solid Highlight;
+  }
+}

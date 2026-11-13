@@ -1,0 +1,62 @@
+/* DERIVED (dubai-health-ui dh-rate), see the component comment. */
+
+:host {
+  display: inline-block;
+}
+
+.dahc-rate__stars {
+  display: inline-flex;
+  gap: var(--dahc-space-1);
+}
+
+.dahc-rate__star {
+  display: inline-grid;
+  border-radius: var(--dahc-radius-xs);
+  color: var(--dahc-color-border-default);
+  transition:
+    color var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard),
+    scale var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard);
+}
+
+.dahc-rate__star[role='radio'] {
+  cursor: pointer;
+}
+
+.dahc-rate__star--on {
+  color: var(--dahc-color-action-primary);
+}
+
+.dahc-rate__star[role='radio']:hover {
+  scale: 1.1;
+}
+
+.dahc-rate__star:focus-visible {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: var(--dahc-size-focus-offset);
+}
+
+:host(.dahc-rate--disabled) .dahc-rate__star {
+  color: var(--dahc-color-action-disabled-fg);
+  cursor: not-allowed;
+  scale: 1;
+}
+
+:host(.dahc-rate--disabled) .dahc-rate__star--on {
+  color: var(--dahc-color-text-tertiary);
+}
+
+.dahc-rate__icon {
+  inline-size: var(--dahc-size-icon-lg);
+  block-size: var(--dahc-size-icon-lg);
+  fill: currentcolor;
+}
+
+@media (forced-colors: active) {
+  .dahc-rate__star {
+    color: GrayText;
+  }
+
+  .dahc-rate__star--on {
+    color: Highlight;
+  }
+}

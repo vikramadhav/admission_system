@@ -1,0 +1,16 @@
+<div class="dahc-segmented" role="radiogroup" [attr.aria-label]="label()">
+  @for (option of options(); track option.value) {
+    <label class="dahc-segmented__option" [class.dahc-segmented__option--disabled]="isDisabled() || option.disabled">
+      <input
+        type="radio"
+        class="dahc-segmented__input"
+        [name]="name"
+        [value]="option.value"
+        [checked]="option.value === value()"
+        [disabled]="isDisabled() || (option.disabled ?? false)"
+        (change)="onSelect(option)"
+        (blur)="onBlur()" />
+      <span class="dahc-segmented__label">{{ option.label }}</span>
+    </label>
+  }
+</div>

@@ -1,11 +1,11 @@
 // Portal page layout. Components come from dahc-ui; these rules only arrange them, using tokens.
-@use '../../dahc-ui/src/styles/breakpoints';
+@use '../../dahc-ui/src/styles/tokens/breakpoints';
 
 .dahc-portal-page {
   display: flex;
   flex-direction: column;
   gap: var(--dahc-space-6);
-  max-inline-size: var(--dahc-size-content-max-width);
+  max-inline-size: var(--dahc-size-container-max);
   margin-inline: auto;
   padding-block: var(--dahc-space-8);
   padding-inline: var(--dahc-space-4);
@@ -13,7 +13,7 @@
 
 @include breakpoints.up('md') {
   .dahc-portal-page {
-    padding-inline: var(--dahc-space-8);
+    padding-inline: var(--dahc-space-6);
   }
 }
 

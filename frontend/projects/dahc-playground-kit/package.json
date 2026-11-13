@@ -1,0 +1,18 @@
+{
+  "name": "dahc-playground-kit",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Reusable component playground for design systems built on DAHC-UI: shell, navigation, inspector controls, source viewer and token-driven foundations pages.",
+  "peerDependencies": {
+    "@angular/common": "22.2.5",
+    "@angular/core": "22.2.5",
+    "@angular/forms": "22.2.5",
+    "@angular/router": "22.2.5",
+    "dahc-ui": "0.0.1",
+    "rxjs": "7.8.2"
+  },
+  "dependencies": {
+    "tslib": "2.9.1"
+  },
+  "sideEffects": false
+}

@@ -9,27 +9,32 @@ Run from `frontend/` with Node 26 and npm 11.
 | Command | What it does |
 |---|---|
 | `npm ci` | Install the pinned packages |
-| `npm start` | Portal on http://localhost:4200 (English, development environment) |
+| `npm start` | Portal on http://localhost:4200 (English, development environment: real API on localhost:5001 and IDAM) |
+| `npm run start:mock` | Portal with the in-browser mock API and persona sign-in (no backend or IDAM needed); one-time codes are `123456` |
 | `npx ng serve dahc-portal -c development-ar` | Portal in Arabic |
 | `npm run start:playground` | Component playground on http://localhost:4300 |
 | `npm run build` | Builds `dahc-ui`, the playground and the portal (both locales, under `dist/dahc-portal/browser/en` and `/ar`) |
 | `npm run lint` | Angular ESLint for all projects and the Playwright tests, zero warnings allowed |
 | `npm run audit` | npm vulnerability audit (moderate and above fail) |
 | `npm run extract-i18n` | Extracts portal messages to `projects/dahc-portal/src/locale/messages.json` |
-| `npx playwright install chromium` then `npm run e2e` | Playwright: one spec per playground component (keyboard, ARIA, both themes, both directions, axe WCAG 2.2 AA, 320 px reflow) and the portal D1 journey |
+| `npx playwright install chromium` then `npm run e2e` | Playwright: playground specs (keyboard, ARIA, both themes, both directions, axe WCAG 2.2 AA, 320 px reflow), portal specs on the development build with IDAM and API mocks, and candidate workflow specs on the mock build (port 4201) |
 
 ## Projects
 
 | Path | Contents |
 |---|---|
-| `projects/dahc-ui` | Component library. `src/styles`: design tokens as SCSS maps (colour, typography, spacing, radius, elevation, motion, sizes, z-index, breakpoints) generating `--dahc-*` custom properties for the light and dark themes. `src/lib`: `DahcThemeService`, accessibility primitives (`DahcLiveAnnouncer`, `dahcUniqueId`) and the components below. |
-| `projects/dahc-playground` | One page per component: live preview, property inspector for every input and output, theme and direction switchers, states, accessibility notes, and the component's real source (copied from `dahc-ui` into the build as assets). |
-| `projects/dahc-portal` | The candidate web app, built only from `dahc-ui`. `api/`: typed clients for the D1 operations. `core/`: configuration, IDAM sign-in, interceptors, locale and date formatting. `features/`: screens. |
-| `tests/playwright` | Configuration, portal page objects, playground specs, portal specs with IDAM and API mocks. |
+| `projects/dahc-ui` | DAHC-UI, the design system library, built from the Dubai Health Standard UI in Figma (spec: `docs/design-system/`). `src/styles`: `tokens/` (Figma primitive palette and scales as SCSS maps), `themes/` (semantic colour roles for the light theme and the proposed dark theme), `base/` (Dubai font, base rules, `.dahc-text-<role>` type roles, layout utilities); compiled to `--dahc-*` custom properties. `src/assets/fonts`: self-hosted Dubai WOFF2. `src/lib`: `core/` (theme service, accessibility primitives) and the components grouped as `actions/`, `forms/`, `data-display/`, `navigation/`, `feedback/`; component stylesheets are native CSS that use semantic tokens only. |
+| `projects/dahc-playground` | Development-only documentation app (never deployed with the portal). Foundations pages (colour with live WCAG contrast checks, typography, layout and elevation) read from the loaded tokens, then one page per component: live preview, property inspector for every input and output, theme and direction switchers, states, accessibility notes, and the component's real source (copied from `dahc-ui` into the build as assets). |
+| `projects/dahc-portal` | The GME candidate portal, built only from `dahc-ui` (docs: `docs/candidate-portal/`). `api/`: typed clients for the candidate operations of the contract. `core/`: configuration, IDAM sign-in, role guard, interceptors, locale, inactivity sign-out. `layouts/`: public and candidate layouts. `shared/`: program variant rules, reference lists, portfolio questions, form helpers. `features/candidate/`: dashboard, my applications, the application wizard, payment, portfolio result and appeal, account, action dialogs. `mock/`: the in-browser API used only by the mock build. |
+| `tests/playwright` | Configuration, page objects, playground specs, portal specs with IDAM and API mocks, candidate workflow specs on the mock build. |
 
-Components: `alert`, `app-header`, `badge`, `button`, `card`, `detail-list`, `empty-state`, `page-header`, `ranked-selection`, `select`, `theme-switch`.
+Components: `actions/button`, `actions/theme-switch`, `forms/select`, `forms/ranked-selection`, `data-display/badge`, `data-display/card`, `data-display/detail-list`, `navigation/app-header`, `navigation/page-header`, `feedback/alert`, `feedback/empty-state`. They still have their D1 look apart from the new tokens; each is realigned to Figma in its DAHC-UI phase (`docs/design-system/07-implementation-roadmap.md`).
 
-## What D1 covers
+## What the portal covers
+
+The complete candidate experience in the GME Figma file plus the BRD candidate stories: sign-in, dashboard (first-time and returning), my applications, the application wizard for every program variant (program and preferences, application information, personal information with ICP pre-fill and contact OTP, university grades, English, internship, residency, board and license, entrance exam, portfolio with one-time submission, review, pay and submit), payment return with retry and the submitted dialog, read-only view, discard, withdraw with OTP, reinstatement, edit preferences, exclude training sites, portfolio result and appeal, account, and inactivity sign-out. See `docs/candidate-portal/README.md` for the screen inventory and routes, and `02-open-questions-and-assumptions.md` for what the business and API teams still need to confirm. Most candidate operations exist only in the contract so far, so the full workflows run on the mock build.
+
+The first slice (D1) set up the parts below, which the portal still uses:
 
 - **US-1.1.1 / US-1.1.2 sign-in:** authorization code with PKCE against IDAM through `angular-auth-oidc-client`, endpoints from the IDAM per-definition metadata address, scopes `openid profile email api`. Tokens are held in memory; only the single-use authorization-request values (PKCE verifier, state, nonce), the return route and a "session started" flag survive the redirect in `sessionStorage`. The first sign-in in a tab calls `POST /api/v1/auth/sign-in`; a reload restores the session with `GET /api/v1/auth/me`. Cancelled or failed sign-in, IDAM unavailable and `409 account.duplicate` each have their own page. Sign-out revokes the access token, clears memory and goes to the IDAM single sign-out page with `id_token_hint`, `post_logout_redirect_uri` and `state`.
 - **HTTP:** one interceptor adds the bearer token (and `Accept-Language`) only for the configured API base URL; one interceptor turns `ApiResponse<T>` into a typed `ApiResult<T>` (with the ETag) and Problem Details into `ApiProblemError`, shows the localized message with its trace id, starts a new sign-in on 401, calls sign-in on `403 account.not_registered`, and shows the not-allowed page for any other 403.
@@ -50,11 +55,9 @@ The typed API clients are written by hand from `Contracts/openapi/openapi.editor
 
 | Not included | Reason |
 |---|---|
-| Application form sections, the step navigation shown in the designs, form schema | OQ-02 (form schema vs dynamic form engine) is open; US-1.3.2 and later slices |
-| View application (US-1.2.2), discard (US-1.2.3), withdraw, reinstate, edit preferences, exclude site, appeal | Later slices; the dashboard shows only the actions D1 implements |
-| Auto-save, reminders, archiving (rest of US-1.3.11) | Later slice of US-1.3.11 |
-| Staff screens and the role switcher | No staff screen exists in D1 to switch to (D3 onwards); staff users see the not-allowed page |
-| Payments, documents, admin | Later slices (D2 onwards) |
+| Other role portals (officer, supervisor, referee, finance, admin) | Out of scope for now; the routing keeps each role in its own lazy area |
+| Notifications inbox | E-mail and SMS only in the BRD and contract (CJ-22) |
+| Correct a returned application (US-2.3.4) | No candidate read of correction flags in the contract (OQ-C6) |
 | Token renewal | IDAM renewal method not confirmed (standard s.30, OQ-15); an expired token leads to a new sign-in |
 | Development-only sign-in | The API's development sign-in is not in the contract yet; portal specs use IDAM and API mocks meanwhile |
 | Visual regression screenshots | Need the pinned container image (standard s.25) |

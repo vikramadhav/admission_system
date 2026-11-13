@@ -1,0 +1,59 @@
+// Figma wizard body: 300 px stepper card and the form card, in the 1200 px container.
+.wizard-page {
+  display: grid;
+  gap: var(--dahc-space-6);
+  max-inline-size: var(--dahc-size-container-max);
+  margin-inline: auto;
+  padding-block: var(--dahc-space-8) var(--dahc-space-12);
+  padding-inline: var(--dahc-space-4);
+}
+
+/* Same content edge as the header, banner and footer: 24px sides from md. */
+@media (min-width: 48rem) {
+  .wizard-page {
+    padding-inline: var(--dahc-space-6);
+  }
+}
+
+.wizard-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--dahc-space-6);
+  align-items: start;
+}
+
+@media (min-width: 64rem) {
+  .wizard-layout {
+    grid-template-columns: 18.75rem minmax(0, 1fr);
+  }
+
+  .wizard-stepper {
+    position: sticky;
+    inset-block-start: var(--dahc-space-4);
+  }
+}
+
+.wizard-form {
+  min-inline-size: 0;
+}
+
+.wizard-text {
+  margin: 0;
+}
+
+.wizard-problem-list {
+  margin-block: var(--dahc-space-2) 0;
+  padding-inline-start: var(--dahc-space-6);
+}
+
+.wizard-inline-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dahc-space-3);
+  margin-block-start: var(--dahc-space-3);
+}
+
+.wizard-form dahc-step-header {
+  display: block;
+  margin-block-end: var(--dahc-space-6);
+}

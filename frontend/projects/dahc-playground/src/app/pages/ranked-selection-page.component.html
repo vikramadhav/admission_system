@@ -1,7 +1,9 @@
 <dahc-playground-page
   heading="Ranked selection"
-  description="Choose several options and put them in order: a checkbox group to choose, an ordered list with move buttons to rank. The form value is the chosen values in rank order."
-  [sourceFiles]="sourceFiles">
+  description="Choose several options, then order them with move buttons; the value is the ordered array. GME preference picker."
+  [sourceFiles]="sourceFiles"
+  selector="dahc-ranked-selection"
+  [whenToUse]="whenToUse">
   <div preview class="pg-stack">
     <dahc-ranked-selection
       [formControl]="control"
@@ -38,6 +40,39 @@
     <dahc-ranked-selection label="Disabled" [options]="sites" [formControl]="disabledControl" />
     <dahc-ranked-selection label="Disabled by input" [options]="sites" [disabled]="true" />
   </div>
+
+  <dahc-doc-example
+    examples
+    exampleId="basic"
+    heading="Basic"
+    description="Chosen items appear in the order list with move buttons."
+    template="ranked-selection-page.component.html">
+    <dahc-ranked-selection label="Preferred specialties" [options]="exampleSpecialties" [formControl]="exampleSpecialtyOrder" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="description"
+    heading="With a description"
+    description="Explain how the order is used."
+    template="ranked-selection-page.component.html">
+    <dahc-ranked-selection label="Interview locations" description="We try your first choice first." [options]="exampleLocations" [formControl]="exampleLocationOrder" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="required"
+    heading="Required with error"
+    description="The error shows after the control was touched without a choice."
+    template="ranked-selection-page.component.html">
+    <dahc-ranked-selection
+      label="Rotation order"
+      [options]="exampleSpecialties"
+      [required]="true"
+      [invalid]="exampleRotation.invalid && exampleRotation.touched"
+      errorMessage="Choose at least one rotation."
+      [formControl]="exampleRotation" />
+  </dahc-doc-example>
 
   <ul accessibility class="pg-notes">
     <li>The options are a fieldset with a legend, so the group name is read with each checkbox; description and error are linked to the group with aria-describedby.</li>

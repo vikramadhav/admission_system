@@ -1,0 +1,62 @@
+<dahc-playground-page
+  heading="Auto-complete"
+  description="A text field with suggestions; any text is allowed. Ported from dubai-health-ui dh-auto-complete; PARTIAL Figma Search dropdown 50:8605."
+  [sourceFiles]="sourceFiles"
+  selector="dahc-auto-complete"
+  [whenToUse]="whenToUse"
+  [exampleColumns]="2">
+  <div preview>
+    <dahc-auto-complete label="Hospital" hint="Type to see suggestions, or enter another name." [options]="hospitals" [formControl]="control" />
+  </div>
+
+  <div inspector class="pg-stack">
+    <p class="pg-value" data-testid="form-value">Form value: {{ valueText() }}</p>
+  </div>
+
+  <dahc-doc-example
+    examples
+    exampleId="basic"
+    heading="Basic"
+    description="Suggestions from a list of strings."
+    template="auto-complete-page.component.html">
+    <dahc-auto-complete label="Nationality" [options]="exampleNationalities" [formControl]="exampleNationality" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="placeholder"
+    heading="Placeholder and hint"
+    description="Explain that any value is accepted."
+    template="auto-complete-page.component.html">
+    <dahc-auto-complete label="University" placeholder="Start typing" hint="Not in the list? Type the full name." [options]="exampleUniversities" [formControl]="exampleUniversity" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="required"
+    heading="Required with error"
+    description="The error shows after the field was touched while empty."
+    template="auto-complete-page.component.html">
+    <dahc-auto-complete
+      label="Current employer"
+      [options]="['Dubai Health', 'Ministry of Health and Prevention', 'Private practice']"
+      [required]="true"
+      [invalid]="exampleEmployer.invalid && exampleEmployer.touched"
+      errorMessage="Enter your current employer."
+      [formControl]="exampleEmployer" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="limit"
+    heading="Fewer suggestions"
+    description="maxSuggestions keeps the list short."
+    template="auto-complete-page.component.html">
+    <dahc-auto-complete label="Specialty" [maxSuggestions]="3" [options]="exampleSpecialties" [formControl]="exampleSpecialty" />
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>A combobox with list autocomplete: aria-expanded, aria-controls and aria-activedescendant follow the suggestions.</li>
+    <li>ArrowDown / ArrowUp move through the suggestions, Enter picks, Escape closes; focus stays in the field.</li>
+  </ul>
+</dahc-playground-page>

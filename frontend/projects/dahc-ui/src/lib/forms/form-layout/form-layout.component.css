@@ -1,0 +1,21 @@
+/* PARTIAL Figma DH Form pattern, see the component comment. Unencapsulated: selectors are scoped
+   by the element name. */
+
+dahc-form-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--dahc-space-6);
+  align-items: start;
+}
+
+/* Breakpoint md (tokens/_breakpoints.scss). */
+@media (min-width: 48rem) {
+  dahc-form-layout.dahc-form-layout--two {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  dahc-form-layout.dahc-form-layout--two > .dahc-form-layout__full,
+  dahc-form-layout.dahc-form-layout--two > [dahcFormFull] {
+    grid-column: 1 / -1;
+  }
+}

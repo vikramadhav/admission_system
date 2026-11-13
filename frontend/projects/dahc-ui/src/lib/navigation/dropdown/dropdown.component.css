@@ -1,0 +1,59 @@
+/* Not encapsulated (projected items): every selector is scoped by the dahc-dropdown BEM block.
+   Figma Dropdown frames (50:13293): rows 48px, padding 12/16, Regular 14/20, hover blue-100.
+   The panel is .dahc-popup. Ported from dubai-health-ui dh-dropdown. */
+
+.dahc-dropdown {
+  display: inline-block;
+}
+
+.dahc-dropdown__panel {
+  min-inline-size: calc(var(--dahc-size-measure-narrow) / 2);
+  padding-block: var(--dahc-space-1);
+}
+
+.dahc-dropdown__item {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--dahc-space-1) + var(--dahc-space-0-5));
+  box-sizing: border-box;
+  inline-size: 100%;
+  min-block-size: var(--dahc-size-control-lg);
+  margin: 0;
+  padding-block: var(--dahc-space-3);
+  padding-inline: var(--dahc-space-4);
+  border: 0;
+  background-color: transparent;
+  color: var(--dahc-color-text-primary);
+  font: inherit;
+  font-size: var(--dahc-font-size-14);
+  line-height: var(--dahc-font-line-height-tight);
+  text-align: start;
+  text-decoration: none;
+  cursor: pointer;
+  outline: none;
+}
+
+.dahc-dropdown__item:hover:not([aria-disabled='true']),
+.dahc-dropdown__item:focus {
+  background-color: var(--dahc-color-surface-raised-1);
+}
+
+.dahc-dropdown__item:focus-visible {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: calc(var(--dahc-size-focus-ring) * -1);
+}
+
+.dahc-dropdown__item--danger {
+  color: var(--dahc-color-error-text);
+}
+
+.dahc-dropdown__item[aria-disabled='true'] {
+  color: var(--dahc-color-text-disabled);
+  cursor: not-allowed;
+}
+
+@media (forced-colors: active) {
+  .dahc-dropdown__item:focus {
+    outline: var(--dahc-size-focus-ring) solid Highlight;
+  }
+}

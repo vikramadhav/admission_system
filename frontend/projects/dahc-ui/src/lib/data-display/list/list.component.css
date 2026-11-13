@@ -1,0 +1,19 @@
+/* dh-list: plain column; bordered = navy-100 frame, radius 12 (dubai-health-ui dh-list bordered). */
+
+:host {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+}
+
+:host(.dahc-list--bordered) {
+  border: var(--dahc-size-border) solid var(--dahc-color-border-subtle);
+  border-radius: var(--dahc-radius-md);
+}
+
+@media (forced-colors: active) {
+  :host(.dahc-list--bordered) {
+    border-color: CanvasText;
+  }
+}

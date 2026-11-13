@@ -1,0 +1,62 @@
+<div class="step">
+  <div class="step-grid" [formGroup]="form">
+    @if (cycle() !== '') {
+      <dahc-form-field i18n-label="@@portal.program.cycle" label="Admission cycle">
+        <input dahcInput type="text" [value]="cycle()" readonly />
+      </dahc-form-field>
+    }
+    @if (state.mode() === 'create') {
+      <dahc-select
+        formControlName="programId"
+        i18n-label="@@portal.program.program"
+        label="Program"
+        [options]="programOptions()"
+        [required]="true"
+        [invalid]="programError() !== ''"
+        [errorMessage]="programError()" />
+    } @else {
+      <dahc-form-field i18n-label="@@portal.program.program" label="Program">
+        <input dahcInput type="text" [value]="state.program()?.name ?? ''" readonly />
+      </dahc-form-field>
+    }
+  </div>
+
+  @if (programs.error() && state.mode() === 'create') {
+    <dahc-alert variant="error" i18n="@@portal.program.programsFailed">The programs could not be loaded. Reload the page to try again.</dahc-alert>
+  }
+
+  @if (state.program()) {
+    <section class="step-section" aria-labelledby="preferences-heading">
+      <h3 id="preferences-heading" class="step-section-heading" i18n="@@portal.program.preferencesHeading">Specialties and Training Sites</h3>
+      <div class="step-grid">
+        <dahc-preference-card
+          [group]="form.controls.preference1"
+          [specialtyId]="form.controls.preference1.controls.specialtyId.value"
+          i18n-heading="@@portal.program.preference1"
+          heading="Preference 1"
+          [specialtyOptions]="specialtyOptions()"
+          [required]="true"
+          [showAllErrors]="showAll()" />
+        @if (twoPreferences()) {
+          <dahc-preference-card
+            [group]="form.controls.preference2"
+            [specialtyId]="form.controls.preference2.controls.specialtyId.value"
+            i18n-heading="@@portal.program.preference2"
+            heading="Preference 2 (optional)"
+            [specialtyOptions]="specialtyOptions()"
+            [showAllErrors]="showAll()"
+            [crossFieldError]="samePreferenceError()" />
+        }
+      </div>
+      <dahc-alert variant="info" i18n="@@portal.program.sameSiteNote">
+        You can pick the same site for different specialties. Specialties and sites depend on the program.
+      </dahc-alert>
+    </section>
+  }
+
+  @if (state.mode() !== 'create') {
+    <p class="step-note" i18n="@@portal.program.programFixed">
+      The program cannot be changed after the draft is created. To apply for another program, discard this draft and start a new application.
+    </p>
+  }
+</div>

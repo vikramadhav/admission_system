@@ -1,0 +1,84 @@
+<dahc-playground-page
+  heading="File upload"
+  description="Choose or drop a file, with type and size checks, an uploaded row with preview and remove, and progress. GME upload slot."
+  [sourceFiles]="sourceFiles"
+  selector="dahc-file-upload"
+  [whenToUse]="whenToUse"
+  [exampleColumns]="2">
+  <div preview>
+    <dahc-file-upload
+      [label]="label()"
+      [hint]="hint()"
+      [required]="required()"
+      accept=".pdf,.jpg,.jpeg,.png"
+      [maxSize]="2097152"
+      [progress]="showProgress() ? 60 : null"
+      [formControl]="control"
+      (fileSelected)="record('fileSelected (' + $event.name + ')')"
+      (previewRequested)="record('previewRequested (' + $event.name + ')')"
+      (fileRemoved)="record('fileRemoved')" />
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-text label="label" [(value)]="label" />
+    <dahc-inspector-text label="hint" [(value)]="hint" />
+    <dahc-inspector-toggle label="required" [(value)]="required" />
+    <dahc-inspector-toggle label="progress (60%)" [(value)]="showProgress" />
+    <p class="pg-value" data-testid="form-value">Form value: {{ valueText() }}</p>
+    <dahc-event-log [events]="events()" />
+  </div>
+
+  <div states class="pg-stack">
+    <dahc-file-upload label="Already uploaded" [formControl]="existingControl" />
+    <dahc-file-upload label="Upload failed" errorMessage="The upload failed. Try again." [invalid]="true" />
+    <dahc-file-upload label="Disabled" [formControl]="disabledControl" />
+  </div>
+
+  <dahc-doc-example
+    examples
+    exampleId="basic"
+    heading="Basic"
+    description="A PDF up to 2 MB."
+    template="file-upload-page.component.html">
+    <dahc-file-upload label="Curriculum vitae" hint="PDF, up to 2 MB." accept=".pdf" [maxSize]="2097152" [formControl]="exampleCv" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="image"
+    heading="Images only"
+    description="A photo in JPG or PNG."
+    template="file-upload-page.component.html">
+    <dahc-file-upload label="Profile photo" hint="JPG or PNG, up to 1 MB." accept=".jpg,.jpeg,.png" [maxSize]="1048576" [formControl]="examplePhoto" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="uploaded"
+    heading="Already uploaded"
+    description="A saved file shows as an uploaded row with preview and remove."
+    template="file-upload-page.component.html">
+    <dahc-file-upload label="Degree certificate" [formControl]="exampleDegree" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="required"
+    heading="Required with error"
+    description="The error shows after the slot was touched without a file."
+    template="file-upload-page.component.html">
+    <dahc-file-upload
+      label="Police clearance certificate"
+      accept=".pdf"
+      [required]="true"
+      [invalid]="exampleClearance.invalid && exampleClearance.touched"
+      errorMessage="Upload your police clearance certificate."
+      [formControl]="exampleClearance" />
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>A labelled group; "Choose file" is a real button that opens the system file picker, so the slot works with the keyboard. Dropping a file is an extra for pointer users.</li>
+    <li>The hint (allowed types and size) and any error are linked to the button; errors have an icon and text.</li>
+    <li>The uploaded row names the file; Preview and "Remove file" buttons include the file name for screen readers.</li>
+  </ul>
+</dahc-playground-page>

@@ -1,0 +1,48 @@
+<dahc-page-header
+  i18n-heading="@@portal.applications.heading"
+  heading="My applications"
+  i18n-description="@@portal.applications.description"
+  description="All the applications you have started, including withdrawn and archived ones."
+  [breadcrumbs]="breadcrumbs"
+  [focusOnLoad]="true" />
+
+<div class="applications">
+  @if (applications.error()) {
+    <dahc-alert variant="error" i18n-heading="@@portal.applications.loadFailed" heading="Your applications could not be loaded">
+      <p class="applications-text" i18n="@@portal.applications.loadFailedText">Please try again in a moment.</p>
+    </dahc-alert>
+    <div>
+      <button dahc-button type="button" variant="secondary" (click)="applications.reload()" i18n="@@portal.action.tryAgain">Try again</button>
+    </div>
+  } @else if (!applications.isLoading() && rows().length === 0) {
+    <dahc-empty-state
+      i18n-heading="@@portal.applications.emptyHeading"
+      heading="You have no applications yet"
+      i18n-description="@@portal.applications.emptyText"
+      description="When you start an application it will appear here.">
+      <a dahc-button routerLink="/candidate/applications/new" i18n="@@portal.dashboard.startNew">Start New Application</a>
+    </dahc-empty-state>
+  } @else {
+    <dahc-table
+      i18n-caption="@@portal.applications.caption"
+      caption="Your applications"
+      [columns]="columns"
+      [rows]="rows()"
+      [loading]="applications.isLoading()">
+      <ng-template dahcTableCell="status" let-row>
+        <dahc-tag [purpose]="asRow(row).statusPurpose">{{ asRow(row).status }}</dahc-tag>
+      </ng-template>
+      <ng-template dahcTableCell="actions" let-row>
+        @if (asRow(row).isDraft) {
+          <a dahc-button size="sm" [routerLink]="['/candidate/applications', asRow(row).id, 'steps', 'program']" i18n="@@portal.applications.resume">
+            Resume<span class="dahc-visually-hidden"> {{ asRow(row).applicationNumber }}</span>
+          </a>
+        } @else {
+          <a dahc-button size="sm" variant="secondary" [routerLink]="['/candidate/applications', asRow(row).id]" i18n="@@portal.applications.view">
+            View<span class="dahc-visually-hidden"> {{ asRow(row).applicationNumber }}</span>
+          </a>
+        }
+      </ng-template>
+    </dahc-table>
+  }
+</div>

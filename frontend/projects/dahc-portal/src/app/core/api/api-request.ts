@@ -1,4 +1,4 @@
-import { HttpContextToken } from '@angular/common/http';
+import { HttpContext, HttpContextToken } from '@angular/common/http';
 
 /**
  * Set by callers that show API problems themselves (sign-in and session restore are shown
@@ -11,4 +11,9 @@ export function isDahcApiUrl(url: string, apiBaseUrl: string): boolean {
   const base = apiBaseUrl.replace(/\/+$/, '');
 
   return url === base || url.startsWith(`${base}/`) || url.startsWith(`${base}?`);
+}
+
+/** Context for a request whose caller shows any problem itself (dialogs, inline forms). */
+export function callerHandlesProblems(): HttpContext {
+  return new HttpContext().set(DAHC_CALLER_HANDLES_PROBLEMS, true);
 }

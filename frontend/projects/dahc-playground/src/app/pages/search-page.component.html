@@ -1,0 +1,68 @@
+<dahc-playground-page
+  heading="Search"
+  description="A search field with a clear button that emits the query on Enter. Figma Search 50:8200 (48 and 64 pixel sizes)."
+  [sourceFiles]="sourceFiles"
+  selector="dahc-search"
+  [whenToUse]="whenToUse">
+  <div preview>
+    <dahc-search
+      [label]="label()"
+      [placeholder]="placeholder()"
+      [size]="size()"
+      [showLabel]="showLabel()"
+      (searchSubmitted)="recordSearch($event)" />
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-text label="label" [(value)]="label" />
+    <dahc-inspector-text label="placeholder" [(value)]="placeholder" />
+    <dahc-inspector-choice label="size" [options]="sizes" [(value)]="size" />
+    <dahc-inspector-toggle label="showLabel" [(value)]="showLabel" />
+    <dahc-event-log [events]="events()" />
+  </div>
+
+  <div states class="pg-stack">
+    <dahc-search label="Large (64 pixels)" size="lg" placeholder="Search services" />
+    <dahc-search
+      label="No results"
+      [showLabel]="true"
+      placeholder="Search"
+      [invalid]="true"
+      errorMessage="Sorry, we can't find &quot;Kjdhaoa&quot;. Try another keyword." />
+  </div>
+
+  <dahc-doc-example
+    examples
+    exampleId="basic"
+    heading="Basic"
+    description="The label is visually hidden; Enter emits searchSubmitted."
+    template="search-page.component.html">
+    <dahc-search label="Search programmes" placeholder="Search by name" (searchSubmitted)="exampleLastQuery.set($event)" />
+    <p>Last search: {{ exampleLastQuery() || 'none' }}</p>
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="large"
+    heading="Large with a visible label"
+    description="A page-level search."
+    template="search-page.component.html">
+    <dahc-search label="Find a doctor" size="lg" [showLabel]="true" placeholder="Name or specialty" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="no-results"
+    heading="No results"
+    description="Show a message in the error slot when nothing was found."
+    template="search-page.component.html">
+    <dahc-search label="Search clinics" [showLabel]="true" [invalid]="true" errorMessage="No clinics match your search. Try another keyword." />
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>A native search input with a label (visually hidden by default) and a decorative search icon.</li>
+    <li>The clear button has an accessible name, appears only when there is text, and returns focus to the field.</li>
+    <li>The on-screen keyboard shows a Search key (enterkeyhint).</li>
+    <li>Figma shows no focus change and no error border; DAHC adds both.</li>
+  </ul>
+</dahc-playground-page>

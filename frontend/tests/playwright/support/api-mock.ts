@@ -48,7 +48,8 @@ interface StartNewOverride {
 }
 
 /**
- * A small in-memory DAHC API following the contract for the D1 operations: ApiResponse
+ * A small in-memory DAHC API following the contract for the D1 operations (plus the empty
+ * attachment and portfolio reads the wizard makes; sections answer 404): ApiResponse
  * envelopes, Problem Details errors, ETag and If-Match on drafts, Idempotency-Key on create.
  */
 export class ApiMock {
@@ -116,6 +117,10 @@ export class ApiMock {
       await this.getApplication(route, applicationMatch[1]);
     } else if (method === 'PATCH' && applicationMatch?.[1]) {
       await this.updateApplication(route, applicationMatch[1], request);
+    } else if (method === 'GET' && /^\/applications\/[^/]+\/attachments$/.test(path)) {
+      await this.ok(route, []);
+    } else if (method === 'GET' && /^\/applications\/[^/]+\/portfolio$/.test(path)) {
+      await this.ok(route, { submittedAt: null, immutable: false, answers: [] });
     } else {
       await this.problem(route, 404, 'resource.not_found', 'Not found.');
     }
@@ -150,7 +155,7 @@ export class ApiMock {
         submissionDeadline: '2026-12-31T19:59:00Z',
         announcementDate: null,
         appealDeadline: null,
-        allowedActions: application.status === 'DRAFT' ? ['RESUME', 'DISCARD'] : ['VIEW'],
+        allowedActions: application.status === 'DRAFT' ? ['VIEW', 'RESUME', 'DISCARD'] : ['VIEW'],
       })),
       page: { limit: 25, nextCursor: null },
     };

@@ -1,0 +1,118 @@
+/* Ported from dubai-health-ui dh-notification: white card, radius 12, Shadow 4, top end (PARTIAL). */
+
+.dahc-notification-region {
+  position: fixed;
+  /* Below an 80px app header, like dahc-toast-region. */
+  inset-block-start: calc(var(--dahc-size-control-lg) + var(--dahc-space-8) + var(--dahc-space-4));
+  inset-inline-end: var(--dahc-space-4);
+  z-index: var(--dahc-z-toast);
+  inline-size: min(var(--dahc-size-measure-narrow) + var(--dahc-space-8), calc(100vw - 2 * var(--dahc-space-4)));
+  pointer-events: none;
+}
+
+.dahc-notification-region__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dahc-space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dahc-notification {
+  --_surface: var(--dahc-color-info-surface);
+  --_accent: var(--dahc-color-info-icon);
+
+  display: flex;
+  align-items: flex-start;
+  gap: var(--dahc-space-3);
+  padding: var(--dahc-space-4);
+  border: var(--dahc-size-border) solid var(--dahc-color-border-subtle);
+  border-radius: var(--dahc-radius-md);
+  background-color: var(--dahc-color-surface);
+  color: var(--dahc-color-text-primary);
+  box-shadow: var(--dahc-shadow-4);
+  pointer-events: auto;
+  animation: dahc-notification-in var(--dahc-motion-duration-normal) var(--dahc-motion-easing-standard);
+}
+
+.dahc-notification--success {
+  --_surface: var(--dahc-color-success-surface);
+  --_accent: var(--dahc-color-success-icon);
+}
+
+.dahc-notification--warning {
+  --_surface: var(--dahc-color-warning-surface);
+  --_accent: var(--dahc-color-warning-icon);
+}
+
+.dahc-notification--error {
+  --_surface: var(--dahc-color-error-surface);
+  --_accent: var(--dahc-color-error-icon);
+}
+
+@keyframes dahc-notification-in {
+  from {
+    opacity: 0;
+    transform: translateY(calc(-1 * var(--dahc-space-2)));
+  }
+}
+
+.dahc-notification__icon {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  inline-size: var(--dahc-size-icon-lg);
+  block-size: var(--dahc-size-icon-lg);
+  color: var(--_accent);
+}
+
+.dahc-notification__body {
+  flex: 1;
+  min-inline-size: 0;
+}
+
+.dahc-notification__heading {
+  margin: 0;
+  font-size: var(--dahc-font-size-16);
+  font-weight: var(--dahc-font-weight-bold);
+  line-height: var(--dahc-font-line-height-tight);
+  overflow-wrap: anywhere;
+}
+
+.dahc-notification__message {
+  margin: var(--dahc-space-1) 0 0;
+  color: var(--dahc-color-text-secondary);
+  font-size: var(--dahc-font-size-14);
+  line-height: var(--dahc-type-body-sm-line-height);
+  overflow-wrap: anywhere;
+}
+
+.dahc-notification__dismiss {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  inline-size: var(--dahc-size-target-min);
+  block-size: var(--dahc-size-target-min);
+  padding: 0;
+  border: 0;
+  border-radius: var(--dahc-radius-pill);
+  background-color: var(--_surface);
+  color: var(--dahc-color-text-primary);
+  cursor: pointer;
+}
+
+.dahc-notification__dismiss:focus-visible {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: var(--dahc-size-focus-offset);
+}
+
+@media (forced-colors: active) {
+  .dahc-notification {
+    border-color: CanvasText;
+  }
+
+  .dahc-notification__dismiss {
+    border: var(--dahc-size-border) solid ButtonText;
+  }
+}

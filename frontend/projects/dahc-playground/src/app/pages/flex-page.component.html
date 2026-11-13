@@ -1,0 +1,97 @@
+<dahc-playground-page
+  heading="Flex"
+  description="A flexible row or column with a gap from the DH space scale (sm 8, md 16, lg 24). Ported from dubai-health-ui dh-flex; DERIVED layout helper."
+  selector="dahc-flex"
+  [whenToUse]="whenToUse"
+  [exampleColumns]="2"
+  [sourceFiles]="sourceFiles">
+  <div preview>
+    <dahc-flex
+      class="flex-demo"
+      data-testid="flex-demo"
+      [vertical]="vertical()"
+      [wrap]="wrap()"
+      [gap]="gap()"
+      [justify]="justify()"
+      [align]="align()">
+      <button dahc-button type="button">Save</button>
+      <button dahc-button type="button" variant="secondary">Back</button>
+      <dahc-tag purpose="information">Draft</dahc-tag>
+    </dahc-flex>
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-toggle label="vertical" [(value)]="vertical" />
+    <dahc-inspector-toggle label="wrap" [(value)]="wrap" />
+    <dahc-inspector-choice label="gap" [options]="gaps" [(value)]="gap" />
+    <dahc-inspector-choice label="justify" [options]="justifies" [(value)]="justify" />
+    <dahc-inspector-choice label="align" [options]="aligns" [(value)]="align" />
+  </div>
+
+  <div states class="pg-stack">
+    <dahc-flex gap="sm" justify="between" class="flex-demo">
+      <span>Start</span>
+      <span>End</span>
+    </dahc-flex>
+    <dahc-flex [vertical]="true" gap="lg" class="flex-demo">
+      <span>First</span>
+      <span>Second</span>
+    </dahc-flex>
+  </div>
+
+  <dahc-doc-example
+    examples
+    exampleId="basic"
+    heading="Basic row"
+    description="Items in a row with the medium gap."
+    template="flex-page.component.html">
+    <dahc-flex>
+      <button dahc-button type="button">Save</button>
+      <button dahc-button type="button" variant="secondary">Back</button>
+    </dahc-flex>
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="vertical"
+    heading="Vertical"
+    description="A column of items with the large gap."
+    template="flex-page.component.html">
+    <dahc-flex [vertical]="true" gap="lg">
+      <dahc-tag purpose="success">Complete</dahc-tag>
+      <dahc-tag purpose="warning">Pending</dahc-tag>
+      <dahc-tag purpose="error">Needs attention</dahc-tag>
+    </dahc-flex>
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="justify"
+    heading="Space between"
+    description="A title at the start and an action at the end."
+    template="flex-page.component.html">
+    <dahc-flex justify="between" align="center">
+      <strong>Uploaded documents</strong>
+      <button dahc-button type="button" size="sm" variant="secondary">Upload</button>
+    </dahc-flex>
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="wrap"
+    heading="Wrapping"
+    description="Items move to the next line when there is no room."
+    template="flex-page.component.html">
+    <dahc-flex [wrap]="true" gap="sm">
+      <dahc-tag purpose="information">Internal Medicine</dahc-tag>
+      <dahc-tag purpose="information">Family Medicine</dahc-tag>
+      <dahc-tag purpose="information">Emergency Medicine</dahc-tag>
+      <dahc-tag purpose="information">Pediatrics</dahc-tag>
+    </dahc-flex>
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>A layout helper only: it adds no role, so the reading order is the source order.</li>
+    <li>Do not use justify or reverse orders to change the meaning of the order; screen readers and keyboard follow the source.</li>
+  </ul>
+</dahc-playground-page>

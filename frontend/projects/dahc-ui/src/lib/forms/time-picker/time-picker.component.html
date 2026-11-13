@@ -1,0 +1,13 @@
+<dahc-form-field [label]="label()" [hint]="hint()" [error]="errorMessage()" [invalid]="invalid()" [required]="required()">
+  <input
+    dahcInput
+    type="time"
+    class="dahc-time-picker__control"
+    [value]="value()"
+    [attr.min]="min() || null"
+    [attr.max]="max() || null"
+    [attr.step]="step()"
+    [disabled]="isDisabled()"
+    (input)="onInput($event)"
+    (blur)="onBlur()" />
+</dahc-form-field>

@@ -1,0 +1,47 @@
+<dahc-playground-page
+  heading="Mention"
+  description="A text area that suggests people (or anything) after @. Ported from dubai-health-ui dh-mention; DERIVED design."
+  [sourceFiles]="sourceFiles"
+  selector="dahc-mention"
+  [whenToUse]="whenToUse">
+  <div preview>
+    <dahc-mention label="Comment" hint="Type @ to mention a colleague." [options]="people" [formControl]="control" (mentioned)="onMentioned($event)" />
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-event-log [events]="events()" />
+    <p class="pg-value" data-testid="form-value">Form value: {{ valueText() }}</p>
+  </div>
+
+  <dahc-doc-example
+    examples
+    exampleId="basic"
+    heading="Basic"
+    description="Type @ to see the suggestions."
+    template="mention-page.component.html">
+    <dahc-mention label="Note to reviewer" hint="Type @ to mention a colleague." [options]="people" [formControl]="exampleNote" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="prefix"
+    heading="Custom prefix"
+    description="Tag topics with #."
+    template="mention-page.component.html">
+    <dahc-mention label="Topics" prefix="#" hint="Type # to add a topic." [options]="exampleTopics" [formControl]="exampleTagged" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="rows"
+    heading="Taller field"
+    description="More rows for longer feedback."
+    template="mention-page.component.html">
+    <dahc-mention label="Interview feedback" [rows]="6" [options]="people" [formControl]="exampleFeedback" />
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>The textarea is a combobox with list autocomplete while suggestions are open.</li>
+    <li>ArrowDown / ArrowUp move, Enter or Tab inserts "@Name ", Escape closes; focus stays in the textarea.</li>
+  </ul>
+</dahc-playground-page>

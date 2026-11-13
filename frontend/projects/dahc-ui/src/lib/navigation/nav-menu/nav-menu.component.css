@@ -1,0 +1,175 @@
+/* Shared by dahc-nav-menu, dahc-nav-menu-item and dahc-nav-sub-menu (each styles its own host).
+   Ported from dubai-health-ui dh-menu. Horizontal: DH "Menu items" 50:11253. Vertical: DH
+   Hamburger "Menu Item" 50:10172. */
+
+/* Menu */
+
+:host(.dahc-nav-menu--horizontal),
+:host(.dahc-nav-menu--vertical) {
+  display: block;
+}
+
+.dahc-nav-menu__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dahc-space-0-5);
+}
+
+:host(.dahc-nav-menu--horizontal) .dahc-nav-menu__list {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0;
+}
+
+/* Item */
+
+:host(.dahc-nav-menu-item--horizontal),
+:host(.dahc-nav-menu-item--vertical) {
+  display: block;
+}
+
+.dahc-nav-menu-item__item {
+  display: flex;
+  align-items: center;
+  gap: var(--dahc-space-2);
+  color: var(--dahc-color-text-primary);
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard),
+    color var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard);
+}
+
+.dahc-nav-menu-item__item:focus-visible {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: calc(var(--dahc-size-focus-ring) * -1);
+}
+
+.dahc-nav-menu-item__icon {
+  flex: none;
+}
+
+:host(.dahc-nav-menu-item--disabled) .dahc-nav-menu-item__item {
+  color: var(--dahc-color-text-disabled);
+  cursor: not-allowed;
+}
+
+/* Horizontal: 80px, padding 0 16, Regular 16/20; current Bold with a 4px navy underline. */
+:host(.dahc-nav-menu-item--horizontal) .dahc-nav-menu-item__item {
+  position: relative;
+  block-size: calc(var(--dahc-size-control-lg) + var(--dahc-space-8));
+  padding-inline: var(--dahc-space-4);
+  font-size: var(--dahc-font-size-16);
+  line-height: var(--dahc-font-line-height-tight);
+}
+
+:host(.dahc-nav-menu-item--horizontal) .dahc-nav-menu-item__item:hover {
+  color: var(--dahc-color-action-primary-hover);
+}
+
+:host(.dahc-nav-menu-item--horizontal.dahc-nav-menu-item--selected) .dahc-nav-menu-item__item {
+  font-weight: var(--dahc-font-weight-bold);
+}
+
+:host(.dahc-nav-menu-item--horizontal.dahc-nav-menu-item--selected) .dahc-nav-menu-item__item::after {
+  content: '';
+  position: absolute;
+  inset-inline: var(--dahc-space-4);
+  inset-block-end: 0;
+  block-size: var(--dahc-space-1);
+  border-start-start-radius: var(--dahc-radius-xs);
+  border-start-end-radius: var(--dahc-radius-xs);
+  background-color: var(--dahc-color-border-strong);
+}
+
+/* Vertical: 40px rows, Medium 14/18, radius 8; current blue-100 with a 2px navy start edge. */
+:host(.dahc-nav-menu-item--vertical) .dahc-nav-menu-item__item {
+  min-block-size: var(--dahc-size-touch-target);
+  padding-inline: var(--dahc-space-4);
+  border-radius: var(--dahc-radius-sm);
+  font-size: var(--dahc-font-size-14);
+  font-weight: var(--dahc-font-weight-medium);
+  line-height: var(--dahc-type-body-sm-line-height);
+}
+
+:host(.dahc-nav-menu-item--vertical:not(.dahc-nav-menu-item--disabled)) .dahc-nav-menu-item__item:hover {
+  background-color: var(--dahc-color-surface-raised-1);
+}
+
+:host(.dahc-nav-menu-item--vertical.dahc-nav-menu-item--selected) .dahc-nav-menu-item__item {
+  /* The start edge replaces part of the padding, so the label does not move. */
+  padding-inline-start: calc(var(--dahc-space-4) - var(--dahc-size-border-strong));
+  border-inline-start: var(--dahc-size-border-strong) solid var(--dahc-color-border-strong);
+  background-color: var(--dahc-color-surface-raised-1);
+  font-weight: var(--dahc-font-weight-bold);
+}
+
+/* Sub-menu (disclosure) */
+
+:host(.dahc-nav-sub-menu) {
+  display: block;
+}
+
+.dahc-nav-sub-menu__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  inline-size: 100%;
+  min-block-size: var(--dahc-size-touch-target);
+  padding-inline: var(--dahc-space-4);
+  border: 0;
+  border-radius: var(--dahc-radius-sm);
+  background-color: transparent;
+  color: var(--dahc-color-text-primary);
+  font: inherit;
+  font-size: var(--dahc-font-size-14);
+  font-weight: var(--dahc-font-weight-bold);
+  line-height: var(--dahc-type-body-sm-line-height);
+  text-align: start;
+  cursor: pointer;
+}
+
+.dahc-nav-sub-menu__head:hover {
+  background-color: var(--dahc-color-surface-raised-1);
+}
+
+.dahc-nav-sub-menu__head:focus-visible {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: calc(var(--dahc-size-focus-ring) * -1);
+}
+
+.dahc-nav-sub-menu__chevron {
+  transition: transform var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard);
+}
+
+:host(.dahc-nav-sub-menu--open) .dahc-nav-sub-menu__chevron {
+  transform: rotate(180deg);
+}
+
+.dahc-nav-sub-menu__items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dahc-space-0-5);
+  padding-inline-start: var(--dahc-space-6);
+}
+
+.dahc-nav-sub-menu__items[hidden] {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dahc-nav-menu-item__item,
+  .dahc-nav-sub-menu__chevron {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  :host(.dahc-nav-menu-item--selected) .dahc-nav-menu-item__item {
+    border-inline-start-color: Highlight;
+  }
+
+  :host(.dahc-nav-menu-item--horizontal.dahc-nav-menu-item--selected) .dahc-nav-menu-item__item::after {
+    background-color: Highlight;
+  }
+}

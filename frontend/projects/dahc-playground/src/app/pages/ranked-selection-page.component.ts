@@ -1,11 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, effect, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DahcRankedSelectionComponent, DahcSelectOption } from 'dahc-ui';
 
-import { InspectorTextComponent } from '../inspector/inspector-text.component';
-import { InspectorToggleComponent } from '../inspector/inspector-toggle.component';
-import { PlaygroundPageComponent } from '../layout/playground-page.component';
+import { DocExampleComponent, InspectorTextComponent, InspectorToggleComponent, PlaygroundPageComponent } from 'dahc-playground-kit';
 
 @Component({
   selector: 'dahc-ranked-selection-page',
@@ -13,6 +11,7 @@ import { PlaygroundPageComponent } from '../layout/playground-page.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     DahcRankedSelectionComponent,
+    DocExampleComponent,
     InspectorTextComponent,
     InspectorToggleComponent,
     PlaygroundPageComponent,
@@ -21,11 +20,11 @@ import { PlaygroundPageComponent } from '../layout/playground-page.component';
 })
 export class RankedSelectionPageComponent {
   protected readonly sourceFiles = [
-    'ranked-selection/ranked-selection.component.ts',
-    'ranked-selection/ranked-selection.component.html',
-    'ranked-selection/ranked-selection.component.scss',
-    'a11y/live-announcer.service.ts',
-    'a11y/unique-id.ts',
+    'forms/ranked-selection/ranked-selection.component.ts',
+    'forms/ranked-selection/ranked-selection.component.html',
+    'forms/ranked-selection/ranked-selection.component.css',
+    'core/a11y/live-announcer.service.ts',
+    'core/a11y/unique-id.ts',
   ];
 
   protected readonly sites: readonly DahcSelectOption[] = [
@@ -61,4 +60,24 @@ export class RankedSelectionPageComponent {
       }
     });
   }
+
+  protected readonly whenToUse: readonly string[] = [
+    'Choose several items when their order matters, such as training sites in order of preference.',
+    'Use a multi-select when the order does not matter.',
+    'Ordering uses buttons, not drag and drop only, so it works with a keyboard and screen readers; each move is announced.',
+  ];
+
+  protected readonly exampleSpecialties: readonly DahcSelectOption[] = [
+    { value: 'cardiology', label: 'Cardiology' },
+    { value: 'neurology', label: 'Neurology' },
+    { value: 'oncology', label: 'Oncology' },
+  ];
+  protected readonly exampleSpecialtyOrder = new FormControl<string[]>(['neurology', 'cardiology'], { nonNullable: true });
+  protected readonly exampleLocations: readonly DahcSelectOption[] = [
+    { value: 'deira', label: 'Deira clinic' },
+    { value: 'marina', label: 'Marina clinic' },
+    { value: 'barsha', label: 'Al Barsha clinic' },
+  ];
+  protected readonly exampleLocationOrder = new FormControl<string[]>([], { nonNullable: true });
+  protected readonly exampleRotation = new FormControl<string[]>([], { nonNullable: true, validators: Validators.required });
 }

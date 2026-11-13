@@ -1,0 +1,38 @@
+@if (type() === 'circle') {
+  <div
+    class="dahc-progress__circle"
+    role="progressbar"
+    aria-valuemin="0"
+    [attr.aria-label]="label()"
+    [attr.aria-valuemax]="max()"
+    [attr.aria-valuenow]="value()">
+    <svg class="dahc-progress__ring" viewBox="0 0 36 36" aria-hidden="true">
+      <circle class="dahc-progress__ring-track" cx="18" cy="18" [attr.r]="radius" />
+      <circle
+        class="dahc-progress__ring-bar"
+        cx="18"
+        cy="18"
+        [attr.r]="radius"
+        [attr.stroke-dasharray]="circumference"
+        [attr.stroke-dashoffset]="dashOffset()" />
+    </svg>
+    @if (showValue()) {
+      <span class="dahc-progress__circle-value" aria-hidden="true">{{ rounded() }}%</span>
+    }
+  </div>
+} @else {
+  <div class="dahc-progress__row">
+    <div
+      class="dahc-progress__track"
+      role="progressbar"
+      aria-valuemin="0"
+      [attr.aria-label]="label()"
+      [attr.aria-valuemax]="max()"
+      [attr.aria-valuenow]="value()">
+      <div class="dahc-progress__bar" [style.inline-size.%]="percent()"></div>
+    </div>
+    @if (showValue()) {
+      <span class="dahc-progress__value" aria-hidden="true">{{ rounded() }}%</span>
+    }
+  </div>
+}

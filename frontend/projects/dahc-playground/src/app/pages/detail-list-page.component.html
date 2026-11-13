@@ -1,15 +1,20 @@
 <dahc-playground-page
   heading="Detail list"
-  description="Read-only label and value pairs as a description list, in up to three columns on wide screens and one column on narrow screens."
+  description="Read-only label and value pairs as a description list, in up to three columns. The heading, bordered variant and projected items come from dubai-health-ui dh-descriptions."
+  selector="dahc-detail-list"
+  [whenToUse]="whenToUse"
+  [exampleColumns]="2"
   [sourceFiles]="sourceFiles">
   <div preview>
-    <dahc-detail-list [items]="items()" [columns]="columns()" [emptyValue]="emptyValue()" />
+    <dahc-detail-list [items]="items()" [columns]="columns()" [emptyValue]="emptyValue()" [heading]="heading()" [bordered]="bordered()" />
   </div>
 
   <div inspector class="pg-stack">
     <dahc-inspector-choice label="columns" [options]="columnOptions" [(value)]="columns" />
     <dahc-inspector-text label="emptyValue" [(value)]="emptyValue" />
     <dahc-inspector-toggle label="items: include an empty value" [(value)]="includeEmptyItem" />
+    <dahc-inspector-text label="heading" [(value)]="heading" />
+    <dahc-inspector-toggle label="bordered" [(value)]="bordered" />
     <p class="pg-value">Outputs: none.</p>
   </div>
 
@@ -18,14 +23,49 @@
       <p class="pg-state-label">One column</p>
       <dahc-detail-list [items]="items()" [columns]="1" />
     </div>
+    <div>
+      <p class="pg-state-label">Bordered with a heading and projected items</p>
+      <dahc-detail-list heading="Application summary" [bordered]="true" [columns]="2">
+        <div dahc-detail-item label="Application number">20260000123</div>
+        <div dahc-detail-item label="Status"><dahc-tag purpose="warning">Draft</dahc-tag></div>
+        <div dahc-detail-item label="Program">Medical Residency</div>
+        <div dahc-detail-item label="Bill amount">AED 650</div>
+      </dahc-detail-list>
+    </div>
     <div lang="ar">
       <p class="pg-state-label">Arabic content</p>
       <dahc-detail-list [items]="arabicItems" [columns]="2" />
     </div>
   </div>
 
+  <div examples>
+    <dahc-doc-example exampleId="basic" heading="Basic" description="Pass items as an array of label and value." template="detail-list-page.component.html">
+      <dahc-detail-list [items]="summaryItems" />
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="columns" heading="One column" description="Use one column for long values or narrow containers." template="detail-list-page.component.html">
+      <dahc-detail-list [items]="summaryItems" [columns]="1" />
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="bordered" heading="Bordered with heading" description="The bordered grid with a heading, from dh-descriptions." template="detail-list-page.component.html">
+      <dahc-detail-list heading="Payment" [bordered]="true" [columns]="2">
+        <div dahc-detail-item label="Bill amount">AED 650</div>
+        <div dahc-detail-item label="Receipt">RCP-2026-004517</div>
+      </dahc-detail-list>
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="projected" heading="Rich values" description="Projected items can hold any content, such as a tag." template="detail-list-page.component.html">
+      <dahc-detail-list [columns]="2">
+        <div dahc-detail-item label="Reference">GME-2026-000187</div>
+        <div dahc-detail-item label="Status"><dahc-tag purpose="information">Submitted</dahc-tag></div>
+      </dahc-detail-list>
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="empty" heading="Empty values" description="Empty values show emptyValue instead of nothing." template="detail-list-page.component.html">
+      <dahc-detail-list [items]="partialItems" [columns]="2" emptyValue="Not yet" />
+    </dahc-doc-example>
+  </div>
+
   <ul accessibility class="pg-notes">
     <li>Rendered as dl, dt and dd, so screen readers announce each label with its value.</li>
+    <li>Projected pairs are written as div[dahc-detail-item], the one wrapper a description list allows, so the dl stays valid.</li>
+    <li>The optional heading (h3 by default, headingLevel 2 to 4) titles the list in the page outline.</li>
     <li>An empty value shows the emptyValue text instead of nothing, so a row never reads as missing.</li>
     <li>Values wrap instead of overflowing at 320 pixels wide and at 200% zoom.</li>
   </ul>

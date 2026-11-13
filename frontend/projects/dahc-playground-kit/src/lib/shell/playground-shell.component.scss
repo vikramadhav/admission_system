@@ -1,0 +1,254 @@
+// NG-ZORRO-style documentation chrome built from DAHC-UI tokens: a 64px header with brand,
+// search and section links, a sticky side menu, and the page.
+:host {
+  display: block;
+  min-block-size: 100vh;
+  background-color: var(--dahc-color-surface);
+}
+
+.pg-skip-link {
+  position: absolute;
+  inset-block-start: var(--dahc-space-2);
+  inset-inline-start: var(--dahc-space-2);
+  z-index: var(--dahc-z-tooltip);
+  padding: var(--dahc-space-2) var(--dahc-space-4);
+  border-radius: var(--dahc-radius-md);
+  background-color: var(--dahc-color-action-primary);
+  color: var(--dahc-color-text-inverse);
+  transform: translateY(-200%);
+}
+
+.pg-skip-link:focus {
+  transform: none;
+}
+
+.pg-header {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: var(--dahc-z-sticky);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--dahc-space-3) var(--dahc-space-6);
+  min-block-size: var(--dahc-space-16);
+  padding-block: var(--dahc-space-2);
+  padding-inline: var(--dahc-space-4);
+  border-block-end: var(--dahc-size-border) solid var(--dahc-color-border-subtle);
+  background-color: var(--dahc-color-surface);
+  box-shadow: var(--dahc-shadow-1);
+}
+
+@media (min-width: 64rem) {
+  .pg-header {
+    flex-wrap: nowrap;
+    padding-inline: var(--dahc-space-8);
+  }
+}
+
+.pg-brand {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: var(--dahc-space-2);
+  color: var(--dahc-color-text-primary);
+  font-size: var(--dahc-font-size-20);
+  font-weight: var(--dahc-font-weight-bold);
+  text-decoration: none;
+}
+
+.pg-brand-logo {
+  block-size: var(--dahc-size-icon-xl);
+}
+
+.pg-brand:focus-visible,
+.pg-top-link:focus-visible,
+.pg-nav-link:focus-visible,
+.pg-nav-toggle:focus-visible {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: var(--dahc-size-focus-offset);
+}
+
+.pg-header-search {
+  flex: 1 1 16rem;
+  min-inline-size: 0;
+}
+
+.pg-top-nav {
+  display: flex;
+  gap: var(--dahc-space-1);
+}
+
+.pg-top-link {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--dahc-size-touch-target);
+  padding-inline: var(--dahc-space-3);
+  border-block-end: var(--dahc-size-border-strong) solid transparent;
+  color: var(--dahc-color-text-primary);
+  font-weight: var(--dahc-font-weight-medium);
+  text-decoration: none;
+}
+
+.pg-top-link:hover {
+  color: var(--dahc-color-text-link);
+}
+
+.pg-top-link--active {
+  border-block-end-color: var(--dahc-color-border-strong);
+  font-weight: var(--dahc-font-weight-bold);
+}
+
+.pg-switchers {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--dahc-space-2);
+}
+
+.pg-version {
+  padding: var(--dahc-space-0-5) var(--dahc-space-2);
+  border: var(--dahc-size-border) solid var(--dahc-color-border-default);
+  border-radius: var(--dahc-radius-pill);
+  color: var(--dahc-color-text-secondary);
+  font-size: var(--dahc-font-size-12);
+}
+
+.pg-layout {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 64rem) {
+  .pg-layout {
+    flex-direction: row;
+  }
+}
+
+.pg-nav {
+  border-block-end: var(--dahc-size-border) solid var(--dahc-color-border-subtle);
+  background-color: var(--dahc-color-surface);
+}
+
+@media (min-width: 64rem) {
+  .pg-nav {
+    position: sticky;
+    inset-block-start: var(--dahc-space-16);
+    flex: none;
+    align-self: flex-start;
+    inline-size: calc(var(--dahc-size-measure-narrow) - var(--dahc-space-8));
+    max-block-size: calc(100vh - var(--dahc-space-16));
+    overflow-y: auto;
+    border-block-end: 0;
+    border-inline-end: var(--dahc-size-border) solid var(--dahc-color-border-subtle);
+  }
+}
+
+.pg-nav-toggle {
+  display: flex;
+  align-items: center;
+  inline-size: 100%;
+  min-block-size: var(--dahc-size-touch-target);
+  padding-inline: var(--dahc-space-4);
+  border: 0;
+  background: transparent;
+  color: var(--dahc-color-text-primary);
+  font: inherit;
+  font-weight: var(--dahc-font-weight-bold);
+  cursor: pointer;
+}
+
+.pg-nav-groups {
+  display: none;
+  padding-block: var(--dahc-space-2) var(--dahc-space-6);
+}
+
+.pg-nav-groups--open {
+  display: block;
+}
+
+@media (min-width: 64rem) {
+  .pg-nav-toggle {
+    display: none;
+  }
+
+  .pg-nav-groups {
+    display: block;
+    padding-block: var(--dahc-space-4) var(--dahc-space-8);
+  }
+}
+
+.pg-nav-group {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: var(--dahc-space-5) 0 var(--dahc-space-1);
+  padding-inline: var(--dahc-space-6);
+  color: var(--dahc-color-text-secondary);
+  font-size: var(--dahc-font-size-14);
+  font-weight: var(--dahc-font-weight-regular);
+  line-height: var(--dahc-font-line-height-tight);
+}
+
+.pg-nav-count {
+  color: var(--dahc-color-text-secondary);
+  font-size: var(--dahc-font-size-12);
+}
+
+.pg-nav-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pg-nav-link {
+  position: relative;
+  display: block;
+  padding-block: var(--dahc-space-2);
+  padding-inline: var(--dahc-space-10) var(--dahc-space-6);
+  color: var(--dahc-color-text-primary);
+  font-size: var(--dahc-font-size-14);
+  line-height: var(--dahc-font-line-height-tight);
+  text-decoration: none;
+}
+
+.pg-nav-link:hover {
+  color: var(--dahc-color-text-link);
+}
+
+.pg-nav-link--active {
+  background-color: var(--dahc-color-surface-highlight);
+  color: var(--dahc-color-text-primary);
+  font-weight: var(--dahc-font-weight-bold);
+}
+
+.pg-nav-link--active::after {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 0;
+  inline-size: var(--dahc-size-border-strong);
+  background-color: var(--dahc-color-border-strong);
+}
+
+.pg-main {
+  flex: 1;
+  min-inline-size: 0;
+  padding-block: var(--dahc-space-6) var(--dahc-space-12);
+  padding-inline: var(--dahc-space-4);
+}
+
+.pg-main:focus {
+  outline: none;
+}
+
+@media (min-width: 64rem) {
+  .pg-main {
+    padding-inline: var(--dahc-space-12);
+  }
+}
+
+@media (forced-colors: active) {
+  .pg-nav-link--active {
+    outline: var(--dahc-size-border) solid CanvasText;
+  }
+}

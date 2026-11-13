@@ -6,12 +6,15 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve dahc-portal",
+    "start:mock": "ng serve dahc-portal --configuration mock",
     "start:playground": "ng serve dahc-playground",
-    "build": "npm run build:ui && npm run build:playground && npm run build:portal",
+    "build": "npm run build:ui && npm run build:playground-kit && npm run build:playground && npm run build:portal",
     "build:ui": "ng build dahc-ui",
+    "build:playground-kit": "ng build dahc-playground-kit",
     "build:playground": "ng build dahc-playground",
     "build:portal": "ng build dahc-portal",
     "extract-i18n": "ng extract-i18n dahc-portal --format json --output-path projects/dahc-portal/src/locale",
+    "icons:registry": "node tools/generate-icon-registry.mjs",
     "lint": "ng lint && eslint tests/playwright --max-warnings 0",
     "e2e": "playwright test --config tests/playwright/playwright.config.ts",
     "audit": "npm audit --audit-level=moderate"

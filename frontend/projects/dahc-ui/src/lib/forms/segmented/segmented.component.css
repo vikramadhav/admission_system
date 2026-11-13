@@ -1,0 +1,84 @@
+/* PARTIAL Figma Selection chip (50:7519) on a track, see the component comment. */
+
+:host {
+  display: inline-block;
+  max-inline-size: 100%;
+}
+
+.dahc-segmented {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--dahc-space-1);
+  padding: var(--dahc-space-1);
+  border: var(--dahc-size-border) solid var(--dahc-color-border-default);
+  border-radius: var(--dahc-radius-pill);
+  background-color: var(--dahc-color-surface-muted);
+}
+
+.dahc-segmented__option {
+  position: relative;
+  display: inline-flex;
+  cursor: pointer;
+}
+
+.dahc-segmented__input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: inherit;
+}
+
+.dahc-segmented__label {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--dahc-size-control-sm);
+  padding-inline: var(--dahc-space-4);
+  border-radius: var(--dahc-radius-pill);
+  color: var(--dahc-color-text-primary);
+  font-size: var(--dahc-font-size-16);
+  line-height: var(--dahc-font-line-height-tight);
+  pointer-events: none;
+  transition:
+    background-color var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard),
+    color var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard);
+}
+
+.dahc-segmented__option:hover .dahc-segmented__input:not(:checked, :disabled) + .dahc-segmented__label {
+  background-color: var(--dahc-color-surface);
+}
+
+.dahc-segmented__input:checked + .dahc-segmented__label {
+  background-color: var(--dahc-color-action-primary);
+  color: var(--dahc-color-text-inverse);
+  font-weight: var(--dahc-font-weight-bold);
+}
+
+.dahc-segmented__input:focus-visible + .dahc-segmented__label {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: var(--dahc-size-focus-offset);
+}
+
+.dahc-segmented__option--disabled {
+  cursor: not-allowed;
+}
+
+.dahc-segmented__option--disabled .dahc-segmented__label {
+  color: var(--dahc-color-text-disabled);
+}
+
+.dahc-segmented__option--disabled .dahc-segmented__input:checked + .dahc-segmented__label {
+  background-color: var(--dahc-color-action-disabled-bg);
+  color: var(--dahc-color-action-disabled-fg);
+}
+
+@media (forced-colors: active) {
+  .dahc-segmented {
+    border-color: CanvasText;
+  }
+
+  .dahc-segmented__input:checked + .dahc-segmented__label {
+    background-color: Highlight;
+    color: HighlightText;
+  }
+}

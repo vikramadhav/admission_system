@@ -1,0 +1,144 @@
+<dahc-playground-page
+  heading="Form field and input"
+  description="A label, hint, error and required marker around a native input or textarea marked dahcInput. Figma Input field 50:7751."
+  [sourceFiles]="sourceFiles"
+  selector="dahc-form-field + input[dahcInput]"
+  [whenToUse]="whenToUse"
+  [exampleColumns]="2">
+  <div preview>
+    <dahc-form-field
+      [label]="label()"
+      [hint]="hint()"
+      [error]="error()"
+      [required]="required()"
+      [status]="status()"
+      [hideLabel]="hideLabel()">
+      @if (withIcon()) {
+        <dahc-icon dahcFieldStart name="account" size="lg" />
+      }
+      @if (type() === 'textarea') {
+        <textarea dahcInput [placeholder]="placeholder()" [readOnly]="readonly()" [formControl]="control"></textarea>
+      } @else {
+        <input dahcInput [type]="type()" [placeholder]="placeholder()" [readOnly]="readonly()" [formControl]="control" />
+      }
+    </dahc-form-field>
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-text label="label" [(value)]="label" />
+    <dahc-inspector-text label="hint" [(value)]="hint" />
+    <dahc-inspector-text label="error" [(value)]="error" />
+    <dahc-inspector-text label="placeholder" [(value)]="placeholder" />
+    <dahc-inspector-choice label="control type" [options]="types" [(value)]="type" />
+    <dahc-inspector-choice label="status" [options]="statuses" [(value)]="status" />
+    <dahc-inspector-toggle label="required" [(value)]="required" />
+    <dahc-inspector-toggle label="readonly" [(value)]="readonly" />
+    <dahc-inspector-toggle label="disabled" [(value)]="disabled" />
+    <dahc-inspector-toggle label="hideLabel" [(value)]="hideLabel" />
+    <dahc-inspector-toggle label="start icon" [(value)]="withIcon" />
+    <p class="pg-value" data-testid="form-value">Form value: {{ valueText() }}</p>
+  </div>
+
+  <div states class="pg-stack">
+    <dahc-form-field label="Default (placeholder)">
+      <input dahcInput placeholder="Enter your text" />
+    </dahc-form-field>
+    <dahc-form-field label="Filled" hint="This is a hint text to help user.">
+      <input dahcInput [formControl]="filledControl" />
+    </dahc-form-field>
+    <dahc-form-field label="Emirates ID" hint="Verified via ICP" status="success">
+      <input dahcInput value="784-1990-1234567-1" readonly />
+    </dahc-form-field>
+    <dahc-form-field label="Age at programme start" hint="Calculated from your date of birth.">
+      <input dahcInput value="27" readonly />
+    </dahc-form-field>
+    <dahc-form-field label="Success" hint="Looks good." status="success">
+      <input dahcInput value="Rashid Hospital" />
+    </dahc-form-field>
+    <dahc-form-field label="Error" error="Enter a valid email address." [invalid]="true">
+      <input dahcInput type="email" [formControl]="errorControl" />
+    </dahc-form-field>
+    <dahc-form-field label="Disabled" hint="Locked after submission.">
+      <input dahcInput [formControl]="disabledControl" />
+    </dahc-form-field>
+    <dahc-form-field label="Date of birth" hint="DD/MM/YYYY">
+      <input dahcInput inputmode="numeric" placeholder="DD/MM/YYYY" />
+      <dahc-icon dahcFieldEnd name="calendar" size="lg" />
+    </dahc-form-field>
+    <dahc-form-field label="Personal statement" hint="Up to 500 words.">
+      <textarea dahcInput></textarea>
+    </dahc-form-field>
+    <dahc-form-field label="Appeal response" hint="Explain why the question should be evaluated again." [showCount]="true">
+      <textarea dahcInput maxlength="200"></textarea>
+    </dahc-form-field>
+  </div>
+
+  <dahc-doc-example
+    examples
+    exampleId="basic"
+    heading="Basic"
+    description="A text input with a label."
+    template="form-field-page.component.html">
+    <dahc-form-field label="Full name">
+      <input dahcInput autocomplete="name" [formControl]="exampleFullName" />
+    </dahc-form-field>
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="textarea"
+    heading="Textarea with counter"
+    description="showCount counts towards the maxlength of the control."
+    template="form-field-page.component.html">
+    <dahc-form-field label="Cover note" hint="Up to 300 characters." [showCount]="true">
+      <textarea dahcInput maxlength="300" [formControl]="exampleCoverNote"></textarea>
+    </dahc-form-field>
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="icon"
+    heading="With an icon"
+    description="Icons at the start or end of the box are decorative."
+    template="form-field-page.component.html">
+    <dahc-form-field label="Username">
+      <dahc-icon dahcFieldStart name="account" size="lg" />
+      <input dahcInput autocomplete="username" [formControl]="exampleUsername" />
+    </dahc-form-field>
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="validation"
+    heading="Validation"
+    description="Required and e-mail validators; the error shows once the field was touched."
+    template="form-field-page.component.html">
+    <dahc-form-field
+      label="Work e-mail"
+      hint="Your Dubai Health address."
+      error="Enter a valid e-mail address."
+      [required]="true"
+      [invalid]="exampleWorkEmail.invalid && exampleWorkEmail.touched">
+      <input dahcInput type="email" autocomplete="email" [formControl]="exampleWorkEmail" />
+    </dahc-form-field>
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="verified"
+    heading="Verified (read-only)"
+    description="A value from a trusted source that cannot be edited."
+    template="form-field-page.component.html">
+    <dahc-form-field label="Passport number" hint="Verified via ICP" status="success">
+      <input dahcInput value="N1234567" readonly />
+    </dahc-form-field>
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>The label is a native label for the control; hint and error are linked with aria-describedby, and the error sets aria-invalid.</li>
+    <li>The error has an icon and text, so it is not shown by colour alone (WCAG 1.4.1); its colour meets 4.5:1.</li>
+    <li>The required marker is decorative; the control gets aria-required.</li>
+    <li>The control keeps every native attribute: type, autocomplete, inputmode, readonly, maxlength.</li>
+    <li>The focus ring is drawn on the box while the control has focus.</li>
+  </ul>
+</dahc-playground-page>

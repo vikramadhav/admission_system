@@ -1,0 +1,4 @@
+<a class="dahc-anchor-link__link" [href]="href()" [attr.aria-current]="active() ? 'location' : null">{{ heading() }}</a>
+@if (children().length > 0) {
+  <div class="dahc-anchor-link__children" role="list"><ng-content /></div>
+}

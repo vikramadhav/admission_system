@@ -1,0 +1,54 @@
+<dahc-playground-page
+  heading="Stat tile"
+  description="A highlighted number with its label: the GME dashboard score tiles (radius 12, category tint, Bold 24 value). The large size uses the DH Stats text style."
+  selector="dahc-stat-tile"
+  [whenToUse]="whenToUse"
+  [exampleColumns]="2"
+  [sourceFiles]="sourceFiles">
+  <div preview>
+    <dahc-stat-tile [label]="label()" [value]="value()" [caption]="caption()" [color]="color()" [large]="large()" />
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-text label="label" [(value)]="label" />
+    <dahc-inspector-text label="value" [(value)]="value" />
+    <dahc-inspector-text label="caption" [(value)]="caption" />
+    <dahc-inspector-choice label="color" [options]="colors" [(value)]="color" />
+    <dahc-inspector-toggle label="large" [(value)]="large" />
+  </div>
+
+  <div states class="tiles">
+    <dahc-stat-tile label="Portfolio" value="42" color="orange" />
+    <dahc-stat-tile label="Entrance exam" value="78" color="blue" />
+    <dahc-stat-tile label="GPA" value="3.6" color="purple" />
+    <dahc-stat-tile label="Shortlisting" color="red" />
+  </div>
+
+  <div examples>
+    <dahc-doc-example exampleId="basic" heading="Basic" description="A label and its value." template="stat-tile-page.component.html">
+      <dahc-stat-tile label="Entrance exam" value="78" />
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="caption" heading="With caption" description="A caption adds context such as the date." template="stat-tile-page.component.html">
+      <dahc-stat-tile label="Portfolio" value="42 / 60" caption="Announced 12 March 2026" color="orange" />
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="colours" heading="Colours" description="Category tints for grouping related numbers." template="stat-tile-page.component.html">
+      <div class="tiles">
+        <dahc-stat-tile label="Blue" value="1" color="blue" />
+        <dahc-stat-tile label="Green" value="2" color="green" />
+        <dahc-stat-tile label="Orange" value="3" color="orange" />
+        <dahc-stat-tile label="Purple" value="4" color="purple" />
+      </div>
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="large" heading="Large" description="The DH Stats text style for headline numbers." template="stat-tile-page.component.html">
+      <dahc-stat-tile label="Applicants" value="12,480" [large]="true" color="light-blue" />
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="empty" heading="Not available" description="An empty value shows a dash." template="stat-tile-page.component.html">
+      <dahc-stat-tile label="Shortlisting score" color="red" />
+    </dahc-doc-example>
+  </div>
+
+  <ul accessibility class="pg-notes">
+    <li>Plain text in reading order: label, value, caption. Navy text meets 4.5:1 on every tint.</li>
+    <li>A missing value shows a dash and is read as "Not available".</li>
+  </ul>
+</dahc-playground-page>

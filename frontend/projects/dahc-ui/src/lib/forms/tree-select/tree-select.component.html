@@ -1,0 +1,52 @@
+<dahc-form-field [label]="label()" [hint]="hint()" [error]="errorMessage()" [invalid]="invalid()" [required]="required()">
+  <button
+    #trigger
+    dahcInput
+    type="button"
+    role="combobox"
+    class="dahc-tree-select__trigger"
+    aria-haspopup="tree"
+    [attr.aria-expanded]="open()"
+    [attr.aria-controls]="treeId"
+    [disabled]="isDisabled()"
+    (click)="toggleOpen()"
+    (keydown)="onTriggerKeydown($event)"
+    (blur)="onBlur()">
+    <span class="dahc-tree-select__value" [class.dahc-tree-select__value--placeholder]="displayText() === ''">
+      {{ displayText() || placeholder() }}
+    </span>
+  </button>
+  <dahc-icon dahcFieldEnd class="dahc-tree-select__chevron" [class.dahc-tree-select__chevron--open]="open()" name="chevron-down" size="lg" />
+</dahc-form-field>
+<div #popup class="dahc-popup dahc-tree-select__popup" popover="manual">
+  <ul class="dahc-entry-list dahc-tree-select__tree" role="tree" [id]="treeId" [attr.aria-label]="label()">
+    @for (item of visible(); track item.node.value) {
+      <li
+        role="treeitem"
+        class="dahc-entry-option dahc-tree-select__item"
+        [id]="itemId(item.node.value)"
+        [style.--_level]="item.level"
+        [class.dahc-entry-option--selected]="item.node.value === value()"
+        [attr.tabindex]="item.node.value === focused() ? 0 : -1"
+        [attr.aria-level]="item.level"
+        [attr.aria-setsize]="item.setSize"
+        [attr.aria-posinset]="item.position"
+        [attr.aria-expanded]="hasChildren(item.node) ? expanded().has(item.node.value) : null"
+        [attr.aria-selected]="item.node.value === value()"
+        [attr.aria-disabled]="item.node.disabled ? 'true' : null"
+        [attr.data-value]="item.node.value">
+        @if (hasChildren(item.node)) {
+          <span
+            class="dahc-tree-select__toggle"
+            [class.dahc-tree-select__toggle--open]="expanded().has(item.node.value)"
+            aria-hidden="true">
+            <dahc-icon name="chevron-right" size="sm" />
+          </span>
+        } @else {
+          <span class="dahc-tree-select__spacer" aria-hidden="true"></span>
+        }
+        <span>{{ item.node.label }}</span>
+      </li>
+    }
+  </ul>
+</div>

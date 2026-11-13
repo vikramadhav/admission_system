@@ -1,0 +1,69 @@
+<dahc-playground-page
+  heading="Footer"
+  description="The site footer: logo, links, contact number, social links and copyright, in two rows on wide screens and stacked below 1024 pixels. Figma Web Footer 50:11046 and Mobile Footer 50:11129."
+  selector="dahc-footer"
+  [whenToUse]="whenToUse"
+  [sourceFiles]="sourceFiles">
+  <div preview>
+    <dahc-footer
+      [links]="links"
+      phone="800 60"
+      [socialLinks]="socialLinks"
+      copyright="© 2026 Dubai Health. All rights reserved." />
+  </div>
+
+  <div inspector class="pg-stack">
+    <p class="pg-value">Inputs: links, linksLabel, contactLabel, phone, socialLinks, copyright.</p>
+  </div>
+
+  <div states class="pg-stack">
+    <dahc-footer copyright="© 2026 Dubai Health. All rights reserved." />
+  </div>
+
+  <dahc-doc-example
+    examples
+    exampleId="basic"
+    heading="Links and phone"
+    description="The most common footer."
+    template="footer-page.component.html">
+    <dahc-footer
+      linksLabel="Site links"
+      phone="800 60"
+      copyright="© 2026 Dubai Health. All rights reserved."
+      [links]="[
+        { label: 'About Dubai Health', href: '#about' },
+        { label: 'Privacy policy', href: '#privacy' }
+      ]" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="social"
+    heading="With social links"
+    description="Icons for the Dubai Health social accounts."
+    template="footer-page.component.html">
+    <dahc-footer
+      linksLabel="Social and site links"
+      copyright="© 2026 Dubai Health. All rights reserved."
+      [links]="[{ label: 'Contact us', href: '#contact' }]"
+      [socialLinks]="[
+        { icon: 'social-x', label: 'Dubai Health on X', href: 'https://x.com' },
+        { icon: 'social-instagram', label: 'Dubai Health on Instagram', href: 'https://www.instagram.com' }
+      ]" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="minimal"
+    heading="Copyright only"
+    description="For short task pages such as sign-in."
+    template="footer-page.component.html">
+    <dahc-footer copyright="© 2026 Dubai Health. All rights reserved." />
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>A contentinfo landmark; the links are a labelled nav.</li>
+    <li>The phone number is a tel: link and stays left-to-right in Arabic.</li>
+    <li>Social links are named for screen readers ("Dubai Health on X") and open in a new tab.</li>
+  </ul>
+</dahc-playground-page>

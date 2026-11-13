@@ -35,7 +35,8 @@ for (const mode of DISPLAY_MODES) {
     });
 
     test('a card without heading has no region name', async () => {
-      await expect(playground.states.getByRole('article')).toHaveCount(3);
+      // Default, Subtle and Elevated are named articles; the card without a heading is still an article.
+      await expect(playground.states.getByRole('article')).toHaveCount(4);
       await expect(playground.states.getByRole('article', { name: 'Subtle' })).toBeVisible();
     });
   });
@@ -46,6 +47,6 @@ test('card serves its real source and reflows at 320 pixels', async ({ page }) =
   await page.setViewportSize({ width: 320, height: 800 });
   await playground.open('card', { theme: 'light', direction: 'ltr' });
 
-  await playground.expectSourceFile('card/card.component.html', 'aria-labelledby');
+  await playground.expectSourceFile('data-display/card/card.component.html', 'aria-labelledby');
   await expectNoHorizontalScroll(page);
 });

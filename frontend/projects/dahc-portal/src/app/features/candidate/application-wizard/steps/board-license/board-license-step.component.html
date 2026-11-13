@@ -1,0 +1,163 @@
+<div class="step" [formGroup]="form">
+  <section class="step-section" aria-labelledby="boards-heading">
+    <h3 id="boards-heading" class="step-section-heading" i18n="@@portal.board.boardsHeading">Boards</h3>
+    <p class="step-note" i18n="@@portal.board.boardsNote">Add at least one board. Add another board for each further board certification.</p>
+
+    <div formArrayName="boards" class="board-list">
+      @for (board of boards; track board; let index = $index) {
+        <fieldset class="board" [formGroupName]="index">
+          <legend class="board-legend">{{ boardHeading(index) }}</legend>
+          <div class="step-grid">
+            <dahc-select
+              formControlName="boardName"
+              i18n-label="@@portal.board.boardName"
+              label="Board name"
+              [options]="boardOptions"
+              [required]="true"
+              [invalid]="error(board.controls.boardName) !== ''"
+              [errorMessage]="error(board.controls.boardName)" />
+            <dahc-radio-group
+              formControlName="satWrittenExam"
+              i18n-label="@@portal.board.satExam"
+              label="Did you sit the final written exam?"
+              [options]="yesNo"
+              [required]="true"
+              [invalid]="error(board.controls.satWrittenExam) !== ''"
+              [errorMessage]="error(board.controls.satWrittenExam)" />
+
+            @if (board.controls.satWrittenExam.value === 'NO') {
+              <dahc-date-picker
+                formControlName="scheduledExamDate"
+                i18n-label="@@portal.board.scheduledDate"
+                label="Scheduled exam date"
+                [min]="today"
+                [required]="true"
+                [invalid]="error(board.controls.scheduledExamDate) !== ''"
+                [errorMessage]="error(board.controls.scheduledExamDate)" />
+            }
+
+            @if (board.controls.satWrittenExam.value === 'YES') {
+              <dahc-date-picker
+                formControlName="examDate"
+                i18n-label="@@portal.board.examDate"
+                label="Exam date"
+                [max]="today"
+                [required]="true"
+                [invalid]="error(board.controls.examDate) !== ''"
+                [errorMessage]="error(board.controls.examDate)" />
+              <dahc-radio-group
+                formControlName="examResult"
+                i18n-label="@@portal.board.examResult"
+                label="Exam result"
+                [options]="results"
+                [required]="true"
+                [invalid]="error(board.controls.examResult) !== ''"
+                [errorMessage]="error(board.controls.examResult)" />
+              <dahc-select
+                formControlName="writtenAttempt"
+                i18n-label="@@portal.board.writtenAttempt"
+                label="Written exam attempt number"
+                [options]="attempts"
+                [required]="true"
+                [invalid]="error(board.controls.writtenAttempt) !== ''"
+                [errorMessage]="error(board.controls.writtenAttempt)" />
+              <dahc-date-picker
+                formControlName="osceDate"
+                i18n-label="@@portal.board.osceDate"
+                label="OSCE exam date"
+                [required]="true"
+                [invalid]="error(board.controls.osceDate) !== ''"
+                [errorMessage]="error(board.controls.osceDate)" />
+              <dahc-select
+                formControlName="osceAttempt"
+                i18n-label="@@portal.board.osceAttempt"
+                label="OSCE exam attempt number"
+                [options]="attempts"
+                [required]="true"
+                [invalid]="error(board.controls.osceAttempt) !== ''"
+                [errorMessage]="error(board.controls.osceAttempt)" />
+              @if (board.controls.examResult.value === 'FAIL') {
+                <dahc-date-picker
+                  formControlName="resitDate"
+                  i18n-label="@@portal.board.resitDate"
+                  label="Resit date"
+                  [min]="today"
+                  [required]="true"
+                  [invalid]="error(board.controls.resitDate) !== ''"
+                  [errorMessage]="error(board.controls.resitDate)" />
+              }
+            }
+          </div>
+          @if (boards.length > 1 && state.editable()) {
+            <div class="board-actions">
+              <button dahc-button type="button" variant="danger-outline" size="sm" (click)="removeBoard(index)">{{ removeLabel(index) }}</button>
+            </div>
+          }
+        </fieldset>
+      }
+    </div>
+
+    @if (state.editable()) {
+      <div>
+        <button dahc-button type="button" variant="secondary" size="sm" (click)="addBoard()" i18n="@@portal.board.add">
+          Add another board
+        </button>
+      </div>
+    }
+  </section>
+
+  <section class="step-section" aria-labelledby="license-heading">
+    <h3 id="license-heading" class="step-section-heading" i18n="@@portal.board.licenseHeading">License</h3>
+    <p class="step-note" i18n="@@portal.board.licenseNote">Optional. When you choose an authority, the license number and job title are required.</p>
+    <div class="step-grid">
+      <dahc-select
+        formControlName="authority"
+        i18n-label="@@portal.board.authority"
+        label="Authority"
+        [options]="authorities"
+        [invalid]="error(form.controls.authority) !== ''"
+        [errorMessage]="error(form.controls.authority)" />
+      @if (form.controls.authority.value === other) {
+        <dahc-form-field
+          i18n-label="@@portal.board.otherAuthority"
+          label="Other authority"
+          [required]="true"
+          [invalid]="error(form.controls.otherAuthority) !== ''"
+          [error]="error(form.controls.otherAuthority)">
+          <input dahcInput type="text" formControlName="otherAuthority" />
+        </dahc-form-field>
+      }
+      <dahc-form-field
+        i18n-label="@@portal.board.licenseNumber"
+        label="License number"
+        [required]="isRequired(form.controls.licenseNumber)"
+        [invalid]="error(form.controls.licenseNumber) !== ''"
+        [error]="error(form.controls.licenseNumber)">
+        <input dahcInput type="text" formControlName="licenseNumber" />
+      </dahc-form-field>
+      <dahc-select
+        formControlName="jobTitle"
+        i18n-label="@@portal.board.jobTitle"
+        label="Job title"
+        [options]="jobTitles"
+        [required]="isRequired(form.controls.jobTitle)"
+        [invalid]="error(form.controls.jobTitle) !== ''"
+        [errorMessage]="error(form.controls.jobTitle)" />
+      @if (form.controls.jobTitle.value === other) {
+        <dahc-form-field
+          i18n-label="@@portal.board.otherJobTitle"
+          label="Other job title"
+          [required]="true"
+          [invalid]="error(form.controls.otherJobTitle) !== ''"
+          [error]="error(form.controls.otherJobTitle)">
+          <input dahcInput type="text" formControlName="otherJobTitle" />
+        </dahc-form-field>
+      }
+    </div>
+  </section>
+
+  <section class="step-section" aria-labelledby="board-documents-heading">
+    <h3 id="board-documents-heading" class="step-section-heading" i18n="@@portal.board.documents">Documents</h3>
+    <dahc-section-attachments sectionKey="board-license-information" [showRequired]="showAll()" />
+  </section>
+</div>

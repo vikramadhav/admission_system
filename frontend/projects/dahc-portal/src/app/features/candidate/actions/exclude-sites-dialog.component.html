@@ -1,0 +1,40 @@
+<dahc-modal [(open)]="open" i18n-heading="@@portal.exclude.heading" heading="Exclude training sites">
+  <form class="action-form" (ngSubmit)="submit()" novalidate>
+    <p class="action-text" i18n="@@portal.exclude.text">
+      Choose the training sites you no longer want to be considered for. You cannot add or reorder sites, and each specialty must keep at
+      least one site.
+    </p>
+    @for (preference of preferences(); track preference.specialtyId) {
+      <fieldset class="action-group">
+        <legend>{{ preference.specialtyName }}</legend>
+        <ul class="action-list">
+          @for (site of preference.sites; track site.id) {
+            <li>
+              <dahc-checkbox [formControl]="control(site.id)">{{ site.name }}</dahc-checkbox>
+            </li>
+          }
+        </ul>
+      </fieldset>
+    }
+    @if (selectionError() !== '') {
+      <p class="action-error" role="alert">{{ selectionError() }}</p>
+    }
+    <dahc-form-field
+      i18n-label="@@portal.exclude.reason"
+      label="Reason"
+      [required]="true"
+      i18n-hint="@@portal.exclude.reasonHint"
+      hint="Up to 500 characters."
+      [invalid]="reasonError() !== ''"
+      [error]="reasonError()">
+      <textarea dahcInput [formControl]="reason" maxlength="500"></textarea>
+    </dahc-form-field>
+    @if (error() !== '') {
+      <dahc-alert variant="error" [announce]="true">{{ error() }}</dahc-alert>
+    }
+  </form>
+  <div dahcDialogFooter class="action-buttons">
+    <button dahc-button type="button" variant="secondary" (click)="open.set(false)" i18n="@@portal.action.cancel">Cancel</button>
+    <button dahc-button type="button" [loading]="busy()" (click)="submit()" i18n="@@portal.exclude.submit">Exclude sites</button>
+  </div>
+</dahc-modal>

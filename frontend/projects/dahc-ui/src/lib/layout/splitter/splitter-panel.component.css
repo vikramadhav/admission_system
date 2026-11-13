@@ -1,0 +1,83 @@
+/* Ported from dubai-health-ui dh-splitter-panel: 1px DH divider in an 8px handle; 2px navy on
+   hover and focus. */
+:host {
+  position: relative;
+  display: flex;
+  flex: 1 1 0;
+  min-inline-size: 0;
+  min-block-size: 0;
+}
+
+:host(.dahc-splitter-panel--sized) {
+  flex-grow: 0;
+  flex-shrink: 1;
+}
+
+:host(.dahc-splitter-panel--vertical) {
+  flex-direction: column;
+}
+
+.dahc-splitter-panel__pane {
+  flex: auto;
+  min-inline-size: 0;
+  min-block-size: 0;
+  overflow: auto;
+}
+
+.dahc-splitter-panel__handle {
+  position: relative;
+  flex: none;
+  inline-size: var(--dahc-space-2);
+  outline: none;
+  cursor: col-resize;
+  touch-action: none;
+}
+
+.dahc-splitter-panel__handle::before {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 50%;
+  inline-size: var(--dahc-size-border);
+  background-color: var(--dahc-color-border-subtle);
+}
+
+.dahc-splitter-panel__handle:hover::before,
+.dahc-splitter-panel__handle:focus-visible::before {
+  inline-size: var(--dahc-size-border-strong);
+  background-color: var(--dahc-color-border-strong);
+}
+
+.dahc-splitter-panel__handle:focus-visible {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: var(--dahc-size-focus-offset);
+}
+
+.dahc-splitter-panel__handle[aria-disabled='true'] {
+  cursor: default;
+}
+
+:host(.dahc-splitter-panel--vertical) .dahc-splitter-panel__handle {
+  inline-size: auto;
+  block-size: var(--dahc-space-2);
+  cursor: row-resize;
+}
+
+:host(.dahc-splitter-panel--vertical) .dahc-splitter-panel__handle::before {
+  inset-inline: 0;
+  inset-block: 50% auto;
+  inline-size: auto;
+  block-size: var(--dahc-size-border);
+}
+
+:host(.dahc-splitter-panel--vertical) .dahc-splitter-panel__handle:hover::before,
+:host(.dahc-splitter-panel--vertical) .dahc-splitter-panel__handle:focus-visible::before {
+  inline-size: auto;
+  block-size: var(--dahc-size-border-strong);
+}
+
+@media (forced-colors: active) {
+  .dahc-splitter-panel__handle::before {
+    background-color: CanvasText;
+  }
+}

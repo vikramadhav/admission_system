@@ -2,32 +2,36 @@ import { Locator, Page } from '@playwright/test';
 
 export type PreferenceNumber = 1 | 2;
 
-/** New application and resumed draft (US-1.3.1, US-1.3.11). */
+/** Program & Preferences, the first wizard step (US-1.3.1; Figma 1:2189). */
 export class ApplicationDraftPage {
+  readonly main: Locator;
   readonly program: Locator;
-  readonly createDraft: Locator;
+  readonly next: Locator;
   readonly saveDraft: Locator;
   readonly loadLatestVersion: Locator;
 
   constructor(readonly page: Page) {
-    this.program = page.getByRole('combobox', { name: 'Program' });
-    this.createDraft = page.getByRole('button', { name: 'Create draft' });
-    this.saveDraft = page.getByRole('button', { name: 'Save draft' });
-    this.loadLatestVersion = page.getByRole('button', { name: 'Load latest version' });
+    this.main = page.getByRole('main');
+    this.program = this.main.getByRole('combobox', { name: 'Program' });
+    this.next = page.getByRole('group', { name: 'Step actions' }).getByRole('button', { name: /^Next/ });
+    this.saveDraft = page.getByRole('group', { name: 'Step actions' }).getByRole('button', { name: 'Save As Draft' });
+    this.loadLatestVersion = this.main.getByRole('button', { name: 'Load the latest version' });
   }
 
   heading(name: string): Locator {
     return this.page.getByRole('heading', { level: 1, name });
   }
 
-  specialty(preference: PreferenceNumber): Locator {
-    const name = preference === 1 ? 'Preference 1' : 'Preference 2 (optional)';
+  preference(preference: PreferenceNumber): Locator {
+    return this.main.locator('dahc-preference-card').nth(preference - 1);
+  }
 
-    return this.page.getByRole('combobox', { name, exact: true });
+  specialty(preference: PreferenceNumber): Locator {
+    return this.preference(preference).getByRole('combobox', { name: 'Specialty' });
   }
 
   sites(preference: PreferenceNumber): Locator {
-    return this.page.getByRole('group', { name: `Preference ${preference} training sites` });
+    return this.preference(preference).getByRole('group', { name: 'Training sites' });
   }
 
   async chooseProgram(name: string): Promise<void> {

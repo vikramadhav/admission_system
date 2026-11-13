@@ -1,0 +1,17 @@
+/* Ported from dubai-health-ui dh-content: 24/16 padding on mobile, 32/40 from md. */
+:host {
+  display: block;
+  flex: auto;
+  min-inline-size: 0;
+}
+
+.dahc-content__main {
+  block-size: 100%;
+  padding: var(--dahc-space-6) var(--dahc-space-4);
+}
+
+@media (min-width: 48rem) {
+  .dahc-content__main {
+    padding: var(--dahc-space-8) var(--dahc-space-10);
+  }
+}

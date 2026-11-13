@@ -1,0 +1,127 @@
+/* Ported from dubai-health-ui dh-progress: navy fill on a navy-100 track, 8px pill bar (DERIVED). */
+
+:host {
+  --_fill: var(--dahc-color-action-primary);
+  --_track: var(--dahc-color-surface-muted);
+  --_circle: calc(var(--dahc-size-illustration) + var(--dahc-space-6));
+
+  display: block;
+  min-inline-size: 0;
+}
+
+:host(.dahc-progress--success) {
+  --_fill: var(--dahc-color-success-icon);
+}
+
+:host(.dahc-progress--error) {
+  --_fill: var(--dahc-color-error-icon);
+}
+
+:host(.dahc-progress--circle) {
+  display: inline-block;
+}
+
+:host(.dahc-progress--sm) {
+  --_circle: var(--dahc-size-control-lg);
+}
+
+:host(.dahc-progress--lg) {
+  --_circle: calc(2 * var(--dahc-size-illustration) + var(--dahc-space-2));
+}
+
+.dahc-progress__row {
+  display: flex;
+  align-items: center;
+  gap: var(--dahc-space-3);
+}
+
+.dahc-progress__track {
+  flex: 1;
+  min-inline-size: 0;
+  block-size: var(--dahc-space-2);
+  overflow: hidden;
+  border-radius: var(--dahc-radius-pill);
+  background-color: var(--_track);
+}
+
+.dahc-progress__bar {
+  block-size: 100%;
+  border-radius: inherit;
+  background-color: var(--_fill);
+  transition: inline-size var(--dahc-motion-duration-normal) var(--dahc-motion-easing-standard);
+}
+
+.dahc-progress__value,
+.dahc-progress__circle-value {
+  color: var(--dahc-color-text-primary);
+  font-size: var(--dahc-font-size-14);
+  font-weight: var(--dahc-font-weight-bold);
+  font-variant-numeric: tabular-nums;
+}
+
+.dahc-progress__value {
+  min-inline-size: 4ch;
+  text-align: end;
+}
+
+.dahc-progress__circle {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  inline-size: var(--_circle);
+  block-size: var(--_circle);
+}
+
+.dahc-progress__ring {
+  grid-area: 1 / 1;
+  inline-size: 100%;
+  block-size: 100%;
+  /* Start at 12 o'clock and fill clockwise. */
+  transform: rotate(-90deg);
+}
+
+.dahc-progress__ring-track,
+.dahc-progress__ring-bar {
+  fill: none;
+  stroke-width: 3;
+}
+
+.dahc-progress__ring-track {
+  stroke: var(--_track);
+}
+
+.dahc-progress__ring-bar {
+  stroke: var(--_fill);
+  stroke-linecap: round;
+  transition: stroke-dashoffset var(--dahc-motion-duration-normal) var(--dahc-motion-easing-standard);
+}
+
+.dahc-progress__circle-value {
+  grid-area: 1 / 1;
+}
+
+:host(.dahc-progress--sm) .dahc-progress__circle-value {
+  font-size: var(--dahc-font-size-12);
+}
+
+:host(.dahc-progress--lg) .dahc-progress__circle-value {
+  font-size: var(--dahc-font-size-22);
+}
+
+@media (forced-colors: active) {
+  .dahc-progress__track {
+    border: var(--dahc-size-border) solid CanvasText;
+  }
+
+  .dahc-progress__bar {
+    background-color: Highlight;
+  }
+
+  .dahc-progress__ring-track {
+    stroke: CanvasText;
+  }
+
+  .dahc-progress__ring-bar {
+    stroke: Highlight;
+  }
+}

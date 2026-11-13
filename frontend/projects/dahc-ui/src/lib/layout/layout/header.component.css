@@ -1,0 +1,22 @@
+/* Ported from dubai-health-ui dh-header: 96px, white, DH divider. */
+:host {
+  display: block;
+  flex: none;
+}
+
+.dahc-header__bar {
+  display: flex;
+  align-items: center;
+  gap: var(--dahc-space-6);
+  min-block-size: calc(2 * var(--dahc-size-control-lg));
+  padding-inline: var(--dahc-space-4);
+  border-block-end: var(--dahc-size-border) solid var(--dahc-color-border-subtle);
+  background-color: var(--dahc-color-surface);
+  color: var(--dahc-color-text-primary);
+}
+
+@media (min-width: 48rem) {
+  .dahc-header__bar {
+    padding-inline: var(--dahc-space-16);
+  }
+}

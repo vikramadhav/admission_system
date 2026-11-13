@@ -1,0 +1,61 @@
+<dahc-playground-page
+  heading="Phone input"
+  description="A phone number with a country code; the value is one international string and dahcPhone validates it."
+  [sourceFiles]="sourceFiles"
+  selector="dahc-phone-input"
+  [whenToUse]="whenToUse">
+  <div preview>
+    <dahc-phone-input [label]="label()" [hint]="hint()" [formControl]="control" />
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-text label="label" [(value)]="label" />
+    <dahc-inspector-text label="hint" [(value)]="hint" />
+    <p class="pg-value" data-testid="form-value">Form value: {{ valueText() }}</p>
+    <p class="pg-value" data-testid="form-errors">Form errors: {{ errorsText() }}</p>
+  </div>
+
+  <div states class="pg-stack">
+    <dahc-phone-input label="Empty (default country UAE)" [formControl]="emptyControl" />
+    <dahc-phone-input label="Disabled" [formControl]="disabledControl" />
+  </div>
+
+  <dahc-doc-example
+    examples
+    exampleId="basic"
+    heading="Basic"
+    description="The UAE is the default country."
+    template="phone-input-page.component.html">
+    <dahc-phone-input label="Work phone" [formControl]="exampleWorkPhone" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="country"
+    heading="Default country"
+    description="Start with another country selected."
+    template="phone-input-page.component.html">
+    <dahc-phone-input label="Contact number in Saudi Arabia" defaultCountry="SA" [formControl]="exampleSaudiPhone" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="required"
+    heading="Required with error"
+    description="The error shows after the field was touched without a value."
+    template="phone-input-page.component.html">
+    <dahc-phone-input
+      label="Emergency contact number"
+      hint="We only call this number in an emergency."
+      [required]="true"
+      [invalid]="exampleEmergency.invalid && exampleEmergency.touched"
+      errorMessage="Enter an emergency contact number."
+      [formControl]="exampleEmergency" />
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>The field label names the number; the country selector has its own name ("Country code") and full country names.</li>
+    <li>The number field uses the telephone keyboard on phones and phone autocomplete.</li>
+    <li>A number that is not 6 to 12 digits shows an error after leaving the field and fails form validation (dahcPhone).</li>
+  </ul>
+</dahc-playground-page>

@@ -59,11 +59,29 @@ for (const mode of DISPLAY_MODES) {
   });
 }
 
+test('button heights and label style follow Figma Buttons 50:6786', async ({ page }) => {
+  const playground = new PlaygroundPage(page);
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await playground.open('button', { theme: 'light', direction: 'ltr' });
+
+  const primary = playground.states.locator('p', { hasText: /^primary$/ }).locator('xpath=..');
+  const heights = await primary.getByRole('button', { name: /^(sm|md|lg)$/ }).evaluateAll(buttons =>
+    buttons.map(button => Math.round(button.getBoundingClientRect().height)),
+  );
+  expect(heights).toEqual([36, 44, 48]);
+
+  const large = primary.getByRole('button', { name: 'lg' });
+  await expect(large).toHaveCSS('background-color', 'rgb(0, 47, 112)');
+  await expect(large).toHaveCSS('font-family', /Dubai/);
+  await expect(large).toHaveCSS('font-size', '18px');
+  await expect(large).toHaveCSS('font-weight', '700');
+});
+
 test('button serves its real source and reflows at 320 pixels', async ({ page }) => {
   const playground = new PlaygroundPage(page);
   await page.setViewportSize({ width: 320, height: 800 });
   await playground.open('button', { theme: 'light', direction: 'ltr' });
 
-  await playground.expectSourceFile('button/button.component.ts', "selector: 'button[dahc-button], a[dahc-button]'");
+  await playground.expectSourceFile('actions/button/button.component.ts', "selector: 'button[dahc-button], a[dahc-button]'");
   await expectNoHorizontalScroll(page);
 });

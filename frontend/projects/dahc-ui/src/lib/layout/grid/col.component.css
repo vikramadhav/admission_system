@@ -1,0 +1,54 @@
+/* Ported from dubai-health-ui dh-col. Each breakpoint falls back to the next smaller one, so a
+   span set for md applies from 768px up until a larger breakpoint overrides it. Media queries
+   cannot read custom properties, so the breakpoint values are written here (tokens/_breakpoints.scss;
+   xxl 90rem is the dubai-health-ui extra breakpoint). */
+:host {
+  --_span: var(--_sxs, var(--_s0, 24));
+  --_offset: var(--_oxs, var(--_o0, 0));
+
+  display: block;
+  flex: 0 0 calc(var(--_span) / 24 * 100%);
+  max-inline-size: calc(var(--_span) / 24 * 100%);
+  min-inline-size: 0;
+  margin-inline-start: calc(var(--_offset) / 24 * 100%);
+  padding-inline: calc(var(--dahc-row-gutter, 0px) / 2);
+}
+
+:host(.dahc-col--hidden) {
+  display: none;
+}
+
+@media (min-width: 36rem) {
+  :host {
+    --_span: var(--_ssm, var(--_sxs, var(--_s0, 24)));
+    --_offset: var(--_osm, var(--_oxs, var(--_o0, 0)));
+  }
+}
+
+@media (min-width: 48rem) {
+  :host {
+    --_span: var(--_smd, var(--_ssm, var(--_sxs, var(--_s0, 24))));
+    --_offset: var(--_omd, var(--_osm, var(--_oxs, var(--_o0, 0))));
+  }
+}
+
+@media (min-width: 64rem) {
+  :host {
+    --_span: var(--_slg, var(--_smd, var(--_ssm, var(--_sxs, var(--_s0, 24)))));
+    --_offset: var(--_olg, var(--_omd, var(--_osm, var(--_oxs, var(--_o0, 0)))));
+  }
+}
+
+@media (min-width: 80rem) {
+  :host {
+    --_span: var(--_sxl, var(--_slg, var(--_smd, var(--_ssm, var(--_sxs, var(--_s0, 24))))));
+    --_offset: var(--_oxl, var(--_olg, var(--_omd, var(--_osm, var(--_oxs, var(--_o0, 0))))));
+  }
+}
+
+@media (min-width: 90rem) {
+  :host {
+    --_span: var(--_sxxl, var(--_sxl, var(--_slg, var(--_smd, var(--_ssm, var(--_sxs, var(--_s0, 24)))))));
+    --_offset: var(--_oxxl, var(--_oxl, var(--_olg, var(--_omd, var(--_osm, var(--_oxs, var(--_o0, 0)))))));
+  }
+}

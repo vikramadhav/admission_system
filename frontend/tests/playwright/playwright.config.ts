@@ -3,13 +3,19 @@ import { defineConfig, devices } from '@playwright/test';
 const isCi = process.env['CI'] !== undefined;
 
 /**
- * Playground specs run against the playground dev server; portal specs run against the portal
- * dev server with IDAM and the API replaced by in-test mocks (see support/idam-mock.ts).
+ * Playground specs run against the playground dev server. Portal specs run against the portal
+ * development build with IDAM and the API replaced by in-test mocks (support/idam-mock.ts), and
+ * candidate specs run the full candidate workflows against the mock build (in-browser API,
+ * persona sign-in) on its own port.
  */
 export default defineConfig({
   testDir: './specs',
   outputDir: './test-results',
   fullyParallel: true,
+  // Specs run against the Angular dev server, which builds pages on demand; with 400+ tests in
+  // parallel a first page load can be slow, so tests and assertions get more time than the defaults.
+  timeout: 60_000,
+  expect: { timeout: 10_000 },
   forbidOnly: isCi,
   retries: isCi ? 1 : 0,
   reporter: [['list'], ['html', { open: 'never', outputFolder: './playwright-report' }]],
@@ -27,6 +33,11 @@ export default defineConfig({
       testDir: './specs/portal',
       use: { ...devices['Desktop Chrome'], baseURL: 'http://localhost:4200' },
     },
+    {
+      name: 'candidate',
+      testDir: './specs/candidate',
+      use: { ...devices['Desktop Chrome'], baseURL: 'http://localhost:4201' },
+    },
   ],
   webServer: [
     {
@@ -40,6 +51,13 @@ export default defineConfig({
       command: 'npx ng serve dahc-portal --port 4200',
       cwd: '../..',
       url: 'http://localhost:4200',
+      reuseExistingServer: !isCi,
+      timeout: 300_000,
+    },
+    {
+      command: 'npx ng serve dahc-portal --configuration mock --port 4201',
+      cwd: '../..',
+      url: 'http://localhost:4201',
       reuseExistingServer: !isCi,
       timeout: 300_000,
     },

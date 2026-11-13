@@ -1,0 +1,87 @@
+<div class="pg-doc-layout">
+  <article class="pg-doc-article">
+    <h1 class="pg-doc-title">
+      {{ heading() }}
+      @if (selector()) {
+        <code class="pg-doc-selector">{{ selector() }}</code>
+      }
+    </h1>
+    <p class="pg-doc-lead">{{ description() }}</p>
+
+    @if (whenToUse().length > 0) {
+      <section class="pg-doc-section" aria-labelledby="pg-when-to-use">
+        <h2 id="pg-when-to-use" class="pg-doc-h2">When To Use</h2>
+        <ul class="pg-doc-list">
+          @for (item of whenToUse(); track $index) {
+            <li>{{ item }}</li>
+          }
+        </ul>
+      </section>
+    }
+
+    <section class="pg-doc-section" aria-labelledby="pg-examples">
+      <h2 id="pg-examples" class="pg-doc-h2">Examples</h2>
+      <div class="pg-examples" [class.pg-examples--two]="exampleColumns() === 2">
+        <section class="pg-example pg-example--wide" id="example-playground" aria-labelledby="example-playground-title">
+          <div class="pg-example-demo pg-playground">
+            <section class="pg-playground-preview" aria-labelledby="preview-heading">
+              <h3 id="preview-heading" class="pg-playground-label">Preview</h3>
+              <div class="pg-preview-stage"><ng-content select="[preview]" /></div>
+            </section>
+            <section class="pg-playground-properties" aria-labelledby="inspector-heading">
+              <h3 id="inspector-heading" class="pg-playground-label">Properties</h3>
+              <ng-content select="[inspector]" />
+            </section>
+          </div>
+          <div class="pg-example-meta">
+            <h3 class="pg-example-title" id="example-playground-title">Playground</h3>
+            <p class="pg-example-description">Change the properties to try every input live. Emitted outputs are listed under the properties.</p>
+          </div>
+        </section>
+
+        <section class="pg-example pg-example--wide" id="example-states" aria-labelledby="states-heading">
+          <div class="pg-example-demo">
+            <div class="pg-states"><ng-content select="[states]" /></div>
+          </div>
+          <div class="pg-example-meta">
+            <h3 class="pg-example-title" id="states-heading">States</h3>
+            <p class="pg-example-description">Every state and variant side by side.</p>
+          </div>
+        </section>
+
+        <ng-content select="[examples]" />
+      </div>
+    </section>
+
+    <section class="pg-doc-section" id="pg-api" aria-labelledby="api-heading">
+      <h2 id="api-heading" class="pg-doc-h2">API</h2>
+      <dahc-api-table [files]="apiSourceFiles()" />
+    </section>
+
+    <section class="pg-doc-section" id="pg-accessibility" aria-labelledby="a11y-heading">
+      <h2 id="a11y-heading" class="pg-doc-h2">Accessibility</h2>
+      <div class="pg-doc-notes"><ng-content select="[accessibility]" /></div>
+    </section>
+
+    <section class="pg-doc-section" id="pg-source" aria-labelledby="source-heading">
+      <h2 id="source-heading" class="pg-doc-h2">Source</h2>
+      <dahc-source-viewer [files]="sourceFiles()" />
+    </section>
+  </article>
+
+  <nav class="pg-toc" aria-label="Page sections">
+    <ul class="pg-toc-list">
+      @for (item of contents(); track item.id) {
+        <li>
+          <a
+            class="pg-toc-link"
+            [class.pg-toc-link--nested]="item.nested"
+            [class.pg-toc-link--active]="item.id === activeSection()"
+            [attr.aria-current]="item.id === activeSection() ? 'location' : null"
+            [href]="'#' + item.id"
+            (click)="goTo($event, item.id)">{{ item.label }}</a>
+        </li>
+      }
+    </ul>
+  </nav>
+</div>

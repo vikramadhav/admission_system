@@ -1,11 +1,14 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { DahcAlertComponent, DahcAlertVariant } from 'dahc-ui';
+import { DahcAlertComponent, DahcAlertVariant, DahcSpaceComponent } from 'dahc-ui';
 
-import { EventLogComponent } from '../inspector/event-log.component';
-import { InspectorChoiceComponent } from '../inspector/inspector-choice.component';
-import { InspectorTextComponent } from '../inspector/inspector-text.component';
-import { InspectorToggleComponent } from '../inspector/inspector-toggle.component';
-import { PlaygroundPageComponent } from '../layout/playground-page.component';
+import {
+  DocExampleComponent,
+  EventLogComponent,
+  InspectorChoiceComponent,
+  InspectorTextComponent,
+  InspectorToggleComponent,
+  PlaygroundPageComponent,
+} from 'dahc-playground-kit';
 
 @Component({
   selector: 'dahc-alert-page',
@@ -13,6 +16,8 @@ import { PlaygroundPageComponent } from '../layout/playground-page.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     DahcAlertComponent,
+    DahcSpaceComponent,
+    DocExampleComponent,
     EventLogComponent,
     InspectorChoiceComponent,
     InspectorTextComponent,
@@ -21,7 +26,14 @@ import { PlaygroundPageComponent } from '../layout/playground-page.component';
   ],
 })
 export class AlertPageComponent {
-  protected readonly sourceFiles = ['alert/alert.component.ts', 'alert/alert.component.html', 'alert/alert.component.scss'];
+  protected readonly whenToUse: readonly string[] = [
+    'Show messages that belong to a page or section and stay until the user acts, such as an error summary after Save.',
+    'Use info alerts for guidance before a task, for example the documents needed for an application.',
+    'Set announce when the alert appears after an action, so screen readers read it.',
+    'Use a toast or message for short confirmations that disappear on their own.',
+  ];
+
+  protected readonly sourceFiles = ['feedback/alert/alert.component.ts', 'feedback/alert/alert.component.html', 'feedback/alert/alert.component.css'];
   protected readonly variants: readonly DahcAlertVariant[] = ['info', 'success', 'warning', 'error'];
 
   protected readonly variant = signal<DahcAlertVariant>('error');

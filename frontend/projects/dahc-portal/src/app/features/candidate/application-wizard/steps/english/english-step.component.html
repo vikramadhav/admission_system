@@ -1,0 +1,59 @@
+<div class="step" [formGroup]="form">
+  <dahc-alert variant="warning" i18n="@@portal.english.warning">
+    Upload the certificate of a valid exam. Results must meet the minimum score of the exam you choose.
+  </dahc-alert>
+
+  @if (optional()) {
+    <dahc-alert variant="info" i18n="@@portal.english.optional">
+      English proficiency is optional for you, because of your program, your nationality or the country of your university. You can still add an exam.
+    </dahc-alert>
+  }
+
+  <div class="step-grid">
+    <dahc-select
+      formControlName="exam"
+      i18n-label="@@portal.english.exam"
+      label="Title of exam"
+      [options]="exams"
+      [required]="isRequired('exam')"
+      [invalid]="error('exam') !== ''"
+      [errorMessage]="error('exam')" />
+    @if (form.controls.exam.value !== '') {
+      <dahc-date-picker
+        formControlName="dateTaken"
+        i18n-label="@@portal.english.dateTaken"
+        label="Date taken"
+        [max]="today"
+        [required]="true"
+        [invalid]="error('dateTaken') !== ''"
+        [errorMessage]="error('dateTaken')" />
+      @if (form.controls.exam.value === 'OET') {
+        @for (part of oetParts; track part.control) {
+          <dahc-form-field
+            [label]="part.label"
+            [hint]="rangeWarning(part.control)"
+            [required]="true"
+            [invalid]="error(part.control) !== ''"
+            [error]="error(part.control)">
+            <input dahcInput type="text" inputmode="numeric" [formControlName]="part.control" />
+          </dahc-form-field>
+        }
+      } @else {
+        <dahc-form-field
+          i18n-label="@@portal.english.result"
+          label="Result"
+          [hint]="rangeWarning('result')"
+          [required]="true"
+          [invalid]="error('result') !== ''"
+          [error]="error('result')">
+          <input dahcInput type="text" inputmode="decimal" formControlName="result" />
+        </dahc-form-field>
+      }
+    }
+  </div>
+
+  <section class="step-section" aria-labelledby="english-documents-heading">
+    <h3 id="english-documents-heading" class="step-section-heading" i18n="@@portal.english.documents">Documents</h3>
+    <dahc-section-attachments sectionKey="english-proficiency" [showRequired]="showAll()" />
+  </section>
+</div>

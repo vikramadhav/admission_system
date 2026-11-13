@@ -1,0 +1,97 @@
+<dahc-playground-page
+  heading="Layout"
+  description="A page frame of header, content and footer, with an optional collapsible side navigation. Ported from dubai-health-ui dh-layout; header 96px (Figma 50:10832), navy footer (50:11046), sider DERIVED."
+  selector="dahc-layout"
+  [whenToUse]="whenToUse"
+  [sourceFiles]="sourceFiles">
+  <div preview>
+    <dahc-layout class="layout-demo" data-testid="layout-demo">
+      <dahc-sider
+        label="Demo navigation"
+        [collapsible]="collapsible()"
+        [breakpoint]="breakpoint()"
+        [(collapsed)]="collapsed"
+        (collapseChange)="onCollapse($event)">
+        @if (!collapsed()) {
+          <ul class="layout-links">
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#applications">Applications</a></li>
+          </ul>
+        }
+      </dahc-sider>
+      <dahc-layout>
+        <dahc-header><strong>GME Admissions</strong></dahc-header>
+        <dahc-content [landmark]="false"><p class="layout-text">Page content on the DH page background.</p></dahc-content>
+        <dahc-layout-footer><p class="layout-text">© 2026 Dubai Health. <a href="#privacy">Privacy policy</a></p></dahc-layout-footer>
+      </dahc-layout>
+    </dahc-layout>
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-toggle label="collapsible" [(value)]="collapsible" />
+    <dahc-inspector-toggle label="collapsed" [(value)]="collapsed" />
+    <dahc-inspector-choice label="breakpoint" [options]="breakpoints" [(value)]="breakpoint" />
+    <dahc-event-log [events]="events()" />
+  </div>
+
+  <div states class="pg-stack">
+    <dahc-layout class="layout-demo">
+      <dahc-header><strong>Header only</strong></dahc-header>
+      <dahc-content [landmark]="false"><p class="layout-text">No sider: the layout stacks.</p></dahc-content>
+    </dahc-layout>
+  </div>
+
+  <dahc-doc-example
+    examples
+    exampleId="basic"
+    heading="Header, content and footer"
+    description="The standard stacked frame."
+    template="layout-page.component.html">
+    <dahc-layout class="layout-demo">
+      <dahc-header label="Example portal header"><strong>GME Admissions</strong></dahc-header>
+      <dahc-content [landmark]="false"><p>Page content on the page background.</p></dahc-content>
+      <dahc-layout-footer label="Example portal footer"><p>© 2026 Dubai Health</p></dahc-layout-footer>
+    </dahc-layout>
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="sider"
+    heading="With a side navigation"
+    description="A sider turns the layout into a row."
+    template="layout-page.component.html">
+    <dahc-layout class="layout-demo">
+      <dahc-sider label="Back office sections">
+        <ul class="layout-links">
+          <li><a href="#queue">Review queue</a></li>
+          <li><a href="#reports">Reports</a></li>
+        </ul>
+      </dahc-sider>
+      <dahc-layout>
+        <dahc-header label="Back office header"><strong>Admissions back office</strong></dahc-header>
+        <dahc-content [landmark]="false"><p>Applications waiting for review.</p></dahc-content>
+      </dahc-layout>
+    </dahc-layout>
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="collapsible"
+    heading="Collapsible sider"
+    description="The collapse button narrows the sider to 80 pixels."
+    template="layout-page.component.html">
+    <dahc-layout class="layout-demo">
+      <dahc-sider label="Collapsible sections" [collapsible]="true" [collapsed]="true">
+        <ul class="layout-links">
+          <li><a href="#home">Home</a></li>
+        </ul>
+      </dahc-sider>
+      <dahc-content [landmark]="false"><p>The collapsed sider leaves more room for content.</p></dahc-content>
+    </dahc-layout>
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>dahc-header renders a header element, dahc-content the main landmark (turn landmark off when nested in another main), dahc-layout-footer a footer and dahc-sider a labelled nav.</li>
+    <li>The collapse button says "Expand navigation" or "Collapse navigation" and reports aria-expanded; its chevron follows the reading direction.</li>
+  </ul>
+</dahc-playground-page>

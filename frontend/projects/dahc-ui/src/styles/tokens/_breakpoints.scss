@@ -1,0 +1,24 @@
+// Breakpoints: DAHC proposal (03 §3.10). Figma has only 1440 desktop and 375/393 mobile frames.
+// Media queries cannot read custom properties, so breakpoints stay in Sass. Components prefer
+// container queries; apps use the `up` mixin.
+@use 'sass:map';
+
+$breakpoints: (
+  'sm': 36rem, // 576px
+  'md': 48rem, // 768px: mobile type roles switch to web
+  'lg': 64rem, // 1024px: header switches from hamburger to full navigation
+  'xl': 80rem, // 1280px: GME desktop frame
+  'xxl': 90rem, // 1440px: wide desktop (dubai-health-ui grid)
+);
+
+@mixin up($name) {
+  @media (min-width: map.get($breakpoints, $name)) {
+    @content;
+  }
+}
+
+@mixin down($name) {
+  @media (max-width: calc(#{map.get($breakpoints, $name)} - 0.02rem)) {
+    @content;
+  }
+}

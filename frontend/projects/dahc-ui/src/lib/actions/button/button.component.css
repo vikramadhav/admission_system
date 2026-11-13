@@ -1,0 +1,202 @@
+/* Figma DH Design System REF, Buttons 50:6786. Values per variant are private custom properties
+   (--_*), so every state rule below is written once. */
+
+:host {
+  --_bg: transparent;
+  --_fg: var(--dahc-color-text-primary);
+  --_border: transparent;
+  --_bg-hover: var(--_bg);
+  --_fg-hover: var(--_fg);
+  --_border-hover: var(--_border);
+  --_bg-active: var(--_bg-hover);
+  --_fg-active: var(--_fg-hover);
+  --_border-active: var(--_border-hover);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--dahc-space-2);
+  min-block-size: var(--dahc-size-control-md);
+  /* Figma heights (12 + 20 + 12 = 44) exclude the border every variant reserves. */
+  padding-block: calc(var(--dahc-space-3) - var(--dahc-size-border));
+  padding-inline: var(--dahc-space-6);
+  border: var(--dahc-size-border) solid var(--_border);
+  border-radius: var(--dahc-radius-pill);
+  background-color: var(--_bg);
+  color: var(--_fg);
+  font-family: inherit;
+  /* Large and Medium: "Web/Button text 1", Bold 18/20 (50:6787, 50:6791) */
+  font-size: var(--dahc-type-button-lg-size);
+  font-weight: var(--dahc-type-button-lg-weight);
+  line-height: var(--dahc-type-button-lg-line-height);
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard),
+    border-color var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard),
+    color var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard);
+}
+
+/* Sizes: Large 48 (12/32, gap 12), Medium 44 (12/24, gap 8), Small 36 (8/24, gap 8, Medium 14/18) */
+:host(.dahc-button--lg) {
+  gap: var(--dahc-space-3);
+  min-block-size: var(--dahc-size-control-lg);
+  padding-inline: var(--dahc-space-8);
+}
+
+:host(.dahc-button--sm) {
+  min-block-size: var(--dahc-size-control-sm);
+  padding-block: calc(var(--dahc-space-2) - var(--dahc-size-border));
+  font-size: var(--dahc-font-size-14);
+  font-weight: var(--dahc-font-weight-medium);
+  line-height: var(--dahc-font-line-height-tight);
+}
+
+:host(.dahc-button--block) {
+  display: flex;
+  inline-size: 100%;
+}
+
+/* Variants */
+:host(.dahc-button--primary) {
+  --_bg: var(--dahc-color-action-primary);
+  --_fg: var(--dahc-color-text-inverse);
+  --_bg-hover: var(--dahc-color-action-primary-hover);
+  --_bg-active: var(--dahc-color-action-primary-active);
+}
+
+/* Outline Navy 50:6819: hover fills navy with a white label; Active equals Default (as dh-button). */
+:host(.dahc-button--secondary) {
+  --_fg: var(--dahc-color-text-primary);
+  --_border: var(--dahc-color-border-strong);
+  --_bg-hover: var(--dahc-color-action-primary);
+  --_fg-hover: var(--dahc-color-text-inverse);
+  --_border-hover: var(--dahc-color-action-primary);
+  --_bg-active: transparent;
+  --_fg-active: var(--dahc-color-text-primary);
+  --_border-active: var(--dahc-color-border-strong);
+}
+
+:host(.dahc-button--danger) {
+  --_bg: var(--dahc-color-action-danger);
+  --_fg: var(--dahc-color-text-inverse);
+  --_bg-hover: var(--dahc-color-action-danger-hover);
+}
+
+/* Special Red outline 50:6936, with the A11y-fixed red. */
+:host(.dahc-button--danger-outline) {
+  --_fg: var(--dahc-color-action-danger);
+  --_border: var(--dahc-color-action-danger);
+  --_bg-hover: var(--dahc-color-action-danger);
+  --_fg-hover: var(--dahc-color-text-inverse);
+  --_bg-active: var(--dahc-color-action-danger-hover);
+  --_border-active: var(--dahc-color-action-danger-hover);
+}
+
+/* Special Blue 50:6932 and Green 50:6923: Medium 14/18 uppercase. */
+:host(.dahc-button--special-blue),
+:host(.dahc-button--special-green) {
+  --_fg: var(--dahc-color-text-on-special);
+
+  text-transform: uppercase;
+}
+
+:host(.dahc-button--special-blue) {
+  --_bg: var(--dahc-color-action-special-blue);
+  --_bg-hover: var(--dahc-color-action-special-blue-hover);
+}
+
+:host(.dahc-button--special-green) {
+  --_bg: var(--dahc-color-action-special-green);
+  --_bg-hover: var(--dahc-color-action-special-green-hover);
+}
+
+/* Links 50:6855: no padding, underline on hover. Large Bold 18, Medium Bold 16, Small Regular 14. */
+:host(.dahc-button--link) {
+  --_fg: var(--dahc-color-text-primary);
+  --_fg-hover: var(--dahc-color-action-primary-hover);
+
+  gap: var(--dahc-space-1);
+  min-block-size: var(--dahc-size-target-min);
+  padding: 0;
+  border-radius: 0;
+  text-underline-offset: var(--dahc-size-focus-offset);
+}
+
+:host(.dahc-button--link.dahc-button--lg) {
+  gap: var(--dahc-space-2);
+  min-block-size: var(--dahc-size-target-min);
+  padding-inline: 0;
+}
+
+:host(.dahc-button--link.dahc-button--md) {
+  font-size: var(--dahc-type-button-md-size);
+  line-height: var(--dahc-type-button-md-line-height);
+}
+
+:host(.dahc-button--link.dahc-button--sm) {
+  min-block-size: var(--dahc-size-target-min);
+  padding-block: 0;
+  font-weight: var(--dahc-font-weight-regular);
+}
+
+/* States */
+:host(:hover:not([disabled], [aria-disabled='true'])) {
+  border-color: var(--_border-hover);
+  background-color: var(--_bg-hover);
+  color: var(--_fg-hover);
+}
+
+:host(.dahc-button--link:hover:not([disabled], [aria-disabled='true'])) {
+  text-decoration: underline;
+}
+
+:host(:active:not([disabled], [aria-disabled='true'])) {
+  border-color: var(--_border-active);
+  background-color: var(--_bg-active);
+  color: var(--_fg-active);
+}
+
+:host(:focus-visible) {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: var(--dahc-size-focus-offset);
+}
+
+/* Disabled: the variant's own colours at 50% opacity (Figma and dh-button). */
+:host([disabled]:not(.dahc-button--loading)),
+:host([aria-disabled='true']:not(.dahc-button--loading)) {
+  opacity: var(--dahc-opacity-disabled);
+  cursor: not-allowed;
+}
+
+/* Loading keeps the variant's colours so the button does not flash grey while busy. */
+:host(.dahc-button--loading) {
+  cursor: progress;
+}
+
+.dahc-button__spinner {
+  flex: none;
+  inline-size: var(--dahc-size-icon-sm);
+  block-size: var(--dahc-size-icon-sm);
+  border: var(--dahc-size-border-strong) solid currentcolor;
+  border-inline-end-color: transparent;
+  border-radius: var(--dahc-radius-pill);
+  animation: dahc-button-spin calc(var(--dahc-motion-duration-normal) * 4) linear infinite;
+}
+
+@keyframes dahc-button-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (forced-colors: active) {
+  :host {
+    border-color: ButtonText;
+  }
+
+  :host(.dahc-button--link) {
+    border-color: transparent;
+  }
+}

@@ -1,3 +1,6 @@
+import { HttpInterceptorFn } from '@angular/common/http';
+import { EnvironmentProviders, Provider } from '@angular/core';
+
 import { DahcPortalConfig } from '../app/core/config/portal-config';
 
 // Template for deployed environments. Each environment replaces this file through its own
@@ -22,8 +25,15 @@ export const environment: DahcPortalConfig = {
     singleSignOutUrl: 'https://idam.example.invalid/pkmslogout',
   },
   defaultTimeZoneId: 'Asia/Dubai',
+  sessionTimeoutMinutes: 30,
   localeBasePaths: {
     'en-AE': '/en/',
     'ar-AE': '/ar/',
   },
 };
+
+/** Extra providers of this environment; the mock environment adds the mock backend here. */
+export const environmentProviders: (Provider | EnvironmentProviders)[] = [];
+
+/** Extra HTTP interceptors of this environment, run after the portal's own. */
+export const environmentInterceptors: HttpInterceptorFn[] = [];

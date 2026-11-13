@@ -1,0 +1,12 @@
+// Text role classes (.dahc-text-<role>), one per Figma text style (03 §3.5).
+// They read the role tokens, so the mobile scale applies automatically below md.
+@use '../tokens/scales';
+
+@each $role, $values in scales.$type-roles-desktop {
+  .dahc-text-#{$role} {
+    font-size: var(--dahc-type-#{$role}-size);
+    font-weight: var(--dahc-type-#{$role}-weight);
+    line-height: var(--dahc-type-#{$role}-line-height);
+    text-transform: var(--dahc-type-#{$role}-transform);
+  }
+}

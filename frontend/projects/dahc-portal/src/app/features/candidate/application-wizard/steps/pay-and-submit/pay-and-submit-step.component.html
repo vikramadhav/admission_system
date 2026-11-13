@@ -1,0 +1,73 @@
+<div class="step">
+  @if (!submitted()) {
+    <dahc-alert variant="warning" i18n="@@portal.pay.gatewayWarning">
+      You will be redirected to the Dubai Health payment gateway. The application fee is non-refundable if you withdraw.
+    </dahc-alert>
+  } @else {
+    <dahc-alert variant="success" i18n="@@portal.pay.submittedNote">Your application fee has been paid and your application has been submitted.</dahc-alert>
+  }
+
+  @if (showIncomplete() && incompleteRows().length > 0) {
+    <div #incompleteAlert tabindex="-1" class="pay-focus">
+      <dahc-alert variant="error" [announce]="true" i18n-heading="@@portal.pay.incompleteHeading" heading="Complete these sections before you pay">
+        <ul class="pay-list">
+          @for (row of incompleteRows(); track row.group) {
+            <li>{{ row.label }}</li>
+          }
+        </ul>
+      </dahc-alert>
+    </div>
+  }
+
+  @if (problem(); as current) {
+    <dahc-alert variant="error" [announce]="true" [dismissible]="true" (dismissed)="problem.set(null)">
+      <p class="step-text">{{ current.detail ?? current.title }}</p>
+      @if (current.errors?.length) {
+        <ul class="pay-list">
+          @for (issue of current.errors; track $index) {
+            <li>{{ issue.detail }}</li>
+          }
+        </ul>
+      }
+    </dahc-alert>
+  }
+
+  <section class="step-section" aria-labelledby="pay-summary-heading">
+    <h3 id="pay-summary-heading" class="step-section-heading" i18n="@@portal.pay.summaryHeading">Review, Pay & Submit</h3>
+    <dahc-detail-list [items]="summary()" [columns]="3" />
+  </section>
+
+  <section class="step-section" aria-labelledby="pay-checklist-heading">
+    <h3 id="pay-checklist-heading" class="step-section-heading" i18n="@@portal.pay.checklistHeading">Sections of your application</h3>
+    <ul class="pay-checklist">
+      @for (row of checklist(); track row.group) {
+        <li class="pay-checklist-row">
+          <span class="pay-checklist-label">{{ row.label }}</span>
+          <span class="pay-checklist-status">
+            @if (row.complete) {
+              <dahc-tag purpose="success" i18n="@@portal.pay.complete">Complete</dahc-tag>
+            } @else {
+              <dahc-tag purpose="warning" i18n="@@portal.pay.incomplete">Incomplete</dahc-tag>
+              @if (state.mode() === 'edit' && row.firstIncomplete; as step) {
+                <button dahc-button type="button" variant="link" size="sm" (click)="completeStep(step)" i18n="@@portal.pay.completeStep">
+                  Complete this step
+                </button>
+              }
+            }
+          </span>
+        </li>
+      }
+    </ul>
+  </section>
+</div>
+
+<dahc-modal [(open)]="confirmOpen" size="sm" i18n-heading="@@portal.pay.confirmHeading" heading="Pay and submit your application?">
+  <p class="step-text" i18n="@@portal.pay.confirmText">
+    You will pay {{ fee() }} on the Dubai Health payment gateway and then return here. The fee is non-refundable, including if you withdraw later.
+    After you submit, your application can no longer be changed.
+  </p>
+  <div dahcDialogFooter class="pay-actions">
+    <button dahc-button type="button" variant="secondary" (click)="confirmOpen.set(false)" i18n="@@portal.action.cancel">Cancel</button>
+    <button dahc-button type="button" [loading]="paying()" (click)="pay()" i18n="@@portal.pay.continueToPayment">Continue to payment</button>
+  </div>
+</dahc-modal>

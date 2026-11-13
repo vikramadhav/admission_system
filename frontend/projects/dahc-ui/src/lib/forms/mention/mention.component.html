@@ -1,0 +1,34 @@
+<dahc-form-field [label]="label()" [hint]="hint()" [error]="errorMessage()" [invalid]="invalid()" [required]="required()">
+  <textarea
+    #textarea
+    dahcInput
+    class="dahc-mention__control"
+    role="combobox"
+    aria-autocomplete="list"
+    [attr.aria-expanded]="expanded()"
+    [attr.aria-controls]="listId"
+    [attr.aria-activedescendant]="activeId()"
+    [attr.placeholder]="placeholder() || null"
+    [rows]="rows()"
+    [value]="display()"
+    [disabled]="isDisabled()"
+    (input)="onInput($event)"
+    (click)="detect()"
+    (keydown)="onKeydown($event)"
+    (blur)="onBlur()"></textarea>
+</dahc-form-field>
+<div #popup class="dahc-popup dahc-mention__popup" popover="manual">
+  <ul class="dahc-entry-list" role="listbox" [id]="listId" [attr.aria-label]="suggestionsLabel()">
+    @for (option of suggestions(); track option.value; let index = $index) {
+      <li
+        role="option"
+        class="dahc-entry-option"
+        [id]="optionId(index)"
+        [class.dahc-entry-option--active]="index === activeIndex()"
+        [attr.aria-selected]="index === activeIndex()"
+        [attr.data-index]="index">
+        <span class="dahc-mention__prefix" aria-hidden="true">{{ prefix() }}</span>{{ option.label }}
+      </li>
+    }
+  </ul>
+</div>

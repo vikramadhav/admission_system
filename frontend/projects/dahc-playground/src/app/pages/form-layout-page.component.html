@@ -1,0 +1,62 @@
+<dahc-playground-page
+  heading="Form layout"
+  description="Lays out fields in one or two columns (two from 48rem), 24px apart. Ported from dubai-health-ui dh-form; PARTIAL Figma DH Form pattern."
+  [sourceFiles]="sourceFiles"
+  selector="dahc-form-layout"
+  [whenToUse]="whenToUse">
+  <div preview>
+    <dahc-form-layout [columns]="two() ? 2 : 1">
+      <dahc-form-field label="First name"><input dahcInput type="text" /></dahc-form-field>
+      <dahc-form-field label="Last name"><input dahcInput type="text" /></dahc-form-field>
+      <dahc-form-field label="E-mail" class="dahc-form-layout__full"><input dahcInput type="email" /></dahc-form-field>
+      <dahc-time-picker label="Preferred time" />
+      <dahc-input-number label="Years of experience" [min]="0" />
+    </dahc-form-layout>
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-toggle label="two columns" [(value)]="two" />
+  </div>
+
+  <dahc-doc-example
+    examples
+    exampleId="one-column"
+    heading="One column"
+    description="The default: every field on its own row."
+    template="form-layout-page.component.html">
+    <dahc-form-layout [formGroup]="exampleContact">
+      <dahc-form-field label="Given name"><input dahcInput formControlName="givenName" /></dahc-form-field>
+      <dahc-form-field label="Family name"><input dahcInput formControlName="familyName" /></dahc-form-field>
+    </dahc-form-layout>
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="two-columns"
+    heading="Two columns with a full-width field"
+    description="Short fields share a row; the street address spans both columns."
+    template="form-layout-page.component.html">
+    <dahc-form-layout [columns]="2" [formGroup]="exampleAddress">
+      <dahc-form-field label="Street address" class="dahc-form-layout__full"><input dahcInput formControlName="street" /></dahc-form-field>
+      <dahc-select label="Home emirate" [options]="exampleEmirates" formControlName="emirate" />
+      <dahc-form-field label="P.O. box"><input dahcInput formControlName="poBox" /></dahc-form-field>
+    </dahc-form-layout>
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="mixed"
+    heading="Mixed controls"
+    description="Any DAHC UI control can be a field."
+    template="form-layout-page.component.html">
+    <dahc-form-layout [columns]="2" [formGroup]="exampleJoining">
+      <dahc-date-picker label="Joining date" formControlName="startDate" />
+      <dahc-form-field label="Department"><input dahcInput formControlName="department" /></dahc-form-field>
+    </dahc-form-layout>
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>Layout only: the fields keep their own labels, hints and errors.</li>
+    <li>Two columns from 48rem; children with the class dahc-form-layout__full span both columns.</li>
+  </ul>
+</dahc-playground-page>

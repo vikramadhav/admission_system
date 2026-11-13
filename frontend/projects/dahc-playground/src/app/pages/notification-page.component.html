@@ -1,0 +1,43 @@
+<dahc-playground-page
+  heading="Notification"
+  description="White notification cards in the top end corner, shown by DahcNotificationService in the dahc-notification-region placed once."
+  selector="dahc-notification-region"
+  [whenToUse]="whenToUse"
+  [sourceFiles]="sourceFiles">
+  <div preview>
+    <button dahc-button type="button" (click)="show()">Show notification</button>
+    <dahc-notification-region />
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-text label="heading" [(value)]="heading" />
+    <dahc-inspector-text label="message" [(value)]="message" />
+    <dahc-inspector-choice label="variant" [options]="variants" [(value)]="variant" />
+    <dahc-inspector-choice label="duration (ms, 0 = until dismissed)" [options]="durations" [(value)]="duration" />
+  </div>
+
+  <div states class="pg-stack">
+    <p class="pg-value">Cards stack in the top-end corner below the app header, newest last; full width on small screens.</p>
+  </div>
+
+  <dahc-doc-example examples exampleId="variants" heading="Variants" description="info, success, warning and error, each with a status icon." template="notification-page.component.html">
+    <dahc-space [wrap]="true">
+      <button dahc-button type="button" variant="secondary" size="sm" (click)="showNotification('info')">Info notification</button>
+      <button dahc-button type="button" variant="secondary" size="sm" (click)="showNotification('success')">Success notification</button>
+      <button dahc-button type="button" variant="secondary" size="sm" (click)="showNotification('warning')">Warning notification</button>
+      <button dahc-button type="button" variant="secondary" size="sm" (click)="showNotification('error')">Error notification</button>
+    </dahc-space>
+  </dahc-doc-example>
+  <dahc-doc-example examples exampleId="persistent" heading="Until dismissed" description="duration 0 keeps the card until the user closes it." template="notification-page.component.html">
+    <button dahc-button type="button" variant="secondary" size="sm" (click)="showPersistentNotification()">Announce the score</button>
+  </dahc-doc-example>
+  <dahc-doc-example examples exampleId="long" heading="Longer message" description="The message wraps inside the card." template="notification-page.component.html">
+    <button dahc-button type="button" variant="secondary" size="sm" (click)="showLongNotification()">Show a longer notification</button>
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>The list is a permanent polite live region; error cards use role="alert".</li>
+    <li>The timer pauses while the pointer or focus is on a card (WCAG 2.2.1); every card can be dismissed.</li>
+    <li>DahcToastService covers the same need with the GME tinted toast; use one style per application.</li>
+  </ul>
+</dahc-playground-page>

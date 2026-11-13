@@ -1,0 +1,19 @@
+<div class="dahc-accordion-item__heading" role="heading" [attr.aria-level]="headingLevel()">
+  <button
+    type="button"
+    class="dahc-accordion-item__button"
+    [id]="buttonId"
+    [attr.aria-expanded]="expanded()"
+    [attr.aria-controls]="panelId"
+    [disabled]="disabled()"
+    (click)="toggle()">
+    @if (icon(); as name) {
+      <span class="dahc-accordion-item__icon"><dahc-icon [name]="name" size="sm" /></span>
+    }
+    <span class="dahc-accordion-item__title">{{ heading() }}</span>
+    <dahc-icon class="dahc-accordion-item__chevron" name="chevron-down" size="md" />
+  </button>
+</div>
+<div class="dahc-accordion-item__panel" role="region" [id]="panelId" [attr.aria-labelledby]="buttonId" [hidden]="!expanded()">
+  <ng-content />
+</div>

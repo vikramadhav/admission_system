@@ -1,0 +1,24 @@
+/* Ported from dubai-health-ui dh-footer: navy band, padding 64 / 64 / 48 from md, gap 40. */
+:host {
+  display: block;
+  flex: none;
+}
+
+.dahc-layout-footer__band {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dahc-space-10);
+  padding: var(--dahc-space-10) var(--dahc-space-4);
+  /* Links inside take the footer colour (dh-footer ::slotted(a) { color: inherit }). */
+  --dahc-color-text-link: var(--dahc-color-text-on-footer);
+  --dahc-color-text-link-hover: var(--dahc-color-text-on-footer-accent);
+
+  background-color: var(--dahc-color-surface-footer);
+  color: var(--dahc-color-text-on-footer);
+}
+
+@media (min-width: 48rem) {
+  .dahc-layout-footer__band {
+    padding: var(--dahc-space-16) var(--dahc-space-16) var(--dahc-space-12);
+  }
+}

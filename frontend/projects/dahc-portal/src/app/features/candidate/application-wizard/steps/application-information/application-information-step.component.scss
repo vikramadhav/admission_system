@@ -1,0 +1,32 @@
+// Terms scroll box (Figma 1:2727): bordered, about 237 px high, scrolls; keyboard reachable.
+.terms {
+  max-block-size: 15rem;
+  overflow-y: auto;
+  padding: var(--dahc-space-4);
+  border: var(--dahc-size-border) solid var(--dahc-color-border-default);
+  border-radius: var(--dahc-radius-control);
+  background-color: var(--dahc-color-surface);
+  color: var(--dahc-color-text-secondary);
+  font-size: var(--dahc-type-body-sm-size);
+  line-height: var(--dahc-type-body-sm-line-height);
+}
+
+.terms:focus-visible {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: var(--dahc-size-focus-offset);
+}
+
+.terms p,
+.terms ol {
+  margin-block: 0 var(--dahc-space-3);
+}
+
+.terms ol {
+  padding-inline-start: var(--dahc-space-6);
+}
+
+.terms-error {
+  margin: 0;
+  color: var(--dahc-color-error-text);
+  font-size: var(--dahc-type-body-sm-size);
+}

@@ -1,0 +1,116 @@
+/* GME upload slot 1:3604 and uploaded row 1:4900 (see the component comment). */
+
+:host {
+  display: block;
+  min-inline-size: 0;
+}
+
+.dahc-file-upload {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--dahc-space-1) + var(--dahc-space-0-5));
+}
+
+.dahc-file-upload__label {
+  margin: 0;
+  color: var(--dahc-color-text-primary);
+  font-size: var(--dahc-type-body-sm-size);
+  line-height: var(--dahc-type-body-sm-line-height);
+}
+
+.dahc-file-upload__required {
+  margin-inline-start: var(--dahc-space-0-5);
+  color: var(--dahc-color-error-text);
+}
+
+.dahc-file-upload__drop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--dahc-space-3);
+  min-block-size: calc(var(--dahc-size-control-lg) + var(--dahc-space-8));
+  padding: var(--dahc-space-4);
+  border: var(--dahc-size-border-strong) dashed var(--dahc-color-border-control);
+  border-radius: var(--dahc-radius-control);
+  background-color: var(--dahc-color-surface);
+  color: var(--dahc-color-text-secondary);
+  transition:
+    background-color var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard),
+    border-color var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard);
+}
+
+/* dubai-health-ui dh-upload: hover and dragging darken the border and tint the zone. */
+.dahc-file-upload__drop:hover:not(:has(:disabled)),
+.dahc-file-upload__drop--dragging {
+  border-color: var(--dahc-color-border-strong);
+  background-color: var(--dahc-color-surface-raised-1);
+}
+
+.dahc-file-upload__drop--error {
+  border-color: var(--dahc-color-error-border);
+  background-color: var(--dahc-color-error-surface);
+}
+
+.dahc-file-upload__drop-text {
+  font-size: var(--dahc-font-size-14);
+}
+
+.dahc-file-upload__file {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--dahc-space-3);
+  padding: var(--dahc-space-4);
+  border: var(--dahc-size-border) solid var(--dahc-color-border-default);
+  border-radius: var(--dahc-radius-control);
+  background-color: var(--dahc-color-surface);
+}
+
+.dahc-file-upload__name {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-inline-size: 0;
+  margin: 0;
+  color: var(--dahc-color-text-primary);
+  font-size: var(--dahc-font-size-14);
+}
+
+.dahc-file-upload__file-name {
+  overflow: hidden;
+  font-weight: var(--dahc-font-weight-medium);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dahc-file-upload__size {
+  color: var(--dahc-color-text-tertiary);
+  font-size: var(--dahc-font-size-12);
+}
+
+.dahc-file-upload__progress {
+  inline-size: 100%;
+  block-size: var(--dahc-space-2);
+  accent-color: var(--dahc-color-action-primary);
+}
+
+.dahc-file-upload__message {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--dahc-space-1);
+  margin: 0;
+  color: var(--dahc-color-text-tertiary);
+  font-size: var(--dahc-font-size-12);
+  font-weight: var(--dahc-font-weight-medium);
+  line-height: var(--dahc-type-overline-line-height);
+}
+
+.dahc-file-upload__message--error {
+  color: var(--dahc-color-error-text);
+}
+
+@media (forced-colors: active) {
+  .dahc-file-upload__drop {
+    border-color: CanvasText;
+  }
+}

@@ -1,0 +1,58 @@
+<dahc-playground-page
+  heading="Timeline"
+  description="Events in time order with a status dot (done, current, pending, error). Ported from dubai-health-ui dh-timeline; DERIVED."
+  selector="dahc-timeline"
+  [whenToUse]="whenToUse"
+  [exampleColumns]="2"
+  [sourceFiles]="sourceFiles">
+  <div preview>
+    <dahc-timeline label="Application history">
+      <dahc-timeline-item heading="Application submitted" time="3 Oct 2026" datetime="2026-10-03">Payment received.</dahc-timeline-item>
+      <dahc-timeline-item heading="Documents verified" time="10 Oct 2026" datetime="2026-10-10" />
+      <dahc-timeline-item heading="Portfolio review" status="current">The referees are scoring your portfolio.</dahc-timeline-item>
+      <dahc-timeline-item heading="Results announced" status="pending" />
+    </dahc-timeline>
+  </div>
+
+  <div inspector class="pg-stack">
+    <p class="pg-value">Item inputs: heading, time, datetime, status (done, current, pending, error), statusLabels.</p>
+  </div>
+
+  <div states class="pg-stack">
+    <dahc-timeline label="Error example">
+      <dahc-timeline-item heading="Payment" status="error">The payment was not completed.</dahc-timeline-item>
+      <dahc-timeline-item heading="Retry payment" status="pending" />
+    </dahc-timeline>
+  </div>
+
+  <div examples>
+    <dahc-doc-example exampleId="basic" heading="Basic" description="Done items with their time." template="timeline-page.component.html">
+      <dahc-timeline label="Cycle dates">
+        <dahc-timeline-item heading="Applications open" time="1 Sep 2026" datetime="2026-09-01" />
+        <dahc-timeline-item heading="Applications close" time="30 Sep 2026" datetime="2026-09-30" />
+      </dahc-timeline>
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="status" heading="Statuses" description="done, current and pending." template="timeline-page.component.html">
+      <dahc-timeline label="Review progress">
+        <dahc-timeline-item heading="Verified" />
+        <dahc-timeline-item heading="Interview" status="current" />
+        <dahc-timeline-item heading="Offer" status="pending" />
+      </dahc-timeline>
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="content" heading="With content" description="Text under an event." template="timeline-page.component.html">
+      <dahc-timeline label="Payment history">
+        <dahc-timeline-item heading="Fee paid" time="3 Oct 2026">Receipt RCP-2026-004517.</dahc-timeline-item>
+      </dahc-timeline>
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="error" heading="Error" description="An event that needs attention." template="timeline-page.component.html">
+      <dahc-timeline label="Document checks">
+        <dahc-timeline-item heading="Transcript rejected" status="error">The final year is missing.</dahc-timeline-item>
+      </dahc-timeline>
+    </dahc-doc-example>
+  </div>
+
+  <ul accessibility class="pg-notes">
+    <li>A list of list items; the current event has aria-current="step".</li>
+    <li>Each status is also given in text ("Completed", "In progress", "Not started", "Needs attention").</li>
+  </ul>
+</dahc-playground-page>

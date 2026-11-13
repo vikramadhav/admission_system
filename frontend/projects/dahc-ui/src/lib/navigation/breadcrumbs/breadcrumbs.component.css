@@ -1,0 +1,65 @@
+/* Figma Breadcrumbs 50:9802 (see the component comment). */
+
+:host {
+  --_link: var(--dahc-color-text-primary);
+  --_current: var(--dahc-color-text-secondary); /* A11y fix: tertiary fails 4.5:1 on surface-highlight. */
+
+  display: block;
+}
+
+:host(.dahc-breadcrumbs--light) {
+  /* dh-breadcrumb inverse uses blue links and a pale navy current page; DAHC keeps inverse text,
+     the only pair that passes 4.5:1 on surface-inverse in both themes. */
+  --_link: var(--dahc-color-text-inverse);
+  --_current: var(--dahc-color-text-inverse);
+}
+
+.dahc-breadcrumbs__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--dahc-space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dahc-breadcrumbs__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--dahc-space-1);
+  min-inline-size: 0;
+}
+
+.dahc-breadcrumbs__separator {
+  color: var(--_link);
+}
+
+.dahc-breadcrumbs__link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--dahc-space-1);
+  min-block-size: var(--dahc-size-target-min);
+  color: var(--_link);
+  font-size: var(--dahc-type-button-md-size);
+  font-weight: var(--dahc-font-weight-bold);
+  line-height: var(--dahc-font-line-height-tight);
+  text-decoration: none;
+}
+
+.dahc-breadcrumbs__link:hover {
+  color: var(--_link);
+  text-decoration: underline;
+}
+
+.dahc-breadcrumbs__link:focus-visible {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: var(--dahc-size-focus-offset);
+}
+
+.dahc-breadcrumbs__current {
+  color: var(--_current);
+  font-size: var(--dahc-type-body-size);
+  line-height: var(--dahc-font-line-height-tight);
+  overflow-wrap: anywhere;
+}

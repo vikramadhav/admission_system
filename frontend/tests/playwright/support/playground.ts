@@ -32,6 +32,9 @@ export class PlaygroundPage {
 
   /** Opens a component page in the given theme and direction using the playground's own switchers. */
   async open(path: string, mode: DisplayMode): Promise<void> {
+    // Reduced motion sets the motion tokens to 0ms, so colour transitions after the theme switch
+    // cannot be caught half-way by the accessibility scan.
+    await this.page.emulateMedia({ reducedMotion: 'reduce' });
     await this.page.goto(`/${path}`);
     await expect(this.page.getByRole('heading', { level: 1 }).first()).toBeVisible();
 

@@ -1,0 +1,116 @@
+<div
+  #scroller
+  class="dahc-table__scroll"
+  role="region"
+  tabindex="0"
+  [attr.aria-label]="caption()"
+  [style.max-block-size]="scrollY() || null">
+  <table class="dahc-table__table" [attr.aria-busy]="loading()" [style.min-inline-size]="scrollX() || null">
+    <caption class="dahc-table__caption">{{ caption() }}</caption>
+    <thead>
+      <tr>
+        @if (selectable()) {
+          <th
+            scope="col"
+            class="dahc-table__select"
+            [class.dahc-table__fixed]="selectFixed()"
+            [style.inset-inline-start]="selectFixed() ? '0px' : null">
+            <input
+              type="checkbox"
+              class="dahc-table__checkbox"
+              [attr.aria-label]="selectAllLabel()"
+              [checked]="allOnPageSelected()"
+              [indeterminate]="someOnPageSelected()"
+              (change)="toggleAll($event)" />
+          </th>
+        }
+        @for (layout of layouts(); track layout.column.key) {
+          <th
+            scope="col"
+            [attr.aria-sort]="ariaSort(layout.column)"
+            [attr.data-align]="layout.column.align ?? 'start'"
+            [class.dahc-table__fixed]="layout.start !== null || layout.end !== null"
+            [class.dahc-table__fixed--last-start]="layout.lastStart"
+            [class.dahc-table__fixed--first-end]="layout.firstEnd"
+            [style.inset-inline-start]="layout.start"
+            [style.inset-inline-end]="layout.end"
+            [style.inline-size]="layout.column.width ?? null"
+            [style.min-inline-size]="layout.column.width ?? null">
+            @if (layout.column.sortable) {
+              <button
+                type="button"
+                class="dahc-table__sort"
+                [attr.data-order]="sort()?.key === layout.column.key ? sort()?.order : null"
+                (click)="toggleSort(layout.column)">
+                {{ layout.column.title }}
+                <span class="dahc-table__sort-icon" aria-hidden="true"></span>
+              </button>
+            } @else {
+              {{ layout.column.title }}
+            }
+          </th>
+        }
+      </tr>
+    </thead>
+    <tbody>
+      @if (loading()) {
+        <tr>
+          <td class="dahc-table__message" [attr.colspan]="columnCount()" role="status">{{ loadingText() }}</td>
+        </tr>
+      } @else {
+        @for (row of visibleRows(); track keyOf(row, $index); let index = $index) {
+          <tr [class.dahc-table__row--selected]="isSelected(keyOf(row, index))">
+            @if (selectable()) {
+              <td
+                class="dahc-table__select"
+                [class.dahc-table__fixed]="selectFixed()"
+                [style.inset-inline-start]="selectFixed() ? '0px' : null">
+                <input
+                  type="checkbox"
+                  class="dahc-table__checkbox"
+                  [attr.aria-label]="selectRowLabel() + ' ' + keyOf(row, index)"
+                  [checked]="isSelected(keyOf(row, index))"
+                  (change)="toggleRow(keyOf(row, index), $event)" />
+              </td>
+            }
+            @for (layout of layouts(); track layout.column.key) {
+              <td
+                [attr.data-align]="layout.column.align ?? 'start'"
+                [class.dahc-table__fixed]="layout.start !== null || layout.end !== null"
+                [class.dahc-table__fixed--last-start]="layout.lastStart"
+                [class.dahc-table__fixed--first-end]="layout.firstEnd"
+                [style.inset-inline-start]="layout.start"
+                [style.inset-inline-end]="layout.end"
+                [style.inline-size]="layout.column.width ?? null"
+                [style.min-inline-size]="layout.column.width ?? null"
+                [style.max-inline-size]="layout.column.ellipsis ? (layout.column.width ?? null) : null">
+                @if (layout.column.ellipsis) {
+                  <span class="dahc-table__ellipsis" [attr.title]="cellText(row, layout.column)">
+                    <ng-container *ngTemplateOutlet="cell; context: { $implicit: row, column: layout.column }" />
+                  </span>
+                } @else {
+                  <ng-container *ngTemplateOutlet="cell; context: { $implicit: row, column: layout.column }" />
+                }
+              </td>
+            }
+          </tr>
+        } @empty {
+          <tr>
+            <td class="dahc-table__message" [attr.colspan]="columnCount()">{{ emptyText() }}</td>
+          </tr>
+        }
+      }
+    </tbody>
+  </table>
+</div>
+@if (pageSize() > 0 && rows().length > pageSize()) {
+  <dahc-pagination class="dahc-table__pagination" [total]="rows().length" [pageSize]="pageSize()" [(current)]="page" />
+}
+
+<ng-template #cell let-row let-column="column">
+  @if (templates().get(column.key); as template) {
+    <ng-container *ngTemplateOutlet="template; context: { $implicit: row, value: row[column.key] }" />
+  } @else {
+    {{ cellText(row, column) }}
+  }
+</ng-template>

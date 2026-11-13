@@ -35,6 +35,6 @@ test('detail list serves its real source and reflows at 320 pixels', async ({ pa
   await page.setViewportSize({ width: 320, height: 800 });
   await playground.open('detail-list', { theme: 'light', direction: 'ltr' });
 
-  await playground.expectSourceFile('detail-list/detail-list.component.html', '<dl');
+  await playground.expectSourceFile('data-display/detail-list/detail-list.component.html', '<dl');
   await expectNoHorizontalScroll(page);
 });

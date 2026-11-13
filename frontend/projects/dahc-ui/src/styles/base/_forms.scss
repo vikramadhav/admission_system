@@ -1,0 +1,69 @@
+// Native controls marked with dahc-input (forms/input/input.directive.ts). The surrounding
+// dahc-form-field draws the box, border and focus ring; the control itself is borderless.
+// Value text: Figma "Web/Input field", Regular 16/20 (Input field 50:7763).
+
+.dahc-input {
+  flex: 1;
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-family: inherit;
+  font-size: var(--dahc-type-input-size);
+  font-weight: var(--dahc-type-input-weight);
+  line-height: var(--dahc-type-input-line-height);
+  text-overflow: ellipsis;
+}
+
+.dahc-input:focus,
+.dahc-input:focus-visible {
+  outline: none;
+}
+
+.dahc-input::placeholder {
+  color: var(--dahc-color-text-placeholder);
+  opacity: 1;
+}
+
+.dahc-input:disabled {
+  color: var(--dahc-color-text-disabled);
+  cursor: not-allowed;
+}
+
+.dahc-input:disabled::placeholder {
+  color: var(--dahc-color-text-disabled);
+}
+
+// The box has the 48px height; the control fills it so the whole box is clickable.
+input.dahc-input,
+select.dahc-input {
+  align-self: stretch;
+}
+
+textarea.dahc-input {
+  min-block-size: calc(var(--dahc-type-input-line-height) * 3);
+  resize: vertical;
+  field-sizing: content;
+}
+
+select.dahc-input {
+  appearance: none;
+  cursor: pointer;
+}
+
+// Combobox triggers (multi-select): a button that looks like the field's value.
+button.dahc-input {
+  align-self: stretch;
+  overflow: hidden;
+  text-align: start;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+// The search field draws its own clear button.
+input.dahc-input[type='search']::-webkit-search-cancel-button,
+input.dahc-input[type='search']::-webkit-search-decoration {
+  appearance: none;
+}

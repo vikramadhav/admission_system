@@ -1,0 +1,65 @@
+<dahc-playground-page
+  heading="Slider"
+  description="A slider for a number, or a range with two thumbs. Ported from dubai-health-ui dh-slider."
+  [sourceFiles]="sourceFiles"
+  selector="dahc-slider"
+  [whenToUse]="whenToUse"
+  [exampleColumns]="2">
+  <div preview>
+    <div class="pg-stack">
+      <dahc-slider label="Volume" unit="%" [marks]="[0, 50, 100]" [formControl]="control" />
+      <dahc-slider label="Budget" unit=" AED" [min]="0" [max]="1000" [step]="50" [range]="true" hint="Drag either thumb." [formControl]="rangeControl" />
+    </div>
+  </div>
+
+  <div inspector class="pg-stack">
+    <p class="pg-value" data-testid="range-value">Range value: {{ rangeText() }}</p>
+    <p class="pg-value" data-testid="form-value">Form value: {{ valueText() }}</p>
+  </div>
+
+  <div states class="pg-stack">
+    <dahc-slider label="Disabled" [formControl]="disabledControl" />
+  </div>
+
+  <dahc-doc-example
+    examples
+    exampleId="basic"
+    heading="Basic"
+    description="A single value with a unit."
+    template="slider-page.component.html">
+    <dahc-slider label="Maximum travel distance" unit=" km" [max]="50" [formControl]="exampleDistance" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="range"
+    heading="Range"
+    description="Two thumbs: the value is [low, high]."
+    template="slider-page.component.html">
+    <dahc-slider label="Expected salary" unit=" AED" [min]="5000" [max]="60000" [step]="1000" [range]="true" [formControl]="exampleSalary" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="marks"
+    heading="Steps and marks"
+    description="Whole steps with labelled marks under the rail."
+    template="slider-page.component.html">
+    <dahc-slider label="Years of clinical experience" [max]="10" [marks]="[0, 5, 10]" [formControl]="exampleExperience" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="disabled"
+    heading="Disabled"
+    description="Disable the form control."
+    template="slider-page.component.html">
+    <dahc-slider label="Allocated share" unit="%" [formControl]="exampleLocked" />
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>Each thumb is a WAI-ARIA slider with aria-valuenow, aria-valuemin, aria-valuemax and aria-valuetext (with the unit).</li>
+    <li>Arrow keys change by step (Left / Right mirrored in RTL), Page Up / Page Down by ten steps, Home / End jump to the limits.</li>
+    <li>In range mode the two thumbs are named "minimum" and "maximum" and cannot cross.</li>
+  </ul>
+</dahc-playground-page>

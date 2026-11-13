@@ -1,0 +1,58 @@
+<dahc-playground-page
+  heading="Tree select"
+  description="Select one value from a hierarchy shown as a tree in a dropdown. Ported from dubai-health-ui dh-tree-select; DERIVED design."
+  [sourceFiles]="sourceFiles"
+  selector="dahc-tree-select"
+  [whenToUse]="whenToUse">
+  <div preview>
+    <dahc-tree-select label="Department" [items]="departments" [formControl]="control" />
+  </div>
+
+  <div inspector class="pg-stack">
+    <p class="pg-value" data-testid="form-value">Form value: {{ valueText() }}</p>
+  </div>
+
+  <div states class="pg-stack">
+    <dahc-tree-select label="Parents selectable" [items]="departments" [selectableParents]="true" />
+  </div>
+
+  <dahc-doc-example
+    examples
+    exampleId="basic"
+    heading="Basic"
+    description="Only leaf items can be chosen."
+    template="tree-select-page.component.html">
+    <dahc-tree-select label="Clinical specialty" [items]="departments" [formControl]="exampleSpecialty" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="parents"
+    heading="Parents selectable"
+    description="A whole branch is a valid answer."
+    template="tree-select-page.component.html">
+    <dahc-tree-select label="Service line" [items]="departments" [selectableParents]="true" [formControl]="exampleServiceLine" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="required"
+    heading="Required with error"
+    description="The error shows after the field was touched without a value."
+    template="tree-select-page.component.html">
+    <dahc-tree-select
+      label="Reporting unit"
+      placeholder="Choose a unit"
+      [items]="departments"
+      [required]="true"
+      [invalid]="exampleUnit.invalid && exampleUnit.touched"
+      errorMessage="Choose the unit you report to."
+      [formControl]="exampleUnit" />
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>The field is a combobox with aria-haspopup="tree"; opening moves focus into a WAI-ARIA tree.</li>
+    <li>ArrowUp / ArrowDown move, ArrowRight expands or goes to the first child, ArrowLeft collapses or goes to the parent (mirrored in RTL), Enter or Space selects, Escape returns to the field.</li>
+    <li>Tree items report aria-level, aria-setsize, aria-posinset and aria-expanded.</li>
+  </ul>
+</dahc-playground-page>

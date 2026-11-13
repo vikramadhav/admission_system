@@ -1,0 +1,86 @@
+<dahc-playground-page
+  heading="Date picker and calendar"
+  description="A date field: type DD/MM/YYYY or pick from the calendar; the value is an ISO date. Figma Datepicker 50:7957."
+  [sourceFiles]="sourceFiles"
+  selector="dahc-date-picker"
+  [whenToUse]="whenToUse"
+  [exampleColumns]="2">
+  <div preview>
+    <dahc-date-picker
+      [label]="label()"
+      [hint]="hint()"
+      [min]="min()"
+      [max]="max()"
+      [required]="required()"
+      [formControl]="control" />
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-text label="label" [(value)]="label" />
+    <dahc-inspector-text label="hint" [(value)]="hint" />
+    <dahc-inspector-text label="min" [(value)]="min" />
+    <dahc-inspector-text label="max" [(value)]="max" />
+    <dahc-inspector-toggle label="required" [(value)]="required" />
+    <p class="pg-value" data-testid="form-value">Form value: {{ valueText() }}</p>
+    <p class="pg-value" data-testid="form-errors">Form errors: {{ errorsText() }}</p>
+  </div>
+
+  <div states class="pg-stack">
+    <dahc-date-picker label="Disabled" [formControl]="disabledControl" />
+    <dahc-date-picker label="Invalid" errorMessage="Enter your date of birth." [invalid]="true" />
+    <div>
+      <p class="pg-state-label">Calendar on its own</p>
+      <dahc-calendar [(value)]="calendarValue" min="2026-11-01" />
+      <p class="pg-value" data-testid="calendar-value">Calendar value: {{ calendarValue() }}</p>
+    </div>
+  </div>
+
+  <dahc-doc-example
+    examples
+    exampleId="basic"
+    heading="Basic"
+    description="An empty date field."
+    template="date-picker-page.component.html">
+    <dahc-date-picker label="Programme start date" [formControl]="exampleStart" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="range"
+    heading="Min and max"
+    description="Only dates in the interview window can be chosen."
+    template="date-picker-page.component.html">
+    <dahc-date-picker label="Interview date" hint="Between 1 and 31 March 2027." min="2027-03-01" max="2027-03-31" [formControl]="exampleInterview" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="required"
+    heading="Required with error"
+    description="The error shows after the field was touched without a value."
+    template="date-picker-page.component.html">
+    <dahc-date-picker
+      label="Passport expiry"
+      [required]="true"
+      [invalid]="examplePassportExpiry.invalid && examplePassportExpiry.touched"
+      errorMessage="Enter your passport expiry date."
+      [formControl]="examplePassportExpiry" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="disabled"
+    heading="Disabled"
+    description="Disable the form control."
+    template="date-picker-page.component.html">
+    <dahc-date-picker label="Graduation date" [formControl]="exampleGraduated" />
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>The calendar button names the popup ("Choose date") and reports aria-expanded; Alt+ArrowDown opens it from the field.</li>
+    <li>In the calendar: arrows move by day and week, Page Up / Page Down by month (Shift for a year), Home / End to the week's start and end, Enter or Space chooses, Escape closes and returns focus.</li>
+    <li>Each day button is named with the full date; today has aria-current="date"; days outside min / max are disabled.</li>
+    <li>Arrow keys follow the reading direction in right-to-left.</li>
+    <li>An unreadable date, or one outside min / max, gives a visible error and a form validation error.</li>
+  </ul>
+</dahc-playground-page>

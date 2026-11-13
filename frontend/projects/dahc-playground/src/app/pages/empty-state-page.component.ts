@@ -1,10 +1,13 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { DahcButtonComponent, DahcEmptyStateComponent, DahcHeadingLevel } from 'dahc-ui';
 
-import { InspectorChoiceComponent } from '../inspector/inspector-choice.component';
-import { InspectorTextComponent } from '../inspector/inspector-text.component';
-import { InspectorToggleComponent } from '../inspector/inspector-toggle.component';
-import { PlaygroundPageComponent } from '../layout/playground-page.component';
+import {
+  DocExampleComponent,
+  InspectorChoiceComponent,
+  InspectorTextComponent,
+  InspectorToggleComponent,
+  PlaygroundPageComponent,
+} from 'dahc-playground-kit';
 
 @Component({
   selector: 'dahc-empty-state-page',
@@ -13,6 +16,7 @@ import { PlaygroundPageComponent } from '../layout/playground-page.component';
   imports: [
     DahcButtonComponent,
     DahcEmptyStateComponent,
+    DocExampleComponent,
     InspectorChoiceComponent,
     InspectorTextComponent,
     InspectorToggleComponent,
@@ -20,10 +24,16 @@ import { PlaygroundPageComponent } from '../layout/playground-page.component';
   ],
 })
 export class EmptyStatePageComponent {
+  protected readonly whenToUse: readonly string[] = [
+    'Show when a list, table or dashboard section has no data yet, such as no applications.',
+    'Show when a search or filter returns nothing, with a way to clear it.',
+    'Offer one clear next action; keep the description to one or two sentences.',
+  ];
+
   protected readonly sourceFiles = [
-    'empty-state/empty-state.component.ts',
-    'empty-state/empty-state.component.html',
-    'empty-state/empty-state.component.scss',
+    'feedback/empty-state/empty-state.component.ts',
+    'feedback/empty-state/empty-state.component.html',
+    'feedback/empty-state/empty-state.component.css',
   ];
   protected readonly headingLevels: readonly DahcHeadingLevel[] = [2, 3];
 

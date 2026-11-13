@@ -1,0 +1,19 @@
+/* Figma Dropdown 50:13303 (closed field): Input field box, value Regular 16/20, 24px chevron-down.
+   Figma draws the closed field without a fill; DAHC uses the input's white fill so both match.
+   The open list is the browser's native list (accessible on every device); Figma's option rows
+   (50:13311) apply to the custom combobox planned in Phase 5. */
+
+:host {
+  display: block;
+  min-inline-size: 0;
+}
+
+/* The select reaches under the chevron so a click anywhere in the box opens it. */
+.dahc-select__native {
+  margin-inline-end: calc(-1 * (var(--dahc-size-icon-lg) + var(--dahc-space-2)));
+  padding-inline-end: calc(var(--dahc-size-icon-lg) + var(--dahc-space-2));
+}
+
+.dahc-select__chevron {
+  pointer-events: none;
+}

@@ -1,0 +1,48 @@
+<dahc-playground-page
+  heading="Watermark"
+  description="A faint repeating text mark over content: decorative, a deterrent, not a security control. Ported from dubai-health-ui dh-watermark; DERIVED (navy at 12%)."
+  selector="dahc-watermark"
+  [whenToUse]="whenToUse"
+  [exampleColumns]="2"
+  [sourceFiles]="sourceFiles">
+  <div preview>
+    <dahc-watermark [content]="content()">
+      <div class="pg-stack">
+        <h3>Application summary</h3>
+        <p>Medical Residency · Internal Medicine · Rashid Hospital</p>
+        <p>The mark repeats over the whole area and never blocks selection or clicks.</p>
+      </div>
+    </dahc-watermark>
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-text label="content" [(value)]="content" />
+  </div>
+
+  <div states class="pg-stack">
+    <p class="pg-value">Use "|" for a second line. The colour follows the theme.</p>
+  </div>
+
+  <div examples>
+    <dahc-doc-example exampleId="basic" heading="Basic" description="The text repeats over the whole area." template="watermark-page.component.html">
+      <dahc-watermark content="Draft">
+        <p>Offer letter preview for Medical Residency.</p>
+      </dahc-watermark>
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="two-lines" heading="Two lines" description="A vertical bar starts a second line." template="watermark-page.component.html">
+      <dahc-watermark content="Confidential|GME-2026-000187">
+        <p>Candidate assessment summary.</p>
+      </dahc-watermark>
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="style" heading="Rotation and size" description="rotate (degrees) and fontSize (pixels)." template="watermark-page.component.html">
+      <dahc-watermark content="Sample" [rotate]="-45" [fontSize]="18">
+        <p>Example certificate layout.</p>
+      </dahc-watermark>
+    </dahc-doc-example>
+  </div>
+
+  <ul accessibility class="pg-notes">
+    <li>The mark is hidden from assistive technology and does not intercept the pointer.</li>
+    <li>In forced-colours mode the mark is not drawn.</li>
+  </ul>
+</dahc-playground-page>

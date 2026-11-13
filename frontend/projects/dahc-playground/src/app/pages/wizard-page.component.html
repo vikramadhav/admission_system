@@ -1,0 +1,85 @@
+<dahc-playground-page
+  heading="Wizard"
+  description="The pieces of the GME application wizard: the vertical stepper with sub-steps, the STEP n OF m step header and the action bar. DH has no stepper; these follow the GME screens."
+  selector="dahc-wizard-steps"
+  [whenToUse]="whenToUse"
+  [sourceFiles]="sourceFiles">
+  <div preview class="pg-stack">
+    <div class="wizard">
+      <dahc-card>
+        <dahc-wizard-steps [steps]="steps()" (stepSelected)="select($event)" />
+      </dahc-card>
+      <dahc-card>
+        <dahc-step-header [heading]="heading()" [step]="current() + 1" [total]="total" />
+        <p>Form fields of this step.</p>
+      </dahc-card>
+    </div>
+    <dahc-wizard-action-bar [sticky]="false">
+      <ng-container dahcActionsStart>
+        <button dahc-button type="button" variant="secondary">Save as draft</button>
+        <button dahc-button type="button" variant="danger-outline">Discard</button>
+      </ng-container>
+      <ng-container dahcActionsEnd>
+        <button dahc-button type="button" variant="secondary" [disabled]="current() === 0" (click)="move(-1)">Back</button>
+        <button dahc-button type="button" iconEnd="chevron-right" [disabled]="current() === total - 1" (click)="move(1)">Next</button>
+      </ng-container>
+    </dahc-wizard-action-bar>
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-toggle label="University grades has an error" [(value)]="gradesError" />
+    <dahc-event-log [events]="events()" />
+  </div>
+
+  <div states class="pg-stack">
+    <p class="pg-value">Complete (navy, tick), current (blue row), upcoming (grey), error (red). Sub-steps show under the current step.</p>
+  </div>
+
+  <dahc-doc-example
+    examples
+    exampleId="stepper"
+    heading="Stepper"
+    description="Complete, current and upcoming steps."
+    template="wizard-page.component.html">
+    <dahc-wizard-steps
+      label="Registration steps"
+      [steps]="[
+        { id: 'account', label: 'Account', status: 'complete' },
+        { id: 'profile', label: 'Profile', status: 'current' },
+        { id: 'review', label: 'Review', status: 'upcoming' }
+      ]" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="step-header"
+    heading="Step header"
+    description="The eyebrow and heading at the top of a step."
+    template="wizard-page.component.html">
+    <dahc-step-header heading="Contact information" [step]="3" [total]="7" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="action-bar"
+    heading="Action bar"
+    description="Secondary actions at the start, Back and Next at the end."
+    template="wizard-page.component.html">
+    <dahc-wizard-action-bar label="Example step actions" [sticky]="false">
+      <ng-container dahcActionsStart>
+        <button dahc-button type="button" variant="secondary">Save as draft</button>
+      </ng-container>
+      <ng-container dahcActionsEnd>
+        <button dahc-button type="button" variant="secondary">Back</button>
+        <button dahc-button type="button" iconEnd="chevron-right">Next</button>
+      </ng-container>
+    </dahc-wizard-action-bar>
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>The stepper is a labelled nav with an ordered list; the current step and sub-step have aria-current="step".</li>
+    <li>Completed, current and error steps are buttons for going back; upcoming steps are plain text.</li>
+    <li>Every step announces its status ("Completed", "Current step", "Not started", "Needs attention").</li>
+    <li>The action bar is a labelled group and stays in reach (sticky) in an application.</li>
+  </ul>
+</dahc-playground-page>

@@ -5,9 +5,9 @@ import {
   provideAppInitializer,
   provideBrowserGlobalErrorListeners,
 } from '@angular/core';
-import { provideRouter, withComponentInputBinding } from '@angular/router';
+import { provideRouter, withComponentInputBinding, withInMemoryScrolling } from '@angular/router';
 
-import { environment } from '../environments/environment';
+import { environment, environmentInterceptors, environmentProviders } from '../environments/environment';
 import { routes } from './app.routes';
 import { apiAuthorizationInterceptor } from './core/api/api-authorization.interceptor';
 import { apiResponseInterceptor } from './core/api/api-response.interceptor';
@@ -20,9 +20,14 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     { provide: DAHC_PORTAL_CONFIG, useValue: environment },
-    provideRouter(routes, withComponentInputBinding()),
-    provideHttpClient(withFetch(), withInterceptors([apiAuthorizationInterceptor, apiResponseInterceptor])),
     provideDahcAuth(),
+    // Environment providers come before the router so routes they add are matched first.
+    ...environmentProviders,
+    provideRouter(routes, withComponentInputBinding(), withInMemoryScrolling({ scrollPositionRestoration: 'top' })),
+    provideHttpClient(
+      withFetch(),
+      withInterceptors([apiAuthorizationInterceptor, apiResponseInterceptor, ...environmentInterceptors]),
+    ),
     provideAppInitializer(() => {
       inject(LocaleService).applyDocumentLanguage();
 

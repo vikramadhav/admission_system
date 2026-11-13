@@ -49,6 +49,6 @@ test('app header serves its real source and reflows at 320 pixels', async ({ pag
   await page.setViewportSize({ width: 320, height: 800 });
   await playground.open('app-header', { theme: 'light', direction: 'ltr' });
 
-  await playground.expectSourceFile('app-header/app-header.component.ts', 'skipToMainContent');
+  await playground.expectSourceFile('navigation/app-header/app-header.component.ts', 'skipToMainContent');
   await expectNoHorizontalScroll(page);
 });

@@ -28,6 +28,13 @@ export interface DahcPortalConfig {
   readonly defaultTimeZoneId: string;
   /** Path of each locale build, used by the language switch. */
   readonly localeBasePaths: Readonly<Record<DahcCulture, string>>;
+  /**
+   * Inactivity sign-out, used until the API returns CandidateDashboard.sessionTimeoutMinutes.
+   * The BRD gives no value; Figma shows 30 minutes (OQ-C9).
+   */
+  readonly sessionTimeoutMinutes: number;
+  /** True only in the mock build: the API is answered in the browser and mock-only routes are enabled. */
+  readonly mockApi?: boolean;
 }
 
 export const DAHC_PORTAL_CONFIG = new InjectionToken<DahcPortalConfig>('DAHC_PORTAL_CONFIG');

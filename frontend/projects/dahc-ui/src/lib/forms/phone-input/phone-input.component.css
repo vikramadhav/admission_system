@@ -1,0 +1,34 @@
+/* Country selector at the start of the Input field box, divided from the number by a 1px line. */
+
+:host {
+  display: block;
+  min-inline-size: 0;
+}
+
+.dahc-phone-input__country {
+  display: flex;
+  align-self: stretch;
+  align-items: center;
+  padding-inline-end: var(--dahc-space-2);
+  border-inline-end: var(--dahc-size-border) solid var(--dahc-color-border-default);
+}
+
+.dahc-phone-input__select {
+  align-self: stretch;
+  padding: 0;
+  padding-inline-end: var(--dahc-space-1);
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: var(--dahc-type-input-size);
+  cursor: pointer;
+}
+
+.dahc-phone-input__select:focus-visible {
+  outline: none;
+}
+
+.dahc-phone-input__select:disabled {
+  cursor: not-allowed;
+}

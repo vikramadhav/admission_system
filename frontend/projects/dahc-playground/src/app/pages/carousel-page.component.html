@@ -1,0 +1,67 @@
+<dahc-playground-page
+  heading="Carousel"
+  description="Slides one at a time with previous, next and slide buttons. Figma Carousel indicator 50:8076; slide container DERIVED. Ported from dubai-health-ui dh-carousel."
+  selector="dahc-carousel"
+  [whenToUse]="whenToUse"
+  [sourceFiles]="sourceFiles">
+  <div preview>
+    <dahc-carousel label="Highlights" [autoplay]="autoplay()" [(index)]="index">
+      @for (slide of slides; track slide.heading) {
+        <dahc-carousel-slide>
+          <div class="pg-slide">
+            <h3 class="pg-slide__heading">{{ slide.heading }}</h3>
+            <p class="pg-slide__text">{{ slide.text }}</p>
+          </div>
+        </dahc-carousel-slide>
+      }
+    </dahc-carousel>
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-choice label="autoplay (ms)" [options]="speeds" [(value)]="autoplay" />
+    <p class="pg-value" data-testid="carousel-index">index: {{ index() }}</p>
+  </div>
+
+  <div states class="pg-stack">
+    <p class="pg-value">With autoplay a pause button comes first; rotation also stops on hover, on focus and for reduced motion.</p>
+  </div>
+
+  <div examples>
+    <dahc-doc-example exampleId="basic" heading="Basic" description="Manual navigation with previous, next and slide buttons." template="carousel-page.component.html">
+      <dahc-carousel label="Announcements">
+        <dahc-carousel-slide>
+          <div class="slide"><p class="slide-heading">Applications are open</p><p class="slide-text">Apply before 30 September.</p></div>
+        </dahc-carousel-slide>
+        <dahc-carousel-slide>
+          <div class="slide"><p class="slide-heading">New fellowships</p><p class="slide-text">Neonatology and Adult Cardiology.</p></div>
+        </dahc-carousel-slide>
+      </dahc-carousel>
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="autoplay" heading="Autoplay" description="autoplay in milliseconds; a pause button comes first." template="carousel-page.component.html">
+      <dahc-carousel label="Program news" [autoplay]="6000">
+        <dahc-carousel-slide>
+          <div class="slide"><p class="slide-heading">Residency</p><p class="slide-text">Four to five years.</p></div>
+        </dahc-carousel-slide>
+        <dahc-carousel-slide>
+          <div class="slide"><p class="slide-heading">Fellowship</p><p class="slide-text">One to three years.</p></div>
+        </dahc-carousel-slide>
+      </dahc-carousel>
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="start" heading="Starting slide" description="[(index)] chooses the slide shown first (0-based)." template="carousel-page.component.html">
+      <dahc-carousel label="Key dates" [index]="1">
+        <dahc-carousel-slide>
+          <div class="slide"><p class="slide-heading">Opens</p><p class="slide-text">1 September</p></div>
+        </dahc-carousel-slide>
+        <dahc-carousel-slide>
+          <div class="slide"><p class="slide-heading">Closes</p><p class="slide-text">30 September</p></div>
+        </dahc-carousel-slide>
+      </dahc-carousel>
+    </dahc-doc-example>
+  </div>
+
+  <ul accessibility class="pg-notes">
+    <li>A region with aria-roledescription "carousel"; each slide is a group announced as "n of m".</li>
+    <li>Previous, next and one button per slide (aria-current on the shown one); the pause button comes first when it rotates.</li>
+    <li>The slide area is announced politely, except while it rotates on its own.</li>
+  </ul>
+</dahc-playground-page>

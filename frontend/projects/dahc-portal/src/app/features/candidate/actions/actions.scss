@@ -1,0 +1,53 @@
+// Shared layout of the candidate action dialogs.
+.action-form {
+  display: grid;
+  gap: var(--dahc-space-4);
+}
+
+.action-text {
+  margin: 0;
+}
+
+.action-muted {
+  margin: 0;
+  color: var(--dahc-color-text-secondary);
+}
+
+.action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--dahc-space-3);
+}
+
+.action-list {
+  display: grid;
+  gap: var(--dahc-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.action-group {
+  display: grid;
+  gap: var(--dahc-space-2);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.action-group legend {
+  margin-block-end: var(--dahc-space-2);
+  padding: 0;
+  font-weight: var(--dahc-font-weight-bold);
+}
+
+.action-error {
+  margin: 0;
+  color: var(--dahc-color-error-text);
+}
+
+textarea[dahcInput] {
+  min-block-size: calc(var(--dahc-size-control-lg) * 2);
+  resize: vertical;
+}

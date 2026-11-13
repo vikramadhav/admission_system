@@ -1,0 +1,99 @@
+/* Figma Carousel indicator 50:8076 (see the component comment). The frame and controls use the
+   footer colour roles because they stay light-on-dark in both themes (no carousel tokens yet). */
+
+:host {
+  display: block;
+}
+
+.dahc-carousel__frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--dahc-radius-lg);
+  background-color: var(--dahc-color-static-dark);
+}
+
+.dahc-carousel__viewport {
+  display: block;
+}
+
+/* Indicator pill: 8px padding, 16px gap, centred at the bottom. */
+.dahc-carousel__controls {
+  position: absolute;
+  inset-block-end: var(--dahc-space-4);
+  inset-inline: 0;
+  display: flex;
+  gap: var(--dahc-space-4);
+  align-items: center;
+  inline-size: max-content;
+  max-inline-size: calc(100% - 2 * var(--dahc-space-4));
+  margin-inline: auto;
+  padding: var(--dahc-space-2);
+  border-radius: var(--dahc-radius-pill);
+  background-color: color-mix(in srgb, var(--dahc-color-scrim) 55%, transparent);
+}
+
+.dahc-carousel__button {
+  display: inline-grid;
+  place-items: center;
+  inline-size: var(--dahc-size-icon-lg);
+  block-size: var(--dahc-size-icon-lg);
+  padding: 0;
+  border: 0;
+  border-radius: var(--dahc-radius-pill);
+  background: none;
+  color: var(--dahc-color-static-light);
+  cursor: pointer;
+}
+
+/* Pause: two bars; play: a triangle (no icon exists for either). */
+.dahc-carousel__rotation {
+  inline-size: calc(var(--dahc-size-icon-xs) * 0.75);
+  block-size: var(--dahc-size-icon-xs);
+  border-inline: var(--dahc-size-border-strong) solid currentcolor;
+}
+
+.dahc-carousel__rotation--play {
+  inline-size: 0;
+  block-size: 0;
+  border-block: calc(var(--dahc-size-icon-xs) / 2) solid transparent;
+  border-inline-start: var(--dahc-size-icon-xs) solid currentcolor;
+  border-inline-end: 0;
+}
+
+.dahc-carousel__dot {
+  inline-size: var(--dahc-space-2);
+  block-size: var(--dahc-space-2);
+  padding: 0;
+  border: 0;
+  border-radius: var(--dahc-radius-pill);
+  background-color: var(--dahc-color-static-light);
+  opacity: var(--dahc-opacity-disabled);
+  cursor: pointer;
+}
+
+.dahc-carousel__dot[aria-current='true'] {
+  inline-size: calc(var(--dahc-space-2) + var(--dahc-space-0-5));
+  block-size: calc(var(--dahc-space-2) + var(--dahc-space-0-5));
+  opacity: 1;
+}
+
+.dahc-carousel__button:focus-visible,
+.dahc-carousel__dot:focus-visible {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-static-light);
+  outline-offset: var(--dahc-size-focus-offset);
+}
+
+@media (forced-colors: active) {
+  .dahc-carousel__controls {
+    border: var(--dahc-size-border) solid CanvasText;
+  }
+
+  .dahc-carousel__dot {
+    background-color: ButtonText;
+    opacity: 1;
+  }
+
+  .dahc-carousel__dot[aria-current='true'] {
+    background-color: Highlight;
+  }
+}

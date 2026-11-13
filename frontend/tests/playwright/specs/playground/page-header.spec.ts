@@ -42,6 +42,6 @@ test('page header serves its real source and reflows at 320 pixels', async ({ pa
   await page.setViewportSize({ width: 320, height: 800 });
   await playground.open('page-header', { theme: 'light', direction: 'ltr' });
 
-  await playground.expectSourceFile('page-header/page-header.component.ts', 'afterNextRender');
+  await playground.expectSourceFile('navigation/page-header/page-header.component.ts', 'afterNextRender');
   await expectNoHorizontalScroll(page);
 });

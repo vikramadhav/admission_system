@@ -1,0 +1,248 @@
+/* DERIVED table following dubai-health-ui dh-table (see the component comment): navy header with
+   white Bold 14/18, 12/16 cell padding, navy-100 row dividers, hover blue-100, selected rows
+   blue-200, radius 12. Fixed columns and the sticky header follow NG-ZORRO's table. */
+
+:host {
+  display: block;
+
+  /* Cell background of the current row state; sticky cells need it to stay opaque. */
+  --_cell-bg: var(--dahc-color-surface);
+  --_fixed-shadow: color-mix(in srgb, var(--dahc-color-surface-inverse) 18%, transparent);
+}
+
+.dahc-table__scroll {
+  position: relative;
+  overflow: auto;
+  border: var(--dahc-size-border) solid var(--dahc-color-border-subtle);
+  border-radius: var(--dahc-radius-md);
+  background-color: var(--dahc-color-surface);
+}
+
+.dahc-table__scroll:focus-visible {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: var(--dahc-size-focus-offset);
+}
+
+.dahc-table__table {
+  inline-size: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  color: var(--dahc-color-text-primary);
+  font-size: var(--dahc-font-size-14);
+  line-height: var(--dahc-type-body-sm-line-height);
+}
+
+.dahc-table__caption {
+  padding: var(--dahc-space-3) var(--dahc-space-4);
+  color: var(--dahc-color-text-primary);
+  font-size: var(--dahc-font-size-16);
+  font-weight: var(--dahc-font-weight-bold);
+  text-align: start;
+}
+
+.dahc-table__table th,
+.dahc-table__table td {
+  padding-block: var(--dahc-space-3);
+  padding-inline: var(--dahc-space-4);
+  text-align: start;
+  vertical-align: middle;
+}
+
+.dahc-table__table th {
+  background-color: var(--dahc-color-surface-inverse);
+  color: var(--dahc-color-text-inverse);
+  font-weight: var(--dahc-font-weight-bold);
+  white-space: nowrap;
+}
+
+.dahc-table__table td {
+  border-block-end: var(--dahc-size-border) solid var(--dahc-color-border-subtle);
+  background-color: var(--_cell-bg);
+  transition: background-color var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard);
+}
+
+.dahc-table__table tbody tr:last-child td {
+  border-block-end: 0;
+}
+
+.dahc-table__table [data-align='center'] {
+  text-align: center;
+}
+
+.dahc-table__table [data-align='end'] {
+  text-align: end;
+}
+
+:host(.dahc-table--striped) tbody tr:nth-child(even) {
+  --_cell-bg: var(--dahc-color-background);
+}
+
+.dahc-table__table tbody tr:hover {
+  --_cell-bg: var(--dahc-color-surface-raised-1);
+}
+
+.dahc-table__row--selected,
+.dahc-table__table tbody .dahc-table__row--selected:hover {
+  --_cell-bg: var(--dahc-color-surface-highlight);
+}
+
+/* Sticky header row (scrollY). */
+:host(.dahc-table--scroll-y) thead th {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 2;
+}
+
+/* Fixed columns: sticky at their computed inline offset, above the scrolling cells. */
+.dahc-table__fixed {
+  position: sticky;
+  z-index: 1;
+}
+
+thead .dahc-table__fixed {
+  z-index: 3;
+}
+
+/* Scroll shadow on the inner edge of the fixed block, only while content is under it. */
+.dahc-table__fixed--last-start::after,
+.dahc-table__fixed--first-end::after {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  inline-size: var(--dahc-space-3);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard);
+}
+
+.dahc-table__fixed--last-start::after {
+  inset-inline-start: 100%;
+  background: linear-gradient(to right, var(--_fixed-shadow), transparent);
+}
+
+.dahc-table__fixed--first-end::after {
+  inset-inline-end: 100%;
+  background: linear-gradient(to left, var(--_fixed-shadow), transparent);
+}
+
+.dahc-table__fixed--last-start:dir(rtl)::after {
+  background: linear-gradient(to left, var(--_fixed-shadow), transparent);
+}
+
+.dahc-table__fixed--first-end:dir(rtl)::after {
+  background: linear-gradient(to right, var(--_fixed-shadow), transparent);
+}
+
+:host(.dahc-table--shadow-start) .dahc-table__fixed--last-start::after,
+:host(.dahc-table--shadow-end) .dahc-table__fixed--first-end::after {
+  opacity: 1;
+}
+
+.dahc-table__ellipsis {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dahc-table__select {
+  inline-size: var(--dahc-size-touch-target);
+  min-inline-size: var(--dahc-size-touch-target);
+  max-inline-size: var(--dahc-size-touch-target);
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.dahc-table__table .dahc-table__select {
+  padding-inline: 0;
+  text-align: center;
+}
+
+.dahc-table__checkbox {
+  inline-size: var(--dahc-size-icon-md);
+  block-size: var(--dahc-size-icon-md);
+  margin: 0;
+  accent-color: var(--dahc-color-control-checked);
+  cursor: pointer;
+}
+
+.dahc-table__sort {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--dahc-space-1) + var(--dahc-space-0-5));
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.dahc-table__sort:focus-visible {
+  outline: var(--dahc-size-focus-ring) solid currentcolor;
+  outline-offset: var(--dahc-size-focus-offset);
+}
+
+/* Sort indicator: two small triangles; the active direction is opaque. */
+.dahc-table__sort-icon {
+  display: inline-grid;
+  gap: var(--dahc-space-0-5);
+}
+
+.dahc-table__sort-icon::before,
+.dahc-table__sort-icon::after {
+  content: '';
+  inline-size: 0;
+  block-size: 0;
+  border-inline: var(--dahc-space-1) solid transparent;
+  opacity: var(--dahc-opacity-muted);
+}
+
+.dahc-table__sort-icon::before {
+  border-block-end: var(--dahc-space-1) solid currentcolor;
+}
+
+.dahc-table__sort-icon::after {
+  border-block-start: var(--dahc-space-1) solid currentcolor;
+}
+
+.dahc-table__sort[data-order='ascending'] .dahc-table__sort-icon::before,
+.dahc-table__sort[data-order='descending'] .dahc-table__sort-icon::after {
+  opacity: 1;
+}
+
+.dahc-table__table .dahc-table__message {
+  padding: var(--dahc-space-6);
+  color: var(--dahc-color-text-tertiary);
+  text-align: center;
+}
+
+.dahc-table__pagination {
+  margin-block-start: var(--dahc-space-4);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dahc-table__table td,
+  .dahc-table__fixed--last-start::after,
+  .dahc-table__fixed--first-end::after {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .dahc-table__table th {
+    border: var(--dahc-size-border) solid CanvasText;
+  }
+
+  .dahc-table__fixed {
+    background-color: Canvas;
+  }
+
+  .dahc-table__fixed--last-start {
+    border-inline-end: var(--dahc-size-border) solid CanvasText;
+  }
+
+  .dahc-table__fixed--first-end {
+    border-inline-start: var(--dahc-size-border) solid CanvasText;
+  }
+}

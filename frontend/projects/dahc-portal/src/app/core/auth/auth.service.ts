@@ -47,7 +47,7 @@ export class AuthService {
   }
 
   /** Starts a new IDAM sign-in and returns to the given route afterwards. */
-  signIn(returnPath = '/dashboard'): void {
+  signIn(returnPath = '/candidate/dashboard'): void {
     this.storage.saveReturnPath(returnPath);
 
     if (this.authenticatedState()) {
@@ -60,7 +60,7 @@ export class AuthService {
   }
 
   consumeReturnPath(): string {
-    return this.storage.consumeReturnPath() ?? '/dashboard';
+    return this.storage.consumeReturnPath() ?? '/candidate/dashboard';
   }
 
   /** The access token, or an empty string when signed out. */

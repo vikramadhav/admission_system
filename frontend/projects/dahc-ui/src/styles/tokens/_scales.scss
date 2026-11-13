@@ -1,0 +1,186 @@
+// Theme-independent scales: typography, spacing, sizing, radius, shadows, motion, z-index.
+// Figma sources are DH Design System REF (FozlGvhO1ZjI2GbklegqFf) unless marked
+// "DAHC proposal" (Figma does not specify the value). Spec: docs/design-system/03-design-tokens.md.
+
+// Typography primitives: Typography 50:2065, Functional text 50:2398.
+// px values are written as rem (16px = 1rem) so text follows the user's font-size setting.
+$font: (
+  'family-base': ('Dubai', 'Noto Sans Arabic', system-ui, sans-serif),
+  'family-mono': (ui-monospace, 'Cascadia Mono', Consolas, 'Courier New', monospace),
+  'size-10': 0.625rem,
+  'size-12': 0.75rem,
+  'size-14': 0.875rem,
+  'size-16': 1rem,
+  'size-18': 1.125rem,
+  'size-20': 1.25rem,
+  'size-22': 1.375rem,
+  'size-24': 1.5rem,
+  'size-26': 1.625rem,
+  'size-32': 2rem,
+  'size-36': 2.25rem,
+  'size-60': 3.75rem,
+  'weight-regular': 400,
+  'weight-medium': 500,
+  'weight-bold': 700,
+  // DAHC proposal: unitless line heights for running text and compact UI.
+  'line-height-tight': 1.25,
+  'line-height-normal': 1.5,
+  // GME step eyebrow tracking 0.72px at 12px (GME 1:2189). Figma DS letter-spacing is 0 elsewhere.
+  'letter-spacing-caps': 0.06em,
+);
+
+// Type roles (03 §3.5): size / line-height / weight / transform, desktop (Web/*) and mobile (Mobile/*).
+// Each entry: (size, line-height, weight, transform). Line heights are Figma's absolute values.
+$type-roles-desktop: (
+  'display': (3.75rem, 4rem, 700, none),
+  'stat': (3.75rem, 5rem, 700, uppercase),
+  'heading-1': (2.25rem, 2.5rem, 700, none),
+  'heading-2': (1.625rem, 2rem, 700, none),
+  'heading-3': (1.5rem, 1.75rem, 700, none),
+  'heading-4': (1.25rem, 1.5rem, 700, none),
+  'subheading-1': (1.375rem, 1.75rem, 500, none),
+  'subheading-2': (1.25rem, 1.625rem, 700, uppercase),
+  'body-lg': (1.25rem, 1.5rem, 400, none),
+  'body': (1rem, 1.25rem, 400, none),
+  'body-sm': (0.875rem, 1.125rem, 400, none),
+  'overline': (0.75rem, 1rem, 400, none),
+  'input': (1rem, 1.25rem, 400, none),
+  'label': (1rem, 1.25rem, 500, none),
+  'button-lg': (1.125rem, 1.25rem, 700, none),
+  'button-md': (1rem, 1.25rem, 700, none),
+  'button-sm': (0.875rem, 1.25rem, 500, uppercase),
+  'chip': (1rem, 1.4375rem, 700, uppercase),
+  'chip-sm': (0.75rem, 1rem, 700, none),
+);
+
+// Mobile overrides below the md breakpoint. Roles absent here keep the desktop values.
+// heading-4, subheading-2 and body-lg have no Mobile/* style in Figma: DAHC proposal.
+$type-roles-mobile: (
+  'display': (2rem, 2.5rem, 700, none),
+  'stat': (2.25rem, 2.25rem, 700, uppercase),
+  'heading-1': (1.125rem, 1.375rem, 700, none),
+  'heading-2': (1rem, 1.25rem, 700, none),
+  'heading-3': (0.875rem, 1.25rem, 700, none),
+  'heading-4': (0.875rem, 1.25rem, 700, none),
+  'subheading-1': (0.875rem, 1.125rem, 400, none),
+  'subheading-2': (0.875rem, 1.125rem, 700, uppercase),
+  'body-lg': (1rem, 1.25rem, 400, none),
+  'body': (0.875rem, 1.125rem, 400, none),
+  'body-sm': (0.75rem, 1rem, 400, none),
+  'label': (0.875rem, 1.125rem, 500, none),
+  'button-lg': (0.875rem, 1.125rem, 700, none),
+  'button-md': (0.875rem, 1.125rem, 700, none),
+  'chip': (0.75rem, 0.875rem, 700, uppercase),
+);
+
+// Spacing: DAHC proposal on a 4px grid, from gaps observed in Figma components (03 §3.6).
+$space: (
+  '0': 0,
+  '0-5': 0.125rem,
+  '1': 0.25rem,
+  '2': 0.5rem,
+  '3': 0.75rem,
+  '4': 1rem,
+  '5': 1.25rem,
+  '6': 1.5rem,
+  '8': 2rem,
+  '10': 2.5rem,
+  '12': 3rem,
+  '16': 4rem,
+  '20': 5rem,
+);
+
+// Sizing (03 §3.6). Control heights: Buttons 50:6786 (Small 36, Medium 44, Large 48).
+$size: (
+  'control-sm': 2.25rem,
+  'control-md': 2.75rem,
+  'control-lg': 3rem,
+  'touch-target': 2.75rem,
+  // WCAG 2.2 SC 2.5.8 minimum target size, for controls without a Figma height (link buttons).
+  'target-min': 1.5rem,
+  'border': 1px,
+  'border-strong': 2px,
+  // DAHC proposal: Figma has no focus state.
+  'focus-ring': 2px,
+  'focus-offset': 2px,
+  'focus-offset-wide': 4px,
+  // Icon sizes used inside components (Buttons 50:6786); masters are 24px (Icons 50:4272).
+  'icon-xs': 0.75rem,
+  'icon-sm': 1rem,
+  'icon-md': 1.25rem,
+  'icon-lg': 1.5rem,
+  'icon-xl': 2.5rem,
+  'illustration': 3.5rem,
+  // DAHC proposal: comfortable reading widths.
+  'measure-narrow': 22rem,
+  'measure': 36rem,
+  'measure-wide': 48rem,
+  // GME container 1200px (GME 1:2189), decision D3.
+  'container-max': 75rem,
+  // Modal 50:17179: 648px, compact 388px; large 880px is DERIVED (dubai-health-ui modal.json).
+  'dialog-sm': 24.25rem,
+  'dialog-md': 40.5rem,
+  'dialog-lg': 55rem,
+  // Drawer: DERIVED. sm = DH Hamburger Menu overlay 365px (50:10087); md 480px for forms.
+  'drawer-sm': 22.8125rem,
+  'drawer-md': 30rem,
+  // Tooltip: DERIVED readable line length for 14px text.
+  'tooltip-max': 17.5rem,
+  // Modal featured icon 52px (50:17179).
+  'featured-icon': 3.25rem,
+);
+
+// Radius (03 §3.7).
+$radius: (
+  'xs': 0.25rem, // Checkbox box, Controls 50:7880
+  'sm': 0.5rem, // Informational tag 50:7426
+  'control': 0.625rem, // GME upload box, decision D3 (inputs use md: Figma Input field radius 12)
+  'md': 0.75rem, // DH cards 50:13532, tabs 50:9930
+  'lg': 1rem, // GME cards, decision D3
+  'xl': 1.25rem, // Modal 50:17179
+  'pill': 999px, // Buttons 50:6786, chips 50:7519
+);
+
+// Shadows: effect styles Shadow 1-4, page Shadows & Elevations 50:4159 (nodes 50:4217-50:4238).
+$shadow-light: (
+  'none': none,
+  '1': (0 25px 36px 0 rgb(0 51 102 / 8%)),
+  '2': (0 25px 26px -22px rgb(0 51 102 / 8%)),
+  '3': (0 8px 12px -6px rgb(0 51 102 / 8%)),
+  '4': (0 12px 24px -8px rgb(0 51 102 / 12%)),
+);
+
+// DAHC proposal for the dark theme (decision D2): same geometry, darker shadow colour.
+$shadow-dark: (
+  'none': none,
+  '1': (0 25px 36px 0 rgb(0 0 0 / 40%)),
+  '2': (0 25px 26px -22px rgb(0 0 0 / 40%)),
+  '3': (0 8px 12px -6px rgb(0 0 0 / 40%)),
+  '4': (0 12px 24px -8px rgb(0 0 0 / 50%)),
+);
+
+// Motion: DAHC proposal; Figma timing is prototype-only and cannot be read (03 §3.9).
+$motion: (
+  'duration-fast': 120ms,
+  'duration-normal': 200ms,
+  'duration-slow': 300ms,
+  'easing-standard': cubic-bezier(0.2, 0, 0, 1),
+  'easing-exit': cubic-bezier(0.3, 0, 1, 1),
+);
+
+// Z-index layers: DAHC proposal (03 §3.11).
+$z-index: (
+  'base': 0,
+  'sticky': 100,
+  'dropdown': 200,
+  'overlay': 1000,
+  'toast': 1100,
+  'tooltip': 1200,
+);
+
+// Opacity (dubai-health-ui): disabled controls fade to 50%; muted decorations (inactive carousel
+// dots, table sort hints) to 40%.
+$opacity: (
+  'disabled': 0.5,
+  'muted': 0.4,
+);

@@ -1,0 +1,71 @@
+/* Shared by dahc-flex, dahc-space and dahc-row: direction, wrapping and alignment classes.
+   Ported from dubai-health-ui (layout/dh-layout.ts, FLEX_ALIGNMENT). */
+
+:host(.dahc-flex--vertical) {
+  flex-direction: column;
+}
+
+:host(.dahc-flex--wrap) {
+  flex-wrap: wrap;
+}
+
+:host(.dahc-flex--justify-start) {
+  justify-content: flex-start;
+}
+
+:host(.dahc-flex--justify-center) {
+  justify-content: center;
+}
+
+:host(.dahc-flex--justify-end) {
+  justify-content: flex-end;
+}
+
+:host(.dahc-flex--justify-between) {
+  justify-content: space-between;
+}
+
+:host(.dahc-flex--justify-around) {
+  justify-content: space-around;
+}
+
+:host(.dahc-flex--justify-evenly) {
+  justify-content: space-evenly;
+}
+
+:host(.dahc-flex--align-start) {
+  align-items: flex-start;
+}
+
+:host(.dahc-flex--align-center) {
+  align-items: center;
+}
+
+:host(.dahc-flex--align-end) {
+  align-items: flex-end;
+}
+
+:host(.dahc-flex--align-baseline) {
+  align-items: baseline;
+}
+
+:host(.dahc-flex--align-stretch) {
+  align-items: stretch;
+}
+
+/* DH space scale: sm 8, md 16, lg 24. */
+:host(.dahc-flex--gap-none) {
+  --_gap: 0;
+}
+
+:host(.dahc-flex--gap-sm) {
+  --_gap: var(--dahc-space-2);
+}
+
+:host(.dahc-flex--gap-md) {
+  --_gap: var(--dahc-space-4);
+}
+
+:host(.dahc-flex--gap-lg) {
+  --_gap: var(--dahc-space-6);
+}

@@ -1,0 +1,40 @@
+<button
+  #trigger
+  dahc-button
+  type="button"
+  iconEnd="chevron-down"
+  aria-haspopup="menu"
+  [variant]="variant()"
+  [size]="size()"
+  [disabled]="disabled()"
+  [attr.aria-expanded]="open()"
+  [attr.aria-controls]="menuId"
+  (click)="toggle()"
+  (keydown)="onTriggerKeydown($event)">
+  {{ label() }}
+</button>
+<ul
+  #popup
+  class="dahc-popup dahc-menu"
+  popover="manual"
+  role="menu"
+  [id]="menuId"
+  [attr.aria-label]="label()">
+  @for (item of items(); track item.value) {
+    <li
+      #item
+      class="dahc-menu__item"
+      role="menuitem"
+      tabindex="-1"
+      [class.dahc-menu__item--danger]="item.danger"
+      [attr.aria-disabled]="item.disabled ? 'true' : null"
+      (click)="choose(item)"
+      (keydown.enter)="$event.preventDefault(); choose(item)"
+      (keydown.space)="$event.preventDefault(); choose(item)">
+      @if (item.icon; as icon) {
+        <dahc-icon [name]="icon" size="md" />
+      }
+      <span>{{ item.label }}</span>
+    </li>
+  }
+</ul>

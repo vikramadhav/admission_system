@@ -1,0 +1,19 @@
+<fieldset class="dahc-button-group" [disabled]="isDisabled()">
+  <legend class="dahc-button-group__legend" [class.dahc-visually-hidden]="hideLabel()">{{ label() }}</legend>
+  <div class="dahc-button-group__options">
+    @for (option of options(); track option.value) {
+      <label class="dahc-button-group__option" [attr.data-label]="option.label">
+        <input
+          class="dahc-button-group__input"
+          type="radio"
+          [name]="groupName"
+          [value]="option.value"
+          [checked]="option.value === current()"
+          [disabled]="option.disabled ?? false"
+          (change)="select(option)"
+          (blur)="onBlur()" />
+        <span class="dahc-button-group__text">{{ option.label }}</span>
+      </label>
+    }
+  </div>
+</fieldset>

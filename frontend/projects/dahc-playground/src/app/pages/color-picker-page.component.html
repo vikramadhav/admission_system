@@ -1,0 +1,57 @@
+<dahc-playground-page
+  heading="Color picker"
+  description="Pick a DAHC palette colour or enter a custom hex value. Ported from dubai-health-ui dh-color-picker; DERIVED design."
+  [sourceFiles]="sourceFiles"
+  selector="dahc-color-picker"
+  [whenToUse]="whenToUse">
+  <div preview>
+    <dahc-color-picker label="Brand colour" [formControl]="control" />
+  </div>
+
+  <div inspector class="pg-stack">
+    <p class="pg-value" data-testid="form-value">Form value: {{ valueText() }}</p>
+  </div>
+
+  <div states class="pg-stack">
+    <dahc-color-picker label="Custom presets" [presets]="customPresets" />
+  </div>
+
+  <dahc-doc-example
+    examples
+    exampleId="basic"
+    heading="Basic"
+    description="The default DAHC palette."
+    template="color-picker-page.component.html">
+    <dahc-color-picker label="Tag colour" [formControl]="exampleTag" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="presets"
+    heading="Custom presets"
+    description="Offer only the colours that suit the use."
+    template="color-picker-page.component.html">
+    <dahc-color-picker label="Banner colour" [presets]="exampleBannerPresets" [formControl]="exampleBanner" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="required"
+    heading="Required with error"
+    description="The error shows after the field was touched without a value."
+    template="color-picker-page.component.html">
+    <dahc-color-picker
+      label="Category colour"
+      hint="Used for the category badge."
+      [required]="true"
+      [invalid]="exampleTheme.invalid && exampleTheme.touched"
+      errorMessage="Choose a colour."
+      [formControl]="exampleTheme" />
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>The field is a combobox with aria-haspopup="dialog"; the panel is a labelled dialog.</li>
+    <li>Swatches are a listbox with a roving tab stop: Arrow keys move (mirrored in RTL), Enter or Space picks; each swatch is named by colour and hex.</li>
+    <li>The native colour input and the hex field (with Apply) set a custom colour; Escape returns to the field.</li>
+  </ul>
+</dahc-playground-page>

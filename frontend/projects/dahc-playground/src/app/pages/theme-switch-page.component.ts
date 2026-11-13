@@ -1,22 +1,38 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { DahcThemeName, DahcThemeService, DahcThemeSwitchComponent } from 'dahc-ui';
+import { DahcButtonComponent, DahcSpaceComponent, DahcThemeName, DahcThemeService, DahcThemeSwitchComponent } from 'dahc-ui';
 
-import { EventLogComponent } from '../inspector/event-log.component';
-import { InspectorTextComponent } from '../inspector/inspector-text.component';
-import { PlaygroundPageComponent } from '../layout/playground-page.component';
+import { DocExampleComponent, EventLogComponent, InspectorTextComponent, PlaygroundPageComponent } from 'dahc-playground-kit';
 
 @Component({
   selector: 'dahc-theme-switch-page',
   templateUrl: './theme-switch-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DahcThemeSwitchComponent, EventLogComponent, InspectorTextComponent, PlaygroundPageComponent],
+  imports: [
+    DahcButtonComponent,
+    DahcSpaceComponent,
+    DahcThemeSwitchComponent,
+    DocExampleComponent,
+    EventLogComponent,
+    InspectorTextComponent,
+    PlaygroundPageComponent,
+  ],
 })
 export class ThemeSwitchPageComponent {
+  protected readonly whenToUse: readonly string[] = [
+    'Place one theme switch in the application header or in the user settings.',
+    'Use DahcThemeService directly when the theme follows an account preference.',
+    'Never use the theme to convey meaning; both themes show the same content.',
+  ];
+
+  protected setTheme(theme: DahcThemeName): void {
+    this.themeService.setTheme(theme);
+  }
+
   protected readonly sourceFiles = [
-    'theme-switch/theme-switch.component.ts',
-    'theme-switch/theme-switch.component.html',
-    'theme-switch/theme-switch.component.scss',
-    'theme/theme.service.ts',
+    'actions/theme-switch/theme-switch.component.ts',
+    'actions/theme-switch/theme-switch.component.html',
+    'actions/theme-switch/theme-switch.component.css',
+    'core/theme/theme.service.ts',
   ];
 
   private readonly themeService = inject(DahcThemeService);

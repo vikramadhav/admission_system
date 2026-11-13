@@ -3,9 +3,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DahcSelectComponent, DahcSelectOption } from 'dahc-ui';
 
-import { InspectorTextComponent } from '../inspector/inspector-text.component';
-import { InspectorToggleComponent } from '../inspector/inspector-toggle.component';
-import { PlaygroundPageComponent } from '../layout/playground-page.component';
+import { DocExampleComponent, InspectorTextComponent, InspectorToggleComponent, PlaygroundPageComponent } from 'dahc-playground-kit';
 
 @Component({
   selector: 'dahc-select-page',
@@ -13,6 +11,7 @@ import { PlaygroundPageComponent } from '../layout/playground-page.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     DahcSelectComponent,
+    DocExampleComponent,
     InspectorTextComponent,
     InspectorToggleComponent,
     PlaygroundPageComponent,
@@ -21,11 +20,11 @@ import { PlaygroundPageComponent } from '../layout/playground-page.component';
 })
 export class SelectPageComponent {
   protected readonly sourceFiles = [
-    'select/select.component.ts',
-    'select/select.component.html',
-    'select/select.component.scss',
-    'select/select-option.ts',
-    'a11y/unique-id.ts',
+    'forms/select/select.component.ts',
+    'forms/select/select.component.html',
+    'forms/select/select.component.css',
+    'forms/select/select-option.ts',
+    'core/a11y/unique-id.ts',
   ];
 
   protected readonly programs: readonly DahcSelectOption[] = [
@@ -63,4 +62,28 @@ export class SelectPageComponent {
       }
     });
   }
+
+  protected readonly whenToUse: readonly string[] = [
+    'Choose one option from a list of about five or more, where showing every option at once would take too much space.',
+    'Use a radio group for fewer options, an auto-complete for very long lists that people type into, and a multi-select for several values.',
+    'The native select keeps the platform picker on phones and full keyboard and screen reader support.',
+  ];
+
+  protected readonly exampleEmirates: readonly DahcSelectOption[] = [
+    { value: 'abu-dhabi', label: 'Abu Dhabi' },
+    { value: 'dubai', label: 'Dubai' },
+    { value: 'sharjah', label: 'Sharjah' },
+    { value: 'ajman', label: 'Ajman' },
+    { value: 'umm-al-quwain', label: 'Umm Al Quwain' },
+    { value: 'ras-al-khaimah', label: 'Ras Al Khaimah' },
+    { value: 'fujairah', label: 'Fujairah' },
+  ];
+  protected readonly exampleEmirate = new FormControl<string>('', { nonNullable: true });
+  protected readonly exampleCampus = new FormControl<string>('', { nonNullable: true });
+  protected readonly exampleIntake = new FormControl<string>('', { nonNullable: true, validators: Validators.required });
+  protected readonly exampleIntakes: readonly DahcSelectOption[] = [
+    { value: '2026-09', label: 'September 2026' },
+    { value: '2027-01', label: 'January 2027' },
+    { value: '2027-09', label: 'September 2027 (not open yet)', disabled: true },
+  ];
 }

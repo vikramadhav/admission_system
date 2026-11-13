@@ -1,0 +1,108 @@
+/* Default (DERIVED): 48px tabs, 24px padding, Regular 18/24 navy-900, active Bold 18/20 navy with a
+   2px navy indicator, navy-100 divider under the list.
+   Inverse (Figma Tabs 50:9910, Tab 50:9930): 80px tabs on a navy-800 bar with radius 8 on top,
+   white text; the active tab is a white tab with navy text. */
+
+:host {
+  display: block;
+}
+
+.dahc-tabs__list {
+  display: flex;
+  overflow-x: auto;
+  border-block-end: var(--dahc-size-border) solid var(--dahc-color-border-subtle);
+  scrollbar-width: thin;
+}
+
+.dahc-tabs__tab {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  gap: var(--dahc-space-2);
+  min-block-size: var(--dahc-size-control-lg);
+  padding-inline: var(--dahc-space-6);
+  border: 0;
+  border-block-end: var(--dahc-size-border-strong) solid transparent;
+  background: transparent;
+  color: var(--dahc-color-text-secondary);
+  font-family: inherit;
+  font-size: var(--dahc-font-size-18);
+  font-weight: var(--dahc-font-weight-regular);
+  line-height: var(--dahc-font-size-24);
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    color var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard),
+    border-color var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard),
+    background-color var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard);
+}
+
+/* The active tab is bold; a hidden bold copy reserves its width so tabs do not shift. */
+.dahc-tabs__label {
+  display: inline-grid;
+}
+
+.dahc-tabs__label::after {
+  content: attr(data-label);
+  grid-area: 1 / 1;
+  block-size: 0;
+  font-weight: var(--dahc-font-weight-bold);
+  visibility: hidden;
+}
+
+.dahc-tabs__tab:hover:not(:disabled) {
+  color: var(--dahc-color-text-primary);
+}
+
+.dahc-tabs__tab[aria-selected='true'] {
+  border-block-end-color: var(--dahc-color-border-strong);
+  color: var(--dahc-color-text-primary);
+  font-weight: var(--dahc-font-weight-bold);
+}
+
+.dahc-tabs__tab:focus-visible {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: calc(var(--dahc-size-focus-ring) * -1);
+}
+
+.dahc-tabs__tab:disabled {
+  color: var(--dahc-color-text-disabled);
+  cursor: not-allowed;
+}
+
+:host(.dahc-tabs--inverse) .dahc-tabs__list {
+  border-block-end: 0;
+  border-start-start-radius: var(--dahc-radius-sm);
+  border-start-end-radius: var(--dahc-radius-sm);
+  background-color: var(--dahc-color-surface-tab-bar);
+}
+
+:host(.dahc-tabs--inverse) .dahc-tabs__tab {
+  min-block-size: calc(var(--dahc-size-control-lg) + var(--dahc-space-8));
+  border-block-end: var(--dahc-size-border) solid var(--dahc-color-border-subtle);
+  color: var(--dahc-color-text-on-tab-bar);
+}
+
+:host(.dahc-tabs--inverse) .dahc-tabs__tab:hover:not(:disabled) {
+  background-color: color-mix(in srgb, var(--dahc-color-text-on-tab-bar) 10%, transparent);
+  color: var(--dahc-color-text-on-tab-bar);
+}
+
+:host(.dahc-tabs--inverse) .dahc-tabs__tab[aria-selected='true'] {
+  border-block-end-color: transparent;
+  border-start-start-radius: var(--dahc-radius-sm);
+  border-start-end-radius: var(--dahc-radius-sm);
+  background-color: var(--dahc-color-surface);
+  color: var(--dahc-color-text-primary);
+}
+
+:host(.dahc-tabs--inverse) .dahc-tabs__tab:focus-visible {
+  outline-color: var(--dahc-color-text-on-tab-bar);
+}
+
+@media (forced-colors: active) {
+  .dahc-tabs__tab[aria-selected='true'] {
+    border-block-end-color: Highlight;
+  }
+}

@@ -1,0 +1,127 @@
+/* Figma Input field 50:7763: label Regular 14/18 navy, 6px, field, 6px, hint Medium 12/16 navy-700.
+   Field: 48px, padding 14/16, gap 8, radius 12, white. States: Hover 1px navy-700 (50:7772),
+   Disabled navy-100 fill (50:7788), Success green-100 fill (50:7796), Error red fill (50:7804).
+   Border colour and the error colour use the A11y-fixed tokens (decision D4). */
+
+:host {
+  --_gap: calc(var(--dahc-space-1) + var(--dahc-space-0-5));
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--_gap);
+  min-inline-size: 0;
+}
+
+.dahc-form-field__label {
+  color: var(--dahc-color-text-primary);
+  font-size: var(--dahc-type-body-sm-size);
+  font-weight: var(--dahc-font-weight-regular);
+  line-height: var(--dahc-type-body-sm-line-height);
+}
+
+.dahc-form-field__required {
+  margin-inline-start: var(--dahc-space-0-5);
+  color: var(--dahc-color-error-text);
+}
+
+.dahc-form-field__box {
+  display: flex;
+  align-items: center;
+  gap: var(--dahc-space-2);
+  min-block-size: var(--dahc-size-control-lg);
+  padding-inline: var(--dahc-space-4);
+  border: var(--dahc-size-border) solid var(--dahc-color-border-control);
+  border-radius: var(--dahc-radius-md);
+  background-color: var(--dahc-color-surface);
+  color: var(--dahc-color-text-primary);
+  cursor: text;
+  transition: border-color var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard);
+}
+
+/* Textareas grow downwards, so their box aligns to the top and keeps the 14px vertical padding. */
+.dahc-form-field__box:has(textarea) {
+  align-items: flex-start;
+  padding-block: calc(var(--dahc-space-3) + var(--dahc-space-0-5) - var(--dahc-size-border));
+}
+
+.dahc-form-field__box:hover {
+  border-color: var(--dahc-color-text-tertiary);
+}
+
+/* Focus is not in Figma. As in dubai-health-ui, the whole box gets the 2px focus ring (offset 2)
+   while its control has focus; the border also darkens. */
+.dahc-form-field__box:focus-within {
+  border-color: var(--dahc-color-border-strong);
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: var(--dahc-size-focus-offset);
+}
+
+/* GME read-only "Verified via ICP" and computed fields (decision D3). */
+.dahc-form-field__box:has(input:read-only, textarea:read-only) {
+  border-color: var(--dahc-color-border-default);
+  background-color: var(--dahc-color-surface-muted);
+  color: var(--dahc-color-text-secondary);
+}
+
+:host(.dahc-form-field--success) .dahc-form-field__box {
+  border-color: var(--dahc-color-success-border);
+  background-color: var(--dahc-color-success-surface);
+}
+
+:host(.dahc-form-field--error) .dahc-form-field__box {
+  border-color: var(--dahc-color-error-border);
+  background-color: var(--dahc-color-error-surface);
+}
+
+.dahc-form-field__box:has(.dahc-input:disabled) {
+  border-color: transparent;
+  background-color: var(--dahc-color-action-disabled-bg);
+  color: var(--dahc-color-text-disabled);
+  cursor: not-allowed;
+}
+
+:host:has(.dahc-input:disabled) .dahc-form-field__label {
+  color: var(--dahc-color-text-disabled);
+}
+
+.dahc-form-field__message {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--dahc-space-1);
+  margin: 0;
+  color: var(--dahc-color-text-tertiary);
+  font-size: var(--dahc-font-size-12);
+  font-weight: var(--dahc-font-weight-medium);
+  line-height: var(--dahc-type-overline-line-height);
+}
+
+:host(.dahc-form-field--success) .dahc-form-field__message {
+  color: var(--dahc-color-success-text);
+}
+
+.dahc-form-field__message--error {
+  color: var(--dahc-color-error-text);
+}
+
+/* Hint or error, and the optional counter at the end of the same row (dh-textarea footer). */
+.dahc-form-field__footer {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--dahc-space-2);
+}
+
+.dahc-form-field__count {
+  flex: none;
+  margin-inline-start: auto;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (forced-colors: active) {
+  .dahc-form-field__box {
+    border-color: FieldText;
+  }
+
+  :host(.dahc-form-field--error) .dahc-form-field__box {
+    border-width: var(--dahc-size-border-strong);
+  }
+}

@@ -1,0 +1,74 @@
+<dahc-playground-page
+  heading="Radio group"
+  description="A labelled group of radio buttons for one answer, horizontal or vertical. Figma Controls 50:7880 (Radio button)."
+  [sourceFiles]="sourceFiles"
+  selector="dahc-radio-group"
+  [whenToUse]="whenToUse">
+  <div preview>
+    <dahc-radio-group
+      [label]="label()"
+      [options]="yesNo"
+      [orientation]="orientation()"
+      [hint]="hint()"
+      [errorMessage]="errorMessage()"
+      [invalid]="invalid()"
+      [required]="required()"
+      [formControl]="control" />
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-text label="label" [(value)]="label" />
+    <dahc-inspector-text label="hint" [(value)]="hint" />
+    <dahc-inspector-text label="errorMessage" [(value)]="errorMessage" />
+    <dahc-inspector-choice label="orientation" [options]="orientations" [(value)]="orientation" />
+    <dahc-inspector-toggle label="invalid" [(value)]="invalid" />
+    <dahc-inspector-toggle label="required" [(value)]="required" />
+    <p class="pg-value" data-testid="form-value">Form value: {{ valueText() }}</p>
+  </div>
+
+  <div states class="pg-stack">
+    <dahc-radio-group label="Vertical, with a disabled option" orientation="vertical" [options]="languages" [formControl]="languageControl" />
+    <dahc-radio-group label="Invalid" [options]="yesNo" errorMessage="Answer this question." [invalid]="true" />
+    <dahc-radio-group label="Disabled group" [options]="yesNo" [formControl]="disabledControl" />
+  </div>
+
+  <dahc-doc-example
+    examples
+    exampleId="basic"
+    heading="Basic"
+    description="A yes / no question laid out horizontally."
+    template="radio-group-page.component.html">
+    <dahc-radio-group label="Are you a UAE national?" [options]="yesNo" [formControl]="exampleNational" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="vertical"
+    heading="Vertical"
+    description="Longer option labels read better stacked."
+    template="radio-group-page.component.html">
+    <dahc-radio-group label="Preferred interview language" orientation="vertical" [options]="exampleLanguages" [formControl]="exampleLanguage" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="required"
+    heading="Required with error"
+    description="The error shows after the group was touched without an answer."
+    template="radio-group-page.component.html">
+    <dahc-radio-group
+      label="Sponsorship type"
+      hint="Who pays your training fees?"
+      [options]="exampleSponsors"
+      [required]="true"
+      [invalid]="exampleSponsor.invalid && exampleSponsor.touched"
+      errorMessage="Choose a sponsorship type."
+      [formControl]="exampleSponsor" />
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>Native radios in a fieldset; the legend names the group. Tab enters the group, arrow keys change the choice.</li>
+    <li>Hint and error are linked to the group with aria-describedby; the error has an icon and text.</li>
+    <li>Each option is at least 44 pixels tall, and the 24-pixel ring area meets the target-size minimum.</li>
+  </ul>
+</dahc-playground-page>

@@ -1,0 +1,46 @@
+<article class="pg-doc-article">
+  <h1 class="pg-doc-title">DAHC UI</h1>
+  <p class="pg-doc-lead">
+    DAHC UI is the Angular component library of the Dubai Health Standard UI. It turns the Dubai Health design system in Figma into accessible,
+    right-to-left ready components for Dubai Health web applications such as the GME admission portal.
+  </p>
+
+  <section class="pg-doc-section" aria-labelledby="intro-features">
+    <h2 id="intro-features" class="pg-doc-h2">Features</h2>
+    <ul class="pg-doc-features">
+      <li class="pg-doc-feature"><strong>Dubai Health design</strong>Built from the Dubai Health Standard UI and its tokens: colour, typography (Dubai font), spacing, radius, shadow and motion.</li>
+      <li class="pg-doc-feature"><strong>Modern Angular</strong>Standalone components, signal inputs and models, OnPush change detection, and Reactive Forms through ControlValueAccessor.</li>
+      <li class="pg-doc-feature"><strong>Accessible</strong>WCAG 2.2 AA: WAI-ARIA keyboard patterns, visible focus, live announcements, reduced motion and forced colours. Every component is tested with axe.</li>
+      <li class="pg-doc-feature"><strong>Arabic and right-to-left</strong>Logical CSS properties throughout, mirrored icons, and every built-in text translatable with Angular i18n.</li>
+      <li class="pg-doc-feature"><strong>Light and dark themes</strong>Semantic colour roles switch with one attribute; components never use raw colours.</li>
+      <li class="pg-doc-feature"><strong>No third-party UI</strong>Native HTML, CSS and Angular only: no CSS framework, no Angular CDK, no UI vendor dependency.</li>
+    </ul>
+  </section>
+
+  <section class="pg-doc-section" aria-labelledby="intro-environment">
+    <h2 id="intro-environment" class="pg-doc-h2">Supported environment</h2>
+    <ul class="pg-doc-list">
+      <li>Angular 22 with standalone components and zoneless or zone-based change detection.</li>
+      <li>Current versions of Chrome, Edge, Firefox and Safari, on desktop and mobile.</li>
+      <li>Screen readers: NVDA and JAWS on Windows, VoiceOver on macOS and iOS, TalkBack on Android.</li>
+    </ul>
+  </section>
+
+  <section class="pg-doc-section" aria-labelledby="intro-start">
+    <h2 id="intro-start" class="pg-doc-h2">Where to start</h2>
+    <ul class="pg-doc-list">
+      @for (link of startLinks; track link.route) {
+        <li><a [routerLink]="link.route">{{ link.label }}</a>: {{ link.text }}</li>
+      }
+    </ul>
+  </section>
+
+  <section class="pg-doc-section" aria-labelledby="intro-design">
+    <h2 id="intro-design" class="pg-doc-h2">Design resources</h2>
+    <p class="pg-doc-text">
+      The Dubai Health Standard UI Figma file is the source of truth for tokens and components; application screens, such as the GME portal,
+      have their own Figma files built from it. Values that Figma does not define are marked "DAHC proposal" or "A11y fix" in the library
+      source and in the design-system documents (<code>frontend/docs/design-system</code>).
+    </p>
+  </section>
+</article>

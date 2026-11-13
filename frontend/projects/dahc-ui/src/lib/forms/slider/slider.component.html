@@ -1,0 +1,36 @@
+<span class="dahc-slider__label" [id]="labelId">{{ label() }}</span>
+<div class="dahc-slider__area" (pointerdown)="onPointerDown($event)">
+  <div #rail class="dahc-slider__rail">
+    <div class="dahc-slider__track" [style.inset-inline-start.%]="trackStart()" [style.inline-size.%]="trackEnd() - trackStart()"></div>
+    @for (thumb of values(); track $index; let index = $index) {
+      <div
+        class="dahc-slider__thumb"
+        role="slider"
+        [class.dahc-slider__thumb--dragging]="dragging() === index"
+        [style.inset-inline-start.%]="percent(thumb)"
+        [attr.tabindex]="isDisabled() ? -1 : 0"
+        [attr.aria-valuemin]="thumbMin(index)"
+        [attr.aria-valuemax]="thumbMax(index)"
+        [attr.aria-valuenow]="thumb"
+        [attr.aria-valuetext]="text(thumb)"
+        [attr.aria-labelledby]="range() ? null : labelId"
+        [attr.aria-label]="thumbLabel(index)"
+        [attr.aria-describedby]="hint() ? hintId : null"
+        [attr.aria-disabled]="isDisabled() ? 'true' : null"
+        (keydown)="onKeydown(index, $event)"
+        (blur)="onBlur()">
+        <span class="dahc-slider__tip" aria-hidden="true">{{ text(thumb) }}</span>
+      </div>
+    }
+  </div>
+</div>
+@if (marks().length > 0) {
+  <div class="dahc-slider__marks" aria-hidden="true">
+    @for (mark of marks(); track mark) {
+      <span class="dahc-slider__mark" [style.inset-inline-start.%]="percent(mark)">{{ text(mark) }}</span>
+    }
+  </div>
+}
+@if (hint()) {
+  <p class="dahc-slider__hint" [id]="hintId">{{ hint() }}</p>
+}

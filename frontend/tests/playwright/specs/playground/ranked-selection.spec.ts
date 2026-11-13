@@ -76,6 +76,6 @@ test('ranked selection serves its real source and reflows at 320 pixels', async 
   await page.setViewportSize({ width: 320, height: 800 });
   await playground.open('ranked-selection', { theme: 'light', direction: 'ltr' });
 
-  await playground.expectSourceFile('ranked-selection/ranked-selection.component.ts', 'implements ControlValueAccessor');
+  await playground.expectSourceFile('forms/ranked-selection/ranked-selection.component.ts', 'implements ControlValueAccessor');
   await expectNoHorizontalScroll(page);
 });

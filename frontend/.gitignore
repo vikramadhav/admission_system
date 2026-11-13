@@ -43,6 +43,10 @@ __screenshots__/
 .DS_Store
 Thumbs.db
 
+# Workspace files that the repository root .gitignore excludes; the frontend needs them to build.
+!angular.json
+!package-lock.json
+
 # Playwright
 /tests/playwright/test-results/
 /tests/playwright/playwright-report/

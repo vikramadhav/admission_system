@@ -1,0 +1,82 @@
+<dahc-playground-page
+  heading="Accordion"
+  description="Expandable sections, one open at a time unless multiple is set. Figma FDP Specialty accordion 50:17721; hover, focus and disabled DERIVED."
+  selector="dahc-accordion"
+  [whenToUse]="whenToUse"
+  [exampleColumns]="2"
+  [sourceFiles]="sourceFiles">
+  <div preview>
+    <dahc-accordion [multiple]="multiple()">
+      <dahc-accordion-item heading="Who can apply?" icon="help" [(expanded)]="firstOpen">
+        <p>Graduates of recognised medical schools with a valid licence or internship completion.</p>
+      </dahc-accordion-item>
+      <dahc-accordion-item heading="Which documents do I need?" icon="copy">
+        <p>Passport, Emirates ID, degree certificate, transcripts and a CV.</p>
+      </dahc-accordion-item>
+      <dahc-accordion-item heading="When are results announced?" icon="calendar">
+        <p>Shortlisting results are announced on the dashboard at the end of the cycle.</p>
+      </dahc-accordion-item>
+      <dahc-accordion-item heading="Appeals (closed)" [disabled]="true">
+        <p>Appeals open after results are announced.</p>
+      </dahc-accordion-item>
+    </dahc-accordion>
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-toggle label="multiple" [(value)]="multiple" />
+    <p class="pg-value" data-testid="first-open">first section expanded: {{ firstOpen() }}</p>
+  </div>
+
+  <div states class="pg-stack">
+    <p class="pg-value">Sections close each other unless multiple is on. A disabled section cannot be opened.</p>
+  </div>
+
+  <div examples>
+    <dahc-doc-example exampleId="basic" heading="Basic" description="Sections open one at a time." template="accordion-page.component.html">
+      <dahc-accordion>
+        <dahc-accordion-item heading="What is GME?">
+          <p>Graduate Medical Education: internship, residency and fellowship programs.</p>
+        </dahc-accordion-item>
+        <dahc-accordion-item heading="How long is a residency?">
+          <p>Four to five years, depending on the specialty.</p>
+        </dahc-accordion-item>
+      </dahc-accordion>
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="multiple" heading="Multiple open" description="With multiple, opening a section leaves the others open." template="accordion-page.component.html">
+      <dahc-accordion [multiple]="true">
+        <dahc-accordion-item heading="Residency" [expanded]="true">
+          <p>Four to five years of supervised specialty training.</p>
+        </dahc-accordion-item>
+        <dahc-accordion-item heading="Fellowship">
+          <p>One to three years of subspecialty training after residency.</p>
+        </dahc-accordion-item>
+      </dahc-accordion>
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="icons" heading="With icons" description="A leading icon helps people scan long lists of sections." template="accordion-page.component.html">
+      <dahc-accordion>
+        <dahc-accordion-item heading="Eligibility" icon="help">
+          <p>Check the requirements of your program before you apply.</p>
+        </dahc-accordion-item>
+        <dahc-accordion-item heading="Key dates" icon="calendar">
+          <p>Applications close on 30 September.</p>
+        </dahc-accordion-item>
+      </dahc-accordion>
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="disabled" heading="Disabled section" description="A disabled section shows that content exists but is not available yet." template="accordion-page.component.html">
+      <dahc-accordion>
+        <dahc-accordion-item heading="Interview schedule">
+          <p>Interviews take place in November.</p>
+        </dahc-accordion-item>
+        <dahc-accordion-item heading="Offers (after interviews)" [disabled]="true">
+          <p>Offers are published after the interviews.</p>
+        </dahc-accordion-item>
+      </dahc-accordion>
+    </dahc-doc-example>
+  </div>
+
+  <ul accessibility class="pg-notes">
+    <li>Each title is a heading containing a button that reports aria-expanded and controls its panel.</li>
+    <li>Enter and Space toggle a section; Tab moves between section buttons.</li>
+    <li>Each open panel is a region labelled by its title.</li>
+  </ul>
+</dahc-playground-page>

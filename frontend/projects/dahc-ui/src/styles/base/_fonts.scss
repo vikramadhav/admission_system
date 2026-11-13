@@ -1,0 +1,27 @@
+// Dubai typeface (Typography 50:2376), self-hosted because the CSP allows no font CDN.
+// Copyright © 2016 Dubai Executive Council. Licence confirmation is tracked as decision D6.
+// The files include Arabic glyphs, so one family serves both locales.
+
+@font-face {
+  font-family: 'Dubai';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../../assets/fonts/Dubai-Regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Dubai';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../../assets/fonts/Dubai-Medium.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Dubai';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../../assets/fonts/Dubai-Bold.woff2') format('woff2');
+}

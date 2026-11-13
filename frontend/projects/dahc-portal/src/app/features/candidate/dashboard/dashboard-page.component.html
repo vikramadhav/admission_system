@@ -1,0 +1,236 @@
+<dahc-page-header [heading]="heading()" [description]="description()" [breadcrumbs]="breadcrumbs" [focusOnLoad]="true">
+  @if (startNew(); as state) {
+    <div page-header-actions class="dashboard-start">
+      @if (state.enabled) {
+        <a dahc-button routerLink="/candidate/applications/new" i18n="@@portal.dashboard.startNew">Start New Application</a>
+      } @else {
+        <button dahc-button type="button" [disabled]="true" [attr.aria-describedby]="startReasonId" i18n="@@portal.dashboard.startNew">Start New Application</button>
+        <p class="dashboard-start-reason" [id]="startReasonId">{{ startReason() }}</p>
+      }
+    </div>
+  }
+</dahc-page-header>
+
+<div class="dashboard">
+  @if (dashboard.isLoading() && data() === null) {
+    <p class="dashboard-text" role="status" i18n="@@portal.dashboard.loading">Loading your dashboard…</p>
+  } @else if (dashboard.error()) {
+    <dahc-alert variant="error" i18n-heading="@@portal.dashboard.loadFailedHeading" heading="Your dashboard could not be loaded">
+      <p class="dashboard-text" i18n="@@portal.dashboard.loadFailed">Please try again. If the problem continues, contact the admissions team.</p>
+    </dahc-alert>
+    <div>
+      <button dahc-button type="button" variant="secondary" (click)="reload()" i18n="@@portal.action.tryAgain">Try again</button>
+    </div>
+  } @else {
+    @if (timeoutNoteVisible()) {
+      <dahc-alert variant="info" [dismissible]="true" (dismissed)="timeoutNoteVisible.set(false)">{{ timeoutNote() }}</dahc-alert>
+    }
+
+    <div class="dashboard-grid">
+      <div class="dashboard-main">
+        @if (items().length === 0) {
+          <dahc-card class="dashboard-hero">
+            <div class="dashboard-hero-body">
+              <dahc-tag purpose="informative-blue" i18n="@@portal.dashboard.journeyTag">GME journey</dahc-tag>
+              <h2 class="dashboard-hero-title" i18n="@@portal.dashboard.heroTitle">Your next chapter starts here</h2>
+              <p class="dashboard-text" i18n="@@portal.dashboard.heroText">
+                You haven't started an application yet. Explore your options and get ready to apply for a graduate medical education program.
+              </p>
+            </div>
+          </dahc-card>
+
+          <dahc-card i18n-heading="@@portal.dashboard.cycleHeading" heading="Admission Cycle">
+            @if (startNew()?.enabled) {
+              <a card-aside dahc-button size="sm" routerLink="/candidate/applications/new" i18n="@@portal.dashboard.startNew">Start New Application</a>
+            }
+            @if (programs.isLoading()) {
+              <p class="dashboard-text" role="status" i18n="@@portal.dashboard.loadingCycle">Loading the admission cycle…</p>
+            } @else {
+              <ul class="cycle-tiles">
+                @for (tile of cycleTiles(); track tile.caption) {
+                  <li class="cycle-tile">
+                    <span class="cycle-icon" [class]="'cycle-icon cycle-icon--' + tile.tone"><dahc-icon [name]="tile.icon" size="md" /></span>
+                    <span class="cycle-texts">
+                      <span class="cycle-value">{{ tile.value }}</span>
+                      <span class="cycle-caption">{{ tile.caption }}</span>
+                    </span>
+                  </li>
+                }
+              </ul>
+            }
+          </dahc-card>
+        } @else {
+          @if (activeView(); as view) {
+            <ng-container [ngTemplateOutlet]="itemCard" [ngTemplateOutletContext]="{ $implicit: view }" />
+          }
+          @if (otherViews().length > 0) {
+            <section class="dashboard-others" aria-labelledby="other-applications-heading">
+              <h2 id="other-applications-heading" class="dashboard-section-title" i18n="@@portal.dashboard.otherApplications">
+                Previous applications
+              </h2>
+              @for (view of otherViews(); track view.item.id) {
+                <ng-container [ngTemplateOutlet]="itemCard" [ngTemplateOutletContext]="{ $implicit: view }" />
+              }
+            </section>
+          }
+        }
+      </div>
+
+      <aside class="dashboard-side" i18n-aria-label="@@portal.dashboard.sideLabel" aria-label="Useful information">
+        @if (items().length === 0) {
+          <dahc-card i18n-heading="@@portal.dashboard.beforeYouBegin" heading="Before you begin">
+            <p class="dashboard-text" i18n="@@portal.dashboard.haveHandy">Have these documents handy:</p>
+            <ul class="dashboard-bullets">
+              <li i18n="@@portal.dashboard.docIdentification">Identification documents</li>
+              <li i18n="@@portal.dashboard.docAcademic">Academic qualifications &amp; transcripts</li>
+              <li i18n="@@portal.dashboard.docExam">Exam results, if required</li>
+              <li i18n="@@portal.dashboard.docCv">Updated CV</li>
+            </ul>
+            <p card-footer class="dashboard-muted" i18n="@@portal.dashboard.requirementsVary">
+              Requirements vary by program. Check eligibility before you start.
+            </p>
+          </dahc-card>
+        } @else {
+          <dahc-card i18n-heading="@@portal.dashboard.keyDates" heading="Key dates">
+            <dahc-detail-list [items]="keyDates()" [columns]="1" />
+          </dahc-card>
+          @if (appealOpen()) {
+            <dahc-alert variant="info">
+              <p class="dashboard-text">
+                <strong i18n="@@portal.dashboard.appealOpenTitle">Appeal window open.</strong>
+                <ng-container i18n="@@portal.dashboard.appealOpenText">
+                  You can appeal once, within 48 hours of the announcement. Only the final-round score is shown.
+                </ng-container>
+              </p>
+            </dahc-alert>
+          }
+        }
+      </aside>
+    </div>
+  }
+</div>
+
+<ng-template #itemCard let-view>
+  <dahc-card i18n-eyebrow="@@portal.dashboard.applicationId" eyebrow="Application ID" [heading]="view.item.applicationNumber" [subheading]="view.programLine">
+    <dahc-tag card-aside size="lg" [purpose]="view.status.purpose">{{ view.status.label }}</dahc-tag>
+    <div class="item-body">
+      <dahc-detail-list [items]="view.details" />
+
+      @if (view.preferences.length > 0) {
+        <section class="item-section" [attr.aria-labelledby]="'preferences-' + view.item.id">
+          <h3 class="item-section-title" [id]="'preferences-' + view.item.id" i18n="@@portal.dashboard.preferences">Preferences</h3>
+          <div class="preference-cards">
+            @for (preference of view.preferences; track preference.specialtyId) {
+              <div class="preference-card">
+                <h4 class="preference-title" i18n="@@portal.dashboard.preferenceN">Preference {{ preference.order }}</h4>
+                <dl class="preference-facts">
+                  <dt i18n="@@portal.dashboard.specialty">Specialty</dt>
+                  <dd class="preference-specialty">{{ preference.specialtyName }}</dd>
+                  <dt i18n="@@portal.dashboard.trainingSites">Training sites</dt>
+                  <dd>
+                    <ol class="preference-sites">
+                      @for (site of preference.sites; track site.id) {
+                        <li>{{ site.name }}</li>
+                      }
+                    </ol>
+                  </dd>
+                </dl>
+              </div>
+            }
+          </div>
+        </section>
+      }
+
+      @if (view.item.status !== 'DRAFT') {
+        <section class="item-section" [attr.aria-labelledby]="'scores-' + view.item.id">
+          <h3 class="item-section-title item-eyebrow" [id]="'scores-' + view.item.id" i18n="@@portal.dashboard.scores">Scores</h3>
+          <div class="score-tiles">
+            @for (tile of view.scores; track tile.label) {
+              <dahc-stat-tile [label]="tile.label" [value]="tile.value" [color]="tile.color" />
+            }
+          </div>
+          @if (!view.item.announcedScores) {
+            <p class="dashboard-muted" i18n="@@portal.dashboard.scoresPending">Your scores appear here after the announcement.</p>
+          }
+        </section>
+      }
+    </div>
+
+    <div card-footer class="item-actions">
+      @if (view.actions.has('WITHDRAW')) {
+        <button dahc-button type="button" variant="danger" size="sm" (click)="open('withdraw', view)" i18n="@@portal.dashboard.withdraw">
+          Withdraw Application
+        </button>
+      }
+      @if (view.actions.has('DISCARD')) {
+        <button dahc-button type="button" variant="danger-outline" size="sm" (click)="open('discard', view)" i18n="@@portal.dashboard.discard">
+          Discard Draft
+        </button>
+      }
+      @if (view.actions.has('APPEAL')) {
+        <a dahc-button variant="secondary" size="sm" [routerLink]="['/candidate/applications', view.item.id, 'portfolio-result']" i18n="@@portal.dashboard.appeal">
+          Appeal Score
+        </a>
+      } @else if (view.item.announcedScores) {
+        <a dahc-button variant="secondary" size="sm" [routerLink]="['/candidate/applications', view.item.id, 'portfolio-result']" i18n="@@portal.dashboard.portfolioResult">
+          Portfolio Result
+        </a>
+      }
+      @if (view.actions.has('EXCLUDE_TRAINING_SITE')) {
+        <button dahc-button type="button" variant="secondary" size="sm" (click)="open('exclude', view)" i18n="@@portal.dashboard.exclude">
+          Exclude Training Site
+        </button>
+      }
+      @if (view.actions.has('EDIT_PREFERENCES')) {
+        <button dahc-button type="button" variant="secondary" size="sm" (click)="open('preferences', view)" i18n="@@portal.dashboard.editPreferences">
+          Edit Preferences
+        </button>
+      }
+      @if (view.actions.has('REINSTATE')) {
+        <button dahc-button type="button" variant="secondary" size="sm" (click)="open('reinstate', view)" i18n="@@portal.dashboard.reinstate">
+          Request Reinstatement
+        </button>
+      }
+      @if (view.actions.has('RESUME')) {
+        <a dahc-button size="sm" [routerLink]="['/candidate/applications', view.item.id, 'steps', 'program']" i18n="@@portal.dashboard.resume">
+          Resume Application
+        </a>
+      } @else if (view.actions.has('VIEW')) {
+        <a dahc-button size="sm" [routerLink]="['/candidate/applications', view.item.id]" i18n="@@portal.dashboard.view">View Application</a>
+      }
+    </div>
+  </dahc-card>
+</ng-template>
+
+@if (dialogItem(); as view) {
+  <dahc-discard-draft-dialog
+    [applicationId]="view.item.id"
+    [applicationNumber]="view.item.applicationNumber"
+    [open]="isOpen('discard')"
+    (openChange)="setOpen('discard', $event)"
+    (completed)="reload()" />
+  <dahc-withdraw-dialog
+    [applicationId]="view.item.id"
+    [applicationNumber]="view.item.applicationNumber"
+    [open]="isOpen('withdraw')"
+    (openChange)="setOpen('withdraw', $event)"
+    (completed)="reload()" />
+  <dahc-reinstate-dialog
+    [applicationId]="view.item.id"
+    [applicationNumber]="view.item.applicationNumber"
+    [open]="isOpen('reinstate')"
+    (openChange)="setOpen('reinstate', $event)"
+    (completed)="reload()" />
+  <dahc-edit-preferences-drawer
+    [applicationId]="view.item.id"
+    [program]="view.item.program"
+    [open]="isOpen('preferences')"
+    (openChange)="setOpen('preferences', $event)"
+    (completed)="reload()" />
+  <dahc-exclude-sites-dialog
+    [applicationId]="view.item.id"
+    [preferences]="view.preferences"
+    [open]="isOpen('exclude')"
+    (openChange)="setOpen('exclude', $event)"
+    (completed)="reload()" />
+}

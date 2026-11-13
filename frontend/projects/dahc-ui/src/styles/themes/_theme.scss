@@ -1,0 +1,66 @@
+// Emits the token maps as --dahc-* custom properties.
+@use 'sass:list';
+@use 'sass:map';
+@use '../tokens/primitives';
+@use '../tokens/scales';
+@use 'semantic';
+
+@mixin custom-properties($group, $map) {
+  @each $name, $value in $map {
+    --dahc-#{$group}-#{$name}: #{$value};
+  }
+}
+
+@mixin palette {
+  @each $name, $value in primitives.$palette {
+    --dahc-#{$name}: #{$value};
+  }
+}
+
+/// Semantic colours: every role points at a primitive custom property.
+@mixin semantic-colors($theme) {
+  @each $role, $primitive in $theme {
+    @if not map.has-key(primitives.$palette, $primitive) {
+      @error 'Semantic token "#{$role}" references unknown primitive "#{$primitive}".';
+    }
+
+    --dahc-color-#{$role}: var(--dahc-#{$primitive});
+  }
+}
+
+@mixin type-roles($roles) {
+  @each $role, $values in $roles {
+    --dahc-type-#{$role}-size: #{list.nth($values, 1)};
+    --dahc-type-#{$role}-line-height: #{list.nth($values, 2)};
+    --dahc-type-#{$role}-weight: #{list.nth($values, 3)};
+    --dahc-type-#{$role}-transform: #{list.nth($values, 4)};
+  }
+}
+
+@mixin static-tokens {
+  @include palette;
+  @include custom-properties('font', scales.$font);
+  @include type-roles(scales.$type-roles-desktop);
+  @include custom-properties('space', scales.$space);
+  @include custom-properties('size', scales.$size);
+  @include custom-properties('radius', scales.$radius);
+  @include custom-properties('motion', scales.$motion);
+  @include custom-properties('z', scales.$z-index);
+  @include custom-properties('opacity', scales.$opacity);
+}
+
+@mixin light {
+  color-scheme: light;
+  @include semantic-colors(semantic.$light);
+  @include custom-properties('shadow', scales.$shadow-light);
+}
+
+@mixin dark {
+  color-scheme: dark;
+  @include semantic-colors(semantic.$dark);
+  @include custom-properties('shadow', scales.$shadow-dark);
+}
+
+@mixin mobile-type-roles {
+  @include type-roles(scales.$type-roles-mobile);
+}

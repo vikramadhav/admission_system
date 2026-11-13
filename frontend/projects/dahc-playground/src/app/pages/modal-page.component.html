@@ -1,0 +1,93 @@
+<dahc-playground-page
+  heading="Modal"
+  description="A dialog on the native dialog element: focus is trapped inside, the page behind is inert, Escape and the backdrop request closing, and focus returns to the opener. Figma Modal 50:17179."
+  selector="dahc-modal"
+  [whenToUse]="whenToUse"
+  [sourceFiles]="sourceFiles">
+  <div preview>
+    <button dahc-button type="button" (click)="open.set(true)">Open modal</button>
+    <dahc-modal
+      [heading]="heading()"
+      [size]="size()"
+      [closable]="closable()"
+      [closeOnBackdrop]="closeOnBackdrop()"
+      [(open)]="open"
+      (opened)="record('opened')"
+      (closeRequested)="onCloseRequested($event)">
+      <p>Once submitted, you can no longer change your answers. You can still withdraw your application.</p>
+      <div dahcDialogFooter>
+        <button dahc-button type="button" variant="secondary" (click)="open.set(false)">Keep editing</button>
+        <button dahc-button type="button" (click)="open.set(false)">Submit</button>
+      </div>
+    </dahc-modal>
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-text label="heading" [(value)]="heading" />
+    <dahc-inspector-choice label="size" [options]="sizes" [(value)]="size" />
+    <dahc-inspector-toggle label="closable" [(value)]="closable" />
+    <dahc-inspector-toggle label="closeOnBackdrop" [(value)]="closeOnBackdrop" />
+    <dahc-inspector-toggle label="cancel closing (unsaved changes)" [(value)]="confirmClose" />
+    <dahc-event-log [events]="events()" />
+  </div>
+
+  <div states class="pg-row">
+    <button dahc-button type="button" variant="danger-outline" (click)="discardOpen.set(true)">Confirmation (danger)</button>
+    <dahc-modal heading="Discard this draft?" size="sm" [(open)]="discardOpen">
+      <p>All answers in this draft will be deleted. This cannot be undone.</p>
+      <div dahcDialogFooter>
+        <button dahc-button type="button" variant="secondary" (click)="discardOpen.set(false)">Cancel</button>
+        <button dahc-button type="button" variant="danger" (click)="discardOpen.set(false)">Discard draft</button>
+      </div>
+    </dahc-modal>
+
+    <button dahc-button type="button" variant="secondary" (click)="successOpen.set(true)">Success with icon</button>
+    <dahc-modal heading="Application submitted" [(open)]="successOpen">
+      <dahc-icon dahcDialogIcon name="check" size="lg" />
+      <p>Your application ID is GME-2026-00142. We have emailed you a receipt.</p>
+      <div dahcDialogFooter>
+        <button dahc-button type="button" (click)="successOpen.set(false)">Go to dashboard</button>
+      </div>
+    </dahc-modal>
+  </div>
+
+  <dahc-doc-example examples exampleId="basic" heading="Basic" description="A heading, content and footer actions; the close button and Escape close it." template="modal-page.component.html">
+    <button dahc-button type="button" variant="secondary" (click)="basicOpen.set(true)">Show a basic modal</button>
+    <dahc-modal heading="Basic modal" [(open)]="basicOpen">
+      <p>Some content for the dialog.</p>
+      <dahc-space dahcDialogFooter>
+        <button dahc-button type="button" (click)="basicOpen.set(false)">OK</button>
+      </dahc-space>
+    </dahc-modal>
+  </dahc-doc-example>
+  <dahc-doc-example examples exampleId="large" heading="Large" description="size=&quot;lg&quot; for longer reading, such as terms and conditions." template="modal-page.component.html">
+    <button dahc-button type="button" variant="secondary" (click)="largeOpen.set(true)">Read the terms</button>
+    <dahc-modal heading="Terms and conditions" size="lg" [(open)]="largeOpen">
+      <p>Candidates are shortlisted based on academic merit. The application fee is non-refundable.</p>
+    </dahc-modal>
+  </dahc-doc-example>
+  <dahc-doc-example examples exampleId="confirm" heading="Confirmation" description="A small modal with a danger action; closeOnBackdrop false avoids accidental dismissal." template="modal-page.component.html">
+    <button dahc-button type="button" variant="danger" (click)="withdrawOpen.set(true)">Withdraw application</button>
+    <dahc-modal heading="Withdraw this application?" size="sm" [closeOnBackdrop]="false" [(open)]="withdrawOpen">
+      <p>The application fee is non-refundable.</p>
+      <dahc-space dahcDialogFooter>
+        <button dahc-button type="button" variant="secondary" (click)="withdrawOpen.set(false)">Keep application</button>
+        <button dahc-button type="button" variant="danger" (click)="withdrawOpen.set(false)">Withdraw</button>
+      </dahc-space>
+    </dahc-modal>
+  </dahc-doc-example>
+  <dahc-doc-example examples exampleId="icon" heading="With a featured icon" description="Content marked dahcDialogIcon shows a featured icon above the heading." template="modal-page.component.html">
+    <button dahc-button type="button" (click)="receiptOpen.set(true)">Show the receipt</button>
+    <dahc-modal heading="Payment received" [(open)]="receiptOpen">
+      <dahc-icon dahcDialogIcon name="check" size="lg" />
+      <p>Receipt RCP-2026-004517. We have emailed you a copy.</p>
+    </dahc-modal>
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>A native modal dialog: focus moves into it, Tab stays inside, and content behind is inert.</li>
+    <li>The heading names the dialog (aria-labelledby). The close button has an accessible name.</li>
+    <li>Escape and a click on the backdrop request closing; closeRequested can cancel it.</li>
+    <li>Focus returns to the element that opened the dialog.</li>
+  </ul>
+</dahc-playground-page>

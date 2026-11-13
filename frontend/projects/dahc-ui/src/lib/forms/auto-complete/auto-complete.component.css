@@ -1,0 +1,10 @@
+/* PARTIAL Figma Search dropdown (50:8605); the list uses ../entry-popup/entry-options.css. */
+
+:host {
+  display: block;
+  min-inline-size: 0;
+}
+
+.dahc-auto-complete__popup {
+  overflow: hidden;
+}

@@ -16,17 +16,22 @@ for (const mode of DISPLAY_MODES) {
       await expectNoAccessibilityViolations(playground.page);
     });
 
-    test('shows the configured text and tone', async () => {
-      const badge = playground.preview.locator('dahc-badge');
+    test('shows the count visually and the label to screen readers', async () => {
+      const badge = playground.preview.locator('dahc-badge').last();
 
-      await expect(badge).toHaveText('Review completed');
-      await expect(badge).toHaveClass(/dahc-badge--success/);
+      await expect(badge).toHaveAccessibleName('');
+      await expect(badge.locator('[aria-hidden="true"]')).toHaveText('3');
+      await expect(badge.locator('.dahc-visually-hidden')).toHaveText('3 unread notifications');
 
-      await playground.property('tone').selectOption({ label: 'danger' });
-      await playground.property('content').fill('Screened out');
+      await playground.property('count').selectOption({ label: '150' });
+      await expect(badge.locator('[aria-hidden="true"]')).toHaveText('99+');
 
-      await expect(badge).toHaveText('Screened out');
-      await expect(badge).toHaveClass(/dahc-badge--danger/);
+      await playground.property('count').selectOption({ label: '0' });
+      await expect(badge).toBeHidden();
+
+      await playground.property('dot').check();
+      await expect(badge).toBeVisible();
+      await expect(badge.locator('[aria-hidden="true"]')).toHaveCount(0);
     });
   });
 }
@@ -36,6 +41,6 @@ test('badge serves its real source and reflows at 320 pixels', async ({ page }) 
   await page.setViewportSize({ width: 320, height: 800 });
   await playground.open('badge', { theme: 'light', direction: 'ltr' });
 
-  await playground.expectSourceFile('badge/badge.component.ts', "selector: 'dahc-badge'");
+  await playground.expectSourceFile('data-display/badge/badge.component.ts', "selector: 'dahc-badge'");
   await expectNoHorizontalScroll(page);
 });

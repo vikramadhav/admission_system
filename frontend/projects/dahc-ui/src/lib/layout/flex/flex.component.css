@@ -1,0 +1,5 @@
+/* Ported from dubai-health-ui dh-flex. */
+:host {
+  display: flex;
+  gap: var(--dahc-flex-gap, var(--_gap));
+}

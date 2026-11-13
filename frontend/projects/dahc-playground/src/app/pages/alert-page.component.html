@@ -1,6 +1,8 @@
 <dahc-playground-page
   heading="Alert"
-  description="Inline message for information, success, warnings and errors. With announce set it becomes a live region."
+  description="An inline message for information, success, warnings and errors that stays on the page until it is resolved. With announce set it becomes a live region."
+  selector="dahc-alert"
+  [whenToUse]="whenToUse"
   [sourceFiles]="sourceFiles">
   <div preview class="pg-stack">
     @if (visible()) {
@@ -32,6 +34,30 @@
       <dahc-alert [variant]="state">Message without heading.</dahc-alert>
     }
   </div>
+
+  <dahc-doc-example examples exampleId="variants" heading="Variants" description="Four variants with their own colour and icon; the variant name is also read by screen readers." template="alert-page.component.html">
+    <dahc-space [vertical]="true" [block]="true">
+      <dahc-alert variant="info">Applications for 2027 open on 1 September.</dahc-alert>
+      <dahc-alert variant="success">Your documents were uploaded.</dahc-alert>
+      <dahc-alert variant="warning">Your session ends in 2 minutes.</dahc-alert>
+      <dahc-alert variant="error">The file is larger than 2 MB.</dahc-alert>
+    </dahc-space>
+  </dahc-doc-example>
+  <dahc-doc-example examples exampleId="heading" heading="With heading" description="A heading summarises the message; the content gives details or next steps." template="alert-page.component.html">
+    <dahc-alert variant="warning" heading="Check your answers carefully">
+      Your portfolio is a one-time submission. After you confirm it, you cannot change it.
+    </dahc-alert>
+  </dahc-doc-example>
+  <dahc-doc-example examples exampleId="dismissible" heading="Dismissible" description="dismissible adds a close button and emits dismissed; remove the alert in your template." template="alert-page.component.html">
+    <dahc-alert variant="info" heading="New in this cycle" [dismissible]="true">
+      You can now save your application as a draft at any step.
+    </dahc-alert>
+  </dahc-doc-example>
+  <dahc-doc-example examples exampleId="live" heading="Live region" description="announce makes an inserted alert speak: role alert for errors, status otherwise." template="alert-page.component.html">
+    <dahc-alert variant="error" heading="Your draft could not be saved" [announce]="true">
+      Please try again. Reference for support: 4bf92f35.
+    </dahc-alert>
+  </dahc-doc-example>
 
   <ul accessibility class="pg-notes">
     <li>Each alert starts with a visually hidden variant name ("Error:"), so meaning never depends on colour or icon.</li>

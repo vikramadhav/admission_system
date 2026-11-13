@@ -1,0 +1,11 @@
+/* Ported from dubai-health-ui dh-splitter. */
+:host {
+  display: flex;
+  inline-size: 100%;
+  min-block-size: 0;
+  overflow: hidden;
+}
+
+:host(.dahc-splitter--vertical) {
+  flex-direction: column;
+}

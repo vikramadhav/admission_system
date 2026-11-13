@@ -1,0 +1,43 @@
+<div class="dahc-result" [attr.role]="status() === 'error' ? 'alert' : 'status'">
+  <svg
+    class="dahc-result__icon"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true">
+    <circle cx="12" cy="12" r="10" />
+    @switch (status()) {
+      @case ('success') {
+        <path d="m8 12 3 3 5-6" />
+      }
+      @case ('error') {
+        <path d="m9 9 6 6M15 9l-6 6" />
+      }
+      @case ('warning') {
+        <path d="M12 8v5M12 16v.5" />
+      }
+      @default {
+        <path d="M12 11v5M12 8v.5" />
+      }
+    }
+  </svg>
+  <ng-template #title>{{ heading() }}</ng-template>
+  @switch (headingLevel()) {
+    @case (1) {
+      <h1 class="dahc-result__title"><ng-container [ngTemplateOutlet]="title" /></h1>
+    }
+    @case (3) {
+      <h3 class="dahc-result__title"><ng-container [ngTemplateOutlet]="title" /></h3>
+    }
+    @default {
+      <h2 class="dahc-result__title"><ng-container [ngTemplateOutlet]="title" /></h2>
+    }
+  }
+  @if (subtitle() !== '') {
+    <p class="dahc-result__subtitle">{{ subtitle() }}</p>
+  }
+  <div class="dahc-result__actions"><ng-content /></div>
+</div>

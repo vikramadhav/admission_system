@@ -1,0 +1,9 @@
+/* Ported from dubai-health-ui dh-space. */
+:host {
+  display: inline-flex;
+  gap: var(--dahc-space-gap, var(--_gap));
+}
+
+:host(.dahc-space--block) {
+  display: flex;
+}

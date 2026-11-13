@@ -1,0 +1,63 @@
+/* Ported from dubai-health-ui dh-sider: 256px, 80px collapsed (DERIVED UDD-019). */
+:host {
+  display: block;
+  flex: none;
+  inline-size: calc(4 * var(--dahc-space-16));
+  transition: inline-size var(--dahc-motion-duration-normal) var(--dahc-motion-easing-standard);
+}
+
+:host(.dahc-sider--collapsed) {
+  inline-size: calc(var(--dahc-size-control-lg) + var(--dahc-space-8));
+}
+
+.dahc-sider__nav {
+  display: flex;
+  flex-direction: column;
+  block-size: 100%;
+  overflow: hidden;
+  border-inline-end: var(--dahc-size-border) solid var(--dahc-color-border-subtle);
+  background-color: var(--dahc-color-surface);
+}
+
+.dahc-sider__body {
+  flex: auto;
+  overflow-y: auto;
+  padding-block: var(--dahc-space-4);
+}
+
+.dahc-sider__trigger {
+  display: grid;
+  place-items: center;
+  block-size: var(--dahc-size-control-md);
+  border: 0;
+  border-block-start: var(--dahc-size-border) solid var(--dahc-color-border-subtle);
+  background-color: transparent;
+  color: var(--dahc-color-text-primary);
+  cursor: pointer;
+  transition: background-color var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard);
+}
+
+.dahc-sider__trigger:hover {
+  background-color: var(--dahc-color-surface-highlight);
+}
+
+.dahc-sider__trigger:focus-visible {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: calc(-1 * var(--dahc-size-focus-ring));
+}
+
+/* The chevron points to the collapsing side; dahc-icon already mirrors it in RTL. */
+.dahc-sider__chevron {
+  display: inline-grid;
+  transition: transform var(--dahc-motion-duration-normal) var(--dahc-motion-easing-standard);
+}
+
+:host(.dahc-sider--collapsed) .dahc-sider__chevron {
+  transform: scaleX(-1);
+}
+
+@media (forced-colors: active) {
+  .dahc-sider__nav {
+    border-inline-end-color: CanvasText;
+  }
+}

@@ -1,0 +1,51 @@
+/* Ported from dubai-health-ui dh-spinner: navy arc on a navy-100 ring (DERIVED). */
+
+:host {
+  /* md 32px */
+  --_size: calc(var(--dahc-size-icon-lg) + var(--dahc-space-2));
+
+  display: inline-flex;
+  vertical-align: middle;
+}
+
+:host(.dahc-spinner--sm) {
+  --_size: var(--dahc-size-icon-md);
+}
+
+:host(.dahc-spinner--lg) {
+  --_size: var(--dahc-size-control-lg);
+}
+
+.dahc-spinner {
+  display: inline-flex;
+}
+
+.dahc-spinner__ring {
+  display: block;
+  inline-size: var(--_size);
+  block-size: var(--_size);
+  border: calc(var(--_size) / 8) solid var(--dahc-color-surface-muted);
+  border-block-start-color: var(--dahc-color-action-primary);
+  border-radius: var(--dahc-radius-pill);
+  animation: dahc-spin 0.8s linear infinite;
+}
+
+/* Movement is essential to show activity, so it slows down rather than stopping (WCAG 2.3.3). */
+@media (prefers-reduced-motion: reduce) {
+  .dahc-spinner__ring {
+    animation-duration: 2.4s;
+  }
+}
+
+@keyframes dahc-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (forced-colors: active) {
+  .dahc-spinner__ring {
+    border-color: GrayText;
+    border-block-start-color: Highlight;
+  }
+}

@@ -1,0 +1,59 @@
+// Shared layout of the wizard steps (Figma form card: 2-column field grid, gap 20; uploads and
+// long questions span both columns). Each step component uses this file as its styleUrl.
+.step {
+  display: grid;
+  gap: var(--dahc-space-6);
+}
+
+.step-section {
+  display: grid;
+  gap: var(--dahc-space-5);
+}
+
+.step-section-heading {
+  margin: 0;
+  color: var(--dahc-color-text-primary);
+  font-size: var(--dahc-type-heading-4-size);
+  font-weight: var(--dahc-type-heading-4-weight);
+  line-height: var(--dahc-type-heading-4-line-height);
+}
+
+.step-subheading {
+  margin: 0;
+  color: var(--dahc-color-text-link);
+  font-size: var(--dahc-font-size-16);
+  font-weight: var(--dahc-font-weight-bold);
+  line-height: var(--dahc-font-line-height-tight);
+}
+
+.step-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--dahc-space-5);
+  align-items: start;
+}
+
+@media (min-width: 48rem) {
+  .step-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .step-grid--thirds {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .step-full {
+    grid-column: 1 / -1;
+  }
+}
+
+.step-note {
+  margin: 0;
+  color: var(--dahc-color-text-secondary);
+  font-size: var(--dahc-type-body-sm-size);
+  line-height: var(--dahc-type-body-sm-line-height);
+}
+
+.step-text {
+  margin: 0;
+}

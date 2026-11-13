@@ -53,6 +53,6 @@ test('alert serves its real source and reflows at 320 pixels', async ({ page }) 
   await page.setViewportSize({ width: 320, height: 800 });
   await playground.open('alert', { theme: 'light', direction: 'ltr' });
 
-  await playground.expectSourceFile('alert/alert.component.ts', "selector: 'dahc-alert'");
+  await playground.expectSourceFile('feedback/alert/alert.component.ts', "selector: 'dahc-alert'");
   await expectNoHorizontalScroll(page);
 });

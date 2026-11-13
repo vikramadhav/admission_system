@@ -1,0 +1,61 @@
+/* Ported from dubai-health-ui dh-anchor-link: 6/16 padding, Regular 14/20 navy-800, active Bold navy
+   with a 2px indicator over the anchor's divider. */
+
+:host {
+  display: block;
+}
+
+.dahc-anchor-link__link {
+  position: relative;
+  display: block;
+  padding-block: calc(var(--dahc-space-1) + var(--dahc-space-0-5));
+  padding-inline: var(--dahc-space-4);
+  border-radius: var(--dahc-radius-xs);
+  color: var(--dahc-color-text-secondary);
+  font-size: var(--dahc-font-size-14);
+  line-height: var(--dahc-type-body-sm-line-height);
+  text-decoration: none;
+  transition: color var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard);
+}
+
+.dahc-anchor-link__link:hover {
+  color: var(--dahc-color-text-primary);
+  text-decoration: underline;
+}
+
+.dahc-anchor-link__link:focus-visible {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: calc(var(--dahc-size-focus-ring) * -1);
+}
+
+:host(.dahc-anchor-link--active) > .dahc-anchor-link__link {
+  color: var(--dahc-color-text-primary);
+  font-weight: var(--dahc-font-weight-bold);
+}
+
+/* The indicator sits on the anchor's divider line, so it moves back by the border width. */
+:host(.dahc-anchor-link--active) > .dahc-anchor-link__link::before {
+  content: '';
+  position: absolute;
+  inset-block: var(--dahc-space-1);
+  inset-inline-start: calc(var(--dahc-size-border) * -1);
+  inline-size: var(--dahc-size-border-strong);
+  border-radius: var(--dahc-radius-pill);
+  background-color: var(--dahc-color-border-strong);
+}
+
+.dahc-anchor-link__children {
+  padding-inline-start: var(--dahc-space-3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dahc-anchor-link__link {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  :host(.dahc-anchor-link--active) > .dahc-anchor-link__link::before {
+    background-color: Highlight;
+  }
+}

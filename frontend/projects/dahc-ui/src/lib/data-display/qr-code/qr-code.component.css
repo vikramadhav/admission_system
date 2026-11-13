@@ -1,0 +1,54 @@
+/* Ported from dubai-health-ui dh-qr-code (DERIVED): 160px light card, radius 12.
+   Scanners need dark modules on a light ground in every theme, so this component uses the fixed
+   theme-independent roles static-dark and static-light. */
+
+:host {
+  --_size: calc(var(--dahc-space-20) * 2);
+
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  inline-size: var(--_size);
+  block-size: var(--_size);
+  padding: var(--dahc-space-2);
+  border: var(--dahc-size-border) solid var(--dahc-color-border-subtle);
+  border-radius: var(--dahc-radius-lg);
+  background-color: var(--dahc-color-static-light);
+}
+
+.dahc-qr-code__svg {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.dahc-qr-code__light {
+  fill: var(--dahc-color-static-light);
+}
+
+.dahc-qr-code__dark {
+  fill: var(--dahc-color-static-dark);
+}
+
+.dahc-qr-code__icon {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  inline-size: 22%;
+  block-size: 22%;
+  padding: 2%;
+  border-radius: var(--dahc-radius-xs);
+  background-color: var(--dahc-color-static-light);
+  overflow: hidden;
+}
+
+.dahc-qr-code__icon:empty {
+  display: none;
+}
+
+@media (forced-colors: active) {
+  :host,
+  .dahc-qr-code__svg {
+    forced-color-adjust: none;
+  }
+}

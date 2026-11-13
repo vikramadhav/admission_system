@@ -1,0 +1,74 @@
+<dahc-playground-page
+  heading="Tag"
+  description="A non-interactive status or category label, such as GME Draft and Submitted. The text states the status; colour only reinforces it. Figma Informational tags 50:7426."
+  selector="dahc-tag"
+  [whenToUse]="whenToUse"
+  [exampleColumns]="2"
+  [sourceFiles]="sourceFiles">
+  <div preview>
+    <dahc-tag [purpose]="purpose()" [appearance]="appearance()" [size]="size()">{{ text() }}</dahc-tag>
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-text label="content" [(value)]="text" />
+    <dahc-inspector-choice label="purpose" [options]="purposes" [(value)]="purpose" />
+    <dahc-inspector-choice label="appearance" [options]="appearances" [(value)]="appearance" />
+    <dahc-inspector-choice label="size" [options]="sizes" [(value)]="size" />
+  </div>
+
+  <div states class="pg-stack">
+    @for (tagSize of sizes; track tagSize) {
+      <div>
+        <p class="pg-state-label">Solid, {{ tagSize }}</p>
+        <div class="pg-row">
+          @for (tagPurpose of purposes; track tagPurpose) {
+            <dahc-tag [purpose]="tagPurpose" [size]="tagSize">{{ tagPurpose }}</dahc-tag>
+          }
+        </div>
+      </div>
+    }
+    <div>
+      <p class="pg-state-label">Outline, lg (Figma designs outline for Large)</p>
+      <div class="pg-row">
+        @for (tagPurpose of purposes.slice(0, 6); track tagPurpose) {
+          <dahc-tag [purpose]="tagPurpose" appearance="outline" size="lg">{{ tagPurpose }}</dahc-tag>
+        }
+      </div>
+    </div>
+    <div>
+      <p class="pg-state-label">With icons</p>
+      <div class="pg-row">
+        <dahc-tag purpose="success" iconStart="check">Uploaded</dahc-tag>
+        <dahc-tag purpose="informative-blue" size="lg" iconEnd="information">Reference</dahc-tag>
+      </div>
+    </div>
+  </div>
+
+  <div examples>
+    <dahc-doc-example exampleId="purposes" heading="Purposes" description="Purposes for status and category." template="tag-page.component.html">
+      <dahc-tag purpose="information">Submitted</dahc-tag>
+      <dahc-tag purpose="in-progress">Under review</dahc-tag>
+      <dahc-tag purpose="warning">Draft</dahc-tag>
+      <dahc-tag purpose="success">Shortlisted</dahc-tag>
+      <dahc-tag purpose="error">Withdrawn</dahc-tag>
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="outline" heading="Outline" description="Outline tags for the page-level status in a banner." template="tag-page.component.html">
+      <dahc-tag purpose="warning" appearance="outline" size="lg">Draft</dahc-tag>
+      <dahc-tag purpose="information" appearance="outline" size="lg">Submitted</dahc-tag>
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="sizes" heading="Sizes" description="lg for page headers, md (default) in rows and cards." template="tag-page.component.html">
+      <dahc-tag purpose="success" size="lg">Complete</dahc-tag>
+      <dahc-tag purpose="success">Complete</dahc-tag>
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="icons" heading="With icons" description="A decorative icon before or after the text." template="tag-page.component.html">
+      <dahc-tag purpose="success" iconStart="check">Verified</dahc-tag>
+      <dahc-tag purpose="informative-purple" iconEnd="information">Reference</dahc-tag>
+    </dahc-doc-example>
+  </div>
+
+  <ul accessibility class="pg-notes">
+    <li>Plain text, not interactive; it is read in place next to what it describes.</li>
+    <li>Text meets 4.5:1 on every purpose in both themes (see the Colour page contrast checks).</li>
+    <li>Icons are decorative; the label carries the meaning.</li>
+  </ul>
+</dahc-playground-page>

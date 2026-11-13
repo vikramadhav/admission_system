@@ -1,0 +1,96 @@
+/* Figma Informational tags 50:7426 (see the component comment). */
+
+:host {
+  --_hue: var(--dahc-color-tag-information);
+  --_outline-alpha: 24%;
+
+  display: inline-flex;
+  align-items: center;
+  gap: var(--dahc-space-2);
+  padding-block: calc(var(--dahc-space-1) + var(--dahc-space-0-5));
+  padding-inline: var(--dahc-space-3);
+  border-radius: var(--dahc-radius-sm);
+  background-color: var(--_hue);
+  color: var(--dahc-color-text-on-special);
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+:host(.dahc-tag--in-progress) {
+  --_hue: var(--dahc-color-tag-in-progress);
+  --_outline-alpha: 36%;
+}
+
+:host(.dahc-tag--warning) {
+  --_hue: var(--dahc-color-tag-warning);
+  --_outline-alpha: 36%;
+}
+
+:host(.dahc-tag--error) {
+  --_hue: var(--dahc-color-tag-error);
+}
+
+:host(.dahc-tag--success) {
+  --_hue: var(--dahc-color-tag-success);
+  --_outline-alpha: 36%;
+}
+
+:host(.dahc-tag--news) {
+  --_hue: var(--dahc-color-tag-news);
+}
+
+:host(.dahc-tag--informative-blue) {
+  --_hue: var(--dahc-color-tag-informative-blue);
+}
+
+:host(.dahc-tag--informative-purple) {
+  --_hue: var(--dahc-color-tag-informative-purple);
+}
+
+/* News solid: pink at 24% (Figma 50:7507). The fill is mostly the surface, so the text uses the
+   surface's text colour (the on-hue colour would fail on the dark theme's surface). */
+:host(.dahc-tag--news.dahc-tag--solid) {
+  background-color: color-mix(in srgb, var(--_hue) 24%, var(--dahc-color-surface));
+  color: var(--dahc-color-text-primary);
+}
+
+/* Outline: the 2px border is drawn inside Figma's height, so it comes out of the padding. */
+:host(.dahc-tag--outline) {
+  padding-block: calc(var(--dahc-space-1) + var(--dahc-space-0-5) - var(--dahc-size-border-strong));
+  border: var(--dahc-size-border-strong) solid var(--_hue);
+  background-color: color-mix(in srgb, var(--_hue) var(--_outline-alpha), var(--dahc-color-surface));
+  color: var(--dahc-color-text-primary);
+}
+
+/* Medium 30px: Regular 14/18 (Functional/14/Regular). */
+:host(.dahc-tag--md) {
+  min-block-size: calc(var(--dahc-size-control-sm) - var(--dahc-space-1) - var(--dahc-space-0-5));
+  font-size: var(--dahc-font-size-14);
+  font-weight: var(--dahc-font-weight-regular);
+  line-height: var(--dahc-type-body-sm-line-height);
+}
+
+/* Large 36px: Bold 18/22 uppercase (Functional/18/Bold Uppercase). */
+:host(.dahc-tag--lg) {
+  min-block-size: var(--dahc-size-control-sm);
+  font-size: var(--dahc-font-size-18);
+  font-weight: var(--dahc-font-weight-bold);
+  /* Figma line height 22px. */
+  line-height: var(--dahc-font-size-22);
+  text-transform: uppercase;
+}
+
+/* Large Informative Blue / Purple: Regular 16/20, sentence case (Functional/16/Regular). */
+:host(.dahc-tag--lg.dahc-tag--informative-blue),
+:host(.dahc-tag--lg.dahc-tag--informative-purple) {
+  font-size: var(--dahc-font-size-16);
+  font-weight: var(--dahc-font-weight-regular);
+  line-height: var(--dahc-font-line-height-tight);
+  text-transform: none;
+}
+
+@media (forced-colors: active) {
+  :host {
+    border: var(--dahc-size-border) solid CanvasText;
+  }
+}

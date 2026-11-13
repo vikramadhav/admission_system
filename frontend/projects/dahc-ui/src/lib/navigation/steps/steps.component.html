@@ -1,0 +1,34 @@
+<ol class="dahc-steps" [attr.aria-label]="label()">
+  @for (step of views(); track $index; let last = $last) {
+    <li
+      [class]="'dahc-step dahc-step--' + step.status"
+      [class.dahc-step--last]="last"
+      [attr.aria-current]="step.status === 'process' ? 'step' : null">
+      <span class="dahc-step__marker" aria-hidden="true">
+        @switch (step.status) {
+          @case ('finish') {
+            <dahc-icon name="check" size="sm" />
+          }
+          @case ('error') {
+            !
+          }
+          @default {
+            {{ step.number }}
+          }
+        }
+      </span>
+      <div class="dahc-step__content">
+        <div class="dahc-step__title-row">
+          <span class="dahc-step__title">
+            {{ step.heading }}
+            <span class="dahc-visually-hidden"> ({{ step.statusText }})</span>
+          </span>
+          <span class="dahc-step__tail" aria-hidden="true"></span>
+        </div>
+        @if (step.description) {
+          <p class="dahc-step__description">{{ step.description }}</p>
+        }
+      </div>
+    </li>
+  }
+</ol>

@@ -1,23 +1,21 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import {
-  DahcBadgeComponent,
+  DahcTagComponent,
   DahcButtonComponent,
   DahcCardComponent,
   DahcCardHeadingLevel,
   DahcCardVariant,
 } from 'dahc-ui';
 
-import { InspectorChoiceComponent } from '../inspector/inspector-choice.component';
-import { InspectorTextComponent } from '../inspector/inspector-text.component';
-import { InspectorToggleComponent } from '../inspector/inspector-toggle.component';
-import { PlaygroundPageComponent } from '../layout/playground-page.component';
+import { DocExampleComponent, InspectorChoiceComponent, InspectorTextComponent, InspectorToggleComponent, PlaygroundPageComponent } from 'dahc-playground-kit';
 
 @Component({
   selector: 'dahc-card-page',
   templateUrl: './card-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    DahcBadgeComponent,
+    DocExampleComponent,
+    DahcTagComponent,
     DahcButtonComponent,
     DahcCardComponent,
     InspectorChoiceComponent,
@@ -27,8 +25,15 @@ import { PlaygroundPageComponent } from '../layout/playground-page.component';
   ],
 })
 export class CardPageComponent {
-  protected readonly sourceFiles = ['card/card.component.ts', 'card/card.component.html', 'card/card.component.scss'];
-  protected readonly variants: readonly DahcCardVariant[] = ['default', 'subtle'];
+  protected readonly whenToUse: readonly string[] = [
+    'Group the information and actions about one item, such as an application on a dashboard.',
+    'Give it a heading when it stands for an item; the card then becomes an article named by that heading.',
+    'Use subtle for supporting information and elevated, sparingly, to lift one card above a busy page.',
+    'Use List for many short items and Table when items share fields that people compare.',
+  ];
+
+  protected readonly sourceFiles = ['data-display/card/card.component.ts', 'data-display/card/card.component.html', 'data-display/card/card.component.css'];
+  protected readonly variants: readonly DahcCardVariant[] = ['default', 'subtle', 'actionable'];
   protected readonly headingLevels: readonly DahcCardHeadingLevel[] = [2, 3];
 
   protected readonly variant = signal<DahcCardVariant>('default');
@@ -38,4 +43,5 @@ export class CardPageComponent {
   protected readonly subheading = signal<string>('Medical Residency');
   protected readonly showAside = signal<boolean>(true);
   protected readonly showFooter = signal<boolean>(true);
+  protected readonly elevated = signal<boolean>(false);
 }

@@ -54,6 +54,6 @@ test('theme switch serves its real source and reflows at 320 pixels', async ({ p
   await page.setViewportSize({ width: 320, height: 800 });
   await playground.open('theme-switch', { theme: 'light', direction: 'ltr' });
 
-  await playground.expectSourceFile('theme/theme.service.ts', 'prefers-color-scheme');
+  await playground.expectSourceFile('core/theme/theme.service.ts', 'prefers-color-scheme');
   await expectNoHorizontalScroll(page);
 });

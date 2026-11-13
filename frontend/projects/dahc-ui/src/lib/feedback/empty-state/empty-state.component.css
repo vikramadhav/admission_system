@@ -1,0 +1,56 @@
+:host {
+  display: block;
+}
+
+/* Aligned with dubai-health-ui dh-empty: centred, unboxed, 24px padding, 8px gap, a 64x48 tray
+   drawing (page-background fill, navy-200 line: no navy-300 role), Bold 16 title and a Regular 14 hint. */
+.dahc-empty-state__box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--dahc-space-2);
+  padding: var(--dahc-space-6);
+  text-align: center;
+}
+
+.dahc-empty-state__illustration {
+  inline-size: var(--dahc-space-16);
+  block-size: var(--dahc-space-12);
+  fill: var(--dahc-color-background);
+  stroke: var(--dahc-color-border-default);
+  stroke-width: 2;
+}
+
+.dahc-empty-state__heading {
+  margin: 0;
+  color: var(--dahc-color-text-primary);
+  font-size: var(--dahc-font-size-16);
+  font-weight: var(--dahc-font-weight-bold);
+  line-height: var(--dahc-font-line-height-tight);
+}
+
+.dahc-empty-state__description {
+  max-inline-size: var(--dahc-size-measure);
+  margin: 0;
+  color: var(--dahc-color-text-secondary);
+  font-size: var(--dahc-font-size-14);
+}
+
+.dahc-empty-state__actions:empty {
+  display: none;
+}
+
+.dahc-empty-state__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--dahc-space-3);
+  margin-block-start: var(--dahc-space-2);
+}
+
+@media (forced-colors: active) {
+  .dahc-empty-state__illustration {
+    fill: Canvas;
+    stroke: CanvasText;
+  }
+}

@@ -1,0 +1,60 @@
+/* Ported from dubai-health-ui dh-comment (DERIVED). */
+
+:host {
+  display: block;
+  font-family: var(--dahc-font-family-base);
+}
+
+.dahc-comment__article {
+  display: flex;
+  gap: var(--dahc-space-3);
+  padding-block: var(--dahc-space-3);
+}
+
+.dahc-comment__main {
+  flex: 1;
+  min-inline-size: 0;
+}
+
+.dahc-comment__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--dahc-space-2);
+  margin: 0;
+}
+
+.dahc-comment__author {
+  color: var(--dahc-color-text-primary);
+  font-size: var(--dahc-font-size-14);
+  font-weight: var(--dahc-font-weight-bold);
+}
+
+.dahc-comment__meta {
+  color: var(--dahc-color-text-tertiary);
+  font-size: var(--dahc-font-size-12);
+}
+
+.dahc-comment__body {
+  margin-block-start: var(--dahc-space-1);
+  color: var(--dahc-color-text-secondary);
+  font-size: var(--dahc-font-size-14);
+  line-height: var(--dahc-font-line-height-normal);
+  overflow-wrap: anywhere;
+}
+
+.dahc-comment__actions:empty,
+.dahc-comment__replies:empty {
+  display: none;
+}
+
+.dahc-comment__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dahc-space-2);
+  margin-block-start: var(--dahc-space-2);
+}
+
+.dahc-comment__replies {
+  margin-block-start: var(--dahc-space-2);
+}

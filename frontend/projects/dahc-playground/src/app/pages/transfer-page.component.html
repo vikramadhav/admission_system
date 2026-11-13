@@ -1,0 +1,56 @@
+<dahc-playground-page
+  heading="Transfer"
+  description="Move items between two lists, for example to assign programmes. Ported from dubai-health-ui dh-transfer."
+  [sourceFiles]="sourceFiles"
+  selector="dahc-transfer"
+  [whenToUse]="whenToUse"
+  [exampleColumns]="2">
+  <div preview>
+    <dahc-transfer sourceTitle="Programmes" targetTitle="Assigned" [items]="programmes" [searchable]="searchable()" [formControl]="control" (moved)="onMoved($event)" />
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-toggle label="searchable" [(value)]="searchable" />
+    <dahc-event-log [events]="events()" />
+    <p class="pg-value" data-testid="form-value">Form value: {{ valueText() }}</p>
+  </div>
+
+  <dahc-doc-example
+    examples
+    exampleId="basic"
+    heading="Basic"
+    description="The value is the array of chosen item values."
+    template="transfer-page.component.html">
+    <dahc-transfer sourceTitle="Available modules" targetTitle="Chosen modules" [items]="exampleModules" [formControl]="exampleChosenModules" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="search"
+    heading="With search"
+    description="Filter both lists while typing."
+    template="transfer-page.component.html">
+    <dahc-transfer
+      sourceTitle="Hospitals"
+      targetTitle="Preferred hospitals"
+      emptyText="Nothing chosen yet"
+      [searchable]="true"
+      [items]="exampleHospitals"
+      [formControl]="exampleChosenHospitals" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="locked"
+    heading="Locked items"
+    description="Disabled items stay where they are; the value keeps them."
+    template="transfer-page.component.html">
+    <dahc-transfer sourceTitle="Optional rotations" targetTitle="Your rotations" [items]="exampleRotations" [formControl]="exampleChosenRotations" />
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>Each list is a labelled multi-selectable listbox: ArrowUp / ArrowDown / Home / End move, Space or Enter checks.</li>
+    <li>The header checkbox checks all items of its list (mixed when some are checked).</li>
+    <li>The move buttons are named "Move to Assigned" / "Move to Programmes"; the panels stack on narrow widths.</li>
+  </ul>
+</dahc-playground-page>

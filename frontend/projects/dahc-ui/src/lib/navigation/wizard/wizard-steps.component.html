@@ -1,0 +1,67 @@
+<nav [attr.aria-label]="label()">
+  <ol class="dahc-wizard-steps">
+    @for (step of steps(); track step.id; let index = $index) {
+      <li class="dahc-wizard-steps__step" [attr.data-status]="step.status">
+        @if (isNavigable(step.status)) {
+          <button
+            type="button"
+            class="dahc-wizard-steps__row"
+            [attr.aria-current]="step.status === 'current' ? 'step' : null"
+            (click)="stepSelected.emit(step.id)">
+            <span class="dahc-wizard-steps__marker" aria-hidden="true">
+              @switch (step.status) {
+                @case ('complete') {
+                  <dahc-icon name="check" size="sm" />
+                }
+                @case ('error') {
+                  !
+                }
+                @default {
+                  {{ index + 1 }}
+                }
+              }
+            </span>
+            <span class="dahc-wizard-steps__label">
+              {{ step.label }}
+              <span class="dahc-visually-hidden"> ({{ statusLabels()[step.status] }})</span>
+            </span>
+          </button>
+        } @else {
+          <span class="dahc-wizard-steps__row">
+            <span class="dahc-wizard-steps__marker" aria-hidden="true">{{ index + 1 }}</span>
+            <span class="dahc-wizard-steps__label">
+              {{ step.label }}
+              <span class="dahc-visually-hidden"> ({{ statusLabels()[step.status] }})</span>
+            </span>
+          </span>
+        }
+        @if (step.status === 'current' && step.substeps?.length) {
+          <ol class="dahc-wizard-steps__substeps">
+            @for (substep of step.substeps; track substep.id) {
+              <li [attr.data-status]="substep.status">
+                @if (isNavigable(substep.status)) {
+                  <button
+                    type="button"
+                    class="dahc-wizard-steps__substep"
+                    [attr.aria-current]="substep.status === 'current' ? 'step' : null"
+                    (click)="stepSelected.emit(substep.id)">
+                    @if (substep.status === 'complete') {
+                      <dahc-icon name="check" size="xs" />
+                    }
+                    {{ substep.label }}
+                    <span class="dahc-visually-hidden"> ({{ statusLabels()[substep.status] }})</span>
+                  </button>
+                } @else {
+                  <span class="dahc-wizard-steps__substep">
+                    {{ substep.label }}
+                    <span class="dahc-visually-hidden"> ({{ statusLabels()[substep.status] }})</span>
+                  </span>
+                }
+              </li>
+            }
+          </ol>
+        }
+      </li>
+    }
+  </ol>
+</nav>

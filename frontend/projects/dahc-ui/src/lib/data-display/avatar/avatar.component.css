@@ -1,0 +1,41 @@
+/* Ported from dubai-health-ui dh-avatar: navy circle, white bold initials (12.8:1). DERIVED. */
+
+:host {
+  --_size: var(--dahc-space-10);
+
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  inline-size: var(--_size);
+  block-size: var(--_size);
+  overflow: hidden;
+  border-radius: var(--dahc-radius-pill);
+  background-color: var(--dahc-color-surface-inverse);
+  color: var(--dahc-color-text-inverse);
+  font-family: var(--dahc-font-family-base);
+  font-size: calc(var(--_size) * 0.38);
+  font-weight: var(--dahc-font-weight-bold);
+  line-height: 1;
+  vertical-align: middle;
+  user-select: none;
+}
+
+:host(.dahc-avatar--sm) {
+  --_size: var(--dahc-space-8);
+}
+
+:host(.dahc-avatar--lg) {
+  --_size: var(--dahc-space-12);
+}
+
+.dahc-avatar__image {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+@media (forced-colors: active) {
+  :host {
+    border: var(--dahc-size-border) solid CanvasText;
+  }
+}

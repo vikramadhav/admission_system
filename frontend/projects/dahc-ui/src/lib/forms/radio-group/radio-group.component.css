@@ -1,0 +1,154 @@
+/* Figma Controls 50:7880, Type=2. Radio button (50:7892 / 50:7888, with label 50:7909 / 50:7901).
+   GME Yes / No rows: horizontal with a 20px gap. */
+
+:host {
+  display: block;
+  min-inline-size: 0;
+}
+
+.dahc-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--dahc-space-1) + var(--dahc-space-0-5));
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.dahc-radio-group__legend {
+  margin-block-end: calc(var(--dahc-space-1) + var(--dahc-space-0-5));
+  padding: 0;
+  color: var(--dahc-color-text-primary);
+  font-size: var(--dahc-type-body-sm-size);
+  line-height: var(--dahc-type-body-sm-line-height);
+}
+
+.dahc-radio-group__required {
+  margin-inline-start: var(--dahc-space-0-5);
+  color: var(--dahc-color-error-text);
+}
+
+.dahc-radio-group__options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dahc-space-2) var(--dahc-space-5);
+}
+
+:host(.dahc-radio-group--vertical) .dahc-radio-group__options {
+  flex-direction: column;
+  gap: var(--dahc-space-3);
+}
+
+.dahc-radio {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--dahc-space-2);
+  min-block-size: var(--dahc-size-touch-target);
+  color: var(--dahc-color-text-primary);
+  font-size: var(--dahc-font-size-16);
+  font-weight: var(--dahc-font-weight-bold);
+  line-height: var(--dahc-font-line-height-tight);
+  cursor: pointer;
+}
+
+.dahc-radio__control {
+  position: relative;
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  inline-size: var(--dahc-size-icon-lg);
+  block-size: var(--dahc-size-icon-lg);
+}
+
+.dahc-radio__input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: inherit;
+}
+
+/* GME radio: 20px white circle with a 2px slate ring; checked = navy ring with a 10px navy dot. */
+.dahc-radio__ring {
+  display: inline-grid;
+  place-items: center;
+  inline-size: var(--dahc-size-icon-md);
+  block-size: var(--dahc-size-icon-md);
+  border: var(--dahc-size-border-strong) solid var(--dahc-color-border-control);
+  border-radius: var(--dahc-radius-pill);
+  background-color: var(--dahc-color-surface);
+  pointer-events: none;
+  transition:
+    background-color var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard),
+    border-color var(--dahc-motion-duration-fast) var(--dahc-motion-easing-standard);
+}
+
+.dahc-radio:hover .dahc-radio__input:not(:disabled) + .dahc-radio__ring {
+  border-color: var(--dahc-color-border-strong);
+}
+
+.dahc-radio__input:checked + .dahc-radio__ring {
+  border-color: var(--dahc-color-control-checked);
+}
+
+.dahc-radio__input:checked + .dahc-radio__ring::after {
+  content: '';
+  inline-size: calc(var(--dahc-size-icon-md) / 2);
+  block-size: calc(var(--dahc-size-icon-md) / 2);
+  border-radius: var(--dahc-radius-pill);
+  background-color: var(--dahc-color-control-checked);
+}
+
+.dahc-radio__input:focus-visible + .dahc-radio__ring {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: var(--dahc-size-focus-offset);
+}
+
+.dahc-radio-group[aria-invalid='true'] .dahc-radio__input:not(:checked) + .dahc-radio__ring {
+  border-color: var(--dahc-color-error-border);
+  background-color: var(--dahc-color-error-surface);
+}
+
+.dahc-radio:has(:disabled) {
+  color: var(--dahc-color-text-disabled);
+  cursor: not-allowed;
+}
+
+.dahc-radio__input:disabled + .dahc-radio__ring {
+  border-color: var(--dahc-color-action-disabled-fg);
+  background-color: var(--dahc-color-action-disabled-bg);
+}
+
+.dahc-radio__input:disabled:checked + .dahc-radio__ring::after {
+  background-color: var(--dahc-color-action-disabled-fg);
+}
+
+.dahc-radio-group__message {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--dahc-space-1);
+  margin: 0;
+  color: var(--dahc-color-text-tertiary);
+  font-size: var(--dahc-font-size-12);
+  font-weight: var(--dahc-font-weight-medium);
+  line-height: var(--dahc-type-overline-line-height);
+}
+
+.dahc-radio-group__message--error {
+  color: var(--dahc-color-error-text);
+}
+
+@media (forced-colors: active) {
+  .dahc-radio__ring {
+    border-color: FieldText;
+  }
+
+  .dahc-radio__input:checked + .dahc-radio__ring {
+    border-color: Highlight;
+  }
+
+  .dahc-radio__input:checked + .dahc-radio__ring::after {
+    background-color: Highlight;
+  }
+}

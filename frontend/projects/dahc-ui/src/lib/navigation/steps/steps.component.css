@@ -1,0 +1,141 @@
+/* DERIVED stepper (see the component comment). */
+
+:host {
+  --_marker: var(--dahc-size-control-sm);
+  --_connector: var(--dahc-size-border-strong);
+
+  display: block;
+}
+
+.dahc-steps {
+  display: flex;
+  gap: var(--dahc-space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+:host(.dahc-steps--vertical) .dahc-steps {
+  flex-direction: column;
+  gap: 0;
+}
+
+.dahc-step {
+  position: relative;
+  display: flex;
+  flex: 1;
+  gap: var(--dahc-space-3);
+  min-inline-size: 0;
+  color: var(--dahc-color-text-secondary);
+}
+
+.dahc-step__marker {
+  z-index: 1;
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  inline-size: var(--_marker);
+  block-size: var(--_marker);
+  border: var(--dahc-size-border-strong) solid var(--dahc-color-text-disabled);
+  border-radius: var(--dahc-radius-pill);
+  background-color: var(--dahc-color-surface);
+  color: var(--dahc-color-text-tertiary);
+  font-size: var(--dahc-font-size-14);
+  font-weight: var(--dahc-font-weight-bold);
+}
+
+.dahc-step--process .dahc-step__marker {
+  border-color: var(--dahc-color-action-primary);
+  background-color: var(--dahc-color-action-primary);
+  color: var(--dahc-color-text-inverse);
+}
+
+.dahc-step--finish .dahc-step__marker {
+  border-color: var(--dahc-color-border-strong);
+  color: var(--dahc-color-text-primary);
+}
+
+.dahc-step--error .dahc-step__marker {
+  border-color: var(--dahc-color-error-border);
+  background-color: var(--dahc-color-error-surface);
+  color: var(--dahc-color-error-text);
+}
+
+.dahc-step__content {
+  flex: 1;
+  min-inline-size: 0;
+}
+
+.dahc-step__title-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--dahc-space-3);
+}
+
+.dahc-step__title {
+  padding-block-start: calc((var(--_marker) - var(--dahc-font-size-20)) / 2);
+  font-size: var(--dahc-font-size-16);
+  font-weight: var(--dahc-font-weight-medium);
+  line-height: var(--dahc-font-line-height-tight);
+}
+
+.dahc-step--process .dahc-step__title,
+.dahc-step--finish .dahc-step__title {
+  color: var(--dahc-color-text-primary);
+  font-weight: var(--dahc-font-weight-bold);
+}
+
+.dahc-step--error .dahc-step__title {
+  color: var(--dahc-color-error-text);
+}
+
+.dahc-step__description {
+  margin: var(--dahc-space-1) 0 0;
+  color: var(--dahc-color-text-tertiary);
+  font-size: var(--dahc-font-size-14);
+  line-height: var(--dahc-type-body-sm-line-height);
+}
+
+/* Horizontal connector after the title. */
+.dahc-step__tail {
+  display: none;
+  flex: 1;
+  min-inline-size: var(--dahc-space-4);
+  block-size: var(--_connector);
+  margin-block-start: calc(var(--_marker) / 2 - var(--_connector) / 2);
+  background-color: var(--dahc-color-border-default);
+}
+
+:host(:not(.dahc-steps--vertical)) .dahc-step:not(.dahc-step--last) .dahc-step__tail {
+  display: block;
+}
+
+.dahc-step--finish .dahc-step__tail {
+  background-color: var(--dahc-color-border-strong);
+}
+
+/* Vertical connector below the marker. */
+:host(.dahc-steps--vertical) .dahc-step {
+  padding-block-end: var(--dahc-space-6);
+}
+
+:host(.dahc-steps--vertical) .dahc-step:not(.dahc-step--last)::after {
+  content: '';
+  position: absolute;
+  inset-block: var(--_marker) 0;
+  inset-inline-start: calc(var(--_marker) / 2 - var(--_connector) / 2);
+  inline-size: var(--_connector);
+  background-color: var(--dahc-color-border-default);
+}
+
+:host(.dahc-steps--vertical) .dahc-step--finish:not(.dahc-step--last)::after {
+  background-color: var(--dahc-color-border-strong);
+}
+
+@media (forced-colors: active) {
+  .dahc-step--process .dahc-step__marker {
+    forced-color-adjust: none;
+    background-color: Highlight;
+    color: HighlightText;
+  }
+}

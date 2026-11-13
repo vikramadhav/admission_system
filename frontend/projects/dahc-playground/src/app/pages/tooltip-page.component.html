@@ -1,0 +1,42 @@
+<dahc-playground-page
+  heading="Tooltip"
+  description="A short text hint for its host element, shown on hover and keyboard focus, as an attribute directive on any focusable element. Derived design."
+  selector="[dahcTooltip]"
+  [whenToUse]="whenToUse"
+  [sourceFiles]="sourceFiles">
+  <div preview class="pg-row">
+    <button dahc-icon-button type="button" icon="help" [dahcTooltip]="text()" [tooltipPlacement]="placement()">Help</button>
+    <button dahc-button type="button" variant="secondary" [dahcTooltip]="text()" [tooltipPlacement]="placement()">Portfolio points</button>
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-text label="dahcTooltip" [(value)]="text" />
+    <dahc-inspector-choice label="tooltipPlacement" [options]="placements" [(value)]="placement" />
+  </div>
+
+  <div states class="pg-stack">
+    <p class="pg-value">The tooltip flips to the other side when there is no room, and stays inside the screen.</p>
+  </div>
+
+  <dahc-doc-example examples exampleId="placements" heading="Placements" description="top (default), bottom, start and end; the tooltip flips when there is no room." template="tooltip-page.component.html">
+    <dahc-space [wrap]="true">
+      <button dahc-button type="button" variant="secondary" size="sm" dahcTooltip="Shown above">Top</button>
+      <button dahc-button type="button" variant="secondary" size="sm" dahcTooltip="Shown below" tooltipPlacement="bottom">Bottom</button>
+      <button dahc-button type="button" variant="secondary" size="sm" dahcTooltip="Shown at the start" tooltipPlacement="start">Start</button>
+      <button dahc-button type="button" variant="secondary" size="sm" dahcTooltip="Shown at the end" tooltipPlacement="end">End</button>
+    </dahc-space>
+  </dahc-doc-example>
+  <dahc-doc-example examples exampleId="icon" heading="Icon button" description="The usual pairing: an icon button with a tooltip that shows its name." template="tooltip-page.component.html">
+    <button dahc-icon-button type="button" icon="information" variant="ghost" dahcTooltip="About the shortlisting score">Shortlisting score</button>
+  </dahc-doc-example>
+  <dahc-doc-example examples exampleId="long" heading="Longer text" description="Text wraps within the maximum tooltip width." template="tooltip-page.component.html">
+    <button dahc-button type="button" variant="link" dahcTooltip="The GPA shortlisting score is your GPA as a percentage multiplied by the program's GPA weight.">How is it calculated?</button>
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>Shows on keyboard focus immediately and on hover after 300ms (WCAG 1.4.13).</li>
+    <li>Escape hides it; it stays open while the pointer moves onto it.</li>
+    <li>The text describes the element (aria-describedby); the element still needs its own name.</li>
+    <li>Never put essential information or interactive content only in a tooltip.</li>
+  </ul>
+</dahc-playground-page>

@@ -1,0 +1,32 @@
+<section class="dahc-carousel__frame" aria-roledescription="carousel" [attr.aria-label]="label()">
+  <div class="dahc-carousel__viewport" [attr.aria-live]="rotating() ? 'off' : 'polite'">
+    <ng-content />
+  </div>
+  @if (count() > 1) {
+    <div class="dahc-carousel__controls">
+      @if (rotates()) {
+        <button
+          type="button"
+          class="dahc-carousel__button"
+          [attr.aria-label]="stopped() ? playLabel() : pauseLabel()"
+          (click)="toggleRotation()">
+          <span class="dahc-carousel__rotation" [class.dahc-carousel__rotation--play]="stopped()" aria-hidden="true"></span>
+        </button>
+      }
+      <button type="button" class="dahc-carousel__button" [attr.aria-label]="previousLabel()" (click)="go(index() - 1)">
+        <dahc-icon name="chevron-left" size="sm" />
+      </button>
+      @for (dot of dots(); track dot) {
+        <button
+          type="button"
+          class="dahc-carousel__dot"
+          [attr.aria-label]="goToLabel() + ' ' + (dot + 1)"
+          [attr.aria-current]="dot === index() ? 'true' : null"
+          (click)="go(dot)"></button>
+      }
+      <button type="button" class="dahc-carousel__button" [attr.aria-label]="nextLabel()" (click)="go(index() + 1)">
+        <dahc-icon name="chevron-right" size="sm" />
+      </button>
+    </div>
+  }
+</section>

@@ -1,0 +1,46 @@
+<dahc-playground-page
+  heading="Config provider"
+  description="Sets the locale, direction and motion of the DAHC UI components inside it. provideDahcConfig() applies the same defaults to the whole application."
+  selector="dahc-config-provider"
+  [whenToUse]="whenToUse"
+  [sourceFiles]="sourceFiles">
+  <div preview>
+    <dahc-config-provider [locale]="locale()" [reducedMotion]="reducedMotion()">
+      <div class="pg-stack" data-testid="configured">
+        <dahc-pagination [total]="48" [pageSize]="10" />
+        <dahc-spinner label="Loading" />
+      </div>
+    </dahc-config-provider>
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-choice label="locale" [options]="locales" [(value)]="locale" />
+    <dahc-inspector-toggle label="reducedMotion" [(value)]="reducedMotion" />
+  </div>
+
+  <div states class="pg-stack">
+    <p class="pg-value">Arabic, Persian, Hebrew and Urdu locales default to right-to-left; direction can override it.</p>
+  </div>
+
+  <dahc-doc-example examples exampleId="arabic" heading="Arabic region" description="locale=&quot;ar-AE&quot; sets lang and switches the area to right-to-left." template="config-provider-page.component.html">
+    <dahc-config-provider locale="ar-AE">
+      <dahc-pagination [total]="30" [pageSize]="10" />
+    </dahc-config-provider>
+  </dahc-doc-example>
+  <dahc-doc-example examples exampleId="direction" heading="Direction only" description="direction overrides the direction that the locale would choose." template="config-provider-page.component.html">
+    <dahc-config-provider locale="en-AE" direction="rtl">
+      <dahc-pagination [total]="30" [pageSize]="10" />
+    </dahc-config-provider>
+  </dahc-doc-example>
+  <dahc-doc-example examples exampleId="motion" heading="Reduced motion" description="reducedMotion sets the motion tokens to zero inside the area." template="config-provider-page.component.html">
+    <dahc-config-provider [reducedMotion]="true">
+      <dahc-spinner label="Loading without animation speed-up" />
+    </dahc-config-provider>
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>lang on the region lets screen readers switch pronunciation.</li>
+    <li>reducedMotion sets the motion tokens to 0ms inside the region, whatever the system setting.</li>
+    <li>The element takes no space (display: contents).</li>
+  </ul>
+</dahc-playground-page>

@@ -1,0 +1,37 @@
+/* Ported from dubai-health-ui dh-row: columns share the gutter through --dahc-row-gutter. */
+:host {
+  --dahc-row-gutter: var(--dahc-space-6);
+
+  display: flex;
+  flex-flow: row nowrap;
+  row-gap: var(--_row-gap, 0);
+  margin-inline: calc(var(--dahc-row-gutter) / -2);
+}
+
+:host(.dahc-row--gutter-none) {
+  --dahc-row-gutter: 0px;
+}
+
+:host(.dahc-row--gutter-sm) {
+  --dahc-row-gutter: var(--dahc-space-2);
+}
+
+:host(.dahc-row--gutter-md) {
+  --dahc-row-gutter: var(--dahc-space-4);
+}
+
+:host(.dahc-row--gutter-lg) {
+  --dahc-row-gutter: var(--dahc-space-6);
+}
+
+:host(.dahc-row--vertical-gutter-sm) {
+  --_row-gap: var(--dahc-space-2);
+}
+
+:host(.dahc-row--vertical-gutter-md) {
+  --_row-gap: var(--dahc-space-4);
+}
+
+:host(.dahc-row--vertical-gutter-lg) {
+  --_row-gap: var(--dahc-space-6);
+}

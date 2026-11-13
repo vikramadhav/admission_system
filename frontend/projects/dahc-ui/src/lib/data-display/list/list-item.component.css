@@ -1,0 +1,72 @@
+/* dubai-health-ui dh-list-item: 16px padding and gap, centred row, title Bold 16 navy, description
+   14 hint, navy-100 line between items (divided or bordered lists). Leading media
+   ([dahcListAvatar] or the icon), trailing aside and actions. */
+
+:host {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--dahc-space-4);
+  padding: var(--dahc-space-4);
+  color: var(--dahc-color-text-primary);
+}
+
+:host-context(.dahc-list--divided):host(:not(:last-child)) {
+  border-block-end: var(--dahc-size-border) solid var(--dahc-color-border-subtle);
+}
+
+.dahc-list-item__avatar {
+  display: flex;
+  flex: none;
+  align-items: center;
+}
+
+.dahc-list-item__icon {
+  flex: none;
+}
+
+.dahc-list-item__text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--dahc-space-1);
+  min-inline-size: 0;
+}
+
+.dahc-list-item__heading {
+  margin: 0;
+  font-size: var(--dahc-font-size-16);
+  font-weight: var(--dahc-font-weight-bold);
+  line-height: var(--dahc-font-line-height-tight);
+  overflow-wrap: anywhere;
+}
+
+.dahc-list-item__description {
+  margin: 0;
+  color: var(--dahc-color-text-secondary);
+  font-size: var(--dahc-font-size-14);
+  line-height: var(--dahc-type-body-sm-line-height);
+}
+
+.dahc-list-item__aside,
+.dahc-list-item__actions {
+  display: flex;
+  flex: none;
+  /* On narrow screens the actions wrap below the text instead of overflowing. */
+  max-inline-size: 100%;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--dahc-space-2);
+}
+
+.dahc-list-item__avatar:empty,
+.dahc-list-item__aside:empty,
+.dahc-list-item__actions:empty {
+  display: none;
+}
+
+@media (forced-colors: active) {
+  :host-context(.dahc-list--divided):host(:not(:last-child)) {
+    border-color: CanvasText;
+  }
+}

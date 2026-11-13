@@ -37,6 +37,6 @@ test('empty state serves its real source and reflows at 320 pixels', async ({ pa
   await page.setViewportSize({ width: 320, height: 800 });
   await playground.open('empty-state', { theme: 'light', direction: 'ltr' });
 
-  await playground.expectSourceFile('empty-state/empty-state.component.ts', "selector: 'dahc-empty-state'");
+  await playground.expectSourceFile('feedback/empty-state/empty-state.component.ts', "selector: 'dahc-empty-state'");
   await expectNoHorizontalScroll(page);
 });

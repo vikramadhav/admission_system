@@ -1,0 +1,36 @@
+<dahc-playground-page
+  heading="Skeleton"
+  description="Placeholder shapes with a shimmer while content loads, so the layout does not jump when it arrives."
+  selector="dahc-skeleton"
+  [whenToUse]="whenToUse"
+  [sourceFiles]="sourceFiles">
+  <div preview>
+    <dahc-skeleton [rows]="rows()" [avatar]="avatar()" [heading]="heading()" />
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-choice label="rows" [options]="rowOptions" [(value)]="rowsText" />
+    <dahc-inspector-toggle label="avatar" [(value)]="avatar" />
+    <dahc-inspector-toggle label="heading" [(value)]="heading" />
+  </div>
+
+  <div states class="pg-stack">
+    <dahc-skeleton [rows]="1" [heading]="false" label="Loading the summary" />
+  </div>
+
+  <dahc-doc-example examples exampleId="basic" heading="Basic" description="A heading line and three rows of text by default." template="skeleton-page.component.html">
+    <dahc-skeleton label="Loading the application summary" />
+  </dahc-doc-example>
+  <dahc-doc-example examples exampleId="avatar" heading="With avatar" description="avatar adds a round placeholder for a profile or list item." template="skeleton-page.component.html">
+    <dahc-skeleton [avatar]="true" [rows]="2" label="Loading the candidate profile" />
+  </dahc-doc-example>
+  <dahc-doc-example examples exampleId="rows" heading="Rows only" description="Without a heading and with one row for compact areas." template="skeleton-page.component.html">
+    <dahc-skeleton [heading]="false" [rows]="1" label="Loading the status" />
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>The shapes are hidden from assistive technology; a visually hidden status says what is loading.</li>
+    <li>The host has aria-busy="true"; replace the skeleton with the content when it arrives.</li>
+    <li>The shimmer stops under reduced motion.</li>
+  </ul>
+</dahc-playground-page>

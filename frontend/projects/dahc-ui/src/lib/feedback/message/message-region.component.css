@@ -1,0 +1,103 @@
+/* Ported from dubai-health-ui dh-message: white pill with a status dot, top centre (DERIVED). */
+
+.dahc-message-region {
+  position: fixed;
+  inset-block-start: var(--dahc-space-4);
+  inset-inline: var(--dahc-space-4);
+  z-index: var(--dahc-z-toast);
+  pointer-events: none;
+}
+
+.dahc-message-region__list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--dahc-space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dahc-message {
+  --_accent: var(--dahc-color-info-icon);
+
+  display: inline-flex;
+  align-items: center;
+  gap: var(--dahc-space-2);
+  max-inline-size: 100%;
+  padding-block: var(--dahc-space-2);
+  padding-inline: var(--dahc-space-4);
+  border: var(--dahc-size-border) solid var(--dahc-color-border-subtle);
+  border-radius: var(--dahc-radius-pill);
+  background-color: var(--dahc-color-surface);
+  color: var(--dahc-color-text-primary);
+  font-size: var(--dahc-font-size-14);
+  font-weight: var(--dahc-font-weight-medium);
+  line-height: var(--dahc-type-body-sm-line-height);
+  box-shadow: var(--dahc-shadow-4);
+  pointer-events: auto;
+  animation: dahc-message-in var(--dahc-motion-duration-normal) var(--dahc-motion-easing-standard);
+}
+
+.dahc-message--success {
+  --_accent: var(--dahc-color-success-icon);
+}
+
+.dahc-message--warning {
+  --_accent: var(--dahc-color-warning-icon);
+}
+
+.dahc-message--error {
+  --_accent: var(--dahc-color-error-icon);
+}
+
+@keyframes dahc-message-in {
+  from {
+    opacity: 0;
+    transform: translateY(calc(-1 * var(--dahc-space-2)));
+  }
+}
+
+.dahc-message__dot {
+  flex: none;
+  inline-size: calc(var(--dahc-space-2) + var(--dahc-space-0-5));
+  block-size: calc(var(--dahc-space-2) + var(--dahc-space-0-5));
+  border-radius: var(--dahc-radius-pill);
+  background-color: var(--_accent);
+}
+
+.dahc-message__text {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.dahc-message__dismiss {
+  display: inline-grid;
+  place-items: center;
+  inline-size: var(--dahc-size-target-min);
+  block-size: var(--dahc-size-target-min);
+  margin-inline-end: calc(-1 * var(--dahc-space-2));
+  padding: 0;
+  border: 0;
+  border-radius: var(--dahc-radius-pill);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: var(--dahc-font-size-18);
+  cursor: pointer;
+}
+
+.dahc-message__dismiss:focus-visible {
+  outline: var(--dahc-size-focus-ring) solid var(--dahc-color-focus-ring);
+  outline-offset: var(--dahc-size-focus-offset);
+}
+
+@media (forced-colors: active) {
+  .dahc-message {
+    border-color: CanvasText;
+  }
+
+  .dahc-message__dot {
+    background-color: CanvasText;
+  }
+}

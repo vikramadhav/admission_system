@@ -1,0 +1,65 @@
+<dahc-playground-page
+  heading="Time picker"
+  description="A time field; the form value is &quot;HH:MM&quot; in 24-hour format. Ported from dubai-health-ui dh-time-picker."
+  [sourceFiles]="sourceFiles"
+  selector="dahc-time-picker"
+  [whenToUse]="whenToUse"
+  [exampleColumns]="2">
+  <div preview>
+    <dahc-time-picker label="Appointment time" hint="Between 07:00 and 20:00, every 15 minutes." min="07:00" max="20:00" [step]="900" [formControl]="control" />
+  </div>
+
+  <div inspector class="pg-stack">
+    <p class="pg-value" data-testid="form-value">Form value: {{ valueText() }}</p>
+  </div>
+
+  <div states class="pg-stack">
+    <dahc-time-picker label="Disabled" [formControl]="disabledControl" />
+  </div>
+
+  <dahc-doc-example
+    examples
+    exampleId="basic"
+    heading="Basic"
+    description="An empty time field."
+    template="time-picker-page.component.html">
+    <dahc-time-picker label="Preferred call time" [formControl]="exampleCallTime" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="slots"
+    heading="Clinic slots"
+    description="Between 08:00 and 17:00, every 30 minutes."
+    template="time-picker-page.component.html">
+    <dahc-time-picker label="Clinic slot" hint="Every 30 minutes, 08:00 to 17:00." min="08:00" max="17:00" [step]="1800" [formControl]="exampleSlot" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="required"
+    heading="Required with error"
+    description="The error shows after the field was touched without a value."
+    template="time-picker-page.component.html">
+    <dahc-time-picker
+      label="Shift start"
+      [required]="true"
+      [invalid]="exampleShift.invalid && exampleShift.touched"
+      errorMessage="Enter the time your shift starts."
+      [formControl]="exampleShift" />
+  </dahc-doc-example>
+
+  <dahc-doc-example
+    examples
+    exampleId="seconds"
+    heading="With seconds"
+    description="A step of one second adds seconds to the value (HH:MM:SS)."
+    template="time-picker-page.component.html">
+    <dahc-time-picker label="Exact arrival time" [step]="1" [formControl]="exampleArrival" />
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>The native time input gives reliable keyboard entry and mobile pickers; the label and hint are connected to it.</li>
+    <li>The value is "HH:MM" (24-hour).</li>
+  </ul>
+</dahc-playground-page>

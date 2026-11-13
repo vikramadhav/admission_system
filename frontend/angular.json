@@ -1,0 +1,348 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "cli": {
+    "packageManager": "npm",
+    "analytics": false
+  },
+  "newProjectRoot": "projects",
+  "projects": {
+    "dahc-ui": {
+      "projectType": "library",
+      "root": "projects/dahc-ui",
+      "sourceRoot": "projects/dahc-ui/src",
+      "prefix": "dahc",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "options": {
+            "project": "projects/dahc-ui/ng-package.json",
+            "tsConfig": "projects/dahc-ui/tsconfig.lib.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/dahc-ui/tsconfig.lib.prod.json"
+            },
+            "development": {}
+          },
+          "defaultConfiguration": "production"
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/dahc-ui/**/*.ts",
+              "projects/dahc-ui/**/*.html"
+            ],
+            "maxWarnings": 0
+          }
+        }
+      }
+    },
+    "dahc-playground-kit": {
+      "projectType": "library",
+      "root": "projects/dahc-playground-kit",
+      "sourceRoot": "projects/dahc-playground-kit/src",
+      "prefix": "dahc",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "options": {
+            "project": "projects/dahc-playground-kit/ng-package.json",
+            "tsConfig": "projects/dahc-playground-kit/tsconfig.lib.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/dahc-playground-kit/tsconfig.lib.prod.json"
+            },
+            "development": {}
+          },
+          "defaultConfiguration": "production"
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/dahc-playground-kit/**/*.ts",
+              "projects/dahc-playground-kit/**/*.html"
+            ],
+            "maxWarnings": 0
+          }
+        }
+      }
+    },
+    "dahc-playground": {
+      "projectType": "application",
+      "root": "projects/dahc-playground",
+      "sourceRoot": "projects/dahc-playground/src",
+      "prefix": "dahc",
+      "schematics": {
+        "@schematics/angular:component": {
+          "changeDetection": "OnPush"
+        }
+      },
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "browser": "projects/dahc-playground/src/main.ts",
+            "index": "projects/dahc-playground/src/index.html",
+            "tsConfig": "projects/dahc-playground/tsconfig.app.json",
+            "polyfills": [
+              "@angular/localize/init"
+            ],
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "projects/dahc-playground/public"
+              },
+              {
+                "glob": "**/*",
+                "input": "projects/dahc-ui/src/lib",
+                "output": "source/lib"
+              },
+              {
+                "glob": "**/*",
+                "input": "projects/dahc-ui/src/styles",
+                "output": "source/styles"
+              },
+              {
+                "glob": "*.svg",
+                "input": "projects/dahc-ui/src/assets/icons",
+                "output": "dahc-ui/icons"
+              },
+              {
+                "glob": "*.svg",
+                "input": "projects/dahc-ui/src/assets/logo",
+                "output": "dahc-ui/logo"
+              },
+              {
+                "glob": "*.html",
+                "input": "projects/dahc-playground/src/app/pages",
+                "output": "source/pages"
+              }
+            ],
+            "styles": [
+              "projects/dahc-ui/src/styles/dahc-ui.scss",
+              "projects/dahc-playground-kit/src/styles/playground.scss"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "600kB",
+                  "maximumError": "1MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "8kB",
+                  "maximumError": "16kB"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular/build:dev-server",
+          "options": {
+            "port": 4300
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "dahc-playground:build:production"
+            },
+            "development": {
+              "buildTarget": "dahc-playground:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/dahc-playground/**/*.ts",
+              "projects/dahc-playground/**/*.html"
+            ],
+            "maxWarnings": 0
+          }
+        }
+      }
+    },
+    "dahc-portal": {
+      "projectType": "application",
+      "root": "projects/dahc-portal",
+      "sourceRoot": "projects/dahc-portal/src",
+      "prefix": "dahc",
+      "i18n": {
+        "sourceLocale": {
+          "code": "en-AE",
+          "subPath": "en"
+        },
+        "locales": {
+          "ar-AE": {
+            "translation": "projects/dahc-portal/src/locale/messages.ar-AE.json",
+            "subPath": "ar"
+          }
+        }
+      },
+      "schematics": {
+        "@schematics/angular:component": {
+          "changeDetection": "OnPush"
+        }
+      },
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "browser": "projects/dahc-portal/src/main.ts",
+            "index": "projects/dahc-portal/src/index.html",
+            "tsConfig": "projects/dahc-portal/tsconfig.app.json",
+            "polyfills": [
+              "@angular/localize/init"
+            ],
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "projects/dahc-portal/public"
+              },
+              {
+                "glob": "*.svg",
+                "input": "projects/dahc-ui/src/assets/icons",
+                "output": "dahc-ui/icons"
+              },
+              {
+                "glob": "*.svg",
+                "input": "projects/dahc-ui/src/assets/logo",
+                "output": "dahc-ui/logo"
+              }
+            ],
+            "styles": [
+              "projects/dahc-ui/src/styles/dahc-ui.scss",
+              "projects/dahc-portal/src/styles.scss"
+            ],
+            "i18nMissingTranslation": "error"
+          },
+          "configurations": {
+            "production": {
+              "localize": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "600kB",
+                  "maximumError": "1MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "8kB",
+                  "maximumError": "16kB"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "fileReplacements": [
+                {
+                  "replace": "projects/dahc-portal/src/environments/environment.ts",
+                  "with": "projects/dahc-portal/src/environments/environment.development.ts"
+                }
+              ]
+            },
+            "development-ar": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "localize": [
+                "ar-AE"
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "projects/dahc-portal/src/environments/environment.ts",
+                  "with": "projects/dahc-portal/src/environments/environment.development.ts"
+                }
+              ]
+            },
+            "mock": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "fileReplacements": [
+                {
+                  "replace": "projects/dahc-portal/src/environments/environment.ts",
+                  "with": "projects/dahc-portal/src/environments/environment.mock.ts"
+                }
+              ]
+            },
+            "mock-ar": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "localize": [
+                "ar-AE"
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "projects/dahc-portal/src/environments/environment.ts",
+                  "with": "projects/dahc-portal/src/environments/environment.mock.ts"
+                }
+              ]
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular/build:dev-server",
+          "options": {
+            "port": 4200
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "dahc-portal:build:production"
+            },
+            "development": {
+              "buildTarget": "dahc-portal:build:development"
+            },
+            "development-ar": {
+              "buildTarget": "dahc-portal:build:development-ar"
+            },
+            "mock": {
+              "buildTarget": "dahc-portal:build:mock"
+            },
+            "mock-ar": {
+              "buildTarget": "dahc-portal:build:mock-ar"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular/build:extract-i18n",
+          "options": {
+            "buildTarget": "dahc-portal:build:development"
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/dahc-portal/**/*.ts",
+              "projects/dahc-portal/**/*.html"
+            ],
+            "maxWarnings": 0
+          }
+        }
+      }
+    }
+  }
+}

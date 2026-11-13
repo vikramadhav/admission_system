@@ -1,0 +1,72 @@
+/* GME score tiles (see the component comment). Text is navy on every category tint. */
+
+:host {
+  --_surface: var(--dahc-color-category-blue-surface);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--dahc-space-1);
+  min-inline-size: 0;
+  padding: calc(var(--dahc-space-3) + var(--dahc-space-0-5));
+  border-radius: var(--dahc-radius-md);
+  background-color: var(--_surface);
+  color: var(--dahc-color-text-primary);
+}
+
+:host(.dahc-stat-tile--light-blue) {
+  --_surface: var(--dahc-color-category-light-blue-surface);
+}
+
+:host(.dahc-stat-tile--green) {
+  --_surface: var(--dahc-color-category-green-surface);
+}
+
+:host(.dahc-stat-tile--orange) {
+  --_surface: var(--dahc-color-category-orange-surface);
+}
+
+:host(.dahc-stat-tile--red) {
+  --_surface: var(--dahc-color-category-red-surface);
+}
+
+:host(.dahc-stat-tile--purple) {
+  --_surface: var(--dahc-color-category-purple-surface);
+}
+
+:host(.dahc-stat-tile--pink) {
+  --_surface: var(--dahc-color-category-pink-surface);
+}
+
+.dahc-stat-tile__label {
+  margin: 0;
+  font-size: var(--dahc-font-size-14);
+  font-weight: var(--dahc-font-weight-medium);
+  line-height: var(--dahc-type-body-sm-line-height);
+}
+
+.dahc-stat-tile__value {
+  margin: 0;
+  font-size: var(--dahc-font-size-24);
+  font-weight: var(--dahc-font-weight-bold);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--dahc-font-line-height-tight);
+}
+
+:host(.dahc-stat-tile--large) .dahc-stat-tile__value {
+  font-size: var(--dahc-type-stat-size);
+  line-height: var(--dahc-type-stat-line-height);
+  text-transform: var(--dahc-type-stat-transform);
+}
+
+.dahc-stat-tile__caption {
+  margin: 0;
+  color: var(--dahc-color-text-secondary);
+  font-size: var(--dahc-font-size-12);
+  line-height: var(--dahc-type-overline-line-height);
+}
+
+@media (forced-colors: active) {
+  :host {
+    border: var(--dahc-size-border) solid CanvasText;
+  }
+}

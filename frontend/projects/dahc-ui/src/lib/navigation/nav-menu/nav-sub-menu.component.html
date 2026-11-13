@@ -1,0 +1,5 @@
+<button type="button" class="dahc-nav-sub-menu__head" [attr.aria-expanded]="open()" [attr.aria-controls]="itemsId" (click)="toggle()">
+  <span>{{ heading() }}</span>
+  <dahc-icon class="dahc-nav-sub-menu__chevron" name="chevron-down" size="md" />
+</button>
+<div class="dahc-nav-sub-menu__items" role="list" [id]="itemsId" [hidden]="!open()"><ng-content /></div>

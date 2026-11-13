@@ -1,0 +1,41 @@
+<dahc-playground-page
+  heading="Tree"
+  description="A hierarchical list with expandable nodes and single selection (WAI-ARIA tree view). Ported from dubai-health-ui dh-tree; DERIVED."
+  selector="dahc-tree"
+  [whenToUse]="whenToUse"
+  [exampleColumns]="2"
+  [sourceFiles]="sourceFiles">
+  <div preview>
+    <dahc-tree label="Specialties" [items]="items" [(value)]="value" [(expanded)]="expanded" (nodeSelected)="record($event)" />
+  </div>
+
+  <div inspector class="pg-stack">
+    <p class="pg-value" data-testid="tree-value">value: {{ value() || '(none)' }}</p>
+    <p class="pg-value">expanded: {{ expanded().join(', ') || '(none)' }}</p>
+    <dahc-event-log [events]="events()" />
+  </div>
+
+  <div states class="pg-stack">
+    <p class="pg-value">Selected nodes are bold on the highlight surface; disabled nodes cannot be selected.</p>
+  </div>
+
+  <div examples>
+    <dahc-doc-example exampleId="basic" heading="Basic" description="Nodes open with a click or the arrow keys." template="tree-page.component.html">
+      <dahc-tree label="Departments" [items]="departments" />
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="expanded" heading="Expanded" description="[(expanded)] lists the values of open nodes." template="tree-page.component.html">
+      <dahc-tree label="Departments, expanded" [items]="departments" [expanded]="openDepartments" />
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="selected" heading="Selected value" description="[(value)] holds the selected node." template="tree-page.component.html">
+      <dahc-tree label="Department choice" [items]="departments" [expanded]="surgeryOpen" [(value)]="chosenDepartment" />
+    </dahc-doc-example>
+    <dahc-doc-example exampleId="disabled" heading="Disabled nodes" description="Disabled nodes stay visible but cannot be chosen." template="tree-page.component.html">
+      <dahc-tree label="Intake" [items]="closedDepartments" />
+    </dahc-doc-example>
+  </div>
+
+  <ul accessibility class="pg-notes">
+    <li>A tree of treeitems with aria-level, aria-setsize, aria-posinset, aria-expanded and aria-selected.</li>
+    <li>One node is in the tab order. Up and Down move, Right opens or enters, Left closes or goes to the parent (mirrored in RTL), Home and End jump, Enter and Space select.</li>
+  </ul>
+</dahc-playground-page>

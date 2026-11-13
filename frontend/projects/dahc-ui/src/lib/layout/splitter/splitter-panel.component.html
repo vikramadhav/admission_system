@@ -1,0 +1,16 @@
+<div class="dahc-splitter-panel__pane" [id]="paneId"><ng-content /></div>
+@if (hasHandle()) {
+  <div
+    class="dahc-splitter-panel__handle"
+    role="separator"
+    [attr.tabindex]="resizable() ? 0 : -1"
+    [attr.aria-orientation]="vertical() ? 'horizontal' : 'vertical'"
+    [attr.aria-valuenow]="valueNow()"
+    [attr.aria-valuemin]="min()"
+    [attr.aria-valuemax]="max()"
+    [attr.aria-label]="label()"
+    [attr.aria-controls]="paneId"
+    [attr.aria-disabled]="resizable() ? null : 'true'"
+    (keydown)="onKeydown($event)"
+    (pointerdown)="onPointerDown($event)"></div>
+}

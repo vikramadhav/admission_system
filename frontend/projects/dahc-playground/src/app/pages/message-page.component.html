@@ -1,0 +1,42 @@
+<dahc-playground-page
+  heading="Message"
+  description="Compact global messages such as Saved or Copied at the top centre, shown by DahcMessageService in the dahc-message-region placed once."
+  selector="dahc-message-region"
+  [whenToUse]="whenToUse"
+  [sourceFiles]="sourceFiles">
+  <div preview>
+    <button dahc-button type="button" (click)="show()">Show message</button>
+    <dahc-message-region />
+  </div>
+
+  <div inspector class="pg-stack">
+    <dahc-inspector-text label="text" [(value)]="text" />
+    <dahc-inspector-choice label="variant" [options]="variants" [(value)]="variant" />
+    <dahc-inspector-choice label="duration (ms, 0 = until dismissed)" [options]="durations" [(value)]="duration" />
+  </div>
+
+  <div states class="pg-stack">
+    <p class="pg-value">Messages close after 3 seconds by default; with duration 0 they get a dismiss button.</p>
+  </div>
+
+  <dahc-doc-example examples exampleId="variants" heading="Variants" description="info, success, warning and error." template="message-page.component.html">
+    <dahc-space [wrap]="true">
+      <button dahc-button type="button" variant="secondary" size="sm" (click)="showMessage('info')">Info message</button>
+      <button dahc-button type="button" variant="secondary" size="sm" (click)="showMessage('success')">Success message</button>
+      <button dahc-button type="button" variant="secondary" size="sm" (click)="showMessage('warning')">Warning message</button>
+      <button dahc-button type="button" variant="secondary" size="sm" (click)="showMessage('error')">Error message</button>
+    </dahc-space>
+  </dahc-doc-example>
+  <dahc-doc-example examples exampleId="persistent" heading="Until dismissed" description="duration 0 adds a dismiss button and keeps the message." template="message-page.component.html">
+    <button dahc-button type="button" variant="secondary" size="sm" (click)="showPersistentMessage()">Show a persistent message</button>
+  </dahc-doc-example>
+  <dahc-doc-example examples exampleId="duration" heading="Custom duration" description="The third argument sets how long the message stays, in milliseconds." template="message-page.component.html">
+    <button dahc-button type="button" variant="secondary" size="sm" (click)="showShortMessage()">Copy, 1.5 seconds</button>
+  </dahc-doc-example>
+
+  <ul accessibility class="pg-notes">
+    <li>The list is a permanent polite live region; error messages use role="alert".</li>
+    <li>The timer pauses while the pointer or focus is on a message (WCAG 2.2.1).</li>
+    <li>Keep messages to a few words; use a toast or notification for anything longer.</li>
+  </ul>
+</dahc-playground-page>

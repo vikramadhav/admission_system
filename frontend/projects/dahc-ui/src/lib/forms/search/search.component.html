@@ -1,0 +1,21 @@
+<dahc-form-field [label]="label()" [hideLabel]="!showLabel()" [error]="errorMessage()" [invalid]="invalid()">
+  <dahc-icon dahcFieldStart name="search" size="md" />
+  <input
+    #field
+    dahcInput
+    type="search"
+    enterkeyhint="search"
+    autocomplete="off"
+    [placeholder]="placeholder()"
+    [value]="value()"
+    [disabled]="isDisabled()"
+    (input)="onInput($event)"
+    (keydown.enter)="onEnter($event)"
+    (blur)="onBlur()" />
+  @if (value() !== '' && !isDisabled()) {
+    <button dahcFieldEnd type="button" class="dahc-search__clear" (click)="clear()">
+      <dahc-icon name="x-close" size="lg" />
+      <span class="dahc-visually-hidden">{{ clearLabel() }}</span>
+    </button>
+  }
+</dahc-form-field>

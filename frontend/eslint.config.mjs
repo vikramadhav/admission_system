@@ -53,7 +53,7 @@ export default tseslint.config(
   },
   {
     files: [
-      'projects/dahc-ui/src/lib/theme/theme.service.ts',
+      'projects/dahc-ui/src/lib/core/theme/theme.service.ts',
       'projects/dahc-portal/src/app/core/auth/auth-redirect-storage.ts',
     ],
     rules: {
@@ -82,7 +82,7 @@ export default tseslint.config(
       // The same custom id is reused on purpose where the same text appears more than once.
       '@angular-eslint/template/i18n': [
         'error',
-        { checkId: true, checkText: true, checkAttributes: false, checkDuplicateId: false, ignoreTags: ['dahc-badge'] },
+        { checkId: true, checkText: true, checkAttributes: false, checkDuplicateId: false, ignoreTags: ['dahc-tag'] },
       ],
     },
   },

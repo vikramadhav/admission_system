@@ -1,8 +1,0 @@
-@use 'sass:map';
-@use 'tokens';
-
-@mixin up($name) {
-  @media (min-width: map.get(tokens.$breakpoints, $name)) {
-    @content;
-  }
-}
