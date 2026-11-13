@@ -1,0 +1,138 @@
+<dahc-page-header [heading]="heading()" [description]="facade.review()?.candidateName ?? ''" [breadcrumbs]="breadcrumbs()" [focusOnLoad]="true" />
+
+<div class="dahc-portal-page">
+  @if (facade.problem() !== null) {
+    <dahc-alert variant="error" [announce]="true" i18n-heading="@@portal.admission.review.loadFailedHeading" heading="The application cannot be shown">
+      {{ problemMessage() }}
+    </dahc-alert>
+  } @else if (facade.application(); as application) {
+    @if (facade.afterFeedback() && facade.latestGuidance(); as guidance) {
+      <dahc-alert variant="info" i18n-heading="@@portal.admission.review.guidanceHeading" heading="Supervisor feedback">
+        <p class="review-page-text">{{ guidance.text }}</p>
+        <p class="review-page-meta" i18n="@@portal.admission.review.guidanceMeta">
+          {{ guidance.authorDisplayName }}, {{ guidance.createdAt | dahcDateTime: timeZoneId() : 'dateTime' }}. Choose your next action below.
+        </p>
+      </dahc-alert>
+    }
+
+    @if (isSupervisor() && status() === 'PENDING_CLARIFICATION' && latestEscalation(); as escalation) {
+      <dahc-alert variant="warning" i18n-heading="@@portal.admission.review.escalationHeading" heading="The officer asks for clarification">
+        <p class="review-page-text">{{ escalation.text }}</p>
+      </dahc-alert>
+    }
+
+    @if (isSupervisor() && status() === 'SCREEN_OUT_PENDING_APPROVAL') {
+      <dahc-alert variant="warning" i18n-heading="@@portal.admission.review.screenOutPendingHeading" heading="Screen-out recommended">
+        <p class="review-page-text" i18n="@@portal.admission.review.screenOutPendingText">The officer recommends screening out this application. Review it, then record your decision.</p>
+      </dahc-alert>
+    }
+
+    @if (facade.flagsDirty()) {
+      <dahc-alert variant="warning" i18n-heading="@@portal.admission.review.unsavedHeading" heading="You have unsaved flags">
+        <p class="review-page-text" i18n="@@portal.admission.review.unsavedText">Save the flags before you return the application for correction.</p>
+        <div class="review-page-actions">
+          <button dahc-button type="button" size="sm" [loading]="savingFlags()" (click)="saveFlags()" i18n="@@portal.admission.review.saveFlags">Save flags</button>
+          <button dahc-button type="button" size="sm" variant="secondary" (click)="facade.discardFlagChanges()" i18n="@@portal.admission.review.discardFlags">Discard changes</button>
+        </div>
+        @if (flagsError() !== '') {
+          <p class="review-page-error" role="alert">{{ flagsError() }}</p>
+        }
+      </dahc-alert>
+    }
+
+    @if (facade.actions().length > 0) {
+      <div class="review-page-toolbar" role="group" i18n-aria-label="@@portal.admission.review.actionsLabel" aria-label="Application actions">
+        @if (can().has('RETURN_FOR_CORRECTION') && !facade.flagsDirty()) {
+          <button
+            *dahcIfPermitted="'admission.application.returnForCorrection'"
+            dahc-button
+            type="button"
+            variant="secondary"
+            (click)="setOpen('return', true)"
+            i18n="@@portal.admission.review.action.return">
+            Return for correction
+          </button>
+        }
+        @if (can().has('COMPLETE_VERIFICATION')) {
+          <button *dahcIfPermitted="'admission.application.completeVerification'" dahc-button type="button" (click)="setOpen('complete', true)" i18n="@@portal.admission.review.action.complete">
+            Complete verification
+          </button>
+        }
+        @if (can().has('ESCALATE')) {
+          <button *dahcIfPermitted="'admission.application.escalate'" dahc-button type="button" variant="secondary" (click)="openNote('escalate')" i18n="@@portal.admission.review.action.escalate">
+            Escalate for clarification
+          </button>
+        }
+        @if (can().has('RECOMMEND_SCREEN_OUT')) {
+          <button
+            *dahcIfPermitted="'admission.application.recommendScreenOut'"
+            dahc-button
+            type="button"
+            variant="danger-outline"
+            (click)="setOpen('screenOut', true)"
+            i18n="@@portal.admission.review.action.screenOut">
+            Recommend screen out
+          </button>
+        }
+        @if (can().has('DECIDE_SCREEN_OUT')) {
+          <button *dahcIfPermitted="'admission.screenOut.decide'" dahc-button type="button" (click)="setOpen('decision', true)" i18n="@@portal.admission.review.action.decide">
+            Decide on screen out
+          </button>
+        }
+        @if (can().has('RETURN_WITH_GUIDANCE')) {
+          <button *dahcIfPermitted="'admission.clarification.respond'" dahc-button type="button" (click)="openNote('guidance')" i18n="@@portal.admission.review.action.guidance">
+            Return with guidance
+          </button>
+        }
+        @if (can().has('REINSTATE')) {
+          <button *dahcIfPermitted="'admission.application.reinstate'" dahc-button type="button" (click)="openNote('reinstate')" i18n="@@portal.admission.review.action.reinstate">
+            Reinstate application
+          </button>
+        }
+        @if (can().has('REFRESH_ICP') && facade.review()?.candidateId) {
+          <button *dahcIfPermitted="'admission.icp.refresh'" dahc-button type="button" variant="secondary" (click)="setOpen('icp', true)" i18n="@@portal.admission.review.action.icp">
+            Refresh ICP data
+          </button>
+        }
+      </div>
+    }
+
+    <dahc-staff-application-view
+      [application]="application"
+      [attachments]="facade.attachments()"
+      [flaggable]="can().has('FLAG')"
+      [replaceable]="can().has('REPLACE_ATTACHMENT')"
+      [flaggedPointers]="facade.flaggedPointers()"
+      (flagRequested)="openFlag($event)"
+      (replaceRequested)="openReplace($event)" />
+
+    <section class="review-page-notes" aria-labelledby="review-notes-heading">
+      <h2 id="review-notes-heading" i18n="@@portal.admission.review.notesHeading">Notes history</h2>
+      @if (notes().length === 0) {
+        <p class="review-page-meta" i18n="@@portal.admission.review.noNotes">There are no notes yet.</p>
+      } @else {
+        <dahc-timeline>
+          @for (note of notes(); track note.createdAt + note.noteType) {
+            <dahc-timeline-item [heading]="noteHeading(note.noteType)" [time]="note.createdAt | dahcDateTime: timeZoneId() : 'dateTime'" [datetime]="note.createdAt">
+              <p class="review-page-text">{{ note.text }}</p>
+              @if (note.authorDisplayName) {
+                <p class="review-page-meta">{{ note.authorDisplayName }}</p>
+              }
+            </dahc-timeline-item>
+          }
+        </dahc-timeline>
+      }
+    </section>
+  } @else if (facade.loading()) {
+    <dahc-spinner i18n-label="@@portal.admission.review.loading" label="Loading the application" />
+  }
+</div>
+
+<dahc-flag-dialog [open]="isOpen('flag')" (openChange)="setOpen('flag', $event)" [target]="flagTarget()" />
+<dahc-return-for-correction-dialog [open]="isOpen('return')" (openChange)="setOpen('return', $event)" (completed)="done($event)" />
+<dahc-complete-verification-dialog [open]="isOpen('complete')" (openChange)="setOpen('complete', $event)" (completed)="done($event)" />
+<dahc-recommend-screen-out-dialog [open]="isOpen('screenOut')" (openChange)="setOpen('screenOut', $event)" (completed)="done($event)" />
+<dahc-note-action-dialog [kind]="noteKind()" [open]="isOpen('note')" (openChange)="setOpen('note', $event)" (completed)="done($event)" />
+<dahc-screen-out-decision-dialog [open]="isOpen('decision')" (openChange)="setOpen('decision', $event)" (completed)="done($event)" />
+<dahc-replace-attachment-dialog [attachment]="replaceTarget()" [open]="isOpen('replace')" (openChange)="setOpen('replace', $event)" (completed)="done($event)" />
+<dahc-icp-refresh-dialog [open]="isOpen('icp')" (openChange)="setOpen('icp', $event)" (completed)="done($event)" />

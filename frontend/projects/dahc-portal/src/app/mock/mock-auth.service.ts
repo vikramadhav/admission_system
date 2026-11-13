@@ -31,7 +31,7 @@ export class MockAuthService implements PublicAuth {
     return Promise.resolve();
   }
 
-  signIn(returnPath = '/candidate/dashboard'): void {
+  signIn(returnPath = '/'): void {
     void this.router.navigate(['/auth/sign-in'], { queryParams: { returnUrl: returnPath } });
   }
 
@@ -39,11 +39,11 @@ export class MockAuthService implements PublicAuth {
   signInAs(personaId: string, returnPath: string): void {
     this.storage.forgetSession();
     this.backend.signIn(personaId);
-    this.document.location.assign(returnPath.startsWith('/') ? returnPath : '/candidate/dashboard');
+    this.document.location.assign(returnPath.startsWith('/') ? returnPath : '/');
   }
 
   consumeReturnPath(): string {
-    return this.storage.consumeReturnPath() ?? '/candidate/dashboard';
+    return this.storage.consumeReturnPath() ?? '/';
   }
 
   getAccessToken(): Observable<string> {

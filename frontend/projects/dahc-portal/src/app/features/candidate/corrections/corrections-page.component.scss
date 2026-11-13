@@ -1,0 +1,33 @@
+// Corrections page (US-2.3.4): the flagged wizard pages one after another, each with its notes.
+.corrections-block {
+  display: grid;
+  gap: var(--dahc-space-4);
+  padding-block-start: var(--dahc-space-4);
+  border-block-start: 1px solid var(--dahc-color-border-subtle);
+}
+
+.corrections-heading {
+  margin: 0;
+  font-size: var(--dahc-type-heading-3-size);
+  line-height: var(--dahc-type-heading-3-line-height);
+}
+
+.corrections-list {
+  margin: 0;
+  padding-inline-start: var(--dahc-space-5);
+}
+
+.corrections-summary:focus {
+  outline: none;
+}
+
+.corrections-actions {
+  justify-content: flex-end;
+}
+
+.corrections-dialog-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--dahc-space-3);
+}

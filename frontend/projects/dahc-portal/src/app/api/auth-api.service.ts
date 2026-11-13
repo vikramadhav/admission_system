@@ -6,7 +6,7 @@ import { ApiResult } from '../core/api/api.models';
 import { DAHC_PORTAL_CONFIG } from '../core/config/portal-config';
 import { AuthSession } from './auth.models';
 
-/** Identity operations signIn and getCurrentSession. */
+/** Identity operations signIn, getCurrentSession and switchActiveRole. */
 @Injectable({ providedIn: 'root' })
 export class AuthApiService {
   private readonly http = inject(HttpClient);
@@ -20,6 +20,14 @@ export class AuthApiService {
   /** GET /auth/me: the current session, without provisioning. */
   getCurrentSession(context: HttpContext = new HttpContext()): Observable<ApiResult<AuthSession>> {
     return this.http.get<ApiResult<AuthSession>>(`${this.baseUrl}/auth/me`, { context });
+  }
+
+  /**
+   * PUT /auth/active-role: switches the staff user's active role on the server, for every tab
+   * and device. The contract has no idempotency key here and no per-request role header.
+   */
+  switchActiveRole(roleCode: string, context: HttpContext = new HttpContext()): Observable<ApiResult<AuthSession>> {
+    return this.http.put<ApiResult<AuthSession>>(`${this.baseUrl}/auth/active-role`, { roleCode }, { context });
   }
 
   isSignInRequest(url: string): boolean {

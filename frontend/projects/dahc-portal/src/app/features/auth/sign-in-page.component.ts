@@ -1,8 +1,14 @@
-import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { DahcAlertComponent, DahcButtonComponent, DahcCardComponent, DahcPageHeaderComponent } from 'dahc-ui';
 
-import { DAHC_ALTERNATIVE_SIGN_IN } from '../../core/auth/alternative-sign-in';
+import { DAHC_ALTERNATIVE_SIGN_IN, DahcSignInPersona } from '../../core/auth/alternative-sign-in';
 import { AuthService } from '../../core/auth/auth.service';
+
+interface PersonaGroup {
+  readonly id: string;
+  readonly heading: string;
+  readonly personas: readonly DahcSignInPersona[];
+}
 
 /**
  * Sign-in hand-off (US-1.1.2). Candidates sign in with their Dubai Health (IDAM) account or UAE
@@ -21,6 +27,8 @@ import { AuthService } from '../../core/auth/auth.service';
     .persona { display: grid; gap: var(--dahc-space-2); justify-items: start; block-size: 100%; }
     .persona h3 { margin: 0; font-size: var(--dahc-type-heading-4-size); line-height: var(--dahc-type-heading-4-line-height); }
     .persona p { margin: 0; color: var(--dahc-color-text-secondary); }
+    .persona-group { display: grid; gap: var(--dahc-space-3); }
+    .persona-group h2 { margin: 0; font-size: var(--dahc-type-heading-3-size); line-height: var(--dahc-type-heading-3-line-height); }
   `,
   template: `
     <dahc-page-header
@@ -33,22 +41,27 @@ import { AuthService } from '../../core/auth/auth.service';
       @if (alternative; as mock) {
         <dahc-alert variant="info" i18n-heading="@@portal.signInPage.mockHeading" heading="Mock environment">
           <p class="sign-in-text" i18n="@@portal.signInPage.mockText">
-            This build uses sample data instead of the admission service. Choose a candidate to continue. One-time codes are 123456.
+            This build uses sample data instead of the admission service. Choose a candidate or staff member to continue. One-time codes are 123456.
           </p>
         </dahc-alert>
-        <ul class="persona-list">
-          @for (persona of mock.personas; track persona.id) {
-            <li>
-              <dahc-card class="persona">
-                <h3>{{ persona.name }}</h3>
-                <p>{{ persona.description }}</p>
-                <button dahc-button type="button" size="sm" (click)="mock.signInAs(persona.id, returnPath())" i18n="@@portal.signInPage.continueAs">
-                  Continue as {{ persona.name }}
-                </button>
-              </dahc-card>
-            </li>
-          }
-        </ul>
+        @for (group of personaGroups(); track group.id) {
+          <section class="persona-group" [attr.aria-labelledby]="'persona-' + group.id">
+            <h2 [id]="'persona-' + group.id">{{ group.heading }}</h2>
+            <ul class="persona-list">
+              @for (persona of group.personas; track persona.id) {
+                <li>
+                  <dahc-card class="persona">
+                    <h3>{{ persona.name }}</h3>
+                    <p>{{ persona.description }}</p>
+                    <button dahc-button type="button" size="sm" (click)="mock.signInAs(persona.id, returnPath())" i18n="@@portal.signInPage.continueAs">
+                      Continue as {{ persona.name }}
+                    </button>
+                  </dahc-card>
+                </li>
+              }
+            </ul>
+          </section>
+        }
         @if (mock.reset) {
           <div>
             <button dahc-button type="button" variant="link" (click)="mock.reset()" i18n="@@portal.signInPage.reset">Restore the sample data</button>
@@ -74,12 +87,30 @@ export class SignInPageComponent {
   readonly returnUrl = input<string | undefined>(undefined);
 
   protected readonly alternative = inject(DAHC_ALTERNATIVE_SIGN_IN);
+  /** Mock personas, candidates first, then staff (one per role plus a multi-role user). */
+  protected readonly personaGroups = computed<readonly PersonaGroup[]>(() => {
+    const personas = this.alternative?.personas ?? [];
+    const groups: PersonaGroup[] = [
+      {
+        id: 'candidate',
+        heading: $localize`:@@portal.signInPage.candidatesHeading:Candidates`,
+        personas: personas.filter(persona => persona.group !== 'staff'),
+      },
+      {
+        id: 'staff',
+        heading: $localize`:@@portal.signInPage.staffHeading:Staff`,
+        personas: personas.filter(persona => persona.group === 'staff'),
+      },
+    ];
+
+    return groups.filter(group => group.personas.length > 0);
+  });
 
   protected returnPath(): string {
     const url = this.returnUrl();
 
     // Only paths inside the portal, never another origin.
-    return url?.startsWith('/') && !url.startsWith('//') ? url : '/candidate/dashboard';
+    return url?.startsWith('/') && !url.startsWith('//') ? url : '/';
   }
 
   protected signIn(): void {

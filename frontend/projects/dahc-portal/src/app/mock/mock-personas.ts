@@ -11,8 +11,11 @@ import {
   PersonalInformationValues,
   ResidencyInformationValues,
 } from '../shared/section-values';
+import { seedAdmission } from './mock-admission-seed';
+import { seedOversight } from './mock-oversight';
+import { seedScoring } from './mock-scoring';
 import { MOCK_CYCLE } from './mock-catalog';
-import { MockApplication, MockCandidate, MockDatabase, MockSection } from './mock-store';
+import { MockApplication, MockCandidate, MockDatabase, MockSection, MockStaffUser } from './mock-store';
 
 const HOUR = 3_600_000;
 const DAY = 24 * HOUR;
@@ -43,16 +46,71 @@ export const MOCK_PERSONAS: readonly DahcSignInPersona[] = [
     description: 'Fellowship application with announced scores and an open appeal window.',
   },
   {
+    id: 'correction-required',
+    name: 'Salma Darwish',
+    description: 'Medical Residency application returned by the admission officer: two fields and one document to correct.',
+  },
+  {
     id: 'withdrawn',
     name: 'Omar Haddad',
     description: 'Withdrawn Dental Residency application; can request reinstatement or start again.',
   },
-  {
-    id: 'staff-user',
-    name: 'Staff member',
-    description: 'An admission officer account: the candidate portal is not available to staff.',
-  },
 ];
+
+/**
+ * Staff personas, one per contract role plus a multi-role user for the temporary role switch.
+ * Staff are separate records from candidates (D-04).
+ */
+export const MOCK_STAFF_USERS: readonly MockStaffUser[] = [
+  staffUser('staff-user', 'Staff member', ['ADMISSION_OFFICER']),
+  staffUser('officer', 'Noura Al Hashimi', ['ADMISSION_OFFICER']),
+  staffUser('supervisor', 'Khalid Rahman', ['ADMISSION_SUPERVISOR']),
+  staffUser('referee', 'Dr. Layla Nasser', ['REFEREE']),
+  staffUser('third-referee', 'Dr. Ahmed Saleh', ['THIRD_REFEREE']),
+  staffUser('second-evaluation-referee', 'Dr. Mariam Qasim', ['SECOND_EVALUATION_REFEREE']),
+  staffUser('senior-referee', 'Dr. Yousef Karim', ['SENIOR_REFEREE']),
+  staffUser('finance-officer', 'Huda Mansour', ['FINANCE_OFFICER']),
+  staffUser('central-monitor', 'Salem Obaid', ['CENTRAL_MONITOR']),
+  staffUser('administrator', 'Reem Al Falasi', ['ADMINISTRATOR']),
+  staffUser('multi-role', 'Demo staff (all roles)', [
+    'ADMISSION_OFFICER',
+    'ADMISSION_SUPERVISOR',
+    'REFEREE',
+    'THIRD_REFEREE',
+    'SECOND_EVALUATION_REFEREE',
+    'SENIOR_REFEREE',
+    'FINANCE_OFFICER',
+    'CENTRAL_MONITOR',
+    'ADMINISTRATOR',
+  ]),
+];
+
+const STAFF_DESCRIPTIONS: Readonly<Record<string, string>> = {
+  'staff-user': 'An admission officer account: the candidate portal is not available to staff.',
+  officer: 'Admission officer: verifies applications retrieved from assigned pools.',
+  supervisor: 'Admission supervisor: escalations, screen-outs, reinstatements, screening; also site monitoring.',
+  referee: 'Referee (Round 1 and 2): scores anonymised portfolios.',
+  'third-referee': 'Third referee: scores portfolios with a Round 1 / Round 2 discrepancy.',
+  'second-evaluation-referee': '2nd evaluation referee: re-scores appealed portfolio questions.',
+  'senior-referee': 'Senior referee: oversees scoring, reassigns and overrides.',
+  'finance-officer': 'Finance officer: searches and exports application payments.',
+  'central-monitor': 'Central monitor: read-only site monitoring dashboard.',
+  administrator: 'Administrator: staff users and integration clients.',
+  'multi-role': 'Holds every staff role, to try the role switch in the header (temporary until IDAM).',
+};
+
+export const MOCK_STAFF_PERSONAS: readonly DahcSignInPersona[] = MOCK_STAFF_USERS.map(user => ({
+  id: user.userId,
+  name: user.displayName,
+  description: STAFF_DESCRIPTIONS[user.userId] ?? '',
+  group: 'staff',
+}));
+
+function staffUser(userId: string, displayName: string, roles: string[]): MockStaffUser {
+  const email = `${userId}@dubaihealth.example`;
+
+  return { userId, displayName, email, roles, activeRole: roles[0] ?? 'ADMISSION_OFFICER' };
+}
 
 const EMPTY_IDENTITY: IdentityValues = {
   firstNameEn: '',
@@ -450,6 +508,80 @@ export function seedDatabase(): MockDatabase {
     ],
   });
 
+  // US-2.3.4: an application the officer returned for correction.
+  const correctionSubmittedAt = isoFromNow(-10 * DAY);
+  const correctionCandidate = candidate({
+    userId: 'correction-required',
+    displayName: 'Salma Darwish',
+    email: 'salma.darwish@example.com',
+    mobile: '+971507778899',
+    profile: profile(residentIdentity('Salma', 'Darwish', 'FEMALE', 'SY'), 'salma.darwish@example.com', '+971507778899', true),
+    applications: [
+      application({
+        id: 'a-cor-0001',
+        applicationNumber: '20260000211',
+        programId: 'p-res-med',
+        status: 'CORRECTION_REQUIRED',
+        createdAt: isoFromNow(-15 * DAY),
+        submittedAt: correctionSubmittedAt,
+        preferences: [
+          {
+            specialtyId: 'sp-im',
+            preferenceOrder: 1,
+            trainingSites: [{ siteId: 's-rashid', siteOrder: 1 }],
+          },
+        ],
+        sections: completeSections([
+          'application-information',
+          'academic-information',
+          'english-proficiency',
+          'internship-information',
+          'residency-entrance-exam',
+        ]),
+        attachments: {
+          ...submittedAttachments(correctionSubmittedAt),
+          'personal-information:EMIRATES_ID': file('Emirates_ID.pdf', 300_000, correctionSubmittedAt),
+          'personal-information:RESIDENCY_VISA': file('Residency_visa.pdf', 280_000, correctionSubmittedAt),
+          'english-proficiency:ENGLISH_CERTIFICATE': file('IELTS_certificate.pdf', 350_000, correctionSubmittedAt),
+          'internship-information:INTERNSHIP_CERTIFICATE': file('Internship_certificate.pdf', 400_000, correctionSubmittedAt),
+          'residency-entrance-exam:EXAM_RESULT': file('EMREE_result.pdf', 250_000, correctionSubmittedAt),
+        },
+        portfolio: { submittedAt: correctionSubmittedAt, answers: NO_ANSWERS(['Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6', 'Q7', 'Q8', 'Q9', 'Q10']) },
+        paymentSessions: [
+          {
+            id: 'ps-cor-0001',
+            applicationId: 'a-cor-0001',
+            amount: 650,
+            currency: 'AED',
+            status: 'PAID',
+            receiptId: 'RCP-2026-004601',
+            paymentDate: correctionSubmittedAt,
+          },
+        ],
+        correction: {
+          deadline: isoFromNow(5 * DAY),
+          flags: [
+            {
+              fieldPointer: '/sections/academic-information/values/graduationYear',
+              candidateNoteCode: 'MISMATCH',
+              candidateNote: 'The graduation year does not match your graduation certificate. Enter the year shown on the certificate.',
+            },
+            {
+              fieldPointer: '/sections/english-proficiency/values/result',
+              candidateNoteCode: 'MISMATCH',
+              candidateNote: 'Enter the overall band score exactly as it appears on your IELTS certificate.',
+            },
+            {
+              fieldPointer: '/attachments/academic-information:GRADUATION_CERTIFICATE',
+              candidateNoteCode: 'MISSING_DOCUMENT',
+              candidateNote: 'The certificate is cut off at the bottom. Upload a complete, coloured copy.',
+            },
+          ],
+        },
+      }),
+    ],
+  });
+
   const announcedAt = new Date(now - 6 * HOUR).toISOString();
   const fellowSubmittedAt = isoFromNow(-40 * DAY);
   const announcedCandidate = candidate({
@@ -571,19 +703,16 @@ export function seedDatabase(): MockDatabase {
     ],
   });
 
-  const staff = candidate({
-    userId: 'staff-user',
-    userType: 'STAFF',
-    candidateNumber: null,
-    displayName: 'Staff member',
-    email: 'officer@example.com',
-    mobile: '+971500000000',
-    profile: profile({}, 'officer@example.com', '+971500000000', false),
-  });
+  const candidates = [newCandidate, draftCandidate, submittedCandidate, correctionCandidate, announcedCandidate, withdrawnCandidate];
 
-  const candidates = [newCandidate, draftCandidate, submittedCandidate, announcedCandidate, withdrawnCandidate, staff];
-
-  return { candidates: Object.fromEntries(candidates.map(item => [item.userId, item])), sequence: 200 };
+  return {
+    candidates: Object.fromEntries(candidates.map(item => [item.userId, item])),
+    staff: Object.fromEntries(MOCK_STAFF_USERS.map(user => [user.userId, { ...user, roles: [...user.roles] }])),
+    admission: seedAdmission(),
+    scoring: seedScoring(),
+    oversight: seedOversight(MOCK_STAFF_USERS),
+    sequence: 200,
+  };
 }
 
 export { MOCK_CYCLE };

@@ -3,6 +3,7 @@ import { EnvironmentProviders, Provider } from '@angular/core';
 
 import { DahcPortalConfig } from '../app/core/config/portal-config';
 import { mockApiInterceptor } from '../app/mock/mock-api.interceptor';
+import { MOCK_CYCLE } from '../app/mock/mock-catalog';
 import { provideMockBackend } from '../app/mock/provide-mock-backend';
 
 // Mock build (npm run start:mock): the API is answered in the browser from an in-memory store
@@ -28,6 +29,7 @@ export const environment: DahcPortalConfig = {
   },
   defaultTimeZoneId: 'Asia/Dubai',
   sessionTimeoutMinutes: 30,
+  admissionCycleId: MOCK_CYCLE.id,
   localeBasePaths: {
     'en-AE': '/',
     'ar-AE': '/',

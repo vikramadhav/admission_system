@@ -6,12 +6,14 @@ import { Router } from '@angular/router';
 import { DahcToastService, DahcWizardStep, DahcWizardStepStatus } from 'dahc-ui';
 import { Observable, catchError, debounceTime, filter, firstValueFrom, forkJoin, map, merge, of } from 'rxjs';
 
+import { CorrectionFlag } from '../../../api/admission.models';
 import { Application } from '../../../api/application.models';
 import { ApplicationsApiService } from '../../../api/applications-api.service';
 import { AttachmentsApiService } from '../../../api/attachments-api.service';
 import { CandidateActionsApiService } from '../../../api/candidate-actions-api.service';
 import {
   ApplicationSection,
+  ApplicationSectionInput,
   ApplicationSectionKey,
   AttachmentSectionKey,
   AttachmentSlot,
@@ -290,6 +292,46 @@ export class WizardStateService {
     } finally {
       this.loading.set(false);
     }
+  }
+
+  /**
+   * Correction mode (US-2.3.4), after load() of an application returned for correction: only the
+   * flagged fields, or whole sections flagged at section level, become editable; everything else
+   * stays read-only. Nothing is auto-saved: the corrections are re-submitted together. Flagged
+   * documents are opened by the server (their slots are editable).
+   */
+  startCorrection(flags: readonly CorrectionFlag[]): void {
+    this.mode.set('correction');
+
+    for (const flag of flags) {
+      const match = /^\/sections\/([^/]+)(?:\/values\/(.+))?$/.exec(flag.fieldPointer);
+      const key = match?.[1] as ApplicationSectionKey | undefined;
+      const form = key ? this.forms[key] : undefined;
+
+      if (!match || !form) {
+        continue;
+      }
+
+      const control = match[2] ? form.get(match[2].split('/').join('.')) : form;
+      control?.enable({ emitEvent: false });
+    }
+
+    this.syncAll();
+    this.revision.update(value => value + 1);
+  }
+
+  /** The flagged sections' current values for POST /corrections (US-2.3.4). */
+  correctionInputs(keys: readonly ApplicationSectionKey[]): Partial<Record<ApplicationSectionKey, ApplicationSectionInput>> {
+    const inputs: Partial<Record<ApplicationSectionKey, ApplicationSectionInput>> = {};
+
+    for (const key of keys) {
+      inputs[key] = {
+        schemaVersion: this.sectionStates()[key]?.schemaVersion ?? '2026.1',
+        values: SECTION_DEFINITIONS[key].values(this.forms[key]),
+      };
+    }
+
+    return inputs;
   }
 
   /** Re-reads the application, for example after another tab changed it (412). */

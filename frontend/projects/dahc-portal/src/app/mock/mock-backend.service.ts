@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 
+import { CorrectionFlag } from '../api/admission.models';
 import { Application, ApplicationStatus, ApplicationSummary, Preference } from '../api/application.models';
 import { AuthSession } from '../api/auth.models';
 import {
@@ -19,16 +20,22 @@ import {
   WorkflowActionResult,
 } from '../api/candidate-lifecycle.models';
 import { CandidateApplicationAction, CandidateDashboard, CandidateDashboardItem } from '../api/dashboard.models';
-import { ApiProblemDetails } from '../core/api/api.models';
 import { portfolioQuestions } from '../shared/portfolio-questions';
 import { programRules } from '../shared/program-rules';
 import { MOCK_CYCLE, MOCK_PROGRAMS, MOCK_SPECIALTIES, mockSite, mockSpecialty, toSpecialty } from './mock-catalog';
+import { MockAdmission } from './mock-admission';
+import { MockOversight } from './mock-oversight';
+import { MockScoring, scoringLookup } from './mock-scoring';
+import { MockReply, ok, problem } from './mock-http';
 import { seedDatabase } from './mock-personas';
 import { attachmentSlots, programOf } from './mock-slots';
 import {
   MockApplication,
   MockCandidate,
   MockDatabase,
+  MockStaffUser,
+  flaggedSectionKeys,
+  flaggedSlotIds,
   clearDatabase,
   loadDatabase,
   saveDatabase,
@@ -36,32 +43,11 @@ import {
   storedUserId,
 } from './mock-store';
 
+export { MockProblem } from './mock-http';
+export type { MockReply } from './mock-http';
+
 /** The one-time code accepted by the mock for every OTP. */
 export const MOCK_OTP = '123456';
-
-export interface MockReply {
-  readonly status: number;
-  readonly body: unknown;
-  readonly etag?: string;
-}
-
-export class MockProblem extends Error {
-  constructor(readonly problem: ApiProblemDetails) {
-    super(problem.title);
-  }
-}
-
-function problem(status: number, code: string, detail: string, errors?: ApiProblemDetails['errors']): MockProblem {
-  return new MockProblem({
-    type: `https://api.dahc.example/problems/${code}`,
-    title: detail,
-    status,
-    code,
-    detail,
-    traceId: `00-mock${Math.random().toString(16).slice(2, 18)}-01`,
-    ...(errors ? { errors } : {}),
-  });
-}
 
 const ACTIVE_STATUSES: readonly ApplicationStatus[] = [
   'DRAFT',
@@ -73,12 +59,6 @@ const ACTIVE_STATUSES: readonly ApplicationStatus[] = [
   'REVIEW_COMPLETED',
   'APPEAL_UNDER_REVIEW',
 ];
-
-const ok = (data: unknown, etag?: string, status = 200): MockReply => ({
-  status,
-  body: { data },
-  ...(etag ? { etag } : {}),
-});
 
 const etagOf = (version: number): string => `W/"${version}"`;
 
@@ -94,6 +74,23 @@ export class MockBackendService {
   private readonly withdrawals = new Map<string, { applicationId: string; reasonCode: string }>();
   private readonly verifications = new Map<string, { channel: string; value: string }>();
   private readonly idempotency = new Map<string, MockReply>();
+  private readonly admission = new MockAdmission(
+    () => this.database.admission,
+    () => this.save(),
+    () => this.staffUser(),
+  );
+  private readonly oversight = new MockOversight(
+    () => this.database.oversight,
+    () => this.database.admission,
+    () => this.save(),
+    () => this.staffUser(),
+    () => this.database.staff,
+  );
+  private readonly scoring = new MockScoring(
+    () => this.database.scoring,
+    () => this.save(),
+    () => this.staffUser(),
+  );
 
   signedInUserId(): string | null {
     return storedUserId();
@@ -158,6 +155,11 @@ export class MockBackendService {
     return reply;
   }
 
+  /** GET /finance/payments/export as a file. */
+  financeExport(fullPath: string): Blob {
+    return this.oversight.exportFile(fullPath);
+  }
+
   attachmentContent(path: string): Blob {
     const [, , applicationId, , slotId] = path.split('/');
     const stored = this.uploadedFiles.get(`${applicationId}/${decodeURIComponent(slotId ?? '')}`);
@@ -180,6 +182,56 @@ export class MockBackendService {
 
     if (method === 'GET' && path === '/auth/me') {
       return ok(this.session());
+    }
+
+    if (method === 'PUT' && path === '/auth/active-role') {
+      return ok(this.switchActiveRole(body as { roleCode?: unknown }));
+    }
+
+    if (path.startsWith('/finance/') || path.startsWith('/admin/') || path.startsWith('/staff/site-monitoring/')) {
+      const reply = this.oversight.handle(method, path, body, headers);
+
+      if (reply === null) {
+        throw problem(404, 'resource.not_found', 'The requested resource was not found.');
+      }
+
+      return reply;
+    }
+
+    if (path.startsWith('/referee/') || path.startsWith('/senior-referee/')) {
+      const reply = this.scoring.handle(method, path, body, headers);
+
+      if (reply === null) {
+        throw problem(404, 'resource.not_found', 'The requested resource was not found.');
+      }
+
+      return reply;
+    }
+
+    if (path.startsWith('/staff/')) {
+      const reply = this.admission.handle(method, path, body);
+
+      if (reply === null) {
+        throw problem(404, 'resource.not_found', 'The requested resource was not found.');
+      }
+
+      return reply;
+    }
+
+    if (method === 'GET' && path.startsWith('/lookups/') && path !== '/lookups/WITHDRAWAL_REASON') {
+      const type = path.split('/')[2] ?? '';
+      const reply = this.staffUser() === null ? null : (this.admission.lookup(type) ?? scoringLookup(type));
+
+      if (reply === null) {
+        throw problem(403, 'auth.forbidden', 'Your active role cannot read this list.');
+      }
+
+      return reply;
+    }
+
+    if (this.staffUser() !== null && (path.startsWith('/me/') || path.startsWith('/applications'))) {
+      // Staff areas arrive in later phases; candidate operations are never open to staff (D-14).
+      throw problem(403, 'auth.forbidden', 'Your active role cannot use this operation.');
     }
 
     if (method === 'GET' && path === '/me/dashboard') {
@@ -298,6 +350,10 @@ export class MockBackendService {
 
         return ok(this.verification(id, pending?.channel === 'SMS' ? 'SMS' : 'EMAIL', pending?.value ?? ''), undefined, 202);
       }
+      case method === 'GET' && rest === '/correction-flags':
+        return ok(this.corrections(application));
+      case method === 'POST' && rest === '/corrections':
+        return this.submitCorrections(application, body as { sections?: Record<string, { values?: SectionValues }> });
       case method === 'GET' && rest === '/portfolio-result':
         return ok(this.portfolioResult(application));
       case method === 'POST' && rest === '/appeals':
@@ -310,18 +366,58 @@ export class MockBackendService {
   // Session and dashboard.
 
   private session(): AuthSession {
+    const staff = this.staffUser();
+
+    if (staff !== null) {
+      return {
+        userType: 'STAFF',
+        userId: staff.userId,
+        candidateNumber: null,
+        displayName: staff.displayName,
+        email: staff.email,
+        roles: [...staff.roles],
+        activeRole: staff.activeRole,
+        preferences: { timeZoneId: 'Asia/Dubai', culture: 'en-AE' },
+      };
+    }
+
     const candidate = this.candidate();
 
     return {
-      userType: candidate.userType,
+      userType: 'CANDIDATE',
       userId: candidate.userId,
       candidateNumber: candidate.candidateNumber,
       displayName: candidate.displayName,
       email: candidate.email,
-      roles: [candidate.userType === 'STAFF' ? 'ADMISSION_OFFICER' : 'CANDIDATE'],
-      activeRole: candidate.userType === 'STAFF' ? 'ADMISSION_OFFICER' : 'CANDIDATE',
+      roles: ['CANDIDATE'],
+      activeRole: 'CANDIDATE',
       preferences: { timeZoneId: 'Asia/Dubai', culture: 'en-AE' },
     };
+  }
+
+  /** PUT /auth/active-role: staff only, and only to a role the user holds (403 otherwise). */
+  private switchActiveRole(body: { roleCode?: unknown }): AuthSession {
+    const staff = this.staffUser();
+
+    if (staff === null) {
+      this.candidate();
+      throw problem(403, 'auth.forbidden', 'Candidates cannot switch roles.');
+    }
+
+    if (typeof body.roleCode !== 'string' || !staff.roles.includes(body.roleCode)) {
+      throw problem(403, 'auth.role_not_held', 'You do not hold that role.');
+    }
+
+    staff.activeRole = body.roleCode;
+    this.save();
+
+    return this.session();
+  }
+
+  private staffUser(): MockStaffUser | null {
+    const userId = storedUserId();
+
+    return userId ? (this.database.staff[userId] ?? null) : null;
   }
 
   private dashboard(): CandidateDashboard {
@@ -517,6 +613,74 @@ export class MockBackendService {
     return preference.trainingSites.map(site => site.siteId).filter(site => !application.excludedSiteIds.includes(site));
   }
 
+  // Corrections (US-2.3.4).
+
+  /** PROPOSAL (PQ-04): the candidate's view of the flags while corrections are open. */
+  private corrections(application: MockApplication): { flags: CorrectionFlag[]; correctionDeadline: string } {
+    if (application.status !== 'CORRECTION_REQUIRED' || !application.correction) {
+      throw problem(409, 'application.not_correction_required', 'This application has no corrections to make.');
+    }
+
+    return { flags: application.correction.flags, correctionDeadline: application.correction.deadline };
+  }
+
+  /** Saves the flagged sections only, then routes the application back to the same officer. */
+  private submitCorrections(application: MockApplication, body: { sections?: Record<string, { values?: SectionValues }> }): MockReply {
+    const correction = application.correction;
+
+    if (application.status !== 'CORRECTION_REQUIRED' || !correction) {
+      throw problem(409, 'application.not_correction_required', 'This application has no corrections to make.');
+    }
+
+    if (correction.deadline < new Date().toISOString()) {
+      throw problem(409, 'application.correction_period_ended', 'The correction period has ended.');
+    }
+
+    const flagged = flaggedSectionKeys(correction);
+    const sections = body.sections ?? {};
+    const unexpected = Object.keys(sections).filter(key => !flagged.includes(key));
+
+    if (unexpected.length > 0) {
+      throw problem(
+        422,
+        'corrections.section_not_flagged',
+        'Only the flagged sections can be corrected.',
+        unexpected.map(key => ({ code: 'corrections.section_not_flagged', detail: 'This section was not flagged.', pointer: `/sections/${key}` })),
+      );
+    }
+
+    const missingFiles = flaggedSlotIds(correction).filter(slotId => {
+      const slot = this.slots(application).find(item => item.slotId === slotId);
+
+      return slot !== undefined && slot.required && slot.attachment === null;
+    });
+
+    if (missingFiles.length > 0) {
+      throw problem(422, 'corrections.document_missing', 'Upload the flagged documents before you re-submit.');
+    }
+
+    const candidate = this.candidate();
+
+    for (const [key, input] of Object.entries(sections)) {
+      const values = input.values ?? {};
+
+      if (key === 'personal-information') {
+        this.requireVerifiedContacts(candidate, values);
+        candidate.profile = values as unknown as MockCandidate['profile'];
+        candidate.profileVersion++;
+      } else {
+        const current = application.sections[key as ApplicationSectionKey];
+        application.sections[key as ApplicationSectionKey] = { values, version: (current?.version ?? 0) + 1 };
+      }
+    }
+
+    application.status = 'CORRECTION_SUBMITTED';
+    application.correction = null;
+    this.touch(application);
+
+    return ok(this.workflow(application, 'CORRECTION_SUBMITTED'));
+  }
+
   // Sections.
 
   private section(
@@ -560,7 +724,7 @@ export class MockBackendService {
       schemaVersion: '2026.1',
       values: key === 'personal-information' ? (candidate.profile as unknown as SectionValues) : (application.sections[key]?.values ?? {}),
       fields: key === 'personal-information' ? this.personalFields(candidate) : [],
-      editable: application.status === 'DRAFT',
+      editable: application.status === 'DRAFT' || (application.status === 'CORRECTION_REQUIRED' && flaggedSectionKeys(application.correction).includes(key)),
       version,
     };
 

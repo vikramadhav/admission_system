@@ -1,0 +1,114 @@
+<dahc-page-header
+  i18n-heading="@@portal.admission.supervisor.heading"
+  heading="Supervision"
+  i18n-description="@@portal.admission.supervisor.description"
+  description="Escalations, screen-out and reinstatement requests, and your team's workload."
+  [focusOnLoad]="true" />
+
+<div class="dahc-portal-page">
+  <nav class="links" i18n-aria-label="@@portal.admission.supervisor.moreLabel" aria-label="More supervision pages">
+    <a dahc-button variant="secondary" size="sm" routerLink="/admission/supervisor/reinstatements" i18n="@@portal.admission.supervisor.reinstatementsLink">Reinstatement requests</a>
+    <a dahc-button variant="secondary" size="sm" routerLink="/admission/supervisor/duplicate-accounts" i18n="@@portal.admission.supervisor.duplicatesLink">Duplicate accounts</a>
+  </nav>
+
+  <section class="section" aria-labelledby="supervisor-pool-insights">
+    <h2 id="supervisor-pool-insights" class="section-heading" i18n="@@portal.admission.supervisor.poolInsights">All pools</h2>
+    <ul class="tiles">
+      @for (tile of poolTiles(); track tile.label) {
+        <li><dahc-stat-tile [label]="tile.label" [value]="tile.value" [color]="tile.color" /></li>
+      }
+    </ul>
+  </section>
+
+  <section class="section" aria-labelledby="supervisor-queue">
+    <h2 id="supervisor-queue" class="section-heading" i18n="@@portal.admission.supervisor.queueInsights">Your queue</h2>
+    <ul class="tiles">
+      @for (tile of queueTiles(); track tile.label) {
+        <li><dahc-stat-tile [label]="tile.label" [value]="tile.value" [color]="tile.color" /></li>
+      }
+    </ul>
+  </section>
+
+  <section class="section" aria-labelledby="supervisor-inbox">
+    <h2 id="supervisor-inbox" class="section-heading" i18n="@@portal.admission.supervisor.inbox">Requests</h2>
+    <div class="toolbar">
+      <dahc-select
+        [formControl]="queueFilter"
+        i18n-label="@@portal.admission.supervisor.queueFilter"
+        label="Request type"
+        i18n-placeholder="@@portal.admission.supervisor.allQueues"
+        placeholder="All requests"
+        [options]="queueOptions" />
+      <dahc-search
+        [formControl]="search"
+        i18n-label="@@portal.admission.supervisor.search"
+        label="Search by application ID or candidate name"
+        [showLabel]="true" />
+    </div>
+    @if (inbox.problem(); as problem) {
+      <dahc-alert variant="error" [announce]="true">
+        {{ problem.detail ?? problem.title }}
+        <button dahc-button type="button" variant="link" (click)="inbox.reload()" i18n="@@portal.action.tryAgain">Try again</button>
+      </dahc-alert>
+    }
+    @if (inbox.loaded() && inboxRows().length === 0 && !inbox.loading()) {
+      <dahc-empty-state
+        [headingLevel]="3"
+        i18n-heading="@@portal.admission.supervisor.emptyHeading"
+        heading="No requests waiting"
+        i18n-description="@@portal.admission.supervisor.emptyText"
+        description="Escalations, screen-out recommendations and reinstatement requests appear here." />
+    } @else {
+      <dahc-table
+        i18n-caption="@@portal.admission.supervisor.inboxCaption"
+        caption="Requests waiting for your decision"
+        [columns]="inboxColumns"
+        [rows]="inboxRows()"
+        [loading]="inbox.loading()"
+        [(sort)]="sort"
+        scrollX="760px">
+        <ng-template dahcTableCell="applicationNumber" let-row>
+          <a [routerLink]="inboxRow(row).link">{{ inboxRow(row).applicationNumber }}</a>
+        </ng-template>
+        <ng-template dahcTableCell="queue" let-row>
+          <dahc-tag [purpose]="inboxRow(row).queuePurpose">{{ inboxRow(row).queue }}</dahc-tag>
+        </ng-template>
+      </dahc-table>
+      <dahc-load-more [shown]="inboxRows().length" [hasMore]="inbox.hasMore()" [loading]="inbox.loading()" (loadMore)="inbox.loadMore()" />
+    }
+  </section>
+
+  <section class="section" aria-labelledby="supervisor-officers">
+    <h2 id="supervisor-officers" class="section-heading" i18n="@@portal.admission.supervisor.officersWorkload">Officers' workload</h2>
+    <p class="section-text" i18n="@@portal.admission.supervisor.officersHint">Open an officer to see their applications, filter overdue ones and reassign or return them.</p>
+    <dahc-table
+      i18n-caption="@@portal.admission.supervisor.officersCaption"
+      caption="Officers' workload"
+      [columns]="officerColumns"
+      [rows]="officerRows()"
+      [loading]="!inbox.loaded()"
+      scrollX="720px">
+      <ng-template dahcTableCell="officerName" let-row>
+        <a [routerLink]="['/admission/supervisor/officers', officerRow(row).id]">{{ officerRow(row).officerName }}</a>
+      </ng-template>
+      <ng-template dahcTableCell="overdue" let-row>
+        @if (officerRow(row).overdue > 0) {
+          <dahc-tag purpose="error">{{ officerRow(row).overdue }}</dahc-tag>
+        } @else {
+          0
+        }
+      </ng-template>
+    </dahc-table>
+  </section>
+
+  <section class="section" aria-labelledby="supervisor-referees">
+    <h2 id="supervisor-referees" class="section-heading" i18n="@@portal.admission.supervisor.refereesWorkload">Referees' workload</h2>
+    <dahc-table
+      i18n-caption="@@portal.admission.supervisor.refereesCaption"
+      caption="Referees' workload"
+      [columns]="refereeColumns"
+      [rows]="refereeRows()"
+      [loading]="!inbox.loaded()"
+      scrollX="720px" />
+  </section>
+</div>

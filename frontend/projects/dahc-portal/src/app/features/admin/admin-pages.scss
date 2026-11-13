@@ -1,0 +1,64 @@
+// Layout shared by the administration pages and dialogs; tokens only.
+.section {
+  display: grid;
+  // minmax(0, 1fr): wide tables scroll inside their own region instead of widening the page.
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--dahc-space-4);
+}
+
+.section-heading {
+  margin: 0;
+  font-size: var(--dahc-type-heading-3-size);
+  line-height: var(--dahc-type-heading-3-line-height);
+}
+
+.section-text {
+  margin: 0;
+  color: var(--dahc-color-text-secondary);
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--dahc-space-3);
+}
+
+.toolbar > dahc-search,
+.toolbar > dahc-select {
+  flex: 1 1 calc(var(--dahc-space-16) * 4);
+  min-inline-size: 0;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dahc-space-1);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dahc-space-3);
+}
+
+.dialog-form {
+  display: grid;
+  gap: var(--dahc-space-4);
+}
+
+.dialog-text {
+  margin: 0;
+}
+
+.dialog-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--dahc-space-3);
+}
+
+textarea[dahcInput] {
+  min-block-size: calc(var(--dahc-size-control-lg) * 2);
+  resize: vertical;
+}

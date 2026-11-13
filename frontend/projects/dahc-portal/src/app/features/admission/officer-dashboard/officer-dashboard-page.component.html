@@ -1,0 +1,110 @@
+<dahc-page-header
+  i18n-heading="@@portal.admission.officer.heading"
+  heading="My applications"
+  i18n-description="@@portal.admission.officer.description"
+  description="Retrieve applications from your pools and verify them."
+  [focusOnLoad]="true" />
+
+<div class="dahc-portal-page">
+  <section class="section" aria-labelledby="officer-pool-insights">
+    <h2 id="officer-pool-insights" class="section-heading" i18n="@@portal.admission.officer.poolInsights">Pool insights</h2>
+    <ul class="tiles">
+      @for (tile of poolTiles(); track tile.label) {
+        <li><dahc-stat-tile [label]="tile.label" [value]="tile.value" [color]="tile.color" /></li>
+      }
+    </ul>
+  </section>
+
+  <section class="section" aria-labelledby="officer-pools">
+    <h2 id="officer-pools" class="section-heading" i18n="@@portal.admission.officer.yourPools">Your pools</h2>
+    @if (retrieveMessage(); as message) {
+      <dahc-alert [variant]="message.variant" [announce]="true">{{ message.text }}</dahc-alert>
+    }
+    @if (pools(); as pools) {
+      <ul class="pool-list">
+        @for (pool of pools; track pool.poolId) {
+          <li>
+            <dahc-card class="pool">
+              <h3 class="pool-name">{{ pool.programName }} – {{ pool.specialtyName }}</h3>
+              <p class="pool-text" i18n="@@portal.admission.officer.waiting">{pool.waiting, plural, =0 {No applications waiting} =1 {1 application waiting} other {{{ pool.waiting }} applications waiting}}</p>
+              <button
+                dahc-button
+                type="button"
+                size="sm"
+                [loading]="retrieving() === pool.poolId"
+                [disabled]="retrieving() !== null"
+                (click)="retrieve(pool)"
+                i18n="@@portal.admission.officer.retrieve">
+                Retrieve applications<span class="dahc-visually-hidden"> from {{ pool.programName }} – {{ pool.specialtyName }}</span>
+              </button>
+            </dahc-card>
+          </li>
+        }
+      </ul>
+    } @else if (inbox.loaded()) {
+      <dahc-alert variant="warning" i18n="@@portal.admission.officer.noPools">
+        Your pools are not available yet, so applications cannot be retrieved here. The admission service does not tell the portal which
+        pools you are assigned to (open question PQ-03).
+      </dahc-alert>
+    }
+  </section>
+
+  <section class="section" aria-labelledby="officer-queue">
+    <h2 id="officer-queue" class="section-heading" i18n="@@portal.admission.officer.queueInsights">Your queue</h2>
+    <p class="section-text" i18n="@@portal.admission.officer.queueHint">Choose a category to show only those applications in your inbox. Choose it again to show all.</p>
+    <ul class="tiles">
+      @for (tile of queueTiles(); track tile.insight) {
+        <li>
+          <button type="button" class="tile-button" [attr.aria-pressed]="insight() === tile.insight" (click)="toggleInsight(tile.insight)">
+            <dahc-stat-tile [label]="tile.label" [value]="tile.value" [color]="tile.color" />
+          </button>
+        </li>
+      }
+    </ul>
+  </section>
+
+  <section class="section" aria-labelledby="officer-inbox">
+    <h2 id="officer-inbox" class="section-heading" i18n="@@portal.admission.officer.inbox">Inbox</h2>
+    <div class="toolbar">
+      <dahc-search
+        [formControl]="search"
+        i18n-label="@@portal.admission.officer.search"
+        label="Search by application ID or candidate name"
+        [showLabel]="true" />
+    </div>
+    @if (inbox.problem(); as problem) {
+      <dahc-alert variant="error" [announce]="true">
+        {{ problem.detail ?? problem.title }}
+        <button dahc-button type="button" variant="link" (click)="inbox.reload()" i18n="@@portal.action.tryAgain">Try again</button>
+      </dahc-alert>
+    }
+    @if (inbox.loaded() && rows().length === 0 && !inbox.loading()) {
+      <dahc-empty-state
+        [headingLevel]="3"
+        i18n-heading="@@portal.admission.officer.emptyHeading"
+        heading="No applications here"
+        i18n-description="@@portal.admission.officer.emptyText"
+        description="Retrieve applications from one of your pools, or choose another category." />
+    } @else {
+      <dahc-table [caption]="caption()" [columns]="columns" [rows]="rows()" [loading]="inbox.loading()" [(sort)]="sort" scrollX="960px">
+        <ng-template dahcTableCell="applicationNumber" let-row>
+          <a [routerLink]="['/admission/applications', asRow(row).id]">{{ asRow(row).applicationNumber }}</a>
+        </ng-template>
+        <ng-template dahcTableCell="dueAt" let-row>
+          @if (asRow(row).overdue) {
+            <span class="overdue">
+              {{ asRow(row).dueAt }}
+              <dahc-tag purpose="error" i18n="@@portal.admission.officer.overdue">Overdue</dahc-tag>
+            </span>
+          } @else {
+            {{ asRow(row).dueAt }}
+          }
+        </ng-template>
+        <ng-template dahcTableCell="verificationStatus" let-row>
+          <dahc-tag [purpose]="asRow(row).statusPurpose">{{ asRow(row).verificationStatus }}</dahc-tag>
+        </ng-template>
+      </dahc-table>
+      <dahc-load-more [shown]="rows().length" [hasMore]="inbox.hasMore()" [loading]="inbox.loading()" (loadMore)="inbox.loadMore()" />
+    }
+  </section>
+</div>

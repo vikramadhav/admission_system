@@ -7,6 +7,7 @@ export const PERSONAS = {
   submitted: 'Mohamed Hazim',
   announced: 'Fatima Al Suwaidi',
   withdrawn: 'Omar Haddad',
+  correction: 'Salma Darwish',
   staff: 'Staff member',
 } as const;
 

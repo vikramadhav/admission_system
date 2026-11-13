@@ -5,7 +5,7 @@ import { DAHC_ALTERNATIVE_SIGN_IN, DahcAlternativeSignIn } from '../core/auth/al
 import { AuthService } from '../core/auth/auth.service';
 import { MockAuthService } from './mock-auth.service';
 import { MockBackendService } from './mock-backend.service';
-import { MOCK_PERSONAS } from './mock-personas';
+import { MOCK_PERSONAS, MOCK_STAFF_PERSONAS } from './mock-personas';
 
 /**
  * What the mock build adds besides its interceptor: persona sign-in instead of IDAM and the mock
@@ -22,7 +22,7 @@ export function provideMockBackend(): EnvironmentProviders {
         const backend = inject(MockBackendService);
 
         return {
-          personas: MOCK_PERSONAS,
+          personas: [...MOCK_PERSONAS, ...MOCK_STAFF_PERSONAS],
           signInAs: (personaId, returnPath) => auth.signInAs(personaId, returnPath),
           reset: () => backend.reset(),
         };

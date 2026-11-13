@@ -2,6 +2,8 @@
 // components/schemas.yaml): sections, attachments, portfolio, payment, submission and the
 // candidate actions. Code generation is not approved yet (OQ-08); keep in step by review.
 
+import type { CorrectionFlag } from './admission.models';
+
 /** Contract parameter sectionKey (PRM:104-118). The portfolio has its own operations. */
 export type ApplicationSectionKey =
   | 'application-information'
@@ -208,7 +210,28 @@ export interface PortfolioAppealInput {
 export interface LookupItem {
   readonly code: string;
   readonly label: string;
+  /** The code this value belongs to, for example the portfolio question of a rejection reason. */
   readonly parentCode?: string | null;
+  /** Candidate-facing comment mapped to a portfolio rejection reason. */
+  readonly candidateComment?: string | null;
+  /** Points of a portfolio classification. */
+  readonly points?: number | null;
   readonly sortOrder: number;
   readonly active: boolean;
+}
+
+/**
+ * PROPOSAL (PQ-04): what the candidate may correct after an officer returned the application
+ * (US-2.3.4). The contract has no candidate read of the flags yet; the mock serves
+ * GET /applications/{applicationId}/correction-flags.
+ */
+export interface CandidateCorrections {
+  readonly flags: readonly CorrectionFlag[];
+  /** End of the correction grace period, with offset (D-07). */
+  readonly correctionDeadline: string;
+}
+
+/** POST /applications/{applicationId}/corrections: values of the flagged sections only. */
+export interface SubmitCorrectionsRequest {
+  readonly sections: Readonly<Partial<Record<ApplicationSectionKey, ApplicationSectionInput>>>;
 }

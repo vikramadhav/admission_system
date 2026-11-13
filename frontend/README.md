@@ -51,13 +51,15 @@ The typed API clients are written by hand from `Contracts/openapi/openapi.editor
 - The web server must send a Content-Security-Policy header with a per-request nonce and replace every `DAHC_CSP_NONCE` in `index.html` with it (the build copies the placeholder from `ngCspNonce` onto the script and stylesheet tags), for example: `default-src 'self'; script-src 'nonce-{nonce}' 'strict-dynamic'; style-src 'self' 'nonce-{nonce}'; connect-src 'self' {API base URL} {IDAM metadata, JWKS, token and revocation endpoints}; img-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; require-trusted-types-for 'script'; trusted-types angular angular#bundler`.
 - The API must allow the portal origin in CORS with `Authorization`, `Content-Type`, `Accept-Language`, `If-Match` and `Idempotency-Key`, and expose `ETag`.
 
+## Multi-role portal
+
+All roles now have their own lazy area, built against the in-browser mock until the API exists: candidate, admission (officer, supervisor, screening), scoring (referees, senior referee), finance, central monitoring and admin. See [docs/portal/README.md](docs/portal/README.md) for the route map, personas and story coverage. Contract gaps the mock fills with proposed fields are listed in [docs/portal/open-questions.md](docs/portal/open-questions.md).
+
 ## Not included, and why
 
 | Not included | Reason |
 |---|---|
-| Other role portals (officer, supervisor, referee, finance, admin) | Out of scope for now; the routing keeps each role in its own lazy area |
 | Notifications inbox | E-mail and SMS only in the BRD and contract (CJ-22) |
-| Correct a returned application (US-2.3.4) | No candidate read of correction flags in the contract (OQ-C6) |
 | Token renewal | IDAM renewal method not confirmed (standard s.30, OQ-15); an expired token leads to a new sign-in |
 | Development-only sign-in | The API's development sign-in is not in the contract yet; portal specs use IDAM and API mocks meanwhile |
 | Visual regression screenshots | Need the pinned container image (standard s.25) |

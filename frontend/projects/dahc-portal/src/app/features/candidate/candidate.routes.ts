@@ -1,8 +1,9 @@
 import { Routes } from '@angular/router';
 
+import { unsavedChangesGuard } from '../../core/auth/unsaved-changes.guard';
 import { applicationEntryRedirect } from './application-wizard/application-entry';
 
-/** Candidate area (lazy, behind candidateGuard in app.routes.ts), rendered in the candidate layout. */
+/** Candidate area (lazy, behind roleGuard('CANDIDATE') in app.routes.ts), rendered in the candidate layout. */
 export const CANDIDATE_ROUTES: Routes = [
   {
     path: '',
@@ -47,6 +48,12 @@ export const CANDIDATE_ROUTES: Routes = [
         title: $localize`:@@portal.title.portfolioResult:Portfolio result - GME Admissions`,
         loadComponent: () =>
           import('./portfolio-result/portfolio-result-page.component').then(module => module.PortfolioResultPageComponent),
+      },
+      {
+        path: 'applications/:applicationId/corrections',
+        title: $localize`:@@portal.title.corrections:Correct your application - GME Admissions`,
+        canDeactivate: [unsavedChangesGuard],
+        loadComponent: () => import('./corrections/corrections-page.component').then(module => module.CorrectionsPageComponent),
       },
       {
         path: 'account',

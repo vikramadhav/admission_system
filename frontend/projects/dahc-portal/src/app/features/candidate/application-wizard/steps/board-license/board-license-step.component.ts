@@ -52,6 +52,11 @@ export class BoardLicenseStepComponent {
   protected readonly other = OTHER;
   protected readonly today = new Date().toISOString().slice(0, 10);
 
+  /** Boards can be added or removed only while the board list itself is editable (not in correction mode unless flagged, PQ-35). */
+  protected get boardsEditable(): boolean {
+    return this.state.editable() && this.form.controls.boards.enabled;
+  }
+
   protected get boards(): readonly BoardEntryForm[] {
     return this.form.controls.boards.controls;
   }

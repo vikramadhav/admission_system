@@ -1,0 +1,135 @@
+<dahc-page-header
+  i18n-heading="@@portal.admission.screening.heading"
+  heading="Screening"
+  i18n-description="@@portal.admission.screening.pageDescription"
+  description="Applications that completed verification and portfolio scoring this cycle, highest shortlisting score first."
+  [focusOnLoad]="true" />
+
+<div class="dahc-portal-page">
+  <section class="screening-filters" aria-labelledby="screening-filters-heading">
+    <h2 id="screening-filters-heading" class="dahc-visually-hidden" i18n="@@portal.admission.screening.filtersHeading">Filters</h2>
+    <form class="screening-filter-grid" [formGroup]="filters" novalidate>
+      <dahc-select
+        formControlName="announcementStatus"
+        i18n-label="@@portal.admission.screening.filter.announcement"
+        label="Announcement status"
+        [options]="announcementOptions"
+        i18n-placeholder="@@portal.admission.screening.filter.all"
+        placeholder="All" />
+      <dahc-select
+        formControlName="casperAttendance"
+        i18n-label="@@portal.admission.screening.filter.casper"
+        label="CASPER attendance"
+        [options]="attendanceOptions"
+        i18n-placeholder="@@portal.admission.screening.filter.all"
+        placeholder="All" />
+      <dahc-select formControlName="appealed" i18n-label="@@portal.admission.screening.filter.appealed" label="Appealed" [options]="appealedOptions"
+        i18n-placeholder="@@portal.admission.screening.filter.all"
+        placeholder="All" />
+    </form>
+    <dahc-search
+      i18n-label="@@portal.admission.screening.search"
+      label="Search by application ID or candidate name"
+      [showLabel]="true"
+      (searchSubmitted)="search($event)" />
+  </section>
+
+  <section class="screening-toolbar" aria-labelledby="screening-actions-heading">
+    <h2 id="screening-actions-heading" class="dahc-visually-hidden" i18n="@@portal.admission.screening.actionsHeading">Screening actions</h2>
+    <p id="screening-selection" class="screening-muted" aria-live="polite">
+      @if (selectedCount() === 0) {
+        <ng-container i18n="@@portal.admission.screening.selectHint">Select one or more applications to announce, screen out or reannounce.</ng-container>
+      } @else {
+        <ng-container i18n="@@portal.admission.screening.selectedCount">{selectedCount(), plural, =1 {1 application selected} other {{{ selectedCount() }} applications selected}}</ng-container>
+      }
+    </p>
+    <div class="screening-buttons screening-buttons--start">
+      <button dahc-button type="button" variant="secondary" (click)="casperOpen.set(true)" i18n="@@portal.admission.screening.uploadCasper">Upload CASPER</button>
+      <button
+        dahc-button
+        type="button"
+        [disabled]="selectedCount() === 0"
+        aria-describedby="screening-selection"
+        (click)="openBulk('announce')"
+        i18n="@@portal.admission.screening.announce.submit">
+        Announce
+      </button>
+      <button
+        dahc-button
+        type="button"
+        variant="secondary"
+        [disabled]="selectedCount() === 0"
+        aria-describedby="screening-selection"
+        (click)="openBulk('screen-out')"
+        i18n="@@portal.admission.screening.screenOut.submit">
+        Screen out
+      </button>
+      <button
+        dahc-button
+        type="button"
+        variant="secondary"
+        [disabled]="selectedCount() === 0"
+        aria-describedby="screening-selection"
+        (click)="openBulk('reannounce')"
+        i18n="@@portal.admission.screening.reannounce.submit">
+        Reannounce
+      </button>
+    </div>
+  </section>
+
+  @if (facade.list.problem(); as problem) {
+    <dahc-alert variant="error" i18n-heading="@@portal.admission.screening.loadFailed" heading="The screening list could not be loaded">
+      <p class="screening-text">{{ problem.detail ?? problem.title }}</p>
+    </dahc-alert>
+    <div>
+      <button dahc-button type="button" variant="secondary" (click)="facade.load()" i18n="@@portal.action.tryAgain">Try again</button>
+    </div>
+  } @else {
+    <dahc-table
+      i18n-caption="@@portal.admission.screening.caption"
+      caption="Screening-stage applications"
+      [columns]="columns"
+      [rows]="rows()"
+      rowKey="applicationId"
+      [selectable]="true"
+      [selectedKeys]="facade.selectedIds()"
+      (selectedKeysChange)="facade.selectedIds.set($event)"
+      [sort]="tableSort()"
+      (sortChange)="onSort($event)"
+      [loading]="facade.list.loading()"
+      scrollX="2900px"
+      i18n-emptyText="@@portal.admission.screening.empty"
+      emptyText="No applications match these filters.">
+      <ng-template dahcTableCell="applicationStatus" let-row>
+        <dahc-tag [purpose]="asRow(row).applicationStatusPurpose">{{ asRow(row).applicationStatusLabel }}</dahc-tag>
+      </ng-template>
+      <ng-template dahcTableCell="verification" let-row>
+        <dahc-tag [purpose]="asRow(row).verificationPurpose">{{ asRow(row).verificationLabel }}</dahc-tag>
+      </ng-template>
+      <ng-template dahcTableCell="portfolio" let-row>
+        <dahc-tag [purpose]="asRow(row).portfolioPurpose">{{ asRow(row).portfolioLabel }}</dahc-tag>
+      </ng-template>
+      <ng-template dahcTableCell="announcementStatus" let-row>
+        <dahc-tag [purpose]="asRow(row).announcementPurpose">{{ asRow(row).announcementLabel }}</dahc-tag>
+      </ng-template>
+      <ng-template dahcTableCell="gpaShortlistingScore" let-row>{{ asRow(row).gpaText }}</ng-template>
+      <ng-template dahcTableCell="examShortlistingScore" let-row>{{ asRow(row).examText }}</ng-template>
+      <ng-template dahcTableCell="casperShortlistingScore" let-row>{{ asRow(row).casperText }}</ng-template>
+      <ng-template dahcTableCell="portfolioScore" let-row>{{ asRow(row).portfolioText }}</ng-template>
+      <ng-template dahcTableCell="shortlistingScore" let-row><strong>{{ asRow(row).shortlistingText }}</strong></ng-template>
+    </dahc-table>
+    <dahc-load-more
+      [shown]="rows().length"
+      [hasMore]="facade.list.hasMore()"
+      [loading]="facade.list.loading()"
+      (loadMore)="facade.list.loadMore()" />
+  }
+</div>
+
+<dahc-casper-import-drawer [(open)]="casperOpen" (imported)="facade.refresh()" />
+<dahc-screening-bulk-dialog
+  [(open)]="bulkOpen"
+  [kind]="bulkKind()"
+  [rows]="facade.selectedRows()"
+  [reasonOptions]="reasonOptions()"
+  (completed)="facade.refresh()" />

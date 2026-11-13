@@ -1,0 +1,67 @@
+<dahc-page-header [heading]="heading()" [breadcrumbs]="breadcrumbs()" [focusOnLoad]="true" />
+
+<div class="dahc-portal-page">
+  <section class="section" aria-labelledby="workload-queue">
+    <h2 id="workload-queue" class="section-heading" i18n="@@portal.admission.workload.queue">Queue</h2>
+    <ul class="tiles">
+      @for (tile of tiles(); track tile.label) {
+        <li><dahc-stat-tile [label]="tile.label" [value]="tile.value" [color]="tile.color" /></li>
+      }
+    </ul>
+  </section>
+
+  <section class="section" aria-labelledby="workload-applications">
+    <h2 id="workload-applications" class="section-heading" i18n="@@portal.admission.workload.applications">Applications</h2>
+    <div class="toolbar">
+      <dahc-checkbox [formControl]="overdueOnly" i18n="@@portal.admission.workload.overdueOnly">Show overdue only</dahc-checkbox>
+      <button dahc-button type="button" [disabled]="selection().length === 0" (click)="dialogOpen.set(true)" i18n="@@portal.admission.workload.reassignButton">
+        Reassign or return selected
+      </button>
+    </div>
+    @if (list.problem(); as problem) {
+      <dahc-alert variant="error" [announce]="true">
+        {{ problem.detail ?? problem.title }}
+        <button dahc-button type="button" variant="link" (click)="list.reload()" i18n="@@portal.action.tryAgain">Try again</button>
+      </dahc-alert>
+    }
+    @if (list.loaded() && rows().length === 0 && !list.loading()) {
+      <dahc-empty-state
+        [headingLevel]="3"
+        i18n-heading="@@portal.admission.workload.emptyHeading"
+        heading="No applications"
+        i18n-description="@@portal.admission.workload.emptyText"
+        description="This officer has no applications matching the filter." />
+    } @else {
+      <dahc-table
+        i18n-caption="@@portal.admission.workload.caption"
+        caption="Applications of this officer"
+        [columns]="columns"
+        [rows]="rows()"
+        [loading]="list.loading()"
+        [selectable]="true"
+        [(selectedKeys)]="selectedKeys"
+        [(sort)]="sort"
+        scrollX="1000px">
+        <ng-template dahcTableCell="applicationNumber" let-row>
+          <a [routerLink]="['/admission/applications', asRow(row).id]">{{ asRow(row).applicationNumber }}</a>
+        </ng-template>
+        <ng-template dahcTableCell="dueAt" let-row>
+          @if (asRow(row).overdue) {
+            <span class="overdue">
+              {{ asRow(row).dueAt }}
+              <dahc-tag purpose="error" i18n="@@portal.admission.officer.overdue">Overdue</dahc-tag>
+            </span>
+          } @else {
+            {{ asRow(row).dueAt }}
+          }
+        </ng-template>
+        <ng-template dahcTableCell="verificationStatus" let-row>
+          <dahc-tag [purpose]="asRow(row).statusPurpose">{{ asRow(row).verificationStatus }}</dahc-tag>
+        </ng-template>
+      </dahc-table>
+      <dahc-load-more [shown]="rows().length" [hasMore]="list.hasMore()" [loading]="list.loading()" (loadMore)="list.loadMore()" />
+    }
+  </section>
+</div>
+
+<dahc-reassign-dialog [(open)]="dialogOpen" [selection]="selection()" [currentOfficerId]="officerId()" (completed)="changed()" />

@@ -36,8 +36,42 @@ export class SessionService {
     return this.pending;
   }
 
+  /**
+   * Reads the session again with GET /auth/me, for example when the tab comes back into view:
+   * the active role is stored on the server and may have been switched in another tab. Returns
+   * the new session, or the current one when it could not be read.
+   */
+  async refresh(): Promise<AuthSession | null> {
+    if (this.currentSession() === null) {
+      return null;
+    }
+
+    try {
+      const result = await firstValueFrom(this.authApi.getCurrentSession(this.callerHandlesProblems()));
+      this.currentSession.set(result.data);
+    } catch (error: unknown) {
+      if (!isApiProblemError(error)) {
+        throw error;
+      }
+    }
+
+    return this.currentSession();
+  }
+
+  /** Switches the active role with PUT /auth/active-role and keeps the session it returns. */
+  async switchRole(roleCode: string): Promise<AuthSession> {
+    const result = await firstValueFrom(this.authApi.switchActiveRole(roleCode, this.callerHandlesProblems()));
+    this.currentSession.set(result.data);
+
+    return result.data;
+  }
+
+  private callerHandlesProblems(): HttpContext {
+    return new HttpContext().set(DAHC_CALLER_HANDLES_PROBLEMS, true);
+  }
+
   private async establish(): Promise<AuthSession | null> {
-    const context = new HttpContext().set(DAHC_CALLER_HANDLES_PROBLEMS, true);
+    const context = this.callerHandlesProblems();
     const request = this.storage.isSessionStarted()
       ? this.authApi.getCurrentSession(context)
       : this.authApi.signIn(context);

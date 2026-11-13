@@ -18,7 +18,7 @@ const DUPLICATE_ACCOUNT = 'account.duplicate';
  * Translates API responses into typed results: the ApiResponse envelope becomes an
  * ApiResult (with the ETag), and Problem Details become an ApiProblemError. It also applies
  * the portal-wide reactions: 401 starts a new sign-in, 403 account.not_registered calls the
- * sign-in endpoint and retries once, any other 403 shows the not-allowed page, 409
+ * sign-in endpoint and retries once, any other 403 shows the unauthorised page, 409
  * account.duplicate shows the duplicate-account guidance, and every other problem is shown
  * with its localized message and trace id.
  */
@@ -58,7 +58,7 @@ export const apiResponseInterceptor: HttpInterceptorFn = (request, next) => {
         if (problem.status === 409 && problem.code === DUPLICATE_ACCOUNT) {
           void router.navigateByUrl('/duplicate-account');
         } else if (problem.status === 403) {
-          void router.navigateByUrl('/not-allowed');
+          void router.navigateByUrl('/unauthorised');
         } else {
           notifications.show(problem);
         }

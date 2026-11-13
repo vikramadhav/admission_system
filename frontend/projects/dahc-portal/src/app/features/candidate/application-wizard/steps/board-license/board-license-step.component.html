@@ -88,7 +88,7 @@
               }
             }
           </div>
-          @if (boards.length > 1 && state.editable()) {
+          @if (boards.length > 1 && boardsEditable) {
             <div class="board-actions">
               <button dahc-button type="button" variant="danger-outline" size="sm" (click)="removeBoard(index)">{{ removeLabel(index) }}</button>
             </div>
@@ -97,7 +97,7 @@
       }
     </div>
 
-    @if (state.editable()) {
+    @if (boardsEditable) {
       <div>
         <button dahc-button type="button" variant="secondary" size="sm" (click)="addBoard()" i18n="@@portal.board.add">
           Add another board

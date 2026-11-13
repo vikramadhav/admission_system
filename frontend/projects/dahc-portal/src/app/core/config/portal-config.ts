@@ -33,6 +33,12 @@ export interface DahcPortalConfig {
    * The BRD gives no value; Figma shows 30 minutes (OQ-C9).
    */
   readonly sessionTimeoutMinutes: number;
+  /**
+   * Admission cycle used by operations that require a cycleId and have no other source, for
+   * example the CASPER import (US-4.2.1). The contract has no "current cycle" operation (OQ-24,
+   * PQ-12); when absent those actions explain that they are unavailable.
+   */
+  readonly admissionCycleId?: string | null;
   /** True only in the mock build: the API is answered in the browser and mock-only routes are enabled. */
   readonly mockApi?: boolean;
 }

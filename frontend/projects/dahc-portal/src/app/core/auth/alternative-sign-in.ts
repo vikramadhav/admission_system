@@ -5,6 +5,8 @@ export interface DahcSignInPersona {
   readonly id: string;
   readonly name: string;
   readonly description: string;
+  /** Listed under candidates (default) or staff on the sign-in page. */
+  readonly group?: 'candidate' | 'staff';
 }
 
 /**

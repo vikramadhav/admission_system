@@ -191,6 +191,12 @@
           Request Reinstatement
         </button>
       }
+      @if (view.item.status === 'CORRECTION_REQUIRED') {
+        <!-- US-2.3.4. allowedActions has no correction value, so the link follows the status (open question). -->
+        <a dahc-button size="sm" [routerLink]="['/candidate/applications', view.item.id, 'corrections']" i18n="@@portal.corrections.dashboardLink">
+          Correct your application
+        </a>
+      }
       @if (view.actions.has('RESUME')) {
         <a dahc-button size="sm" [routerLink]="['/candidate/applications', view.item.id, 'steps', 'program']" i18n="@@portal.dashboard.resume">
           Resume Application

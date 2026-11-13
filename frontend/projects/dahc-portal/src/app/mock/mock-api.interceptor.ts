@@ -26,11 +26,16 @@ export const mockApiInterceptor: HttpInterceptorFn = (request, next) => {
 
   const reply: Observable<HttpResponse<unknown>> = defer(() => {
     try {
-      if (request.method === 'GET' && /\/attachments\/[^/]+\/content$/.test(pathOnly)) {
+      if (request.method === 'GET' && pathOnly === '/finance/payments/export') {
+        return of(new HttpResponse({ status: 200, body: backend.financeExport(path), url: request.url }));
+      }
+
+      if (request.method === 'GET' && /\/(attachments|evidence)\/[^/]+\/content$/.test(pathOnly)) {
         return of(new HttpResponse({ status: 200, body: backend.attachmentContent(pathOnly), url: request.url }));
       }
 
-      const routed = pathOnly === '/applications' && request.method === 'POST' ? path : pathOnly;
+      // Staff operations read their query parameters (filters, sort, cursor).
+      const routed = (pathOnly === '/applications' && request.method === 'POST') || /^\/(staff|referee|senior-referee|finance|admin)\//.test(pathOnly) ? path : pathOnly;
       const result = backend.handle(request.method, routed, request.body, request.headers);
 
       if (request.method === 'PUT' && request.body instanceof FormData) {

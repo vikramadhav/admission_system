@@ -36,4 +36,8 @@ export interface WizardPrimaryAction {
   run(): void;
 }
 
-export type WizardMode = 'create' | 'edit' | 'view';
+/**
+ * create: choosing the program; edit: a draft (auto-saved); view: read-only; correction: a returned
+ * application where only the flagged items are open and nothing is auto-saved (US-2.3.4).
+ */
+export type WizardMode = 'create' | 'edit' | 'view' | 'correction';

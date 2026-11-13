@@ -1,3 +1,4 @@
+import { CorrectionFlag } from '../api/admission.models';
 import { AnnouncedScores, ApplicationStatus, Preference } from '../api/application.models';
 import { UserType } from '../api/auth.models';
 import {
@@ -8,9 +9,12 @@ import {
   SectionValues,
 } from '../api/candidate-lifecycle.models';
 import { PersonalInformationValues } from '../shared/section-values';
+import { MockAdmissionState } from './mock-admission-seed';
+import { MockOversightState } from './mock-oversight';
+import { MockScoringState } from './mock-scoring';
 
 /** Mock persistence. Only fake data is stored, and only in the mock build (sessionStorage, per tab). */
-const STORAGE_KEY = 'gme-mock-db-v1';
+const STORAGE_KEY = 'gme-mock-db-v5';
 const USER_KEY = 'gme-mock-user';
 
 export interface MockSection {
@@ -43,6 +47,28 @@ export interface MockApplication {
   editPreferencesOpen: boolean;
   reinstatementRequestedAt: string | null;
   excludedSiteIds: string[];
+  /** Items an officer returned for correction (US-2.3.4), while the status is Correction Required. */
+  correction?: MockCorrection | null;
+}
+
+/** Flags with the officer's notes and the end of the correction grace period. */
+export interface MockCorrection {
+  flags: CorrectionFlag[];
+  deadline: string;
+}
+
+/** A JSON Pointer of a flag names a section (`/sections/<key>/...`) or an attachment slot (`/attachments/<slotId>`). */
+export function flaggedSectionKeys(correction: MockCorrection | null | undefined): string[] {
+  const keys = (correction?.flags ?? []).map(flag => flag.fieldPointer.match(/^\/sections\/([^/]+)/)?.[1]).filter((key): key is string => key !== undefined);
+
+  return [...new Set(keys)];
+}
+
+export function flaggedSlotIds(correction: MockCorrection | null | undefined): string[] {
+  return (correction?.flags ?? [])
+    .map(flag => flag.fieldPointer.match(/^\/attachments\/(.+)$/)?.[1])
+    .filter((slotId): slotId is string => slotId !== undefined)
+    .map(slotId => decodeURIComponent(slotId));
 }
 
 export interface MockCandidate {
@@ -63,8 +89,25 @@ export interface MockCandidate {
   applications: MockApplication[];
 }
 
+/** A pre-registered staff user (D-04: staff and candidates are separate records). */
+export interface MockStaffUser {
+  userId: string;
+  displayName: string;
+  email: string;
+  roles: string[];
+  /** Server-stored active role, shared by every tab (standards s.15). */
+  activeRole: string;
+}
+
 export interface MockDatabase {
   candidates: Record<string, MockCandidate>;
+  staff: Record<string, MockStaffUser>;
+  /** Admission back office: pools, officers, applications under review, requests. */
+  admission: MockAdmissionState;
+  /** Portfolio scoring: referees, portfolios and their rounds. */
+  scoring: MockScoringState;
+  /** Finance payments, administration users and integration clients. */
+  oversight: MockOversightState;
   sequence: number;
 }
 

@@ -13,14 +13,3 @@
 .dahc-layout-main:focus {
   outline: none;
 }
-
-.session-text {
-  margin: 0;
-}
-
-.session-actions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: var(--dahc-space-3);
-}

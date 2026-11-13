@@ -6,7 +6,7 @@ const isCi = process.env['CI'] !== undefined;
  * Playground specs run against the playground dev server. Portal specs run against the portal
  * development build with IDAM and the API replaced by in-test mocks (support/idam-mock.ts), and
  * candidate specs run the full candidate workflows against the mock build (in-browser API,
- * persona sign-in) on its own port.
+ * persona sign-in) on its own port. Staff specs use that mock build too, with a persona per role.
  */
 export default defineConfig({
   testDir: './specs',
@@ -36,6 +36,12 @@ export default defineConfig({
     {
       name: 'candidate',
       testDir: './specs/candidate',
+      use: { ...devices['Desktop Chrome'], baseURL: 'http://localhost:4201' },
+    },
+    {
+      // Staff areas and roles, against the same mock build as the candidate specs.
+      name: 'staff',
+      testDir: './specs/staff',
       use: { ...devices['Desktop Chrome'], baseURL: 'http://localhost:4201' },
     },
   ],

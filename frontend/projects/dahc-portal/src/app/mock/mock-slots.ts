@@ -4,7 +4,7 @@ import { ProgramRules } from '../shared/program-rules';
 import { GCC_COUNTRIES } from '../shared/reference-data';
 import { groupOf, valueOf } from '../shared/section-values';
 import { mockProgram, mockSite, mockSpecialty } from './mock-catalog';
-import { MockApplication, MockCandidate } from './mock-store';
+import { MockApplication, MockCandidate, flaggedSlotIds } from './mock-store';
 
 const PDF = ['application/pdf'];
 const IMAGE = ['image/jpeg', 'image/png'];
@@ -147,12 +147,14 @@ export function attachmentSlots(application: MockApplication, candidate: MockCan
   }
 
   const draft = application.status === 'DRAFT';
+  // US-2.3.4: while corrections are open, only flagged documents can be replaced.
+  const flagged = application.status === 'CORRECTION_REQUIRED' ? flaggedSlotIds(application.correction) : [];
 
   return drafts.map(slot => ({
     ...slot,
     allowedMediaTypes: slot.allowedMediaTypes ?? PDF,
     maxFileSizeBytes: TWO_MB,
-    editable: slot.sectionKey === 'portfolio' ? draft && application.portfolio === null : draft,
+    editable: slot.sectionKey === 'portfolio' ? draft && application.portfolio === null : draft || flagged.includes(slot.slotId),
     attachment: application.attachments[slot.slotId] ?? null,
   }));
 }

@@ -25,6 +25,8 @@ export const environment: DahcPortalConfig = {
   },
   defaultTimeZoneId: 'Asia/Dubai',
   sessionTimeoutMinutes: 30,
+  // No API source for the current cycle yet (OQ-24, PQ-12): cycle-bound actions stay unavailable.
+  admissionCycleId: null,
   localeBasePaths: {
     'en-AE': '/',
     'ar-AE': '/',

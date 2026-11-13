@@ -1,0 +1,51 @@
+// Screening dashboard and its panels (EPIC-04). Layout only, with tokens.
+.screening-form {
+  display: grid;
+  gap: var(--dahc-space-4);
+}
+
+.screening-text,
+.screening-muted {
+  margin: 0;
+}
+
+.screening-muted {
+  color: var(--dahc-color-text-secondary);
+}
+
+.screening-subheading {
+  margin: 0;
+  font-size: var(--dahc-type-heading-4-size);
+  line-height: var(--dahc-type-heading-4-line-height);
+}
+
+.screening-list {
+  display: grid;
+  gap: var(--dahc-space-2);
+  margin: 0;
+  padding-inline-start: var(--dahc-space-5);
+}
+
+.screening-highlight {
+  display: grid;
+  gap: var(--dahc-space-2);
+  padding: var(--dahc-space-3) var(--dahc-space-4);
+  border: 1px solid var(--dahc-color-border-default);
+  border-inline-start-width: var(--dahc-space-1);
+  border-radius: var(--dahc-radius-md);
+  border-inline-start-color: var(--dahc-color-border-strong);
+  background-color: var(--dahc-color-surface);
+  color: var(--dahc-color-text-primary);
+}
+
+.screening-error {
+  margin: 0;
+  color: var(--dahc-color-error-text);
+}
+
+.screening-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--dahc-space-3);
+}

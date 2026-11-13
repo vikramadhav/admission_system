@@ -15,8 +15,10 @@ import {
   ApplicationSection,
   ApplicationSectionInput,
   ApplicationSectionKey,
+  CandidateCorrections,
   ReinstatementRequestInput,
   SiteExclusionInput,
+  SubmitCorrectionsRequest,
   WorkflowActionResult,
 } from './candidate-lifecycle.models';
 
@@ -135,6 +137,26 @@ export class ApplicationsApiService {
       input,
       { headers: idempotent(), context },
     );
+  }
+
+  /** GET /applications/{applicationId}/correction-flags. PROPOSAL (PQ-04): not in the contract yet. */
+  getCorrections(applicationId: string, context = new HttpContext()): Observable<ApiResult<CandidateCorrections>> {
+    return this.http.get<ApiResult<CandidateCorrections>>(`${this.applicationUrl(applicationId)}/correction-flags`, { context });
+  }
+
+  /**
+   * POST /applications/{applicationId}/corrections (US-2.3.4): re-submits the flagged sections to the
+   * same officer. The idempotency key is created once per attempt and reused for retries.
+   */
+  submitCorrections(
+    applicationId: string,
+    request: SubmitCorrectionsRequest,
+    idempotencyKey: string,
+    context = new HttpContext(),
+  ): Observable<ApiResult<WorkflowActionResult>> {
+    const headers = new HttpHeaders({ 'Idempotency-Key': idempotencyKey });
+
+    return this.http.post<ApiResult<WorkflowActionResult>>(`${this.applicationUrl(applicationId)}/corrections`, request, { headers, context });
   }
 
   private applicationUrl(applicationId: string): string {
